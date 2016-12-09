@@ -93,3 +93,12 @@ Github issues use labels to help classified and filter issues. Please use the la
 * **ux** Indicates the issue is related to the user interface or affects the user experience
 * **wontfix** Indicates the issue won't be fixed. A proper comment must be added explaining the reason.
 
+
+
+Commiting
+	Add issue number on latest commit message.
+	Limit commit issues to only 128 characters. (Moodle use 
+	
+	
+123456789012345678901234567890123456789012345678901234567890123456789012
+
