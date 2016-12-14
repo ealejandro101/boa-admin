@@ -45,7 +45,7 @@ Release branches are created when **master** has reached the state of the next m
 
 The key moment to branch off a new release branch from master is when master reflects the desired state of the new release.
 
-## Creating a release branch
+## Creating a Release Branch
 
 Release branches are created from **master** branch. When the state of **master** is ready for the upcoming target version we branch off and give the release branch a name reflecting the target version number. In addition the ".0" release must be tagged on the new release branch. Naming convention is release-x.y.z, where x.y.z is the target version number.
 
@@ -58,11 +58,11 @@ git push origin release-1.0.0
 
 Release branches must exists as long as they are supported.
 
-# Issues management
+# Issues Management
 
 Github issues will be used for issue management. Before creating an issue please ensure you search the issue database to ensure the issue has not been created before. If you found the issue, please just add to the conversation by adding a comment.
 
-## Creating issues
+## Creating Issues
 
 When creating an issue please add a title that short describe what is the issue about
 
@@ -95,10 +95,8 @@ Github issues use labels to help classified and filter issues. Please use the la
 
 
 
-Commiting
-	Add issue number on latest commit message.
-	Limit commit issues to only 128 characters. (Moodle use 
-	
-	
-123456789012345678901234567890123456789012345678901234567890123456789012
+## Commiting
+When commiting make sure to:
 
+- Add issue number on latest commit message.
+- Limit commit issues to only 128 characters.
