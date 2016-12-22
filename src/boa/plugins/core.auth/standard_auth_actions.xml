@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<registry_contributions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.ajaxplorer/ajxp_registry.xsd">
+<registry_contributions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
 	<actions>
 		<action name="login">
 			<gui text="163" title="168" src="encrypted.png" iconClass="icon-signin"

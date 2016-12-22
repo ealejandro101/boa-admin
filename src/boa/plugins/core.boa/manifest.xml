@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ajxpcore id="core.ajaxplorer" label="CONF_MESSAGE[AjaXplorer Main Options]"
+<ajxpcore id="core.boa" label="CONF_MESSAGE[AjaXplorer Main Options]"
           description="CONF_MESSAGE[Main container for core AjaXplorer settings (application title, sharing, webdav server config, etc...)]"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="file:../core.ajaxplorer/ajxp_registry.xsd"
+          xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd"
         >
     <plugin_info>
         <plugin_author>Charles du Jeu</plugin_author>
@@ -12,7 +12,7 @@
     </plugin_info>
     <client_settings>
         <resources>
-            <i18n namespace="" path="plugins/core.ajaxplorer/i18n"/>
+            <i18n namespace="" path="plugins/core.boa/i18n"/>
         </resources>
     </client_settings>
 	<server_settings>

@@ -279,7 +279,6 @@ class Utils
             }else{
                 $parameters["repository_id"] = $repository->getId();
             }
-            require_once(BOA_BIN_FOLDER . "/class.SystemTextEncoding.php");
             if (AuthService::usersEnabled()) {
                 $loggedUser = AuthService::getLoggedUser();
                 if ($loggedUser != null && $loggedUser->canSwitchTo($parameters["repository_id"])) {
@@ -947,7 +946,7 @@ class Utils
                     }
                 }
                 if ($namespace == "") {
-                    $mixXml = file_get_contents(BOA_PLUGINS_FOLDER."/core.ajaxplorer/ajxp_mixins.xml");
+                    $mixXml = file_get_contents(BOA_PLUGINS_FOLDER."/core.boa/mixins.xml");
                     if (preg_match_all("/MIXIN_MESSAGE(\[.*?\])/", $mixXml, $matches, PREG_SET_ORDER)) {
                         foreach ($matches as $match) {
                             $match[1] = str_replace(array("[", "]"), "", $match[1]);
@@ -997,7 +996,7 @@ class Utils
     {
         if (!is_dir($baseDir) || !is_file($baseDir . "/en.php")) return;
         if ($createLanguage != "" && !is_file($baseDir . "/$createLanguage.php")) {
-            @copy(BOA_INSTALL_PATH . "/plugins/core.ajaxplorer/i18n-template.php", $baseDir . "/$createLanguage.php");
+            @copy(BOA_INSTALL_PATH . "/plugins/core.boa/i18n-template.php", $baseDir . "/$createLanguage.php");
         }
         if (!$detectLanguages) {
             $languages = ConfService::listAvailableLanguages();

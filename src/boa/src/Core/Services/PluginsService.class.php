@@ -605,7 +605,7 @@ class PluginsService{
         // Load behaviours if not already
         if(!isSet($this->mixinsDoc)){
             $this->mixinsDoc = new \DOMDocument();
-            $this->mixinsDoc->load(BOA_PLUGINS_FOLDER."/core.ajaxplorer/ajxp_mixins.xml");
+            $this->mixinsDoc->load(BOA_PLUGINS_FOLDER."/core.boa/mixins.xml");
             $this->mixinsXPath = new \DOMXPath($this->mixinsDoc);
         }
         // Merge into manifestDoc

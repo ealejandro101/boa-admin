@@ -202,8 +202,8 @@ class BootConfLoader extends AbstractConfDriver {
 
         // Prepare plugins configs
         $direct = array(
-            "APPLICATION_TITLE" => "core.ajaxplorer/APPLICATION_TITLE",
-            "APPLICATION_LANGUAGE" => "core.ajaxplorer/DEFAULT_LANGUAGE",
+            "APPLICATION_TITLE" => "core.boa/APPLICATION_TITLE",
+            "APPLICATION_LANGUAGE" => "core.boa/DEFAULT_LANGUAGE",
             "ENABLE_NOTIF"      => "core.notifications/USER_EVENTS",
             "APPLICATION_WELCOME" => "gui.ajax/CUSTOM_WELCOME_MESSAGE"
         );

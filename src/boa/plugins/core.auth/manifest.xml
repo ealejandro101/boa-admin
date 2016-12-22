@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ajxpcore id="core.auth" label="CONF_MESSAGE[Authentification]" description="CONF_MESSAGE[Options applied to all auth drivers]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.ajaxplorer/ajxp_registry.xsd">
+<ajxpcore id="core.auth" label="CONF_MESSAGE[Authentification]" description="CONF_MESSAGE[Options applied to all auth drivers]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
 	<class_definition classname="BoA\Plugins\Core\Auth\CoreAuthLoader" filename="core.auth/CoreAuthLoader.class.php"/>
     <client_settings>
         <resources>

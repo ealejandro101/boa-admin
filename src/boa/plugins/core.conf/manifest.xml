@@ -2,7 +2,7 @@
 <ajxpcore id="core.conf" label="CONF_MESSAGE[Configurations Management]"
           description="CONF_MESSAGE[Sets how the application core data (users,roles,etc) is stored.]"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="file:../core.ajaxplorer/ajxp_registry.xsd"
+          xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd"
           mixins="dibidriver_provider"
         >
     <class_definition classname="BoA\Plugins\Core\Conf\CoreConfLoader" filename="core.conf/CoreConfLoader.class.php"/>

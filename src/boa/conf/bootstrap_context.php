@@ -52,7 +52,7 @@ define("BOA_PLUGINS_FOLDER_REL", "boa/plugins");
 define("BOA_BIN_FOLDER", BOA_INSTALL_PATH."/boa/src");
 define("BOA_BIN_FOLDER_REL", "boa/src");
 define("BOA_DOCS_FOLDER", BOA_INSTALL_PATH."/boa/docs");
-define("BOA_COREI18N_FOLDER", BOA_INSTALL_PATH."/boa/plugins/core.ajaxplorer/i18n");
+define("BOA_COREI18N_FOLDER", BOA_PLUGINS_FOLDER."/core.boa/i18n");
 define("TESTS_RESULT_FILE", BOA_CACHE_DIR."/diag_result.php");
 define("BOA_TESTS_FOLDER", BOA_INSTALL_PATH."/boa/tests");
 define("INITIAL_ADMIN_PASSWORD", "admin");
@@ -67,7 +67,7 @@ define("ADMIN_PASSWORD", "admin");
 // example in log.serial. Do not forget the trailing slash
 // define("BOA_FORCE_LOGPATH", "/var/log/ajaxplorer/");
 // DEBUG OPTIONS
-define("BOA_CLIENT_DEBUG"  ,   false);
+define("BOA_CLIENT_DEBUG"  ,   true);
 define("BOA_SERVER_DEBUG"  ,   false);
 define("BOA_SKIP_CACHE"    ,   true);
 

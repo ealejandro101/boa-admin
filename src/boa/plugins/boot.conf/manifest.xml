@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ajxp_plugin label="CONF_MESSAGE[]" description="CONF_MESSAGE[]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:noNamespaceSchemaLocation="file:../core.ajaxplorer/ajxp_registry.xsd" mixins="dibidriver_provider" id="boot.conf">
+             xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd" mixins="dibidriver_provider" id="boot.conf">
     <class_definition classname="BoA\Plugins\Boot\Conf\BootConfLoader" filename="boot.conf/BootConfLoader.class.php" />
     <client_settings>
         <resources>

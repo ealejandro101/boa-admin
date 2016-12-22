@@ -1489,7 +1489,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 			foreach($uniqTypes as $type){
 				if(!isset($types[$type])) continue;
 				foreach($types[$type] as $pId => $pObject){
-                    $isMain = ($pObject->getId() == "core.ajaxplorer");
+                    $isMain = ($pObject->getId() == "core.boa");
 					$meta = array(				
 						"icon" 		=> ($isMain?"preferences_desktop.png":"desktop.png"),
 						"ajxp_mime" => "ajxp_plugin",
