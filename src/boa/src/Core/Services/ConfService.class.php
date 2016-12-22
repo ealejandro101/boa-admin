@@ -943,7 +943,7 @@ class ConfService
      * @param string $coreType
      * @return mixed|null|string
      */
-    public static function getCoreConf($varName, $coreType = "ajaxplorer"){
+    public static function getCoreConf($varName, $coreType = "boa"){
         $coreP = PluginsService::getInstance()->findPlugin("core", $coreType);
         if($coreP === false) return null;
         $confs = $coreP->getConfigs();
