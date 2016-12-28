@@ -177,7 +177,7 @@ class Plugin implements \Serializable{
                 $filename = $data["filename"] OR "";
                 $include = $data["include"] OR "*";
                 $exclude = $data["exclude"] OR "";          
-                if(!is_file(BOA_INSTALL_PATH."/".$filename)) continue;          
+                if(!is_file(BOA_PLUGINS_FOLDER."/".$filename)) continue;
                 if($include != "*") {
                     $include = explode(",", $include);
                 }else{
@@ -222,7 +222,7 @@ class Plugin implements \Serializable{
      */
     protected function initXmlContributionFile($xmlFile, $include=array("*"), $exclude=array(), $dry = false){
         $contribDoc = new \DOMDocument();
-        $contribDoc->load(BOA_INSTALL_PATH."/".$xmlFile);
+        $contribDoc->load(BOA_PLUGINS_FOLDER."/".$xmlFile);
         if(!is_array($include) && !is_array($exclude)){
             if(!$dry) {
                 $this->registryContributions[] = $contribDoc->documentElement;

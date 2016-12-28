@@ -22,6 +22,7 @@ namespace BoA\Core\Services;
 
 use BoA\Core\Http\Controller;
 use BoA\Core\Security\Credential;
+use BoA\Core\Security\GroupPathProvider;
 use BoA\Core\Security\Role;
 use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
@@ -608,7 +609,8 @@ class AuthService
      * @param AbstractUser $userObject
      */
     static function updateAutoApplyRole(&$userObject){
-        foreach(AuthService::getRolesList(array(), true) as $roleId => $roleObject){
+        $roles = AuthService::getRolesList(array(), true);
+        foreach($roles as $roleId => $roleObject){
             if(!self::allowedForCurrentGroup($roleObject, $userObject)) continue;
             if($roleObject->autoAppliesTo($userObject->getProfile()) || $roleObject->autoAppliesTo("all")){
                 $userObject->addRole($roleObject);
@@ -981,7 +983,7 @@ class AuthService
 		return self::$roles;
 	}
 
-    static function allowedForCurrentGroup(AjxpGroupPathProvider $provider, $userObject = null){
+    static function allowedForCurrentGroup(GroupPathProvider $provider, $userObject = null){
         $l = ($userObject == null ? self::getLoggedUser() : $userObject);
         $pGP = $provider->getGroupPath();
         if(empty($pGP)) $pGP = "/";
@@ -989,7 +991,7 @@ class AuthService
         return (strpos($l->getGroupPath(), $pGP, 0) === 0);
     }
 
-    static function canAdministrate(AjxpGroupPathProvider $provider, $userObject = null){
+    static function canAdministrate(GroupPathProvider $provider, $userObject = null){
         $l = ($userObject == null ? self::getLoggedUser() : $userObject);
         $pGP = $provider->getGroupPath();
         if(empty($pGP)) $pGP = "/";
@@ -997,7 +999,7 @@ class AuthService
         return (strpos($pGP, $l->getGroupPath(), 0) === 0);
     }
 
-    static function canAssign(AjxpGroupPathProvider $provider, $userObject = null){
+    static function canAssign(GroupPathProvider $provider, $userObject = null){
         $l = ($userObject == null ? self::getLoggedUser() : $userObject);
         $pGP = $provider->getGroupPath();
         if(empty($pGP)) $pGP = "/";

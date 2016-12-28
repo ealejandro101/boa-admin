@@ -8,7 +8,7 @@
     <class_definition classname="BoA\Plugins\Core\Conf\CoreConfLoader" filename="core.conf/CoreConfLoader.class.php"/>
     <client_settings>
         <resources>
-            <i18n namespace="core_conf" path="plugins/core.conf/i18n"/>
+            <i18n namespace="core_conf" path="/core.conf/i18n"/>
         </resources>
     </client_settings>
 	<server_settings>
@@ -18,7 +18,7 @@
                editable="true"
                uploadAction="store_binary_temp"
                loadAction="get_binary_param"
-               defaultImage="plugins/core.conf/default_avatar.png"
+               defaultImage="core.conf/default_avatar.png"
                 />
         <param name="email" scope="user" description="Email" label="Email Address" type="string" expose="true" editable="true"/>
         <param name="country" scope="role,user" description="Country" label="Country" type="select" choices="fr|France,uk|United Kingdom,de|Germany" expose="true" editable="true"/>
