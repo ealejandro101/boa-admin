@@ -57,8 +57,8 @@ class SerialUser extends AbstractUser
      * @param $id
      * @param serialConfDriver $storage
      */
-    function SerialUser($id, $storage=null){
-		parent::AbstractAjxpUser($id, $storage);
+    function __construct($id, $storage=null){
+		parent::__construct($id, $storage);
         $this->registerForSave = array();
     }
 

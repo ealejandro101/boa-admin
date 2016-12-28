@@ -64,16 +64,16 @@ class SerialConfDriver extends AbstractConfDriver {
 	function performSerialFileCheck($file, $fileLabel, $isDir = false){
 		if($isDir){
 			if(!is_dir($file) || !is_writable($file)){
-				throw new Exception("Folder for storing $fileLabel is either inexistent or not writeable.");
+				throw new \Exception("Folder for storing $fileLabel is either inexistent or not writeable.");
 			}
 			return ;
 		}
 		$dir = dirname($file);
 		if(!is_dir($dir) || !is_writable($dir)){
-			throw new Exception("Parent folder for $fileLabel is either inexistent or not writeable.");
+			throw new \Exception("Parent folder for $fileLabel is either inexistent or not writeable.");
 		}
 		if(is_file($file) && !is_writable($file)){
-			throw new Exception(ucfirst($fileLabel)." exists but is not writeable!");
+			throw new \Exception(ucfirst($fileLabel)." exists but is not writeable!");
 		}
 	}
 
@@ -404,7 +404,7 @@ class SerialConfDriver extends AbstractConfDriver {
         $gUsers = AuthService::listUsers($groupPath);
         $gGroups = AuthService::listChildrenGroups($groupPath);
         if(count($gUsers) || count($gGroups)){
-            throw new Exception("Group is not empty, please do something with its content before trying to delete it!");
+            throw new \Exception("Group is not empty, please do something with its content before trying to delete it!");
         }
         $groups = Utils::loadSerialFile(VarsFilter::filter($this->getOption("USERS_DIRPATH"))."/groups.ser");
         foreach($groups as $key => $value){
@@ -417,7 +417,7 @@ class SerialConfDriver extends AbstractConfDriver {
 	 * Instantiate the right class
 	 *
 	 * @param String $userId
-     * @return AbstractAjxpUser
+     * @return AbstractUser
 	 */
 	function instantiateAbstractUserImpl($userId){
 		return new SerialUser($userId, $this);

@@ -483,7 +483,7 @@ abstract class AbstractConfDriver extends Plugin {
 				}
 				if($bmUser == null) exit(1);
                 $driver = ConfService::loadRepositoryDriver();
-                if(!is_a($driver, "AjxpWrapperProvider")){
+                if(!is_a($driver, "BoA\Core\Access\FileWrapperProvider")){
                     $driver = false;
                 }
 
@@ -649,7 +649,7 @@ abstract class AbstractConfDriver extends Plugin {
 				foreach($repoList as $repoIndex => $repoObject){
 					$accessType = $repoObject->getAccessType();
                     $driver = PluginsService::getInstance()->getPluginByTypeName("access", $accessType);
-					if(is_a($driver, "AjxpWrapperProvider") && ($loggedUser->canRead($repoIndex) || $loggedUser->canWrite($repoIndex))){
+					if(is_a($driver, "BoA\Core\Access\FileWrapperProvider") && ($loggedUser->canRead($repoIndex) || $loggedUser->canWrite($repoIndex))){
 						$davRepos[$repoIndex] = $webdavBaseUrl ."".($repoObject->getSlug()==null?$repoObject->getId():$repoObject->getSlug());
 					}
 				}

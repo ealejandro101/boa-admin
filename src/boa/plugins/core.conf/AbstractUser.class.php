@@ -70,7 +70,7 @@ abstract class AbstractUser
 	 */
 	var $storage;
 	
-	function AbstractAjxpUser($id, $storage=null){
+	function __construct($id, $storage=null){
 		$this->id = $id;
 		if($storage == null){
 			$storage = ConfService::getConfStorageImpl();

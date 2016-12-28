@@ -75,8 +75,7 @@ define("BOA_SKIP_CACHE"    ,   true);
 function BoA_autoload($className){    
     //Core Classes
     $className = str_replace('\\', '/', $className);
-    $prefix = 'BoA/';
-    $lClassName = (substr($className, 0, strlen($prefix)) == $prefix) ? substr($className, strlen($prefix)) : $className;
+    $lClassName = preg_replace('/^BoA\//', '', $className);
     $fileName = BOA_BIN_FOLDER."/".$lClassName.".class.php";
     if(file_exists($fileName)){
         require_once($fileName);
@@ -90,8 +89,7 @@ function BoA_autoload($className){
     }
     
     //Core Plugin Classes
-    $prefix = 'BoA/Plugins/Core';
-    if (substr($className, 0, strlen($prefix)) == $prefix){
+    if (preg_match('/^BoA\/Plugins\/Core/', $className)){
         $lClassName = end(explode('/', $className));
         //Try class
         $corePlugClass = glob(BOA_PLUGINS_FOLDER."/core.*/".$lClassName.".class.php", GLOB_NOSORT);

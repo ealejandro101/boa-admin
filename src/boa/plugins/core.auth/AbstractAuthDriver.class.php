@@ -20,12 +20,13 @@
  */
 namespace BoA\Plugins\Core\Auth;
 
+use BoA\Core\Http\HTMLWriter;
+use BoA\Core\Http\XMLWriter;
 use BoA\Core\Plugins\Plugin;
 use BoA\Core\Security\CaptchaProvider;
 use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Utils\Utils;
-use BoA\Core\Http\XMLWriter;
 
 defined('BOA_EXEC') or die( 'Access not allowed');
 
