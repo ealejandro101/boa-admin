@@ -78,7 +78,7 @@ class Router {
         $confPlugin = ConfService::getInstance()->confPluginSoftLoad($pServ);
         try{
             $pServ->loadPluginsRegistry(BOA_PLUGINS_FOLDER, $confPlugin);
-        }catch (Exception $e){
+        }catch (\Exception $e){
             die("Severe error while loading plugins registry : ".$e->getMessage());
         }
         ConfService::start();
@@ -113,7 +113,7 @@ class Router {
             if(isSet($_GET["secure_token"])) $token = $_GET["secure_token"];
             else if(isSet($_POST["secure_token"])) $token = $_POST["secure_token"];
             if( $token == "" || !AuthService::checkSecureToken($token)){
-                throw new Exception("You are not allowed to access this resource.");
+                throw new \Exception("You are not allowed to access this resource.");
             }
         }
 
