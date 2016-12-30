@@ -59,14 +59,14 @@ class Plugin implements \Serializable{
      * @var \DOMDocument
      */
     protected $manifestDoc;
-    
+
     /**
      * Internally store XML during serialization state.
      *
      * @var string
      */
     private $manifestXML;
-    
+
     private $serializableAttributes = array(
         "baseDir", 
         "id", 
@@ -81,7 +81,7 @@ class Plugin implements \Serializable{
         "mixins",
         "streamData",
         "options", "pluginConf", "pluginConfDefinition", "dependencies", "loadingState", "manifestXML");
-    
+
     /**
      * Construction method
      *
@@ -146,7 +146,7 @@ class Plugin implements \Serializable{
      * @throws Exception
      */
     public function performChecks(){
-        
+
     }
     /**
      * @return bool
@@ -176,7 +176,7 @@ class Plugin implements \Serializable{
                 $data = $this->nodeAttrToHash($regNode);
                 $filename = $data["filename"] OR "";
                 $include = $data["include"] OR "*";
-                $exclude = $data["exclude"] OR "";          
+                $exclude = $data["exclude"] OR "";
                 if(!is_file(BOA_PLUGINS_FOLDER."/".$filename)) continue;
                 if($include != "*") {
                     $include = explode(",", $include);
@@ -184,7 +184,7 @@ class Plugin implements \Serializable{
                     $include = array("*");
                 }
                 if($exclude != "") {
-                    $exclude = explode(",", $exclude);          
+                    $exclude = explode(",", $exclude);
                 }else{
                     $exclude = array();
                 }
@@ -311,7 +311,7 @@ class Plugin implements \Serializable{
                 continue;
                 /*
                 $actionData=array();
-                $actionData["XML"] = $contribNode->ownerDocument->saveXML($actionNode);         
+                $actionData["XML"] = $contribNode->ownerDocument->saveXML($actionNode);
                 $names = $actionXpath->query("@name", $actionNode);
                 $callbacks = $actionXpath->query("processing/serverCallback/@methodName", $actionNode);
                 if($callbacks->length){
@@ -401,11 +401,11 @@ class Plugin implements \Serializable{
         foreach ($serialArray as $key => $value){
             $this->$key = unserialize($value);
         }
-        if($this->manifestXML != NULL){         
+        if($this->manifestXML != NULL){
             //$this->manifestDoc = DOMDocument::loadXML(base64_decode($this->manifestXML));
             $this->manifestDoc = new \DOMDocument(1.0, "UTF-8");
             $this->manifestDoc->loadXML(base64_decode($this->manifestXML));
-            $this->reloadXPath();           
+            $this->reloadXPath();
             unset($this->manifestXML);
         }
         //var_dump($this);
@@ -533,7 +533,7 @@ class Plugin implements \Serializable{
                 }
                 $this->pluginConf[$paramNode["name"]] = $paramNode["default"];
             }
-        }                   
+        }
     }
     /**
      * Load the default values for this plugin options
@@ -574,7 +574,7 @@ class Plugin implements \Serializable{
         }
         // MERGE WITH PASSED CONFIGS
         $this->pluginConf = array_merge($this->pluginConf, $configData);
-        
+
         // PUBLISH IF NECESSARY
         foreach ($this->pluginConf as $key => $value){
             if(isSet($this->pluginConfDefinition[$key]) && isSet($this->pluginConfDefinition[$key]["expose"]) && $this->pluginConfDefinition[$key]["expose"] == "true"){
@@ -654,12 +654,11 @@ class Plugin implements \Serializable{
      * @return array|bool
      */
     public function detectStreamWrapper($register = false){
-        if(isSet($this->streamData)){            
+        if(isSet($this->streamData)){
             if($this->streamData === false) return false;
             $streamData = $this->streamData;
             // include wrapper, no other checks needed.
-            echo '<br>including ' . $streamData["filename"];
-            include_once(BOA_INSTALL_PATH."/".$streamData["filename"]);
+            include_once(BOA_PLUGINS_FOLDER."/".$streamData["filename"]);
         }else{
             $files = $this->xPath->query("class_stream_wrapper");
             if(!$files->length) {
@@ -667,12 +666,12 @@ class Plugin implements \Serializable{
                 return false;
             }
             $streamData = $this->nodeAttrToHash($files->item(0));
-            if(!is_file(BOA_INSTALL_PATH."/".$streamData["filename"])){
+            if(!is_file(BOA_PLUGINS_FOLDER."/".$streamData["filename"])){
                 $this->streamData = false;
                 return false;
             }
-            echo '<br>including ' . $streamData["filename"];
-            include_once(BOA_INSTALL_PATH."/".$streamData["filename"]);
+
+            include_once(BOA_PLUGINS_FOLDER."/".$streamData["filename"]);
             if(!class_exists($streamData["classname"])){
                 $this->streamData = false;
                 return false;
@@ -695,10 +694,10 @@ class Plugin implements \Serializable{
      * @return void
      */
     protected function exposeConfigInManifest($configName, $configValue){
-        $confBranch = $this->xPath->query("plugin_configs");        
-        if(!$confBranch->length){           
+        $confBranch = $this->xPath->query("plugin_configs");
+        if(!$confBranch->length){
             $configNode = $this->manifestDoc->importNode(new \DOMElement("plugin_configs", ""));
-            $this->manifestDoc->documentElement->appendChild($configNode);          
+            $this->manifestDoc->documentElement->appendChild($configNode);
         }else{
             $configNode = $confBranch->item(0);
         }
@@ -772,7 +771,7 @@ class Plugin implements \Serializable{
      */
     public function reloadXPath(){
         // Relaunch xpath
-        $this->xPath = new \DOMXPath($this->manifestDoc);       
+        $this->xPath = new \DOMXPath($this->manifestDoc);
     }
     /**
      * @param $mixinName
@@ -786,7 +785,7 @@ class Plugin implements \Serializable{
      * @return void
      */
     protected function loadMixins(){
-        
+
         $attr = $this->manifestDoc->documentElement->getAttribute("mixins");
         if($attr != ""){
             $this->mixins = explode(",", $attr);
@@ -795,7 +794,7 @@ class Plugin implements \Serializable{
             }
         }
     }
-    
+
     /**
      * Transform a simple node and its attributes to a HashTable
      *

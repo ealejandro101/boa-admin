@@ -21,6 +21,7 @@
 namespace BoA\Core\Utils\Filters;
 
 use BoA\Core\Http\Controller;
+use BoA\Core\Services\AuthService;
 
 defined('BOA_EXEC') or die( 'Access not allowed');
 

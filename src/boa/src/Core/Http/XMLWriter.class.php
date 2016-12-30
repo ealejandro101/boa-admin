@@ -21,6 +21,7 @@
 namespace BoA\Core\Http;
 
 use BoA\Core\Http\Controller;
+use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Text\SystemTextEncoding;

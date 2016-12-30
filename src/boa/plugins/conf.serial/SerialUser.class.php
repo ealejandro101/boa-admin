@@ -154,7 +154,7 @@ class SerialUser extends AbstractUser
 
         // LOAD USR ROLE LOCALLY
         $personalRole = Utils::loadSerialFile($this->getStoragePath()."/role.ser");
-        if(is_a($personalRole, "BOA_Role")){
+        if(is_a($personalRole, "BoA\Core\Security\Role")){
             $this->personalRole = $personalRole;
             $this->roles["BOA_USR_"."/".$this->id] = $personalRole;
         }else{

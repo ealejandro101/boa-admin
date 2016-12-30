@@ -28,10 +28,10 @@ defined('BOA_EXEC') or die( 'Access not allowed');
  * @package AjaXplorer
  * @subpackage Core
  */
-class ApplicationException extends Exception {
+class ApplicationException extends \Exception {
 	
-	function ApplicationException($messageString, $messageId = false){
-		if($messageId !== false && class_exists("ConfService")){
+	function __construct($messageString, $messageId = false){
+		if($messageId !== false && class_exists("BoA\Core\Services\ConfService")){
 			$messages = ConfService::getMessages();
 			if(array_key_exists($messageId, $messages)){
 				$messageString = $messages[$messageId];

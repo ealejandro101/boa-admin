@@ -26,7 +26,10 @@ use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Filters\VarsFilter;
 use BoA\Core\Utils\JSPacker;
+use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Plugins\Core\Log\Logger;
+
+use BoA\Plugins\Conf\Serial\SerialUser;
 
 defined('BOA_EXEC') or die('Access not allowed');
 
@@ -1207,6 +1210,10 @@ class Utils
         return preg_match( "!^$wrappers_re://!", $path ) === 1;
     }
 
+    static function my_err_handler($errno, $errstr, $errfile, $errline) {
+        echo '<br/>No:'.$errno.'. Mess: '.$errstr.'At line '.$errline.' of '.$errfile.'<br/>';
+        return false;
+    }
     /**
      * Load an array stored serialized inside a file.
      *
@@ -1228,6 +1235,34 @@ class Utils
         }
         if (is_file($filePath)) {
             $fileLines = file($filePath);
+            //if (preg_match('/roles\.ser$/', $filePath)) {
+                //echo '<br/> Loading file '.$filePath . '<br/>';
+                ////var_dump($fileLines);
+                ////$flog = fopen(BOA_DATA_PATH."/plugins/auth.serial/log.txt", "w") or die("Unable to open file!");
+                ////$content = $fileLines[0];
+                ////$search = array("9:\"AJXP_Role\"", "23:\"AJXP_USR_", "19:\"AJXP_REPO", "22:\"AJXP_REPO");
+                ////$replace = array("22:\"BoA\\Core\\Security\\Role\"", "22:\"BOA_USR_", "18:\"BOA_REPO", "21:\"BOA_REPO");
+                ////$content = str_replace($search, $replace, $fileLines[0]);
+                ////fwrite($flog, $fileLines[0]);
+                ////fwrite($flog, $content);
+                ////fclose($flog);
+                //////$sample = array( "BOA_USR_/Administrator" => new SerialUser("BOA_USR_/Administrator"));
+                //////echo '<br/>sample serialize<br/>';
+                //////var_dump($sample);
+                //////echo '<br/>unserialized file<br/>';
+                //////var_dump(unserialize(implode("", $fileLines)));
+                ////echo '<br/>serialized content<br/>';
+                ////$content = array($content);
+                ////var_dump($content);
+                ////set_error_handler("BoA\Core\Utils\Utils::my_err_handler", E_NOTICE);
+                ////$content = unserialize(implode("", $content));
+                ////echo '<br/>unserialized content<br/>';
+                ////var_dump($content);
+                ////Utils::saveSerialFile($filePath, $content);
+                ////$fileLines = file($filePath);
+                //var_dump($fileLines);
+                //var_dump(unserialize(implode("", $fileLines)));
+            //}
             if($format == "ser") $result = unserialize(implode("", $fileLines));
             else if($format == "json") $result = json_decode(implode("", $fileLines), true);
         }

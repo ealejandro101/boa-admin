@@ -28,6 +28,7 @@ use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
+use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Core\Xml\ManifestNode;
 use BoA\Plugins\Core\Log\Logger;
 

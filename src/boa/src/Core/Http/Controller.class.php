@@ -23,6 +23,7 @@ namespace BoA\Core\Http;
 use BoA\Core\Exceptions\ApplicationException;
 use BoA\Core\Http\XMLWriter;
 use BoA\Core\Services\AuthService;
+use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Plugins\Core\Log;
@@ -464,7 +465,7 @@ class Controller{
 		$xPath = self::initXPath();
 		$callbacks = $xPath->query("hooks/serverCallback[@hookName='$hookName']");
 		if(!$callbacks->length) return ;
-        $callback = new DOMNode();
+        $callback = new \DOMNode();
 		foreach ($callbacks as $callback){
             if($callback->getAttribute("applyCondition")!=""){
                 $apply = false;

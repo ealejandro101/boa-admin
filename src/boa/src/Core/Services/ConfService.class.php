@@ -20,6 +20,7 @@
  */
 namespace BoA\Core\Services;
 
+use BoA\Core\Access\Repository;
 use BoA\Core\Exceptions\ApplicationException;
 use BoA\Core\Plugins\Plugin;
 use BoA\Core\Services\PluginsService;
@@ -1214,7 +1215,7 @@ class ConfService
         foreach($nodeList as $node){
             $dName = $node->getAttribute("name");
             if($filterByDriverName != "" && $dName != $filterByDriverName) continue;
-            if($dName == "ajxp_conf" || $dName == "ajxp_shared") continue;
+            if($dName == "boaconf" || $dName == "boashared") continue;
             if($filterByTagName == ""){
                 $xmlBuffer .= $node->ownerDocument->saveXML($node);
                 continue;
