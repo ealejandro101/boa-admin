@@ -22,6 +22,7 @@ namespace BoA\Core\Access;
 
 use BoA\Core\Utils\Utils;
 use BoA\Core\Services\AuthService;
+use BoA\Core\Xml\ManifestNode;
 use BoA\Plugins\Core\Access\AbstractAccessDriver;
 
 defined('BOA_EXEC') or die( 'Access not allowed');
@@ -178,7 +179,7 @@ class UserSelection
         $currentFile = $this->getUniqueFile();
         $wrapperData = $accessDriver->detectStreamWrapper(false);
         $urlBase = $wrapperData["protocol"]."://".$accessDriver->repository->getId();
-        $ajxpNode = new Node($urlBase.$currentFile);
+        $ajxpNode = new ManifestNode($urlBase.$currentFile);
         return $ajxpNode;
 
     }
@@ -194,7 +195,7 @@ class UserSelection
         $urlBase = $wrapperData["protocol"]."://".$accessDriver->repository->getId();
         $nodes = array();
         foreach($this->files as $file){
-            $nodes[] = new Node($urlBase.$file);
+            $nodes[] = new ManifestNode($urlBase.$file);
         }
         return $nodes;
 

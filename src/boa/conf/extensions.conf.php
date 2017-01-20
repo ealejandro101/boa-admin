@@ -26,8 +26,8 @@
 defined('BOA_EXEC') or die( 'Access not allowed');
 
 $RESERVED_EXTENSIONS = array(
-	"folder"	=> array("ajxp_folder", "folder.png", 8),
-	"unkown" 	=> array("ajxp_empty", "mime_empty.png", 23)
+	"folder"	=> array("boa_folder", "folder.png", 8),
+	"unkown" 	=> array("boa_empty", "mime_empty.png", 23)
 );
 $EXTENSIONS = array(
 	// ALL FILES TYPES

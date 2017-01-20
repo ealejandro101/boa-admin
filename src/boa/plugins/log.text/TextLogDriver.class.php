@@ -23,6 +23,7 @@ namespace BoA\Plugins\Log\Text;
 use BoA\Core\Services\AuthService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Filters\VarsFilter;
+use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Plugins\Core\Log\AbstractLogDriver;
 use BoA\Plugins\Core\Log\Logger;
 

@@ -369,7 +369,7 @@ class Utils
         $fileName = strtolower($fileName);
         $EXTENSIONS = ConfService::getRegisteredExtensions();
         if ($isDir) {
-            $mime = $EXTENSIONS["ajxp_folder"];
+            $mime = $EXTENSIONS["boa_folder"];
         } else {
             foreach ($EXTENSIONS as $ext) {
                 if (preg_match("/\.$ext[0]$/", $fileName)) {
@@ -379,7 +379,7 @@ class Utils
             }
         }
         if (!isSet($mime)) {
-            $mime = $EXTENSIONS["ajxp_empty"];
+            $mime = $EXTENSIONS["boa_empty"];
         }
         if (is_numeric($mime[2]) || array_key_exists($mime[2], $mess)) {
             $mime[2] = $mess[$mime[2]];
@@ -394,18 +394,18 @@ class Utils
             self::$registeredExtensions = ConfService::getRegisteredExtensions();
         }
         if ($isDir) {
-            $mime = self::$registeredExtensions["ajxp_folder"];
+            $mime = self::$registeredExtensions["boa_folder"];
         } else {
             $pos = strrpos($fileName, ".");
             if($pos !== false){
                 $fileExt = substr($fileName, $pos + 1);
-                if(!empty($fileExt) && array_key_exists($fileExt, self::$registeredExtensions) && $fileExt != "ajxp_folder" && $fileExt != "ajxp_empty"){
+                if(!empty($fileExt) && array_key_exists($fileExt, self::$registeredExtensions) && $fileExt != "boa_folder" && $fileExt != "boa_empty"){
                     $mime = self::$registeredExtensions[$fileExt];
                 }
             }
         }
         if (!isSet($mime)) {
-            $mime = self::$registeredExtensions["ajxp_empty"];
+            $mime = self::$registeredExtensions["boa_empty"];
         }
         return array($mime[2], $mime[1]);
 
@@ -1583,48 +1583,48 @@ class Utils
     }
 
     public static function runCreateTablesQuery($p, $file){
-        require_once(BOA_BIN_FOLDER."/dibi.compact.php");
+        require_once(BOA_VENDOR_FOLDER."/dibi/dibi.compact.php");
         $result = array();
         if($p["driver"] == "sqlite" || $p["driver"] == "sqlite3"){
             if(!file_exists(dirname($p["database"]))){
                 @mkdir(dirname($p["database"]), 0755, true);
             }
-            dibi::connect($p);
+            \dibi::connect($p);
             $file = dirname($file) ."/". str_replace(".sql", ".sqlite", basename($file) );
             $sql = file_get_contents($file);
-            dibi::begin();
+            \dibi::begin();
             $parts = explode("CREATE TABLE", $sql);
             foreach($parts as $createPart){
                 if(empty($createPart)) continue;
                 $sqlPart = trim("CREATE TABLE".$createPart);
                 try{
-                    dibi::nativeQuery($sqlPart);
+                    \dibi::nativeQuery($sqlPart);
                     $resKey = str_replace("\n", "", substr($sqlPart, 0, 50))."...";
                     $result[] = "OK: $resKey executed successfully";
-                }catch (DibiException $e){
+                }catch (\DibiException $e){
                     $result[] = "ERROR! $sqlPart failed";
                 }
             }
             $message = implode("\n", $result);
-            dibi::commit();
-            dibi::disconnect();
+            \dibi::commit();
+            \dibi::disconnect();
         }else{
-            dibi::connect($p);
+            \dibi::connect($p);
             $sql = file_get_contents($file);
             $parts = explode("CREATE TABLE", $sql);
             foreach($parts as $createPart){
                 if(empty($createPart)) continue;
                 $sqlPart = trim("CREATE TABLE".$createPart);
                 try{
-                    dibi::nativeQuery($sqlPart);
+                    \dibi::nativeQuery($sqlPart);
                     $resKey = str_replace("\n", "", substr($sqlPart, 0, 50))."...";
                     $result[] = "OK: $resKey executed successfully";
-                }catch (DibiException $e){
+                }catch (\DibiException $e){
                     $result[] = "ERROR! $sqlPart failed";
                 }
             }
             $message = implode("\n", $result);
-            dibi::disconnect();
+            \dibi::disconnect();
         }
         if(strpos($message, "ERROR!")) return $message;
         else return "SUCCESS:".$message;

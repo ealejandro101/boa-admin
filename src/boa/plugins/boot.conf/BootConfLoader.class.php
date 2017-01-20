@@ -296,10 +296,10 @@ class BootConfLoader extends AbstractConfDriver {
                 }
             }
 
-            require_once(BOA_BIN_FOLDER."/dibi.compact.php");
+            require_once(BOA_VENDOR_FOLDER."/dibi/dibi.compact.php");
             // Should throw an exception if there was a problem.
-            dibi::connect($p);
-            dibi::disconnect();
+            \dibi::connect($p);
+            \dibi::disconnect();
             echo 'SUCCESS:Connexion established!';
 
         }else if($action == "boot_test_mailer"){

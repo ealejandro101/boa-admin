@@ -25,7 +25,7 @@
                       editable="true"
                       uploadAction="store_binary_temp"
                       loadAction="get_global_binary_param"
-                      defaultImage="gui.ajax/res/themes/umbra/images/white_logo.png"
+                      defaultImage="plugins/gui.ajax/res/themes/umbra/images/white_logo.png"
                       expose="true"
                 />
         <global_param name="CUSTOM_TOP_LOGO_H" group="CONF_MESSAGE[Top Toolbar]" type="integer" label="CONF_MESSAGE[Logo Height]" description="CONF_MESSAGE[Manually set a logo height]" mandatory="false" default="39" expose="true"/>

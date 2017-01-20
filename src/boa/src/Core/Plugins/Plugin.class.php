@@ -20,6 +20,7 @@
  */
 namespace BoA\Core\Plugins;
 
+use BoA\Core\Http\XMLWriter;
 use BoA\Core\Services\PluginsService;
 
 defined('BOA_EXEC') or die( 'Access not allowed');
@@ -362,7 +363,7 @@ class Plugin implements \Serializable{
      */
     public function getManifestLabel(){
         $l = $this->xPath->query("@label", $this->manifestDoc->documentElement);
-        if($l->length) return BOA_XMLWriter::replaceAjxpXmlKeywords($l->item(0)->nodeValue);
+        if($l->length) return XMLWriter::replaceAjxpXmlKeywords($l->item(0)->nodeValue);
         else return $this->id;
     }
     /**
@@ -371,7 +372,7 @@ class Plugin implements \Serializable{
      */
     public function getManifestDescription(){
         $l = $this->xPath->query("@description", $this->manifestDoc->documentElement);
-        if($l->length) return BOA_XMLWriter::replaceAjxpXmlKeywords($l->item(0)->nodeValue);
+        if($l->length) return XMLWriter::replaceAjxpXmlKeywords($l->item(0)->nodeValue);
         else return "";
     }
 

@@ -12,7 +12,7 @@
     </plugin_info>
     <client_settings>
         <resources>
-            <i18n namespace="" path="plugins/core.boa/i18n"/>
+            <i18n namespace="" path="core.boa/i18n"/>
         </resources>
     </client_settings>
 	<server_settings>

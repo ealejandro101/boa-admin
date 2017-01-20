@@ -26,8 +26,10 @@ use BoA\Core\Access\RecycleBinManager;
 use BoA\Core\Access\UserSelection;
 use BoA\Core\Exceptions\ApplicationException;
 use BoA\Core\Http\Controller;
+use BoA\Core\Http\HTMLWriter;
 use BoA\Core\Http\XMLWriter;
 use BoA\Core\Security\Credential;
+use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Text\SystemTextEncoding;
@@ -37,11 +39,6 @@ use BoA\Plugins\Core\Log\Logger;
 use BoA\Plugins\Access\Fs\FsAccessWrapper;
 
 defined('BOA_EXEC') or die( 'Access not allowed');
-
-// This is used to catch exception while downloading
-if(!function_exists('download_exception_handler')){
-    function download_exception_handler($exception){}
-}
 
 /**
  * Plugin to access a filesystem. Most "FS" like driver (even remote ones)
@@ -939,7 +936,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
             $metaData["icon"] = $recycleIcon;
             $metaData["mimestring"] = $mess[122];
             $ajxpNode->setLabel($mess[122]);
-            $metaData["ajxp_mime"] = "ajxp_recycle";
+            $metaData["boa_mime"] = "ajxp_recycle";
         }else{
             $mimeData = Utils::mimeData($ajxpNode->getUrl(), !$isLeaf);
             $metaData["mimestring_id"] = $mimeData[0]; //Utils::mimetype($ajxpNode->getUrl(), "type", !$isLeaf);
@@ -948,7 +945,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                 $metaData["openicon"] = "folder_open.png";
             }
             if(!$isLeaf){
-                $metaData["ajxp_mime"] = "ajxp_folder";
+                $metaData["boa_mime"] = "boa_folder";
             }
         }
         //if($lsOptions["l"]){
@@ -984,7 +981,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         }
         $metaData["filesize"] = Utils::roundSize($metaData["bytesize"]);
         if(Utils::isBrowsableArchive($nodeName)){
-            $metaData["ajxp_mime"] = "ajxp_browsable_archive";
+            $metaData["boa_mime"] = "ajxp_browsable_archive";
         }
 
         if($details == "minimal"){
@@ -1079,8 +1076,12 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         return false;
     }
 
-    function readFile($filePathOrData, $headerType="plain", $localName="", $data=false, $gzip=null, $realfileSystem=false, $byteOffset=-1, $byteLength=-1)
-    {
+    // This is used to catch exception while downloading
+    function download_exception_handler($exception){
+
+    }
+
+    function readFile($filePathOrData, $headerType="plain", $localName="", $data=false, $gzip=null, $realfileSystem=false, $byteOffset=-1, $byteLength=-1){
         if($gzip === null){
             $gzip = ConfService::getCoreConf("GZIP_COMPRESSION");
         }
@@ -1093,8 +1094,8 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         restore_error_handler();
         restore_exception_handler();
 
-        set_exception_handler('download_exception_handler');
-        set_error_handler('download_exception_handler');
+        set_exception_handler(array($this, 'download_exception_handler'));
+        set_error_handler(array($this, 'download_exception_handler'));
         // required for IE, otherwise Content-disposition is ignored
         if(ini_get('zlib.output_compression')) { 
          Utils::safeIniSet('zlib.output_compression', 'Off'); 
@@ -1317,14 +1318,14 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
      * @param array $success
      */
     function extractArchive($destDir, $selection, &$error, &$success){
-        require_once(BOA_BIN_FOLDER."/pclzip.lib.php");
+        require_once(BOA_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
         $zipPath = $selection->getZipPath(true);
         $zipLocalPath = $selection->getZipLocalPath(true);
         if(strlen($zipLocalPath)>1 && $zipLocalPath[0] == "/") $zipLocalPath = substr($zipLocalPath, 1)."/";
         $files = $selection->getFiles();
 
         $realZipFile = call_user_func(array($this->wrapperClassName, "getRealFSReference"), $this->urlBase.$zipPath);
-        $archive = new PclZip($realZipFile);
+        $archive = new \PclZip($realZipFile);
         $content = $archive->listContent();
         foreach ($files as $key => $item){// Remove path
             $item = substr($item, strlen($zipPath));
@@ -1834,7 +1835,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
     function makeZip ($src, $dest, $basedir)
     {
         @set_time_limit(0);
-        require_once(BOA_BIN_FOLDER."/pclzip.lib.php");
+        require_once(BOA_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
         $filePaths = array();
         foreach ($src as $item){
             $realFile = call_user_func(array($this->wrapperClassName, "getRealFSReference"), $this->urlBase."/".$item);
@@ -1850,8 +1851,8 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         Logger::debug("Pathes", $filePaths);
         Logger::debug("Basedir", array($basedir));
         self::$filteringDriverInstance = $this;
-        $archive = new PclZip($dest);
-        $vList = $archive->create($filePaths, PCLZIP_OPT_REMOVE_PATH, $basedir, PCLZIP_OPT_NO_COMPRESSION, PCLZIP_OPT_ADD_TEMP_FILE_ON, PCLZIP_CB_PRE_ADD, 'zipPreAddCallback');
+        $archive = new \PclZip($dest);
+        $vList = $archive->create($filePaths, PCLZIP_OPT_REMOVE_PATH, $basedir, PCLZIP_OPT_NO_COMPRESSION, PCLZIP_OPT_ADD_TEMP_FILE_ON, PCLZIP_CB_PRE_ADD, array($this, 'zipPreAddCallback'));
         if(!$vList){
             throw new \Exception("Zip creation error : ($dest) ".$archive->errorInfo(true));
         }
@@ -1913,7 +1914,6 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         }
         return $newOptions;
     }
-}
 
     function zipPreAddCallback($value, $header){
         if(FsAccessDriver::$filteringDriverInstance == null) return true;
@@ -1921,3 +1921,5 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         return !(FsAccessDriver::$filteringDriverInstance->filterFile($search) 
         || FsAccessDriver::$filteringDriverInstance->filterFolder($search, "contains"));
     }
+}
+

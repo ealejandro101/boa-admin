@@ -84,7 +84,7 @@ class JSPacker{
 		}
 		
 		// Pack and write to file
-		require_once("packer/class.JavaScriptPacker.php");
+		require_once(BOA_VENDOR_FOLDER."/packer/class.JavaScriptPacker.php");
 		$packer = new JavaScriptPacker($jscode, $mode , true, false);
 		$packed = $packer->pack();
 		if($mode == "None"){ // css case, hack for I.E.

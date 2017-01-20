@@ -20,6 +20,7 @@
  */
 namespace BoA\Plugins\Core\Access;
 
+use BoA\Core\Access\UserSelection;
 use BoA\Core\Http\Controller;
 use BoA\Core\Http\XMLWriter;
 use BoA\Core\Plugins\Plugin;

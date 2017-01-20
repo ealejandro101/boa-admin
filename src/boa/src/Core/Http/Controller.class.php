@@ -25,6 +25,7 @@ use BoA\Core\Http\XMLWriter;
 use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
+use BoA\Core\Utils\ShutdownScheduler;
 use BoA\Core\Utils\Utils;
 use BoA\Plugins\Core\Log;
 

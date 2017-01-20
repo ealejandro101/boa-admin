@@ -21,13 +21,14 @@
  */
 namespace BoA\Plugins\Access\BoAConf;
 
-use BoA\Core\Html\Controller;
+use BoA\Core\Http\Controller;
 use BoA\Core\Plugins\Plugin;
 use BoA\Core\Security\Role;
 use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
+use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Core\Http\XMLWriter;
 use BoA\Plugins\Core\Access\AbstractAccessDriver;
 use BoA\Plugins\Core\Log\Logger;
@@ -206,35 +207,35 @@ class ConfAccessDriver extends AbstractAccessDriver
 
                 $rootNodes = array(
                     "data" => array(
-                        "LABEL" => $mess["ajxp_conf.110"],
+                        "LABEL" => $mess["boaconf.110"],
                         "ICON" => "user.png",
                         "DESCRIPTION" => "Day-to-day administration of the application : who accesses to what, create roles, etc.",
                         "CHILDREN" => array(
                             "repositories" => array(
-                                "LABEL" => $mess["ajxp_conf.3"],
+                                "LABEL" => $mess["boaconf.3"],
                                 "DESCRIPTION" => "Create and delete workspaces, add features to them using meta sources.",
                                 "ICON" => "hdd_external_unmount.png",
                                 "LIST" => "listRepositories"),
                             "users" => array(
-                                "LABEL" => $mess["ajxp_conf.2"],
+                                "LABEL" => $mess["boaconf.2"],
                                 "DESCRIPTION" => "Manage users and groups",
                                 "ICON" => "users-folder.png",
                                 "LIST" => "listUsers"
                             ),
                             "roles" => array(
-                                "LABEL" => $mess["ajxp_conf.69"],
+                                "LABEL" => $mess["boaconf.69"],
                                 "DESCRIPTION" => "Define profiles that can be applied at once to whole bunch of users.",
                                 "ICON" => "user-acl.png",
                                 "LIST" => "listRoles"),
                         )
                     ),
                     "config" => array(
-                        "LABEL" => $mess["ajxp_conf.109"],
+                        "LABEL" => $mess["boaconf.109"],
                         "ICON" => "preferences_desktop.png",
                         "DESCRIPTION" => "Global configurations of the application core and of each plugin. Enable/disable plugins",
                         "CHILDREN" => array(
                             "core"	   	   => array(
-                                "LABEL" => $mess["ajxp_conf.98"],
+                                "LABEL" => $mess["boaconf.98"],
                                 "DESCRIPTION" => "Core application parameters",
                                 "ICON" => "preferences_desktop.png",
                                 "LIST" => "listPlugins"),
@@ -244,29 +245,29 @@ class ConfAccessDriver extends AbstractAccessDriver
                                 "ICON" => "folder_development.png",
                                 "LIST" => "listPlugins"),
                             "plugins"	   => array(
-                                "LABEL" => $mess["ajxp_conf.99"],
+                                "LABEL" => $mess["boaconf.99"],
                                 "DESCRIPTION" => "Enable/disable additional feature-oriented plugins, check if they are correctly working, set up global parameters of the plugins.",
                                 "ICON" => "folder_development.png",
                                 "LIST" => "listPlugins")
                         )
                     ),
                     "admin" => array(
-                        "LABEL" => $mess["ajxp_conf.111"],
+                        "LABEL" => $mess["boaconf.111"],
                         "ICON" => "toggle_log.png",
                         "DESCRIPTION" => "Administrator tasks to monitor the application state.",
                         "CHILDREN" => array(
                             "logs" => array(
-                                "LABEL" => $mess["ajxp_conf.4"],
+                                "LABEL" => $mess["boaconf.4"],
                                 "DESCRIPTION" => "Monitor all activities happening on the server",
                                 "ICON" => "toggle_log.png",
                                 "LIST" => "listLogFiles"),
                             "files" => array(
-                                "LABEL" => $mess["ajxp_shared.3"],
+                                "LABEL" => $mess["shared.3"],
                                 "DESCRIPTION" => "Monitor all files shared as public links by every users",
                                 "ICON" => "html.png",
                                 "LIST" => "listSharedFiles"),
                             "diagnostic" => array(
-                                "LABEL" => $mess["ajxp_conf.5"],
+                                "LABEL" => $mess["boaconf.5"],
                                 "DESCRIPTION" => "Read the start-up diagnostic generated by AjaXplorer",
                                 "ICON" => "susehelpcenter.png", "LIST" => "printDiagnostic")
                         )
@@ -330,7 +331,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                 }
                 if(isSet($nodes)){
                     XMLWriter::header();
-                    if(!isSet($httpVars["file"])) XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail"><column messageId="ajxp_conf.1" attributeName="ajxp_label" sortType="String"/><column messageId="ajxp_conf.102" attributeName="description" sortType="String"/></columns>');
+                    if(!isSet($httpVars["file"])) XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail"><column messageId="boaconf.1" attributeName="ajxp_label" sortType="String"/><column messageId="boaconf.102" attributeName="description" sortType="String"/></columns>');
                     foreach ($nodes as $key => $data){
                         print '<tree text="'.Utils::xmlEntities($data["LABEL"]).'" description="'.Utils::xmlEntities($data["DESCRIPTION"]).'" icon="'.$data["ICON"].'" filename="'.$parentName.$key.'"/>';
                     }
@@ -369,10 +370,10 @@ class ConfAccessDriver extends AbstractAccessDriver
             case "create_role":
 				$roleId = Utils::sanitize(SystemTextEncoding::magicDequote($httpVars["role_id"]), BOA_SANITIZE_HTML_STRICT);
 				if(!strlen($roleId)){
-					throw new Exception($mess[349]);
+					throw new \Exception($mess[349]);
 				}
 				if(AuthService::getRole($roleId) !== false){
-					throw new Exception($mess["ajxp_conf.65"]);
+					throw new \Exception($mess["boaconf.65"]);
 				}
                 $r = new Role($roleId);
                 if(AuthService::getLoggedUser()!=null && AuthService::getLoggedUser()->getGroupPath()!=null){
@@ -380,7 +381,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                 }
 				AuthService::updateRole($r);
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.66"], null);
+				XMLWriter::sendMessage($mess["boaconf.66"], null);
 				XMLWriter::reloadDataNode("", $httpVars["role_id"]);
 				XMLWriter::close();				
 			break;
@@ -393,7 +394,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $groups = AuthService::listChildrenGroups(dirname($groupPath));
                     $key = "/".basename($groupPath);
                     if(!array_key_exists($key, $groups)){
-                        throw new Exception("Cannot find group with this id!");
+                        throw new \Exception("Cannot find group with this id!");
                     }
                     $roleId = "BOA_GRP_".$groupPath;
                     $groupLabel = $groups[$key];
@@ -407,7 +408,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $role = AuthService::getRole($roleId, $roleGroup);
                 }
 				if($role === false) {
-                    throw new Exception("Cant find role! ");
+                    throw new \Exception("Cant find role! ");
 				}
                 if(isSet($httpVars["format"]) && $httpVars["format"] == "json"){
                     HTMLWriter::charsetHeader("application/json");
@@ -464,7 +465,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $groups = AuthService::listChildrenGroups(dirname($groupPath));
                     $key = "/".basename($groupPath);
                     if(!array_key_exists($key, $groups)){
-                        throw new Exception("Cannot find group with this id!");
+                        throw new \Exception("Cannot find group with this id!");
                     }
                     $groupLabel = $groups[$key];
                     $roleGroup = true;
@@ -478,7 +479,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $originalRole = AuthService::getRole($roleId, $roleGroup);
                 }
                 if($originalRole === false) {
-                    throw new Exception("Cant find role! ");
+                    throw new \Exception("Cant find role! ");
                 }
 
                 $jsonData = Utils::decodeSecureMagic($httpVars["json_data"]);
@@ -521,7 +522,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                         AuthService::updateRole($originalRole);
                     }
                     $output = array("ROLE" => $originalRole->getDataArray(), "SUCCESS" => true);
-                }catch (Exception $e){
+                }catch (\Exception $e){
                     $output = array("ERROR" => $e->getMessage());
                 }
                 HTMLWriter::charsetHeader("application/json");
@@ -552,7 +553,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				if(!isset($httpVars["new_user_login"]) || $httpVars["new_user_login"] == "" ||!isset($httpVars["new_user_pwd"]) || $httpVars["new_user_pwd"] == "")
 				{
 					XMLWriter::header();
-					XMLWriter::sendMessage(null, $mess["ajxp_conf.61"]);
+					XMLWriter::sendMessage(null, $mess["boaconf.61"]);
 					XMLWriter::close();
 					return;						
 				}
@@ -560,7 +561,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				if(AuthService::userExists($new_user_login, "w") || AuthService::isReservedUserId($new_user_login))
 				{
 					XMLWriter::header();
-					XMLWriter::sendMessage(null, $mess["ajxp_conf.43"]);
+					XMLWriter::sendMessage(null, $mess["boaconf.43"]);
 					XMLWriter::close();
 					return;									
 				}
@@ -578,7 +579,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 
 				$newUser->save("superuser");
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.44"], null);
+				XMLWriter::sendMessage($mess["boaconf.44"], null);
 				XMLWriter::reloadDataNode("", $new_user_login);
 				XMLWriter::close();
 														
@@ -587,14 +588,14 @@ class ConfAccessDriver extends AbstractAccessDriver
 			case "change_admin_right" :
 				$userId = $httpVars["user_id"];
 				if(!AuthService::userExists($userId)){
-					throw new Exception("Invalid user id!");
+					throw new \Exception("Invalid user id!");
 				}				
 				$confStorage = ConfService::getConfStorageImpl();		
 				$user = $confStorage->createUserObject($userId);
 				$user->setAdmin(($httpVars["right_value"]=="1"?true:false));
 				$user->save("superuser");
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.45"].$httpVars["user_id"], null);
+				XMLWriter::sendMessage($mess["boaconf.45"].$httpVars["user_id"], null);
 				XMLWriter::reloadDataNode();
 				XMLWriter::close();
 				
@@ -607,7 +608,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					|| !AuthService::userExists($httpVars["user_id"]))
 				{
 					XMLWriter::header();
-					XMLWriter::sendMessage(null, $mess["ajxp_conf.61"]);
+					XMLWriter::sendMessage(null, $mess["boaconf.61"]);
 					print("<update_checkboxes user_id=\"".$httpVars["user_id"]."\" repository_id=\"".$httpVars["repository_id"]."\" read=\"old\" write=\"old\"/>");
 					XMLWriter::close();
 					return;
@@ -621,7 +622,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					AuthService::updateUser($user);
 				}
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.46"].$httpVars["user_id"], null);
+				XMLWriter::sendMessage($mess["boaconf.46"].$httpVars["user_id"], null);
 				print("<update_checkboxes user_id=\"".$httpVars["user_id"]."\" repository_id=\"".$httpVars["repository_id"]."\" read=\"".$user->canRead($httpVars["repository_id"])."\" write=\"".$user->canWrite($httpVars["repository_id"])."\"/>");
 				XMLWriter::reloadRepositoryList();
 				XMLWriter::close();
@@ -672,7 +673,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 			case "user_delete_role":
 			
 				if(!isSet($httpVars["user_id"]) || !isSet($httpVars["role_id"]) || !AuthService::userExists($httpVars["user_id"]) || !AuthService::getRole($httpVars["role_id"])){
-					throw new Exception($mess["ajxp_conf.61"]);
+					throw new \Exception($mess["boaconf.61"]);
 				}
 				if($action == "user_add_role"){
 					$act = "add";
@@ -683,7 +684,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				}
 				$this->updateUserRole($httpVars["user_id"], $httpVars["role_id"], $act);
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.".$messId].$httpVars["user_id"], null);
+				XMLWriter::sendMessage($mess["boaconf.".$messId].$httpVars["user_id"], null);
 				XMLWriter::close();
 				return ;
 				
@@ -701,7 +702,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					$update = $httpVars["update_role_action"];
 					$roleId = $httpVars["role_id"];
 					if(AuthService::getRole($roleId) === false){
-						throw new Exception("Invalid role id");
+						throw new \Exception("Invalid role id");
 					}
 				}
 				foreach ($files as $index => $file){
@@ -759,7 +760,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					AuthService::updateUser($user);
 				}
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.47"].$httpVars["user_id"], null);
+				XMLWriter::sendMessage($mess["boaconf.47"].$httpVars["user_id"], null);
 				XMLWriter::close();
 					
 			break;
@@ -788,7 +789,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					AuthService::updateUser($user);
 				}
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.47"].$httpVars["user_id"], null);
+				XMLWriter::sendMessage($mess["boaconf.47"].$httpVars["user_id"], null);
 				XMLWriter::close();
 					
 			break;
@@ -797,7 +798,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				if(!isSet($httpVars["user_id"]) || !isSet($httpVars["user_pwd"]) || !AuthService::userExists($httpVars["user_id"]) || trim($httpVars["user_pwd"]) == "")
 				{
 					XMLWriter::header();
-					XMLWriter::sendMessage(null, $mess["ajxp_conf.61"]);
+					XMLWriter::sendMessage(null, $mess["boaconf.61"]);
 					XMLWriter::close();
 					return;			
 				}
@@ -805,11 +806,11 @@ class ConfAccessDriver extends AbstractAccessDriver
 				XMLWriter::header();
 				if($res === true)
 				{
-					XMLWriter::sendMessage($mess["ajxp_conf.48"].$httpVars["user_id"], null);
+					XMLWriter::sendMessage($mess["boaconf.48"].$httpVars["user_id"], null);
 				}
 				else 
 				{
-					XMLWriter::sendMessage(null, $mess["ajxp_conf.49"]." : $res");
+					XMLWriter::sendMessage(null, $mess["boaconf.49"]." : $res");
 				}
 				XMLWriter::close();
 										
@@ -818,7 +819,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             case "save_user_preference":
 
                 if(!isSet($httpVars["user_id"]) || !AuthService::userExists($httpVars["user_id"]) ){
-                    throw new Exception($mess["ajxp_conf.61"]);
+                    throw new \Exception($mess["boaconf.61"]);
                 }
                 $userId = $httpVars["user_id"];
                 if($userId == $loggedUser->getId()){
@@ -898,7 +899,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					$newRep = $templateRepo->createTemplateChild($repDef["DISPLAY"], $repDef["DRIVER_OPTIONS"]);
 				}else{
                     if($currentUserIsGroupAdmin){
-                        throw new Exception("You are not allowed to create a repository from a driver. Use a template instead.");
+                        throw new \Exception("You are not allowed to create a repository from a driver. Use a template instead.");
                     }
                     $pServ = PluginsService::getInstance();
                     $driver = $pServ->getPluginByTypeName("access", $repDef["DRIVER"]);
@@ -944,7 +945,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                 if ($this->repositoryExists($newRep->getDisplay()))
                 {
 					XMLWriter::header();
-					XMLWriter::sendMessage(null, $mess["ajxp_conf.50"]);
+					XMLWriter::sendMessage(null, $mess["boaconf.50"]);
 					XMLWriter::close();
 					return;
                 }
@@ -965,7 +966,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				$res = ConfService::addRepository($newRep);
 				XMLWriter::header();
 				if($res == -1){
-					XMLWriter::sendMessage(null, $mess["ajxp_conf.51"]);
+					XMLWriter::sendMessage(null, $mess["boaconf.51"]);
 				}else{
 					$loggedUser = AuthService::getLoggedUser();
 					$loggedUser->personalRole->setAcl($newRep->getUniqueId(), "rw");
@@ -973,7 +974,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					$loggedUser->save("superuser");
 					AuthService::updateUser($loggedUser);
 					
-					XMLWriter::sendMessage($mess["ajxp_conf.52"], null);
+					XMLWriter::sendMessage($mess["boaconf.52"], null);
 					XMLWriter::reloadDataNode("", $newRep->getUniqueId());
 					XMLWriter::reloadRepositoryList();
 				}
@@ -987,15 +988,15 @@ class ConfAccessDriver extends AbstractAccessDriver
 				$repId = $httpVars["repository_id"];
                 $repository = ConfService::getRepositoryById($repId);
                 if($repository == null){
-                    throw new Exception("Cannot find repository with id $repId");
+                    throw new \Exception("Cannot find repository with id $repId");
                 }
                 if(!AuthService::canAdministrate($repository)){
-                    throw new Exception("You are not allowed to edit this repository!");
+                    throw new \Exception("You are not allowed to edit this repository!");
                 }
 				$pServ = PluginsService::getInstance();
 				$plug = $pServ->getPluginById("access.".$repository->accessType);
 				if($plug == null){
-					throw new Exception("Cannot find access driver (".$repository->accessType.") for repository!");
+					throw new \Exception("Cannot find access driver (".$repository->accessType.") for repository!");
 				}				
 				XMLWriter::header("admin_data");		
 				$slug = $repository->getSlug();
@@ -1094,7 +1095,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     if ($this->repositoryExists($newLabel))
                     {
 		     			XMLWriter::header();
-			    		XMLWriter::sendMessage(null, $mess["ajxp_conf.50"]);
+			    		XMLWriter::sendMessage(null, $mess["boaconf.50"]);
 				    	XMLWriter::close();
 					    return;
                     }
@@ -1150,9 +1151,9 @@ class ConfAccessDriver extends AbstractAccessDriver
 				}
 				XMLWriter::header();
 				if($res == -1){
-					XMLWriter::sendMessage(null, $mess["ajxp_conf.53"]);
+					XMLWriter::sendMessage(null, $mess["boaconf.53"]);
 				}else{
-					XMLWriter::sendMessage($mess["ajxp_conf.54"], null);					
+					XMLWriter::sendMessage($mess["boaconf.54"], null);					
 					XMLWriter::reloadDataNode("", (isSet($httpVars["newLabel"])?$repId:false));
 					XMLWriter::reloadRepositoryList();
 				}
@@ -1164,7 +1165,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				$repId = $httpVars["repository_id"];
 				$repo = ConfService::getRepositoryById($repId);
 				if(!is_object($repo)){
-					throw new Exception("Invalid repository id! $repId");
+					throw new \Exception("Invalid repository id! $repId");
 				}
 				$metaSourceType = Utils::sanitize($httpVars["new_meta_source"], BOA_SANITIZE_ALPHANUM);
                 if(isSet($httpVars["json_data"])){
@@ -1175,7 +1176,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                 }
 				$repoOptions = $repo->getOption("META_SOURCES");
 				if(is_array($repoOptions) && isSet($repoOptions[$metaSourceType])){
-					throw new Exception($mess["ajxp_conf.55"]);
+					throw new \Exception($mess["boaconf.55"]);
 				}
 				if(!is_array($repoOptions)){
 					$repoOptions = array();
@@ -1185,7 +1186,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				$repo->addOption("META_SOURCES", $repoOptions);
 				ConfService::replaceRepository($repId, $repo);
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.56"],null);
+				XMLWriter::sendMessage($mess["boaconf.56"],null);
 				XMLWriter::close();
 			break;
 						
@@ -1194,7 +1195,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				$repId = $httpVars["repository_id"];
 				$repo = ConfService::getRepositoryById($repId);
 				if(!is_object($repo)){
-					throw new Exception("Invalid repository id! $repId");
+					throw new \Exception("Invalid repository id! $repId");
 				}
 				$metaSourceId = $httpVars["plugId"];
 				$repoOptions = $repo->getOption("META_SOURCES");
@@ -1205,7 +1206,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					ConfService::replaceRepository($repId, $repo);
 				}
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.57"],null);
+				XMLWriter::sendMessage($mess["boaconf.57"],null);
 				XMLWriter::close();
 
 			break;
@@ -1214,7 +1215,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				$repId = $httpVars["repository_id"];
 				$repo = ConfService::getRepositoryById($repId);
 				if(!is_object($repo)){
-					throw new Exception("Invalid repository id! $repId");
+					throw new \Exception("Invalid repository id! $repId");
 				}				
 				$metaSourceId = $httpVars["plugId"];
                 $repoOptions = $repo->getOption("META_SOURCES");
@@ -1232,7 +1233,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				$repo->addOption("META_SOURCES", $repoOptions);
 				ConfService::replaceRepository($repId, $repo);
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.58"],null);
+				XMLWriter::sendMessage($mess["boaconf.58"],null);
 				XMLWriter::close();
 			break;
 									
@@ -1267,9 +1268,9 @@ class ConfAccessDriver extends AbstractAccessDriver
 					$res = ConfService::deleteRepository($repId);
 					XMLWriter::header();
 					if($res == -1){
-						XMLWriter::sendMessage(null, $mess["ajxp_conf.51"]);
+						XMLWriter::sendMessage(null, $mess["boaconf.51"]);
 					}else{
-						XMLWriter::sendMessage($mess["ajxp_conf.59"], null);						
+						XMLWriter::sendMessage($mess["boaconf.59"], null);						
 						XMLWriter::reloadDataNode();
 						XMLWriter::reloadRepositoryList();
 					}
@@ -1281,17 +1282,17 @@ class ConfAccessDriver extends AbstractAccessDriver
 					$dlFolder = ConfService::getCoreConf("PUBLIC_DOWNLOAD_FOLDER");
 					$publicletData = $this->loadPublicletData($dlFolder."/".$element.".php");
 					unlink($dlFolder."/".$element.".php");
-					XMLWriter::sendMessage($mess["ajxp_shared.13"], null);
+					XMLWriter::sendMessage($mess["shared.13"], null);
 					XMLWriter::reloadDataNode();
 					XMLWriter::close();					
 				}else if(isSet($httpVars["role_id"])){
 					$roleId = $httpVars["role_id"];
 					if(AuthService::getRole($roleId) === false){
-						throw new Exception($mess["ajxp_conf.67"]);
+						throw new \Exception($mess["boaconf.67"]);
 					}
 					AuthService::deleteRole($roleId);
 					XMLWriter::header();
-					XMLWriter::sendMessage($mess["ajxp_conf.68"], null);
+					XMLWriter::sendMessage($mess["boaconf.68"], null);
 					XMLWriter::reloadDataNode();
 					XMLWriter::close();
                 }else if(isSet($httpVars["group"])){
@@ -1308,12 +1309,12 @@ class ConfAccessDriver extends AbstractAccessDriver
 						|| $loggedUser->getId() == $httpVars["user_id"])
 					{
 						XMLWriter::header();
-						XMLWriter::sendMessage(null, $mess["ajxp_conf.61"]);
+						XMLWriter::sendMessage(null, $mess["boaconf.61"]);
 						XMLWriter::close();
 					}
 					$res = AuthService::deleteUser($httpVars["user_id"]);
 					XMLWriter::header();
-					XMLWriter::sendMessage($mess["ajxp_conf.60"], null);
+					XMLWriter::sendMessage($mess["boaconf.60"], null);
 					XMLWriter::reloadDataNode();
 					XMLWriter::close();
 					
@@ -1325,10 +1326,10 @@ class ConfAccessDriver extends AbstractAccessDriver
 				$deleted = $this->clearExpiredFiles();
 				XMLWriter::header();
 				if(count($deleted)){
-					XMLWriter::sendMessage(sprintf($mess["ajxp_shared.23"], count($deleted).""), null);
+					XMLWriter::sendMessage(sprintf($mess["shared.23"], count($deleted).""), null);
 					XMLWriter::reloadDataNode();					
 				}else{
-					XMLWriter::sendMessage($mess["ajxp_shared.24"], null);
+					XMLWriter::sendMessage($mess["shared.24"], null);
 				}
 				XMLWriter::close();
 				
@@ -1353,7 +1354,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                         $checkErrorMessage = "";
                         try{
                             $typePlug->performChecks();
-                        }catch (Exception $e){
+                        }catch (\Exception $e){
                             $checkErrorMessage = " (Warning : ".$e->getMessage().")";
                         }
                         $tParams = XMLWriter::replaceAjxpXmlKeywords($typePlug->getManifestRawContent("server_settings/param[not(@group_switch_name)]"));
@@ -1420,7 +1421,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                 if(method_exists($plugin, $httpVars["action_plugin_method"])){
                     try{
                         $res = call_user_func(array($plugin, $httpVars["action_plugin_method"]), $options);
-                    }catch (Exception $e){
+                    }catch (\Exception $e){
                         echo("ERROR:" . $e->getMessage());
                         break;
                     }
@@ -1441,7 +1442,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				@unlink(BOA_PLUGINS_REQUIRES_FILE);				
 				@unlink(BOA_PLUGINS_MESSAGES_FILE);
 				XMLWriter::header();
-				XMLWriter::sendMessage($mess["ajxp_conf.97"], null);
+				XMLWriter::sendMessage($mess["boaconf.97"], null);
 				XMLWriter::reloadDataNode();
 				XMLWriter::close();
 				
@@ -1467,7 +1468,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             if($dir == "/core_plugins") $uniqTypes = $coreTypes;
             else $uniqTypes = array_diff(array_keys($types), $coreTypes);
 			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" template_name="ajxp_conf.plugins_folder">
-			<column messageId="ajxp_conf.101" attributeName="ajxp_label" sortType="String"/>
+			<column messageId="boaconf.101" attributeName="ajxp_label" sortType="String"/>
 			</columns>');		
 			ksort($types);
 			foreach( $types as $t => $tPlugs){
@@ -1480,9 +1481,9 @@ class ConfAccessDriver extends AbstractAccessDriver
 			}
 		}else if($dir == "/core"){
 			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" switchDisplayMode="detail"  template_name="ajxp_conf.plugins">
-			<column messageId="ajxp_conf.101" attributeName="ajxp_label" sortType="String"/>
-			<column messageId="ajxp_conf.102" attributeName="plugin_id" sortType="String"/>
-			<column messageId="ajxp_conf.103" attributeName="plugin_description" sortType="String"/>
+			<column messageId="boaconf.101" attributeName="ajxp_label" sortType="String"/>
+			<column messageId="boaconf.102" attributeName="plugin_id" sortType="String"/>
+			<column messageId="boaconf.103" attributeName="plugin_description" sortType="String"/>
 			</columns>');		
 			$mess = ConfService::getMessages();
             $all =  $first = "";
@@ -1492,7 +1493,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $isMain = ($pObject->getId() == "core.boa");
 					$meta = array(				
 						"icon" 		=> ($isMain?"preferences_desktop.png":"desktop.png"),
-						"ajxp_mime" => "ajxp_plugin",
+						"boa_mime" => "ajxp_plugin",
 						"plugin_id" => $pObject->getId(),						
 						"plugin_description" => $pObject->getManifestDescription()
 					);
@@ -1513,23 +1514,23 @@ class ConfAccessDriver extends AbstractAccessDriver
 			if(empty($split[0])) array_shift($split);
 			$type = $split[1];
 			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" switchDisplayMode="full" template_name="ajxp_conf.plugin_detail">
-			<column messageId="ajxp_conf.101" attributeName="ajxp_label" sortType="String" defaultWidth="10%"/>
-			<column messageId="ajxp_conf.102" attributeName="plugin_id" sortType="String" defaultWidth="10%"/>
-			<column messageId="ajxp_conf.103" attributeName="plugin_description" sortType="String" defaultWidth="60%"/>
-			<column messageId="ajxp_conf.104" attributeName="enabled" sortType="String" defaultWidth="10%"/>
-			<column messageId="ajxp_conf.105" attributeName="can_active" sortType="String" defaultWidth="10%"/>
+			<column messageId="boaconf.101" attributeName="ajxp_label" sortType="String" defaultWidth="10%"/>
+			<column messageId="boaconf.102" attributeName="plugin_id" sortType="String" defaultWidth="10%"/>
+			<column messageId="boaconf.103" attributeName="plugin_description" sortType="String" defaultWidth="60%"/>
+			<column messageId="boaconf.104" attributeName="enabled" sortType="String" defaultWidth="10%"/>
+			<column messageId="boaconf.105" attributeName="can_active" sortType="String" defaultWidth="10%"/>
 			</columns>');
             $mess = ConfService::getMessages();
 			foreach($types[$type] as $pId => $pObject){
 				$errors = "OK";
 				try{
 					$pObject->performChecks();
-				}catch(Exception $e){
+				}catch(\Exception $e){
 					$errors = "ERROR : ".$e->getMessage();
 				}
 				$meta = array(				
 					"icon" 		=> "preferences_plugin.png",
-					"ajxp_mime" => "ajxp_plugin",
+					"boa_mime" => "ajxp_plugin",
 					"can_active"	=> $errors,
 					"enabled"	=> ($pObject->isEnabled()?$mess[440]:$mess[441]),
 					"plugin_id" => $pObject->getId(),
@@ -1542,18 +1543,18 @@ class ConfAccessDriver extends AbstractAccessDriver
 	
 	function listUsers($root, $child, $hashValue = null){
         $columns = '<columns switchDisplayMode="list" switchGridMode="filelist" template_name="ajxp_conf.users">
-        			<column messageId="ajxp_conf.6" attributeName="ajxp_label" sortType="String" defaultWidth="40%"/>
-        			<column messageId="ajxp_conf.7" attributeName="isAdmin" sortType="String" defaultWidth="10%"/>
-        			<column messageId="ajxp_conf.70" attributeName="ajxp_roles" sortType="String" defaultWidth="15%"/>
-        			<column messageId="ajxp_conf.62" attributeName="rights_summary" sortType="String" defaultWidth="15%"/>
+        			<column messageId="boaconf.6" attributeName="ajxp_label" sortType="String" defaultWidth="40%"/>
+        			<column messageId="boaconf.7" attributeName="isAdmin" sortType="String" defaultWidth="10%"/>
+        			<column messageId="boaconf.70" attributeName="ajxp_roles" sortType="String" defaultWidth="15%"/>
+        			<column messageId="boaconf.62" attributeName="rights_summary" sortType="String" defaultWidth="15%"/>
         			</columns>';
         if(AuthService::driverSupportsAuthSchemes()){
             $columns = '<columns switchDisplayMode="list" switchGridMode="filelist" template_name="ajxp_conf.users_authscheme">
-            			<column messageId="ajxp_conf.6" attributeName="ajxp_label" sortType="String" defaultWidth="40%"/>
-            			<column messageId="ajxp_conf.115" attributeName="auth_scheme" sortType="String" defaultWidth="5%"/>
-            			<column messageId="ajxp_conf.7" attributeName="isAdmin" sortType="String" defaultWidth="5%"/>
-            			<column messageId="ajxp_conf.70" attributeName="ajxp_roles" sortType="String" defaultWidth="15%"/>
-            			<column messageId="ajxp_conf.62" attributeName="rights_summary" sortType="String" defaultWidth="15%"/>
+            			<column messageId="boaconf.6" attributeName="ajxp_label" sortType="String" defaultWidth="40%"/>
+            			<column messageId="boaconf.115" attributeName="auth_scheme" sortType="String" defaultWidth="5%"/>
+            			<column messageId="boaconf.7" attributeName="isAdmin" sortType="String" defaultWidth="5%"/>
+            			<column messageId="boaconf.70" attributeName="ajxp_roles" sortType="String" defaultWidth="15%"/>
+            			<column messageId="boaconf.62" attributeName="rights_summary" sortType="String" defaultWidth="15%"/>
             </columns>';
         }
 		XMLWriter::sendFilesListComponentConfig($columns);
@@ -1582,7 +1583,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             XMLWriter::renderNode("/data/".$root."/".ltrim($groupId,"/"),
                 $groupLabel, false, array(
                     "icon" => "users-folder.png",
-                    "ajxp_mime" => "group"
+                    "boa_mime" => "group"
                 ));
 
         }
@@ -1607,11 +1608,11 @@ class ConfAccessDriver extends AbstractAccessDriver
 			}
 			$rightsString = "";
 			if($isAdmin) {
-				$rightsString = $mess["ajxp_conf.63"];
+				$rightsString = $mess["boaconf.63"];
 			}else{
 				$r = array();
 				foreach ($repos as $repoId => $repository){
-					if($repository->getAccessType() == "ajxp_shared") continue;
+					if($repository->getAccessType() == "shared") continue;
                     if(!$userObject->canRead($repoId) && !$userObject->canWrite($repoId)) continue;
                     $rs = ($userObject->canRead($repoId) ? "r" : "");
                     $rs .= ($userObject->canWrite($repoId) ? "w" : "");
@@ -1624,21 +1625,21 @@ class ConfAccessDriver extends AbstractAccessDriver
             if(!empty($test)) $nodeLabel = $test;
             $scheme = AuthService::getAuthScheme($userId);
 			XMLWriter::renderNode("/data/users/".$userId, $nodeLabel, true, array(
-				"isAdmin" => $mess[($isAdmin?"ajxp_conf.14":"ajxp_conf.15")], 
+				"isAdmin" => $mess[($isAdmin?"boaconf.14":"boaconf.15")], 
 				"icon" => $icon.".png",
                 "auth_scheme" => ($scheme != null? $scheme : ""),
 				"rights_summary" => $rightsString,
 				"ajxp_roles" => implode(", ", array_keys($userObject->getRoles())),
-				"ajxp_mime" => "user".(($userId!="guest"&&$userId!=$loggedUser->getId())?"_editable":"")
+				"boa_mime" => "user".(($userId!="guest"&&$userId!=$loggedUser->getId())?"_editable":"")
 			));
 		}
 	}
 	
 	function listRoles(){
 		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" template_name="ajxp_conf.roles">
-			<column messageId="ajxp_conf.6" attributeName="ajxp_label" sortType="String"/>			
-			<column messageId="ajxp_conf.114" attributeName="is_default" sortType="String"/>
-			<column messageId="ajxp_conf.62" attributeName="rights_summary" sortType="String"/>
+			<column messageId="boaconf.6" attributeName="ajxp_label" sortType="String"/>			
+			<column messageId="boaconf.114" attributeName="is_default" sortType="String"/>
+			<column messageId="boaconf.62" attributeName="rights_summary" sortType="String"/>
 			</columns>');
 		if(!AuthService::usersEnabled()) return ;
 		$roles = AuthService::getRolesList(array(), !$this->listSpecialRoles);
@@ -1650,7 +1651,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 			$r = array();
             if(!AuthService::canAdministrate($roleObject)) continue;
 			foreach ($repos as $repoId => $repository){
-				if($repository->getAccessType() == "ajxp_shared") continue;
+				if($repository->getAccessType() == "shared") continue;
                 if(!$roleObject->canRead($repoId) && !$roleObject->canWrite($repoId)) continue;
                 $rs = ($roleObject->canRead($repoId) ? "r" : "");
                 $rs .= ($roleObject->canWrite($repoId) ? "w" : "");
@@ -1661,7 +1662,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				"icon" => "user-acl.png",
 				"rights_summary" => $rightsString,
                 "is_default"    => implode(",", $roleObject->listAutoApplies()), //($roleObject->autoAppliesTo("standard") ? $mess[440]:$mess[441]),
-				"ajxp_mime" => "role",
+				"boa_mime" => "role",
                 "text"      => $roleObject->getLabel()
 			));
 		}
@@ -1688,10 +1689,10 @@ class ConfAccessDriver extends AbstractAccessDriver
 	function listRepositories(){
 		$repos = ConfService::getRepositoriesList("all");
 		XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="list" switchGridMode="filelist" template_name="ajxp_conf.repositories">
-			<column messageId="ajxp_conf.8" attributeName="ajxp_label" sortType="String"/>
-			<column messageId="ajxp_conf.9" attributeName="accessType" sortType="String"/>
-			<column messageId="ajxp_shared.27" attributeName="owner" sortType="String"/>
-			<column messageId="ajxp_conf.106" attributeName="repository_id" sortType="String"/>
+			<column messageId="boaconf.8" attributeName="ajxp_label" sortType="String"/>
+			<column messageId="boaconf.9" attributeName="accessType" sortType="String"/>
+			<column messageId="shared.27" attributeName="owner" sortType="String"/>
+			<column messageId="boaconf.106" attributeName="repository_id" sortType="String"/>
 			</columns>');		
         $repoArray = array();
         $childRepos = array();
@@ -1702,7 +1703,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             if(!AuthService::canAdministrate($repoObject)){
                 continue;
             }
-			if($repoObject->getAccessType() == "ajxp_conf" || $repoObject->getAccessType() == "ajxp_shared") continue;
+			if($repoObject->getAccessType() == "boaconf" || $repoObject->getAccessType() == "shared") continue;
 			if(is_numeric($repoIndex)) $repoIndex = "".$repoIndex;
             $name = Utils::xmlEntities(SystemTextEncoding::toUTF8($repoObject->getDisplay()));
 			if($repoObject->hasOwner() || $repoObject->hasParent()) {
@@ -1751,7 +1752,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             	"owner"			=> ($repoObject->hasOwner()?$repoObject->getOwner():""),
             	"openicon"		=> $icon,
             	"parentname"	=> "/repositories",
-				"ajxp_mime" 	=> "repository".($editable?"_editable":"")
+				"boa_mime" 	=> "repository".($editable?"_editable":"")
             );
             XMLWriter::renderNode("/repositories/$repoIndex", $name, true, $metaData);
 		}
@@ -1765,7 +1766,7 @@ class ConfAccessDriver extends AbstractAccessDriver
         if(count($parts) == 1){
             // list all types
             XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" template_name="ajxp_conf.plugins_folder">
-			<column messageId="ajxp_conf.101" attributeName="ajxp_label" sortType="String"/>
+			<column messageId="boaconf.101" attributeName="ajxp_label" sortType="String"/>
 			</columns>');
             ksort($types);
             foreach( $types as $t => $tPlugs){
@@ -1780,8 +1781,8 @@ class ConfAccessDriver extends AbstractAccessDriver
             // list plugs
             $type = $parts[1];
             XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail" template_name="ajxp_conf.plugins_folder">
-                <column messageId="ajxp_conf.101" attributeName="ajxp_label" sortType="String"/>
-                <column messageId="ajxp_conf.103" attributeName="actions" sortType="String"/>
+                <column messageId="boaconf.101" attributeName="ajxp_label" sortType="String"/>
+                <column messageId="boaconf.103" attributeName="actions" sortType="String"/>
 			</columns>');
             $pObject = new Plugin("","");
             foreach($types[$type] as $pId => $pObject){
@@ -1806,8 +1807,8 @@ class ConfAccessDriver extends AbstractAccessDriver
             $name = $parts[2];
             $mess = ConfService::getMessages();
             XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="full" template_name="ajxp_conf.plugins_folder">
-                <column messageId="ajxp_conf.101" attributeName="ajxp_label" sortType="String" defaultWidth="10%"/>
-                <column messageId="ajxp_conf.103" attributeName="parameters" sortType="String" fixedWidth="30%"/>
+                <column messageId="boaconf.101" attributeName="ajxp_label" sortType="String" defaultWidth="10%"/>
+                <column messageId="boaconf.103" attributeName="parameters" sortType="String" fixedWidth="30%"/>
 			</columns>');
             $pObject = new Plugin("","");
             $pObject = $types[$type][$name];
@@ -1816,7 +1817,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             $allNodes = array();
             if($actions->length){
                 foreach($actions as $node){
-                    $xPath = new DOMXPath($node->ownerDocument);
+                    $xPath = new \DOMXPath($node->ownerDocument);
                     $callbacks = $xPath->query("processing/serverCallback", $node);
                     if(!$callbacks->length) continue;
                     $callback = $callbacks->item(0);
@@ -1870,11 +1871,11 @@ class ConfAccessDriver extends AbstractAccessDriver
     function listHooks($dir, $root = NULL){
         $jsonContent = json_decode(file_get_contents(Utils::getHooksFile()), true);
         $config = '<columns switchDisplayMode="full" template_name="hooks.list">
-				<column messageId="ajxp_conf.17" attributeName="ajxp_label" sortType="String" defaultWidth="20%"/>
-				<column messageId="ajxp_conf.18" attributeName="description" sortType="String" defaultWidth="20%"/>
-				<column messageId="ajxp_conf.19" attributeName="triggers" sortType="String" defaultWidth="25%"/>
-				<column messageId="ajxp_conf.20" attributeName="listeners" sortType="String" defaultWidth="25%"/>
-				<column messageId="ajxp_conf.21" attributeName="sample" sortType="String" defaultWidth="10%"/>
+				<column messageId="boaconf.17" attributeName="ajxp_label" sortType="String" defaultWidth="20%"/>
+				<column messageId="boaconf.18" attributeName="description" sortType="String" defaultWidth="20%"/>
+				<column messageId="boaconf.19" attributeName="triggers" sortType="String" defaultWidth="25%"/>
+				<column messageId="boaconf.20" attributeName="listeners" sortType="String" defaultWidth="25%"/>
+				<column messageId="boaconf.21" attributeName="sample" sortType="String" defaultWidth="10%"/>
 			</columns>';
         XMLWriter::sendFilesListComponentConfig($config);
         foreach($jsonContent as $hookName => $hookData){
@@ -1903,18 +1904,18 @@ class ConfAccessDriver extends AbstractAccessDriver
 		$parts = explode("/", $dir);
 		if(count($parts)>4){
 			$config = '<columns switchDisplayMode="list" switchGridMode="grid" template_name="ajxp_conf.logs">
-				<column messageId="ajxp_conf.17" attributeName="date" sortType="MyDate" defaultWidth="10%"/>
-				<column messageId="ajxp_conf.18" attributeName="ip" sortType="String" defaultWidth="10%"/>
-				<column messageId="ajxp_conf.19" attributeName="level" sortType="String" defaultWidth="10%"/>
-				<column messageId="ajxp_conf.20" attributeName="user" sortType="String" defaultWidth="10%"/>
-				<column messageId="ajxp_conf.21" attributeName="action" sortType="String" defaultWidth="10%"/>
-				<column messageId="ajxp_conf.22" attributeName="params" sortType="String" defaultWidth="50%"/>
+				<column messageId="boaconf.17" attributeName="date" sortType="MyDate" defaultWidth="10%"/>
+				<column messageId="boaconf.18" attributeName="ip" sortType="String" defaultWidth="10%"/>
+				<column messageId="boaconf.19" attributeName="level" sortType="String" defaultWidth="10%"/>
+				<column messageId="boaconf.20" attributeName="user" sortType="String" defaultWidth="10%"/>
+				<column messageId="boaconf.21" attributeName="action" sortType="String" defaultWidth="10%"/>
+				<column messageId="boaconf.22" attributeName="params" sortType="String" defaultWidth="50%"/>
 			</columns>';				
 			XMLWriter::sendFilesListComponentConfig($config);
 			$date = $parts[count($parts)-1];
 			$logger->xmlLogs($dir, $date, "tree", $root."/logs");
 		}else{
-			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="ajxp_conf.16" attributeName="ajxp_label" sortType="String"/></columns>');
+			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.16" attributeName="ajxp_label" sortType="String"/></columns>');
 			$logger->xmlListLogFiles("tree", (count($parts)>2?$parts[2]:null), (count($parts)>3?$parts[3]:null), $root."/logs");
 		}
 	}
@@ -1924,7 +1925,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 		$testedParams = array();
 		$passed = Utils::runTests($outputArray, $testedParams);
 		Utils::testResultsToFile($outputArray, $testedParams);		
-		XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="list" switchGridMode="fileList" template_name="ajxp_conf.diagnostic" defaultWidth="20%"><column messageId="ajxp_conf.23" attributeName="ajxp_label" sortType="String"/><column messageId="ajxp_conf.24" attributeName="data" sortType="String"/></columns>');		
+		XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="list" switchGridMode="fileList" template_name="ajxp_conf.diagnostic" defaultWidth="20%"><column messageId="boaconf.23" attributeName="ajxp_label" sortType="String"/><column messageId="boaconf.24" attributeName="data" sortType="String"/></columns>');		
 		if(is_file(TESTS_RESULT_FILE)){
 			include_once(TESTS_RESULT_FILE);
             if(isset($diagResults)){
@@ -1938,13 +1939,13 @@ class ConfAccessDriver extends AbstractAccessDriver
 	
 	function listSharedFiles(){
 		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" template_name="ajxp_conf.shared">
-				<column messageId="ajxp_shared.4" attributeName="ajxp_label" sortType="String" defaultWidth="30%"/>
-				<column messageId="ajxp_shared.27" attributeName="owner" sortType="String" defaultWidth="10%"/>
-				<column messageId="ajxp_shared.17" attributeName="download_url" sortType="String" defaultWidth="40%"/>
-				<column messageId="ajxp_shared.6" attributeName="password" sortType="String" defaultWidth="4%"/>
-				<column messageId="ajxp_shared.7" attributeName="expiration" sortType="String" defaultWidth="4%"/>
-				<column messageId="ajxp_shared.20" attributeName="expired" sortType="String" defaultWidth="4%"/>
-				<column messageId="ajxp_shared.14" attributeName="integrity" sortType="String" defaultWidth="4%" hidden="true"/>
+				<column messageId="shared.4" attributeName="ajxp_label" sortType="String" defaultWidth="30%"/>
+				<column messageId="shared.27" attributeName="owner" sortType="String" defaultWidth="10%"/>
+				<column messageId="shared.17" attributeName="download_url" sortType="String" defaultWidth="40%"/>
+				<column messageId="shared.6" attributeName="password" sortType="String" defaultWidth="4%"/>
+				<column messageId="shared.7" attributeName="expiration" sortType="String" defaultWidth="4%"/>
+				<column messageId="shared.20" attributeName="expired" sortType="String" defaultWidth="4%"/>
+				<column messageId="shared.14" attributeName="integrity" sortType="String" defaultWidth="4%" hidden="true"/>
 			</columns>');
 		$dlFolder = ConfService::getCoreConf("PUBLIC_DOWNLOAD_FOLDER");
 		if(!is_dir($dlFolder)) return ;		
@@ -1970,11 +1971,11 @@ class ConfAccessDriver extends AbstractAccessDriver
 				"icon"		=> "html.png",
 				"password" => ($publicletData["PASSWORD"]!=""?$publicletData["PASSWORD"]:"-"), 
 				"expiration" => ($publicletData["EXPIRE_TIME"]!=0?date($mess["date_format"], $publicletData["EXPIRE_TIME"]):"-"), 
-				"expired" => ($publicletData["EXPIRE_TIME"]!=0?($publicletData["EXPIRE_TIME"]<time()?$mess["ajxp_shared.21"]:$mess["ajxp_shared.22"]):"-"), 
-				"integrity"  => (!$publicletData["SECURITY_MODIFIED"]?$mess["ajxp_shared.15"]:$mess["ajxp_shared.16"]),
+				"expired" => ($publicletData["EXPIRE_TIME"]!=0?($publicletData["EXPIRE_TIME"]<time()?$mess["shared.21"]:$mess["shared.22"]):"-"), 
+				"integrity"  => (!$publicletData["SECURITY_MODIFIED"]?$mess["shared.15"]:$mess["shared.16"]),
 				"download_url" => $downloadBase . "/".basename($file),
 				"owner" => (isset($publicletData["OWNER_ID"])?$publicletData["OWNER_ID"]:"-"),
-				"ajxp_mime" => "shared_file")
+				"boa_mime" => "shared_file")
 			);			
 		}
 	}

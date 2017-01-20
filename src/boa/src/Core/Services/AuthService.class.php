@@ -362,7 +362,7 @@ class AuthService
         }
         else{
             if(!$user->hasParent() && $user_id != "guest"){
-                //$user->setAcl("ajxp_shared", "rw");
+                //$user->setAcl("shared", "rw");
             }
         }
         if(self::$useSession) $_SESSION["BOA_USER"] = $user;
@@ -417,6 +417,7 @@ class AuthService
             $rootRole = new Role("ROOT_ROLE");
             $rootRole->setLabel("Root Role");
             $rootRole->setAutoApplies(array("standard"));
+            die('bootSequence');
             foreach (ConfService::getRepositoriesList("all") as $repositoryId => $repoObject)
             {
                 if($repoObject->isTemplate) continue;
@@ -546,7 +547,7 @@ class AuthService
                 if($rootDirObject->getAccessType()=="boaconf" && AuthService::usersEnabled() && !$loggedUser->isAdmin()){
                     continue;
                 }
-                if($rootDirObject->getAccessType() == "boashared" && count($repoList) > 1){
+                if($rootDirObject->getAccessType() == "shared" && count($repoList) > 1){
                     continue;
                 }
                 return $rootDirIndex;

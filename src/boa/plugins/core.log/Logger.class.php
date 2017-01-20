@@ -47,7 +47,7 @@ class Logger extends Plugin {
 
     public function init($options){
         parent::init($options);
-        $this->pluginInstance = ConfService::instanciatePluginFromGlobalParams($this->pluginConf["UNIQUE_PLUGIN_INSTANCE"], "AbstractLogDriver");
+        $this->pluginInstance = ConfService::instanciatePluginFromGlobalParams($this->pluginConf["UNIQUE_PLUGIN_INSTANCE"], "BoA\Plugins\Core\Log\AbstractLogDriver");
         if($this->pluginInstance != false){
             PluginsService::getInstance()->setPluginUniqueActiveForType("log", $this->pluginInstance->getName(), $this->pluginInstance);
         }

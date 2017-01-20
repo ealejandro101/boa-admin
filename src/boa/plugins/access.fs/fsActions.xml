@@ -61,6 +61,7 @@
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
 					var uploaders = ajaxplorer.getActiveExtensionByType("uploader");
+					console.log(uploaders);
 					if(uploaders.length){
 						var uploader = uploaders[0];
 						if(ajaxplorer.actionBar.getActionByName("trigger_remote_copy")){

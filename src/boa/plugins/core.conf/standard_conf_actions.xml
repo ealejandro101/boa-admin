@@ -321,6 +321,7 @@
 						    && !ajaxplorer.webdavCurrentPreferences.webdav_force_basic) {
 						    $('webdav_password_form').show();
 						}
+                        alert(45);
                         ajaxplorer.user.getRepositoriesList().each(function(pair){
                             if(ajaxplorer.webdavCurrentPreferences.webdav_repositories[pair.key]){
                                 var div = new Element('div', {className:(even?'even':'')});
@@ -429,8 +430,8 @@
             <rightsContext adminOnly="false" noUser="false" read="false" userLogged="only" write="false"/>
             <processing>
                 <clientCallback><![CDATA[
-                    if(!ajaxplorer.repositoryId || ajaxplorer.repositoryId != "boashared"){
-                        ajaxplorer.triggerRepositoryChange('boashared');
+                    if(!ajaxplorer.repositoryId || ajaxplorer.repositoryId != "shared"){
+                        ajaxplorer.triggerRepositoryChange('shared');
                     }
                 ]]></clientCallback>
             </processing>

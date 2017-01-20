@@ -253,7 +253,7 @@ Class.create("AjxpBootstrap", {
             var titleDivSize = (customWording.iconHeight ? 'height:' + customWording.iconHeight + ';' : '');
 			html+=' <div style="margin-bottom:0px; font-size:'+fontSize+';font-weight:bold; background-image:url(\''+ (this.parameters.get("SERVER_PREFIX_URI") || '') + icon+'\');background-position:left center;background-repeat:no-repeat;padding-left:'+iconWidth+';'+titleDivSize+'color:#0077b3;">'+(customWording.iconOnly?'':title)+'</div>';
 			if(customWording.title.toLowerCase() != "ajaxplorer"){
-				html+='	<div style="padding:4px 7px;position: relative;"><div>AjaXplorer Community Edition<span id="version_span"></span></div>';
+				//html+='	<div style="padding:4px 7px;position: relative;"><div>AjaXplorer Community Edition<span id="version_span"></span></div>';
 			}else{
 				html+='	<div style="padding:4px 7px;position: relative;"><div>The web data-browser<span id="version_span"></span></div>';
 			}
@@ -344,7 +344,7 @@ Class.create("AjxpBootstrap", {
 	 */
 	insertBasicSkeleton : function(desktopNode){
         var elem = new Element("div", {style:"position: absolute;z-index: 10000; bottom: 0; right: 0; color: #666;font-family: Arial;font-size: 11px;text-align: right;padding: 3px; padding-right: 10px;"});
-        elem.update('AjaXplorer Community - Free non supported version &copy; C. du Jeu 2008-2013 - <a target="_blank" href="http://ajaxplorer.info/">http://ajaxplorer.info/</a>');
+        //elem.update('AjaXplorer Community - Free non supported version &copy; C. du Jeu 2008-2013 - <a target="_blank" href="http://ajaxplorer.info/">http://ajaxplorer.info/</a>');
         $(desktopNode).insert({after:elem});
         disableTextSelection(elem);
 		if($('all_forms')) return;

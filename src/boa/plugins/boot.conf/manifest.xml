@@ -4,7 +4,7 @@
     <class_definition classname="BoA\Plugins\Boot\Conf\BootConfLoader" filename="boot.conf/BootConfLoader.class.php" />
     <client_settings>
         <resources>
-            <i18n namespace="installer" path="plugins/boot.conf/i18n"/>
+            <i18n namespace="installer" path="boot.conf/i18n"/>
         </resources>
     </client_settings>
     <server_settings>

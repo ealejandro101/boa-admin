@@ -33,6 +33,7 @@ use BoA\Plugins\Core\Log;
 defined('BOA_EXEC') or die('Access not allowed');
 
 class Router {
+    const APP_SESSION_COOKIE = "BoA";
     /**
      * Router constructor.
      * @param array $cacheOptions
@@ -56,11 +57,11 @@ class Router {
             exit();
         }
 
-        if(isSet($_GET["ajxp_sessid"]))
+        if(isSet($_GET[self::APP_SESSION_COOKIE]))
         {
             // Don't overwrite cookie
-            if (!isSet($_COOKIE["AjaXplorer"]))
-                $_COOKIE["AjaXplorer"] = $_GET["ajxp_sessid"];
+            if (!isSet($_COOKIE[self::APP_SESSION_COOKIE]))
+                $_COOKIE[self::APP_SESSION_COOKIE] = $_GET["ajxp_sessid"];
         }
 
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
@@ -87,7 +88,7 @@ class Router {
         require_once($confStorageDriver->getUserClassFileName());
         //new AjxpSessionHandler();
         if(!isSet($OVERRIDE_SESSION)){
-            session_name("AjaXplorer");
+            session_name(self::APP_SESSION_COOKIE);
         }
         session_start();
 

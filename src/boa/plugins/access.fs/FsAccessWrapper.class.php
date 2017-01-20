@@ -92,7 +92,7 @@ class FsAccessWrapper implements FileWrapper {
         if($insideZip){
             $zipPath = $split[0];
             $localPath = $split[1];
-            require_once(BOA_BIN_FOLDER."/pclzip.lib.php");
+            require_once(BOA_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
             //print($streamType.$path);
             if($streamType == "file"){
                 if(self::$crtZip == null ||  !is_array(self::$currentListingKeys)){

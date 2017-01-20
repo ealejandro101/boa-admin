@@ -105,10 +105,10 @@ $REPOSITORIES[1] = array(
 
 // DO NOT REMOVE THIS!
 // SHARE ELEMENTS
-$REPOSITORIES["boashared"] = array(
+$REPOSITORIES["shared"] = array(
 	"DISPLAY"		=>	"Shared Elements",
 	"DISPLAY_ID"		=>	"467",
-	"DRIVER"		=>	"boashared",
+	"DRIVER"		=>	"shared",
 	"DRIVER_OPTIONS"=> array(
 		"DEFAULT_RIGHTS" => "rw"
 	)

@@ -43,8 +43,8 @@ Class.create("ConfigEditor",{
 			
 //		this.form.down('#rights_pane').remove();
 //		this.form.down('#rights_legend').remove();
-		this.form.down('#roles_pane').select('.dialogLegend')[0].update(MessageHash['ajxp_conf.83']);
-//		this.form.down('#roles_pane').select('span')[1].update(MessageHash['ajxp_conf.84']);
+		this.form.down('#roles_pane').select('.dialogLegend')[0].update(MessageHash['boaconf.83']);
+//		this.form.down('#roles_pane').select('span')[1].update(MessageHash['boaconf.84']);
 		var url = window.ajxpServerAccessPath + '&get_action=user_update_role';
 		this.selectionUrl = selection.updateFormOrUrl(null, url);
 		var connexion = new Connexion(this.selectionUrl);
@@ -159,11 +159,11 @@ Class.create("ConfigEditor",{
 		var extraParams = this.form.select('div#custom_pane input');
 		
 		if(login.value == ''){
-			ajaxplorer.displayMessage("ERROR", MessageHash['ajxp_conf.38']);
+			ajaxplorer.displayMessage("ERROR", MessageHash['boaconf.38']);
 			return false;
 		}
 		if(pass.value == '' || passConf.value == '' ){
-			ajaxplorer.displayMessage("ERROR", MessageHash['ajxp_conf.39']);
+			ajaxplorer.displayMessage("ERROR", MessageHash['boaconf.39']);
 			return false;
 		}
 		if(pass.value.length < window.ajxpBootstrap.parameters.get("password_min_length")){
@@ -171,7 +171,7 @@ Class.create("ConfigEditor",{
 			return false;
 		}
 		if(pass.value != passConf.value){
-			ajaxplorer.displayMessage("ERROR", MessageHash['ajxp_conf.37']);
+			ajaxplorer.displayMessage("ERROR", MessageHash['boaconf.37']);
 			return false;
 		}
 		var parameters = new Hash();
@@ -192,7 +192,7 @@ Class.create("ConfigEditor",{
             var editorData = ajaxplorer.findEditorById("editor.ajxp_role");
             ajaxplorer.loadEditorResources(editorData.resourcesManager);
             var node = new AjxpNode(currentPath + "/"+newUserName, true);
-            node.getMetadata().set("ajxp_mime", "user");
+            node.getMetadata().set("boa_mime", "user");
             modal.openEditorDialog(editorData, node);
         }.bind(this), function(responseXML){
             // error callback;
@@ -203,7 +203,7 @@ Class.create("ConfigEditor",{
 	deleteUser: function(){
 		var chck = this.form.select('[id="delete_confirm"]')[0];
 		if(!chck.checked){
-			this.displayMessage("ERROR", MessageHash['ajxp_conf.40']);
+			this.displayMessage("ERROR", MessageHash['boaconf.40']);
 			return;
 		}
 		parameters = new Hash();
@@ -218,15 +218,15 @@ Class.create("ConfigEditor",{
 		var pass = $('new_user_pwd');
 		var passConf = $('new_user_pwd_conf');
 		if(login.value == ''){
-			this.displayMessage("ERROR", MessageHash['ajxp_conf.38']);
+			this.displayMessage("ERROR", MessageHash['boaconf.38']);
 			return;
 		}
 		if(pass.value == '' || passConf.value == ''){
-			this.displayMessage("ERROR", MessageHash['ajxp_conf.39']);
+			this.displayMessage("ERROR", MessageHash['boaconf.39']);
 			return;
 		}
 		if(pass.value != passConf.value){
-			this.displayMessage("ERROR", MessageHash['ajxp_conf.37']);
+			this.displayMessage("ERROR", MessageHash['boaconf.37']);
 			return;
 		}
 		
@@ -434,7 +434,7 @@ Class.create("ConfigEditor",{
 		toSubmit.set('DRIVER', this.driverSelector.options[this.driverSelector.selectedIndex].value);
 		var missingMandFields = this.formManager.serializeParametersInputs(this.driverForm, toSubmit, 'DRIVER_OPTION_');
 		if(missingMandatory || missingMandFields){
-			this.displayMessage("ERROR", MessageHash['ajxp_conf.36']);
+			this.displayMessage("ERROR", MessageHash['boaconf.36']);
 			return false;
 		}		
 		this.submitForm('edit_repository', 'create_repository', toSubmit, null, function(responseXML){

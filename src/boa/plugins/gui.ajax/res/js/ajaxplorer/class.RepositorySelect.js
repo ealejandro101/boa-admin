@@ -124,7 +124,7 @@ Class.create("RepositorySelect", {
 				var key = pair.key;
 				var selected = (key == repositoryId ? true:false);
 
-                if(repoObject.getAccessType() == "ajxp_conf" || repoObject.getAccessType() == "ajxp_shared"){
+                if(repoObject.getAccessType() == "boaconf" || repoObject.getAccessType() == "shared"){
                     return;
                 }
 
@@ -147,7 +147,7 @@ Class.create("RepositorySelect", {
                 if(repoObject.userEditable){
                     actionData.moreActions = this.getContextActions(key);
                 }
-				if(repoObject.getAccessType() == "ajxp_shared"){
+				if(repoObject.getAccessType() == "shared"){
 					lastActions.push(actionData);
                 }else if(repoObject.getOwner()){
                     sharedActions.push(actionData);

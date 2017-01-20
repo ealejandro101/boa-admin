@@ -370,7 +370,7 @@ Class.create("AjxpNode", {
 	 * @returns String
 	 */
 	getAjxpMime : function(){
-		if(this._metadata && this._metadata.get("ajxp_mime")) return this._metadata.get("ajxp_mime").toLowerCase();
+		if(this._metadata && this._metadata.get("boa_mime")) return this._metadata.get("boa_mime").toLowerCase();
 		if(this._metadata && this.isLeaf()) return getAjxpMimeType(this._metadata).toLowerCase();
 		return "";
 	}

@@ -349,7 +349,6 @@ class ConfService
             if(!ConfService::repositoryIsAccessible($repositoryId, $repositoryObject, $userObject, $details, $skipShared)){
                 continue;
             }
-
             if($labelOnly){
                 $result[$repositoryId] = $repositoryObject->getDisplay();
             }else{
@@ -385,7 +384,7 @@ class ConfService
                 return false;
             }
         }
-        if($repositoryObject->getAccessType() == "boashared" && !AuthService::usersEnabled()){
+        if($repositoryObject->getAccessType() == "shared" && !AuthService::usersEnabled()){
             return false;
         }
         if($repositoryObject->getUniqueUser() && (!AuthService::usersEnabled() || $userObject == null  || $userObject->getId() == "shared" || $userObject->getId() != $repositoryObject->getUniqueUser() )){
@@ -780,7 +779,7 @@ class ConfService
             $nodes = PluginsService::getInstance()->searchAllManifests("//i18n", "nodes");
             foreach ($nodes as $node){
                 $nameSpace = $node->getAttribute("namespace");
-                $path = $node->getAttribute("path");
+                $path = BOA_PLUGINS_FOLDER_REL."/".$node->getAttribute("path");
                 $lang = $crtLang;
                 if(!is_file($path."/".$crtLang.".php")){
                     $lang = "en"; // Default language, minimum required.
@@ -1215,7 +1214,7 @@ class ConfService
         foreach($nodeList as $node){
             $dName = $node->getAttribute("name");
             if($filterByDriverName != "" && $dName != $filterByDriverName) continue;
-            if($dName == "boaconf" || $dName == "boashared") continue;
+            if($dName == "boaconf" || $dName == "shared") continue;
             if($filterByTagName == ""){
                 $xmlBuffer .= $node->ownerDocument->saveXML($node);
                 continue;
