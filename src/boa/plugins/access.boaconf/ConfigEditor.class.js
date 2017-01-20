@@ -166,7 +166,7 @@ Class.create("ConfigEditor",{
 			ajaxplorer.displayMessage("ERROR", MessageHash['boaconf.39']);
 			return false;
 		}
-		if(pass.value.length < window.ajxpBootstrap.parameters.get("password_min_length")){
+		if(pass.value.length < window._bootstrap.parameters.get("password_min_length")){
 			ajaxplorer.displayMessage("ERROR", MessageHash[378]);
 			return false;
 		}

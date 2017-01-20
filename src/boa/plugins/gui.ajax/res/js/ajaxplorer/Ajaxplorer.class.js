@@ -47,7 +47,7 @@ Class.create("Ajaxplorer", {
 		this._initDefaultDisp = 'list';
 		this.histCount=0;
 		this._guiComponentsConfigs = new Hash();
-		this.appTitle = ajxpBootstrap.parameters.get("customWording").title || "AjaXplorer";
+		this.appTitle = window._bootstrap.parameters.get("customWording").title || "AjaXplorer";
 	},
 	
 	/**
@@ -77,8 +77,8 @@ Class.create("Ajaxplorer", {
 		}.bind(this));
 
 		modal.setLoadingStepCounts(5);
-        if(ajxpBootstrap.parameters.get("PRELOADED_REGISTRY")){
-            this._registry = parseXml(ajxpBootstrap.parameters.unset("PRELOADED_REGISTRY")).documentElement;
+        if(window._bootstrap.parameters.get("PRELOADED_REGISTRY")){
+            this._registry = parseXml(window._bootstrap.parameters.unset("PRELOADED_REGISTRY")).documentElement;
             modal.updateLoadingProgress('XML Registry loaded');
         }else{
             this.loadXmlRegistry(true);
@@ -217,15 +217,15 @@ Class.create("Ajaxplorer", {
 		modal.updateLoadingProgress('Actions Initialized');
 		
 		this.activityMonitor = new ActivityMonitor(
-			window.ajxpBootstrap.parameters.get('session_timeout'), 
-			window.ajxpBootstrap.parameters.get('client_timeout'), 
-			window.ajxpBootstrap.parameters.get('client_timeout_warning'));
+			window._bootstrap.parameters.get('session_timeout'), 
+			window._bootstrap.parameters.get('client_timeout'), 
+			window._bootstrap.parameters.get('client_timeout_warning'));
 		  
 		/*********************
 		/* USER GUI
 		/*********************/
 		this.guiLoaded = false;
-		this.buildGUI($(ajxpBootstrap.parameters.get('MAIN_ELEMENT')));
+		this.buildGUI($(window._bootstrap.parameters.get('MAIN_ELEMENT')));
 		document.fire("ajaxplorer:before_gui_load");
 		// Rewind components creation!
 		if(this.guiCompRegistry){
@@ -314,7 +314,7 @@ Class.create("Ajaxplorer", {
 			this.templatePartsToRestore = $A();
 		}
 		for(var i=0;i<parts.length;i++){
-            if(parts[i].getAttribute("theme") && parts[i].getAttribute("theme") != ajxpBootstrap.parameters.get("theme")){
+            if(parts[i].getAttribute("theme") && parts[i].getAttribute("theme") != window._bootstrap.parameters.get("theme")){
                 continue;
             }
 			var ajxpId = parts[i].getAttribute("ajxpId");
@@ -708,7 +708,7 @@ Class.create("Ajaxplorer", {
 				write : (xmlNode.getAttribute("write") && xmlNode.getAttribute("write")=="true"?true:false)
 			});
 		}else if(xmlNode.nodeName == 'uploader'){
-            var th = ajxpBootstrap.parameters.get('theme');
+            var th = window._bootstrap.parameters.get('theme');
 			var clientForm = XPathSelectSingleNode(xmlNode, 'processing/clientForm[@theme="'+th+'"]');
             if(!clientForm){
                 clientForm = XPathSelectSingleNode(xmlNode, 'processing/clientForm');
@@ -844,7 +844,7 @@ Class.create("Ajaxplorer", {
 		for(var i=0;i<tNodes.length;i++){
 			var target = tNodes[i].getAttribute("element");
             var themeSpecific = tNodes[i].getAttribute("theme");
-            if(themeSpecific && window.ajxpBootstrap.parameters.get("theme") && window.ajxpBootstrap.parameters.get("theme") != themeSpecific){
+            if(themeSpecific && window._bootstrap.parameters.get("theme") && window._bootstrap.parameters.get("theme") != themeSpecific){
                 continue;
             }
 			if($(target) || $$(target).length || passedTarget){

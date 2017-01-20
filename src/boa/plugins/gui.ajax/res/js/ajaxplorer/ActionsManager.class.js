@@ -499,7 +499,7 @@ Class.create("ActionsManager", {
 					Connexion.SECURE_TOKEN = childs[i].getAttribute("secure_token");
 					var parts = window.ajxpServerAccessPath.split("?secure_token");
 					window.ajxpServerAccessPath = parts[0] + "?secure_token=" + Connexion.SECURE_TOKEN;
-					ajxpBootstrap.parameters.set('ajxpServerAccess', window.ajxpServerAccessPath);
+					window._bootstrap.parameters.set('ajxpServerAccess', window.ajxpServerAccessPath);
 				}
                 if($("generic_dialog_box") && $("generic_dialog_box").down(".ajxp_login_error")){
                     $("generic_dialog_box").down(".ajxp_login_error").remove();

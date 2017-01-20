@@ -9,7 +9,7 @@
 		<resources>
 			<i18n namespace="boaconf" path="access.boaconf/i18n" />		
 			<i18n namespace="shared" path="access.shared/i18n" />
-			<js file="boa/plugins/access.boaconf/class.ConfigEditor.js" className="ConfigEditor"/>			
+			<js file="plugins/access.boaconf/ConfigEditor.class.js" className="ConfigEditor"/>			
 		</resources>
 	</client_settings>
 	<registry_contributions>

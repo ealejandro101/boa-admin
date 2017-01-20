@@ -192,7 +192,7 @@ Class.create("FormManager", {
                         choices = ["loading|"+MessageHash[466]+"..."];
                         json_list = param.get("choices").split(":")[1];
                     }else if(param.get("choices") == "BOA_AVAILABLE_LANGUAGES"){
-                        var object = window.ajxpBootstrap.parameters.get("availableLanguages");
+                        var object = window._bootstrap.parameters.get("availableLanguages");
                         choices = [];
                         for(var key in object){
                             choices.push(key + "|" + object[key]);

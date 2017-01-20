@@ -583,7 +583,7 @@ Class.create("Modal", {
 		this.messageContent.update(message);
 		var container = $('content_pane');
 		if(!container){
-			container = $(ajxpBootstrap.parameters.get("MAIN_ELEMENT"));
+			container = $(window._bootstrap.parameters.get("MAIN_ELEMENT"));
 		}
 		var containerOffset = Position.cumulativeOffset(container);
 		var containerDimensions = container.getDimensions();

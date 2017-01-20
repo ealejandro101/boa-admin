@@ -77,7 +77,7 @@ Class.create("Connexion", {
      */
     showLoader : function(){
         if(this.discrete) return;
-        if(!$('AjxpConnexion-loader') && window.ajxpBootstrap.parameters.get("theme")){
+        if(!$('AjxpConnexion-loader') && window._bootstrap.parameters.get("theme")){
             var span = new Element("span", {
                 id:'AjxpConnexion-loader',
                 style:'position:absolute;top:2px;right:2px;z-index:40000;display:none;'});
@@ -199,8 +199,8 @@ Class.create("Connexion", {
 	 * @param onLoadedCode Function Callback
 	 */
 	loadLibrary : function(fileName, onLoadedCode){
-        if(window.ajxpBootstrap && window.ajxpBootstrap.parameters.get("ajxpVersion") && fileName.indexOf("?")==-1){
-            fileName += "?v="+window.ajxpBootstrap.parameters.get("ajxpVersion");
+        if(window._bootstrap && window._bootstrap.parameters.get("ajxpVersion") && fileName.indexOf("?")==-1){
+            fileName += "?v="+window._bootstrap.parameters.get("ajxpVersion");
         }
         var path = (this._libUrl?this._libUrl+'/'+fileName:fileName);
 		new Ajax.Request(path,

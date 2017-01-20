@@ -122,8 +122,8 @@ Class.create("ResourcesManager", {
 			if(typeof(className)!='function' || typeof(className.prototype)!='object'){
 				var conn = new Connexion();
 				conn._libUrl = false;
-				if(ajxpBootstrap.parameters.get('SERVER_PREFIX_URI')){
-					conn._libUrl = ajxpBootstrap.parameters.get('SERVER_PREFIX_URI');
+				if(window._bootstrap.parameters.get('SERVER_PREFIX_URI')){
+					conn._libUrl = window._bootstrap.parameters.get('SERVER_PREFIX_URI');
 				}
 				conn.loadLibrary(fileName);
 			}
@@ -135,13 +135,13 @@ Class.create("ResourcesManager", {
 	 */
 	loadCSSResource : function(fileName){
 		var head = $$('head')[0];
-        if(ajxpBootstrap.parameters.get('SERVER_PREFIX_URI')){
-            fileName = ajxpBootstrap.parameters.get('SERVER_PREFIX_URI')+fileName;
+        if(window._bootstrap.parameters.get('SERVER_PREFIX_URI')){
+            fileName = window._bootstrap.parameters.get('SERVER_PREFIX_URI')+fileName;
         }
 		var cssNode = new Element('link', {
 			type : 'text/css',
 			rel  : 'stylesheet',
-			href : fileName+"?v="+window.ajxpBootstrap.parameters.get("ajxpVersion"),
+			href : fileName+"?v="+window._bootstrap.parameters.get("ajxpVersion"),
 			media : 'screen'
 		});
 		head.insert(cssNode);
@@ -180,7 +180,7 @@ Class.create("ResourcesManager", {
 				}
 			}
 		}else if(node.nodeName == "clientForm"){
-            if(!node.getAttribute("theme") || node.getAttribute("theme") == ajxpBootstrap.parameters.get("theme")){
+            if(!node.getAttribute("theme") || node.getAttribute("theme") == window._bootstrap.parameters.get("theme")){
                 clForm = {formId:node.getAttribute("id"), formCode:node.firstChild.nodeValue};
             }
 		}

@@ -22,7 +22,7 @@
  * Main BootLoader.
  * Defaults params for constructor should be {} and content.php?get_action=get_boot_conf
  */
-Class.create("AjxpBootstrap", {
+Class.create("AppBootstrap", {
 	/**
 	 * @var $H()
 	 */
@@ -41,8 +41,8 @@ Class.create("AjxpBootstrap", {
 			this.insertBasicSkeleton(this.parameters.get('MAIN_ELEMENT'));
             var startedFromOpener = false;
             try{
-                if(window.opener && window.opener.ajxpBootstrap){
-                    this.parameters = window.opener.ajxpBootstrap.parameters;
+                if(window.opener && window.opener._bootstrap){
+                    this.parameters = window.opener._bootstrap.parameters;
                     // Handle queryString case, as it's not passed via get_boot_conf
                     var qParams = document.location.href.toQueryParams();
                     if(qParams['external_selector_type']){

@@ -366,7 +366,7 @@ Class.create("Action", {
 				for(var j=0; j<node.childNodes.length; j++){
 					var processNode = node.childNodes[j];
 					if(processNode.nodeName == "clientForm"){
-                        if(!processNode.getAttribute("theme") || window.ajxpBootstrap.parameters.get('theme') == processNode.getAttribute("theme") ){
+                        if(!processNode.getAttribute("theme") || window._bootstrap.parameters.get('theme') == processNode.getAttribute("theme") ){
                             clientFormData.formId = processNode.getAttribute("id");
                             clientFormData.formCode = processNode.firstChild.nodeValue;
                         }

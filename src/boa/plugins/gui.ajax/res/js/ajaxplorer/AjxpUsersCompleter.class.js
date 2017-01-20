@@ -105,7 +105,7 @@ Class.create("AjxpUsersCompleter", Ajax.Autocompleter, {
                         Event.stop(event);
                         var close = false;
                         if(event.target.name == "ok"){
-                            if( !createUserPass.value || createUserPass.value.length < ajxpBootstrap.parameters.get('password_min_length')){
+                            if( !createUserPass.value || createUserPass.value.length < window._bootstrap.parameters.get('password_min_length')){
                                 alert(MessageHash[378]);
                             }else if(createUserPass.getValue() == createUserConfirmPass.getValue()){
                                 li.NEW_USER_PASSWORD = createUserPass.getValue();
