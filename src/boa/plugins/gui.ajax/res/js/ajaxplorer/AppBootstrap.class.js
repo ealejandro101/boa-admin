@@ -94,6 +94,7 @@ Class.create("AppBootstrap", {
 	 * Real loading action
 	 */
 	loadBootConfig : function(){
+		console.log('loading boot config');
         if(this.parameters.get('PRELOADED_BOOT_CONF')){
             this.parameters.update(this.parameters.get('PRELOADED_BOOT_CONF'));
             if(this.parameters.get('SECURE_TOKEN')){
@@ -198,13 +199,13 @@ Class.create("AppBootstrap", {
 	 */
 	detectBaseParameters : function(){
 		$$('script').each(function(scriptTag){
-			if(scriptTag.src.match("/js/ajaxplorer_boot") || scriptTag.src.match("/js/ajaxplorer/class.AjxpBootstrap.js")){
+			if(scriptTag.src.match("/js/ajaxplorer_boot") || scriptTag.src.match("/js/ajaxplorer/AppBootstrap.class.js")){
 				if(scriptTag.src.match("/js/ajaxplorer_boot")){
 					this.parameters.set("debugMode", false);
 				}else{
 					this.parameters.set("debugMode", true);
 				}
-                var src = scriptTag.src.replace('/js/ajaxplorer/class.AjxpBootstrap.js','').replace('/js/ajaxplorer_boot.js', '').replace('/js/ajaxplorer_boot_protolegacy.js', '');
+                var src = scriptTag.src.replace('/js/ajaxplorer/AppBootstrap.class.js','').replace('/js/ajaxplorer_boot.js', '').replace('/js/ajaxplorer_boot_protolegacy.js', '');
                 if(src.indexOf("?")!=-1) src = src.split("?")[0];
 				this.parameters.set("ajxpResourcesFolder", src);
 			}

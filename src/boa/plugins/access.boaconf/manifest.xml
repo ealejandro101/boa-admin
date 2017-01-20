@@ -5,7 +5,7 @@
         <core_relation packaged="true" tested_version="4.2.0"/>
         <plugin_author>Charles du Jeu</plugin_author>
     </plugin_info>
-	<client_settings icon="boa/plugins/access.boaconf/admin.png">
+	<client_settings icon="plugins/access.boaconf/admin.png">
 		<resources>
 			<i18n namespace="boaconf" path="access.boaconf/i18n" />		
 			<i18n namespace="shared" path="access.shared/i18n" />

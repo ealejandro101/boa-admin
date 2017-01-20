@@ -7,7 +7,7 @@
         xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
 	<client_settings>
         <resources>
-            <js file="plugins/editor.plugin/class.PluginEditor.js" className="PluginEditor"/>
+            <js file="plugins/editor.plugin/PluginEditor.class.js" className="PluginEditor"/>
             <!--css file="plugins/editor.ajxp_role/rolesEditor.css" /-->
             <i18n namespace="plugin_editor" path="editor.plugin/i18n"/>
         </resources>

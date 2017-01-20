@@ -8,8 +8,8 @@
     </server_settings>
     <client_settings>
         <resources>
-            <js file="plugins\uploader.html/class.MultiUploader.js" className="MultiUploader"/>
-            <js file="plugins\uploader.html/class.XHRUploader.js" className="XHRUploader"/>
+            <js file="plugins\uploader.html/MultiUploader.class.js" className="MultiUploader"/>
+            <js file="plugins\uploader.html/XHRUploader.class.js" className="XHRUploader"/>
             <i18n path="uploader.html/i18n" namespace="html_uploader"/>
         </resources>
     </client_settings>
