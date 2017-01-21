@@ -27,7 +27,6 @@ foreach ($lines as $line){
 <div id="ajxp_desktop" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"window","fitMarginBottom":"$(\"optional_bottom_div\").getHeight()"}'></div>
 
 <script type="text/javascript">
-console.log('loading debug...');
 var ajaxplorer, startParameters = {};
 <?php if($JSON_START_PARAMETERS) print "startParameters = ".$JSON_START_PARAMETERS.";"; ?>
 window._bootstrap = new AppBootstrap(startParameters);

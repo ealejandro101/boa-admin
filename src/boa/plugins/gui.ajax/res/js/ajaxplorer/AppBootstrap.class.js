@@ -94,7 +94,6 @@ Class.create("AppBootstrap", {
 	 * Real loading action
 	 */
 	loadBootConfig : function(){
-		console.log('loading boot config');
         if(this.parameters.get('PRELOADED_BOOT_CONF')){
             this.parameters.update(this.parameters.get('PRELOADED_BOOT_CONF'));
             if(this.parameters.get('SECURE_TOKEN')){
