@@ -190,7 +190,7 @@ Class.create("Connexion", {
 		if(this.onComplete){
 			this.onComplete(transport);
 		}
-		document.fire("ajaxplorer:server_answer");
+		document.fire("boa:server_answer");
 	},
 	
 	/**
@@ -231,7 +231,7 @@ Class.create("Connexion", {
 						alert('error loading '+fileName+':'+ e.message);
 					}
 				}
-				document.fire("ajaxplorer:server_answer");				
+				document.fire("boa:server_answer");				
 			}
 		});	
 	}

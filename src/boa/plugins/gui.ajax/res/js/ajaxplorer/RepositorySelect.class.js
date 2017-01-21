@@ -19,7 +19,7 @@
  */
 
 /**
- * A selector for displaying repository list. Will hook to ajaxplorer:repository_list_refreshed.
+ * A selector for displaying repository list. Will hook to boa:repository_list_refreshed.
  */
 Class.create("RepositorySelect", {
 	__implements : "IAjxpWidget",
@@ -38,7 +38,7 @@ Class.create("RepositorySelect", {
             this.options = options;
         }
 		this.createGui();
-		document.observe("ajaxplorer:repository_list_refreshed", function(e){
+		document.observe("boa:repository_list_refreshed", function(e){
 			this.refreshRepositoriesMenu(e.memo.list,e.memo.active);
 		}.bind(this) );
 

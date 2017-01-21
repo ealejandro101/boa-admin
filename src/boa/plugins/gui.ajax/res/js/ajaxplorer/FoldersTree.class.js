@@ -47,8 +47,8 @@ Class.create("FoldersTree", AjxpPane, {
         if(this.options.replaceScroller){
             this.scrollbar = new Control.ScrollBar('tree_container','tree_scroller');
             var scrollbarLayoutObserver = this.scrollbar.recalculateLayout.bind(this.scrollbar);
-            document.observe("ajaxplorer:tree_change",  scrollbarLayoutObserver);
-            this.registeredObservers.set("ajaxplorer:tree_change", scrollbarLayoutObserver);
+            document.observe("boa:tree_change",  scrollbarLayoutObserver);
+            this.registeredObservers.set("boa:tree_change", scrollbarLayoutObserver);
         }
 
 
@@ -97,16 +97,16 @@ Class.create("FoldersTree", AjxpPane, {
 				this.setSelectedPath(path);
 			}.bind(this), 100);
 		}.bind(this);
-		document.observe("ajaxplorer:context_changed",  ctxChangedObs);
-        this.registeredObservers.set("ajaxplorer:context_changed", ctxChangedObs);
+		document.observe("boa:context_changed",  ctxChangedObs);
+        this.registeredObservers.set("boa:context_changed", ctxChangedObs);
 
         var rootNodeObs = function(event){
 			var ajxpRootNode = event.memo;
 			this.tree.setAjxpRootNode(ajxpRootNode);
 			this.changeRootLabel(ajxpRootNode.getLabel(), ajxpRootNode.getIcon());
 		}.bind(this);
-		document.observe("ajaxplorer:root_node_changed", rootNodeObs);
-        this.registeredObservers.set("ajaxplorer:root_node_changed", rootNodeObs);
+		document.observe("boa:root_node_changed", rootNodeObs);
+        this.registeredObservers.set("boa:root_node_changed", rootNodeObs);
 
         var compConfChanged = function(event){
 			if(event.memo.className == "FoldersTree"){
@@ -120,8 +120,8 @@ Class.create("FoldersTree", AjxpPane, {
 				}
 			}
 		}.bind(this);
-		document.observe("ajaxplorer:component_config_changed",  compConfChanged);
-        this.registeredObservers.set("ajaxplorer:component_config_changed", compConfChanged);
+		document.observe("boa:component_config_changed",  compConfChanged);
+        this.registeredObservers.set("boa:component_config_changed", compConfChanged);
 
 	},
 
@@ -191,7 +191,7 @@ Class.create("FoldersTree", AjxpPane, {
             this.scroller.setStyle({height:parseInt(this.treeContainer.getHeight())+'px'});
             this.scrollbar.recalculateLayout();
         }
-        document.fire("ajaxplorer:resize-FoldersTree-" + this.htmlElement.id, this.htmlElement.getDimensions());
+        document.fire("boa:resize-FoldersTree-" + this.htmlElement.id, this.htmlElement.getDimensions());
 	},
 	
 	/**

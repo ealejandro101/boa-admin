@@ -121,7 +121,7 @@
 			dropzone.addEventListener("drop", dropFunc, true);
 			dropzone.addEventListener("dragenter", enterFunc, true);
 			dropzone.addEventListener("dragleave", leaveFunc, true);
-			document.observeOnce("ajaxplorer:trigger_repository_switch", function(){				
+			document.observeOnce("boa:trigger_repository_switch", function(){				
 				dropzone.removeClassName('droparea');
 				dropzone.removeEventListener("dragover", dragOverFunc, true);
 				dropzone.removeEventListener("drop", dropFunc, true);

@@ -64,7 +64,7 @@ Class.create("FetchedResultPane", FilesList, {
              if(selectedNode) ajaxplorer.goTo(selectedNode);
          }.bind(this));
 
-        document.observe("ajaxplorer:repository_list_refreshed", function(){
+        document.observe("boa:repository_list_refreshed", function(){
             this._rootNode.clear();
             this._dataLoaded = false;
             if(this.htmlElement && this.htmlElement.visible()){

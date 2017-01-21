@@ -63,9 +63,9 @@ Class.create("InfoPanel", AjxpPane, {
 		}.bind(this);
 		this.userLogHandler = this.clearPanels.bind(this);
 		if(!this.options.skipObservers){
-            document.observe("ajaxplorer:actions_refreshed", this.updateHandler );
-            document.observe("ajaxplorer:component_config_changed", this.componentConfigHandler );
-            document.observe("ajaxplorer:user_logged", this.userLogHandler );
+            document.observe("boa:actions_refreshed", this.updateHandler );
+            document.observe("boa:component_config_changed", this.componentConfigHandler );
+            document.observe("boa:user_logged", this.userLogHandler );
         }
 	},
 
@@ -91,9 +91,9 @@ Class.create("InfoPanel", AjxpPane, {
 	 */
 	destroy : function(){
         if(!this.options.skipObservers){
-            document.stopObserving("ajaxplorer:actions_refreshed", this.updateHandler );
-            document.stopObserving("ajaxplorer:component_config_changed", this.componentConfigHandler );
-            document.stopObserving("ajaxplorer:user_logged", this.userLogHandler );
+            document.stopObserving("boa:actions_refreshed", this.updateHandler );
+            document.stopObserving("boa:component_config_changed", this.componentConfigHandler );
+            document.stopObserving("boa:user_logged", this.userLogHandler );
         }
 		this.empty();
         if(this.scrollbar){
@@ -328,7 +328,7 @@ Class.create("InfoPanel", AjxpPane, {
 			this.currentPreviewElement.resizePreviewElement({width:squareDim,height:squareDim, maxHeight:previewMaxHeight});
 		}
         if(this.htmlElement){
-            document.fire("ajaxplorer:resize-InfoPanel-" + this.htmlElement.id, this.htmlElement.getDimensions());
+            document.fire("boa:resize-InfoPanel-" + this.htmlElement.id, this.htmlElement.getDimensions());
         }
     },
 	/**

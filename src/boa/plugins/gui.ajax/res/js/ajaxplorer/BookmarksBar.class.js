@@ -47,21 +47,21 @@
 
         }
 		this.createMenu();
-		document.observe("ajaxplorer:registry_loaded", function(event){
+		document.observe("boa:registry_loaded", function(event){
 			this.parseXml(event.memo);
 		}.bind(this) );
-		document.observeOnce("ajaxplorer:actions_loaded", function(){
+		document.observeOnce("boa:actions_loaded", function(){
 			var bmAction = ajaxplorer.actionBar.actions.get('bookmark');
 			this.addBookmarkObject = {
 				name:bmAction.getKeyedText(),
 				alt:bmAction.options.title,
 				image:ajxpResourcesFolder+'/images/actions/16/bookmark_add.png',
 				callback:function(e){
-                    document.notify("ajaxplorer:add_bookmark");
+                    document.notify("boa:add_bookmark");
 				}.bind(this)
 			};		
 		}.bind(this));
-		document.observe("ajaxplorer:add_bookmark", function(){
+		document.observe("boa:add_bookmark", function(){
 			var node = ajaxplorer.getUserSelection().getUniqueNode();
             if(node.getMetadata().get('ajxp_bookmarked') && node.getMetadata().get('ajxp_bookmarked') == 'true'){
                 this.removeBookmark(node.getPath(), function(){ajaxplorer.fireNodeRefresh(node);});
@@ -193,7 +193,7 @@
             connexion.onComplete = onComplete;
         }else{
             connexion.onComplete = function(transport){
-                document.observeOnce("ajaxplorer:registry_part_loaded", function(event){
+                document.observeOnce("boa:registry_part_loaded", function(event){
                     if(event.memo != "user/bookmarks") return;
                     this.parseXml(ajaxplorer.getXmlRegistry());
                 }.bind(this) );

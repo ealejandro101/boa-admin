@@ -103,7 +103,7 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
 			<processing>
 				<clientCallback prepareModal="false"><![CDATA[
-					document.fire("ajaxplorer:add_bookmark");
+					document.fire("boa:add_bookmark");
 					]]></clientCallback>
 			</processing>
 		</action>		

@@ -231,7 +231,7 @@
                               conn.setMethod("POST");
                               conn.onComplete = function(transport){
                                   ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
-                                  document.observeOnce("ajaxplorer:registry_part_loaded", function(event){
+                                  document.observeOnce("boa:registry_part_loaded", function(event){
                                       if(event.memo != "user/preferences") return;
                                       ajaxplorer.logXmlUser(ajaxplorer.getXmlRegistry());
                                   });

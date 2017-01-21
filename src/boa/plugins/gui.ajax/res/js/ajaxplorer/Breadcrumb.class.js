@@ -34,7 +34,7 @@ Class.create("Breadcrumb", {
 		this.element.ajxpPaneObject = this;
         this.options = options || {};
         this.element.update('Files');
-        document.observe("ajaxplorer:context_changed", function(event){
+        document.observe("boa:context_changed", function(event){
             var newNode = event.memo;
             if(Object.isString(newNode)){
                 newNode = new AjxpNode(newNode);

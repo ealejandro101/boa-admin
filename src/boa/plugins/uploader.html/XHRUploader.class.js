@@ -599,7 +599,7 @@ Class.create("XHRUploader", {
 
         var item;
         if(item = this.getNextItem()){
-            document.fire("ajaxplorer:longtask_starting");
+            document.fire("boa:longtask_starting");
 			this.sendFileMultipart(item);
 		}else{
             if(this.hasLoadingItem()) return;
@@ -607,7 +607,7 @@ Class.create("XHRUploader", {
 			if(this.optionPane.autoCloseCheck.checked){
 				hideLightBox(true);
 			}
-            document.fire("ajaxplorer:longtask_finished");
+            document.fire("boa:longtask_finished");
 		}
 
 	},

@@ -51,7 +51,7 @@ Class.create("ActionsToolbar", {
         if(this.options.styles){
             this.buildActionBarStylingMenu();
             this.style = this.options.defaultStyle;
-            document.observe("ajaxplorer:user_logged", function(){
+            document.observe("boa:user_logged", function(){
                 if(ajaxplorer.user && ajaxplorer.user.getPreference("action_bar_style")){
                     this.style = ajaxplorer.user.getPreference("action_bar_style");
                 }else{
@@ -61,14 +61,14 @@ Class.create("ActionsToolbar", {
             }.bind(this));
         }
 		attachMobileScroll(oElement.id, "horizontal");
-		document.observe("ajaxplorer:actions_loaded", this.actionsLoaded.bind(this));
-		document.observe("ajaxplorer:actions_refreshed", this.refreshToolbarsSeparator.bind(this));
+		document.observe("boa:actions_loaded", this.actionsLoaded.bind(this));
+		document.observe("boa:actions_refreshed", this.refreshToolbarsSeparator.bind(this));
         this.componentConfigHandler = function(event){
             if(event.memo.className == "ActionsToolbar"){
                 this.parseComponentConfig(event.memo.classConfig.get('all'));
             }
         }.bind(this);
-        document.observe("ajaxplorer:component_config_changed", this.componentConfigHandler );
+        document.observe("boa:component_config_changed", this.componentConfigHandler );
 
 	},
 	
@@ -98,7 +98,7 @@ Class.create("ActionsToolbar", {
     },
 	/**
 	 * Handler for actions_loaded event.
-	 * @param event Event ajaxplorer:actions_loaded
+	 * @param event Event boa:actions_loaded
 	 */
 	actionsLoaded : function(event) {
 		this.actions = event.memo;

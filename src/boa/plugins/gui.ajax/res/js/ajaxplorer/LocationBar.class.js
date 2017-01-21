@@ -38,7 +38,7 @@ Class.create("LocationBar", {
 		this.realPath = '/';
         this.options = options || {};
 		this.createGui();
-		document.observe("ajaxplorer:user_logged", this.resize.bind(this));
+		document.observe("boa:user_logged", this.resize.bind(this));
 	},
 	/**
 	 * Creates the GUI
@@ -158,7 +158,7 @@ Class.create("LocationBar", {
 				this.hasFocus = false;
 			}
 		}.bind(this));
-		document.observe("ajaxplorer:context_changed", function(event){
+		document.observe("boa:context_changed", function(event){
 			window.setTimeout(function(){
 				this.updateLocationBar(event.memo);
 			}.bind(this), 0);			

@@ -367,12 +367,12 @@ Class.create("MultiUploader", {
 					return;
 				}
 			}
-            document.fire("ajaxplorer:longtask_starting");
+            document.fire("boa:longtask_starting");
             $(nextToSubmit).submit();
 		}
 		else
 		{
-            document.fire("ajaxplorer:longtask_finished");
+            document.fire("boa:longtask_finished");
 			//ajaxplorer.fireContextRefresh();
 		}
 		

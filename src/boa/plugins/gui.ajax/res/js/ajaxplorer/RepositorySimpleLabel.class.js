@@ -19,7 +19,7 @@
  */
 
 /**
- * A selector for displaying repository list. Will hook to ajaxplorer:repository_list_refreshed.
+ * A selector for displaying repository list. Will hook to boa:repository_list_refreshed.
  */
 Class.create("RepositorySimpleLabel", AjxpPane, {
 
@@ -33,7 +33,7 @@ Class.create("RepositorySimpleLabel", AjxpPane, {
 
         this.htmlElement.update('<div class="repository_legend">Workspace</div>');
         this.htmlElement.insert('<div class="repository_title"></div>');
-        document.observe("ajaxplorer:repository_list_refreshed", function(e){
+        document.observe("boa:repository_list_refreshed", function(e){
 
             this.htmlElement.down("div.repository_title").update(this._defaultString);
             var repositoryList = e.memo.list;

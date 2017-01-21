@@ -217,7 +217,7 @@ Class.create("AjxpDataModel", {
         var args = $A(arguments).slice(1);
         //args.unshift(this);
         if(this._globalEvents){
-            args.unshift("ajaxplorer:"+eventName);
+            args.unshift("boa:"+eventName);
             document.fire.apply(document, args);
         }else{
             if(args.length){

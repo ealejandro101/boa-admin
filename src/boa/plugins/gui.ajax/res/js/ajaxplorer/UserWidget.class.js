@@ -49,10 +49,10 @@ Class.create("UserWidget", {
 		
 		this.element.observe("mouseover", this.mObs1 );
 		this.element.observe("mouseout", this.mObs2 );		
-		document.observe("ajaxplorer:user_logged", this.uLoggedObs );
-		document.observe("ajaxplorer:actions_loaded", this.actLoaded );
+		document.observe("boa:user_logged", this.uLoggedObs );
+		document.observe("boa:actions_loaded", this.actLoaded );
 		if(Prototype.Browser.IE) {
-			document.observe("ajaxplorer:actions_refreshed", this.actLoaded );
+			document.observe("boa:actions_refreshed", this.actLoaded );
 		}
 	},
 	/**
@@ -184,10 +184,10 @@ Class.create("UserWidget", {
 	destroy : function(){
 		this.element.stopObserving("mouseover", this.mObs1 );
 		this.element.stopObserving("mouseout", this.mObs2 );		
-		document.stopObserving("ajaxplorer:user_logged", this.uLoggedObs );
-		document.stopObserving("ajaxplorer:actions_loaded", this.actLoaded );		
+		document.stopObserving("boa:user_logged", this.uLoggedObs );
+		document.stopObserving("boa:actions_loaded", this.actLoaded );		
 		if(Prototype.Browser.IE) {
-			document.stopObserving("ajaxplorer:actions_refreshed", this.actLoaded );
+			document.stopObserving("boa:actions_refreshed", this.actLoaded );
 		}		
 		this.element = null;
 	}

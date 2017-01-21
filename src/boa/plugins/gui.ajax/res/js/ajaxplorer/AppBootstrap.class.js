@@ -60,7 +60,7 @@ Class.create("AppBootstrap", {
                 this.loadBootConfig();
             }
 		}.bind(this));
-		document.observe("ajaxplorer:before_gui_load", function(e){
+		document.observe("boa:before_gui_load", function(e){
 			var desktop = $(this.parameters.get('MAIN_ELEMENT'));
 			var options = desktop.getAttribute("ajxpOptions").evalJSON(false);
 			if(options.fit && options.fit == 'height'){
@@ -73,7 +73,7 @@ Class.create("AppBootstrap", {
 				fitHeightToBottom($(this.parameters.get('MAIN_ELEMENT')), options.fitParent, marginBottom, true);
 			}
 		}.bind(this));
-		document.observe("ajaxplorer:actions_loaded", function(){
+		document.observe("boa:actions_loaded", function(){
 			if(!this.parameters.get("SELECTOR_DATA") && ajaxplorer.actionBar.actions.get("ext_select")){
 				ajaxplorer.actionBar.actions.unset("ext_select");
 				ajaxplorer.actionBar.fireContextChange();
@@ -82,7 +82,7 @@ Class.create("AppBootstrap", {
 				ajaxplorer.actionBar.defaultActions.set("file", "ext_select");
 			}
 		}.bind(this));					
-		document.observe("ajaxplorer:loaded", function(e){
+		document.observe("boa:loaded", function(e){
 			this.insertAnalytics();
 			if(this.parameters.get("SELECTOR_DATA")){
 	    		ajaxplorer.actionBar.defaultActions.set("file", "ext_select");
@@ -184,7 +184,7 @@ Class.create("AppBootstrap", {
 		}
 		window.zipEnabled = this.parameters.get("zipEnabled");
 		window.multipleFilesDownloadEnabled = this.parameters.get("multipleFilesDownloadEnabled");
-		document.fire("ajaxplorer:boot_loaded");
+		document.fire("boa:boot_loaded");
 		window.ajaxplorer = new Ajaxplorer(this.parameters.get("EXT_REP")||"", this.parameters.get("usersEnabled"), this.parameters.get("loggedUser"));
 		if(this.parameters.get("currentLanguage")){
 			window.ajaxplorer.currentLanguage = this.parameters.get("currentLanguage");

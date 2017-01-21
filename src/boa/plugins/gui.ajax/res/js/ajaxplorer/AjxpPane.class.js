@@ -51,7 +51,7 @@ Class.create("AjxpPane", {
         if(this.options.bindSizeTo){
             if(this.options.bindSizeTo.width){
                 this.options.bindSizeTo.width.events.each(function(eventName){
-                    document.observe("ajaxplorer:" + eventName, this.resizeBound.bind(this));
+                    document.observe("boa:" + eventName, this.resizeBound.bind(this));
                 }.bind(this) );
 
             }

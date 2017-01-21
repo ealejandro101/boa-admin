@@ -67,7 +67,7 @@ Class.create("SearchEngine", AjxpPane, {
 		$super($(mainElementName), this._ajxpOptions);
         this.updateSearchModeFromRegistry();
         this.searchModeObserver = this.updateSearchModeFromRegistry.bind(this);
-        document.observe("ajaxplorer:registry_loaded", this.searchModeObserver);
+        document.observe("boa:registry_loaded", this.searchModeObserver);
 
         this._dataModel = new AjxpDataModel(true);
         this._rootNode = new AjxpNode("/", false, "Results", "folder.png");
@@ -251,7 +251,7 @@ Class.create("SearchEngine", AjxpPane, {
             }
         }.bind(this);
 
-        document.observe("ajaxplorer:repository_list_refreshed", this.refreshObserver );
+        document.observe("boa:repository_list_refreshed", this.refreshObserver );
 
         this.resize();
 	},
@@ -292,8 +292,8 @@ Class.create("SearchEngine", AjxpPane, {
             var ajxpId = this.htmlElement.id;
             this.htmlElement.update('');
         }
-        document.stopObserving("ajaxplorer:repository_list_refreshed", this.refreshObserver);
-        document.stopObserving("ajaxplorer:registry_loaded", this.searchModeObserver);
+        document.stopObserving("boa:repository_list_refreshed", this.refreshObserver);
+        document.stopObserving("boa:registry_loaded", this.searchModeObserver);
 		this.htmlElement = null;
         if(ajxpId && window[ajxpId]){
             try {delete window[ajxpId];}catch(e){}

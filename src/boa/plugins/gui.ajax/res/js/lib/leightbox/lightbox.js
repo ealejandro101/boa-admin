@@ -250,7 +250,7 @@ function hideLightBox(onFormSubmit)
 		ajaxplorer.enableNavigation();
 		ajaxplorer.focusLast();
 		ajaxplorer.enableShortcuts();
-		document.fire("ajaxplorer:selection_changed");
+		document.fire("boa:selection_changed");
 	}
 	if(currentDraggable) currentDraggable.destroy();
 	if(modal.closeFunction){

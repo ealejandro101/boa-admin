@@ -93,7 +93,7 @@ Class.create("FilesList", SelectableElements, {
 				this.resizeThumbnails();
 			}
 		}.bind(this);
-        this._registerObserver(document, "ajaxplorer:user_logged", userLoggedObserver);
+        this._registerObserver(document, "boa:user_logged", userLoggedObserver);
 		
 		
 		var loadObserver = this.contextObserver.bind(this);
@@ -146,10 +146,10 @@ Class.create("FilesList", SelectableElements, {
             this._registerObserver(this._dataModel, "component_config_changed", componentConfigObserver, true);
             this._registerObserver(this._dataModel, "selection_changed", selectionChangedObserver, true);
         }else{
-            this._registerObserver(document, "ajaxplorer:context_changed", contextChangedObserver, false );
-            this._registerObserver(document, "ajaxplorer:context_loading", loadingObs, false);
-            this._registerObserver(document, "ajaxplorer:component_config_changed", componentConfigObserver, false);
-            this._registerObserver(document, "ajaxplorer:selection_changed", selectionChangedObserver, false);
+            this._registerObserver(document, "boa:context_changed", contextChangedObserver, false );
+            this._registerObserver(document, "boa:context_loading", loadingObs, false);
+            this._registerObserver(document, "boa:component_config_changed", componentConfigObserver, false);
+            this._registerObserver(document, "boa:selection_changed", selectionChangedObserver, false);
         }
 
 		this._thumbSize = 64;
@@ -188,7 +188,7 @@ Class.create("FilesList", SelectableElements, {
         var repoSwitchObserver = this.setOnLoad.bind(this);
 		this._registerObserver(document, "keydown", keydownObserver);
         if(!this._dataModel){
-            this._registerObserver(document, "ajaxplorer:trigger_repository_switch", repoSwitchObserver);
+            this._registerObserver(document, "boa:trigger_repository_switch", repoSwitchObserver);
         }
 	},
 
@@ -959,7 +959,7 @@ Class.create("FilesList", SelectableElements, {
             this.htmlElement.down('.table_rows_container').setStyle({width:'100%'});
     	}
 		this.notify("resize");
-        document.fire("ajaxplorer:resize-FilesList-" + this.htmlElement.id, this.htmlElement.getDimensions());
+        document.fire("boa:resize-FilesList-" + this.htmlElement.id, this.htmlElement.getDimensions());
     },
 	
 	/**

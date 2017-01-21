@@ -52,10 +52,10 @@ Class.create("Ajaxplorer", {
 	
 	/**
 	 * Real initialisation sequence. Will Trigger the whole GUI building.
-	 * Event ajaxplorer:loaded is fired at the end.
+	 * Event boa:loaded is fired at the end.
 	 */
 	init:function(){
-		document.observe("ajaxplorer:registry_loaded", function(){
+		document.observe("boa:registry_loaded", function(){
 			this.refreshExtensionsRegistry();
 			this.logXmlUser(this._registry);
             if(this.user){
@@ -68,7 +68,7 @@ Class.create("Ajaxplorer", {
 				this.refreshTemplateParts();
 				this.refreshGuiComponentConfigs();
 			} else {
-				document.observe("ajaxplorer:gui_loaded", function(){
+				document.observe("boa:gui_loaded", function(){
 					this.refreshTemplateParts();
 					this.refreshGuiComponentConfigs();
 				}.bind(this));
@@ -87,7 +87,7 @@ Class.create("Ajaxplorer", {
 		modal.initForms();
 		this.initObjects();
 		window.setTimeout(function(){
-			document.fire('ajaxplorer:loaded');
+			document.fire('boa:loaded');
 		}, 200);		
 	},
 	/**
@@ -105,7 +105,7 @@ Class.create("Ajaxplorer", {
 				modal.updateLoadingProgress('XML Registry loaded');
 				if(!sync) {
 					//console.log('firing registry_loaded');
-					document.fire("ajaxplorer:registry_loaded", this._registry);
+					document.fire("boa:registry_loaded", this._registry);
 				}
 			}else if(transport.responseXML.documentElement.nodeName == "ajxp_registry_part"){
 				this.refreshXmlRegistryPart(transport.responseXML.documentElement);
@@ -125,7 +125,7 @@ Class.create("Ajaxplorer", {
 	/**
 	 * Inserts a document fragment retrieved from server inside the full tree.
 	 * The node must contains the xPath attribute to locate it inside the registry.
-	 * Event ajaxplorer:registry_part_loaded is triggerd once this is done.
+	 * Event boa:registry_part_loaded is triggerd once this is done.
 	 * @param documentElement DOMNode
 	 */
 	refreshXmlRegistryPart : function(documentElement){
@@ -148,7 +148,7 @@ Class.create("Ajaxplorer", {
 		}else{
 			if(documentElement.firstChild) this._registry.appendChild(documentElement.firstChild.cloneNode(true));
 		}
-		document.fire("ajaxplorer:registry_part_loaded", xPath);		
+		document.fire("boa:registry_part_loaded", xPath);		
 	},
 	
 	/**
@@ -175,7 +175,7 @@ Class.create("Ajaxplorer", {
 		protoMenu.options.beforeHide = function(e){
 			this.options.lastElement = null;
 		}.bind(protoMenu);
-		document.observe("ajaxplorer:actions_refreshed", function(){
+		document.observe("boa:actions_refreshed", function(){
 			if(this.options.lastElement){
 				this.options.menuItems = ajaxplorer.actionBar.getContextActions(this.options.lastElement, ["inline"]);
 				this.refreshList();
@@ -186,7 +186,7 @@ Class.create("Ajaxplorer", {
 		if(this._registry){
 			this.actionBar.loadActionsFromRegistry(this._registry);
 		}
-		document.observe("ajaxplorer:registry_loaded", function(event){
+		document.observe("boa:registry_loaded", function(event){
             if(Prototype.Browser.IE) ResourcesManager.prototype.loadAutoLoadResources(event.memo);
 			this.actionBar.loadActionsFromRegistry(event.memo);
 		}.bind(this) );
@@ -195,16 +195,16 @@ Class.create("Ajaxplorer", {
 			this.history = new Proto.History(function(hash){
 				this.goTo(this.historyHashToPath(hash));
 			}.bind(this));
-			document.observe("ajaxplorer:context_changed", function(event){
+			document.observe("boa:context_changed", function(event){
 				this.updateHistory(this.getContextNode().getPath());
 			}.bind(this));
 		}else{
-			document.observe("ajaxplorer:context_changed", function(event){
+			document.observe("boa:context_changed", function(event){
 				var path = this.getContextNode().getPath();
 				document.title = this.appTitle + ' - '+(getBaseName(path)?getBaseName(path):'/');
 			}.bind(this));
 		}
-		document.observe("ajaxplorer:context_changed", function(event){
+		document.observe("boa:context_changed", function(event){
 			if(this.skipLsHistory || !this.user || !this.user.getActiveRepository()) return;			
 			window.setTimeout(function(){
 				var data = this.user.getPreference("ls_history", true) || {};
@@ -226,13 +226,13 @@ Class.create("Ajaxplorer", {
 		/*********************/
 		this.guiLoaded = false;
 		this.buildGUI($(window._bootstrap.parameters.get('MAIN_ELEMENT')));
-		document.fire("ajaxplorer:before_gui_load");
+		document.fire("boa:before_gui_load");
 		// Rewind components creation!
 		if(this.guiCompRegistry){
             this.initAjxpWidgets(this.guiCompRegistry);
 		}
 		this.guiLoaded = true;
-		document.fire("ajaxplorer:gui_loaded");
+		document.fire("boa:gui_loaded");
 		modal.updateLoadingProgress('GUI Initialized');
 		this.initTabNavigation();
 		this.blockShortcuts = false;
@@ -241,7 +241,7 @@ Class.create("Ajaxplorer", {
 		
 
 		this.tryLogUserFromCookie();
-		document.fire("ajaxplorer:registry_loaded", this._registry);		
+		document.fire("boa:registry_loaded", this._registry);		
 	},
 
     initAjxpWidgets : function(compRegistry){
@@ -439,7 +439,7 @@ Class.create("Ajaxplorer", {
         if(!cumul) cumul = $A();
 		cumul.push(classConfig);
         this._guiComponentsConfigs.set(className, cumul);
-		document.fire("ajaxplorer:component_config_changed", {className:className, classConfig:classConfig});
+		document.fire("boa:component_config_changed", {className:className, classConfig:classConfig});
 	},
 
     getGuiComponentConfigs : function(className){
@@ -468,7 +468,7 @@ Class.create("Ajaxplorer", {
 	/**
 	 * Translate the XML answer to a new User object
 	 * @param documentElement DOMNode The user fragment
-	 * @param skipEvent Boolean Whether to skip the sending of ajaxplorer:user_logged event.
+	 * @param skipEvent Boolean Whether to skip the sending of boa:user_logged event.
 	 */
 	logXmlUser: function(documentElement, skipEvent){
 		this.user = null;
@@ -481,7 +481,7 @@ Class.create("Ajaxplorer", {
 			}
 		}
 		if(!skipEvent){
-			document.fire("ajaxplorer:user_logged", this.user);
+			document.fire("boa:user_logged", this.user);
 		}
 	},
 		
@@ -517,9 +517,9 @@ Class.create("Ajaxplorer", {
 		}
 		this.loadRepository(repositoryObject);		
 		if(repList && repId){
-			document.fire("ajaxplorer:repository_list_refreshed", {list:repList,active:repId});
+			document.fire("boa:repository_list_refreshed", {list:repList,active:repId});
 		}else{
-			document.fire("ajaxplorer:repository_list_refreshed", {list:false,active:false});
+			document.fire("boa:repository_list_refreshed", {list:false,active:false});
 		}		
 	},
 	
@@ -528,12 +528,12 @@ Class.create("Ajaxplorer", {
 	 */
 	reloadRepositoriesList : function(){
 		if(!this.user) return;
-		document.observeOnce("ajaxplorer:registry_part_loaded", function(event){
+		document.observeOnce("boa:registry_part_loaded", function(event){
 			if(event.memo != "user/repositories") return;
 			this.logXmlUser(this._registry, true);
 			repId = this.user.getActiveRepository();
 			repList = this.user.getRepositoriesList();
-			document.fire("ajaxplorer:repository_list_refreshed", {list:repList,active:repId});			
+			document.fire("boa:repository_list_refreshed", {list:repList,active:repId});			
 		}.bind(this));
 		this.loadXmlRegistry(false, "user/repositories");
 	},
@@ -661,7 +661,7 @@ Class.create("Ajaxplorer", {
 	 * @param repositoryId String Id of the new repository
 	 */
 	triggerRepositoryChange: function(repositoryId){		
-		document.fire("ajaxplorer:trigger_repository_switch");
+		document.fire("boa:trigger_repository_switch");
 		var connexion = new Connexion();
 		connexion.addParameter('get_action', 'switch_repository');
 		connexion.addParameter('repository_id', repositoryId);
