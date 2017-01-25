@@ -451,7 +451,7 @@ Class.create("HeaderResizer", {
 		label.siblings().each(function(sib){
 			siblingWidth += sib.getWidth();
 		});
-		//if(cell.getAttribute("ajxp_message_id"))console.log(computedWidth + ' // ' + (computedWidth - siblingWidth - parseInt(cellPaddLeft) - parseInt(cellPaddRight) - parseInt(labelPaddLeft) - parseInt(labelPaddRight)));
+		//if(cell.getAttribute("message_id"))console.log(computedWidth + ' // ' + (computedWidth - siblingWidth - parseInt(cellPaddLeft) - parseInt(cellPaddRight) - parseInt(labelPaddLeft) - parseInt(labelPaddRight)));
 		label.setStyle({width:(computedWidth - siblingWidth) + 'px'});
 		//console.log(width + " :: " + computedWidth +" :: "+ (computedWidth - siblingWidth - parseInt(cellPaddLeft) - parseInt(cellPaddRight) - parseInt(labelPaddLeft) - parseInt(labelPaddRight)));
 		if(width) cell.setStyle({width:computedWidth + 'px'});	

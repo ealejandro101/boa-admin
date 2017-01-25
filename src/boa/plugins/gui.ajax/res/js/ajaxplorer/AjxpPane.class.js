@@ -175,7 +175,7 @@ Class.create("AjxpPane", {
 	 * @param headerIcon String Path for the icon image
 	 */
 	addPaneHeader : function(headerLabel, headerIcon){
-        var label = new Element('span', {ajxp_message_id:headerLabel}).update(MessageHash[headerLabel]);
+        var label = new Element('span', {message_id:headerLabel}).update(MessageHash[headerLabel]);
         var header = new Element('div', {className:'panelHeader'}).update(label);
         if(headerIcon){
             var ic = resolveImageSource(headerIcon, '/images/actions/ICON_SIZE', 16);

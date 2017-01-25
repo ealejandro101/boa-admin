@@ -409,7 +409,7 @@
 				<clientForm id="ajxp_link_form"><![CDATA[
 				<div id="ajxp_link_form" title="BOA_MESSAGE[369]"  box_width="280" action="ajxp_link">
 				<fieldset>
-					<legend ajxp_message_id="296">BOA_MESSAGE[296]</legend>
+					<legend message_id="296">BOA_MESSAGE[296]</legend>
 					<input type="text" style="width:195px;margin-right:5px;" id="ajxp_link_container" class="dialogFocus"/>
                     <a id="email" title="BOA_MESSAGE[323]"><span class="icon-envelope-alt"></span><img style="border:none;" align="absmiddle" src="BOA_THEME_FOLDER/images/actions/22/mail_generic.png" height="22" width="22"/></a>
                   </fieldset>

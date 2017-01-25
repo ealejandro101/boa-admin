@@ -65,7 +65,7 @@ Class.create("UserWidget", {
 		{
 			if(oUser.id != 'guest') 
 			{
-                var label = '<ajxp:message ajxp_message_id="142">'+MessageHash[142]+'</ajxp:message><i ajxp_message_title_id="189" title="'+MessageHash[189]+'">'+ oUser.id +' </i>';
+                var label = '<ajxp:message message_id="142">'+MessageHash[142]+'</ajxp:message><i ajxp_message_title_id="189" title="'+MessageHash[189]+'">'+ oUser.id +' </i>';
                 if(oUser.getPreference('USER_DISPLAY_NAME')){
                     var img = '';
                     if(oUser.getPreference("avatar")){
@@ -84,13 +84,13 @@ Class.create("UserWidget", {
 			}
 			else 
 			{
-				logging_string = '<div style="padding:3px 0 3px 7px;"><ajxp:message ajxp_message_id="143">'+MessageHash[143]+'</ajxp:message></div>';
+				logging_string = '<div style="padding:3px 0 3px 7px;"><ajxp:message message_id="143">'+MessageHash[143]+'</ajxp:message></div>';
 				this.element.addClassName('disabled');
 			}
 		}
 		else 
 		{
-			logging_string = '<div style="padding:3px 0 3px 7px;"><ajxp:message ajxp_message_id="142">'+MessageHash[144]+'</ajxp:message></div>';
+			logging_string = '<div style="padding:3px 0 3px 7px;"><ajxp:message message_id="142">'+MessageHash[144]+'</ajxp:message></div>';
 			this.element.addClassName('disabled');
 		}
 		this.element.update(logging_string);

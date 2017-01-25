@@ -22,8 +22,8 @@
 			</div>
 			<div id="pluginTabulator">
 			    <ul class="tabrow">
-                    <li class="selected" data-PaneID="pane-infos"><span ajxp_message_id="plugin_editor.3">AJXP_MESSAGE[plugin_editor.3]</span></li>
-                    <li class="" data-PaneID="pane-docs"><span ajxp_message_id="plugin_editor.4">AJXP_MESSAGE[plugin_editor.4]</span></li>
+                    <li class="selected" data-PaneID="pane-infos"><span message_id="plugin_editor.3">AJXP_MESSAGE[plugin_editor.3]</span></li>
+                    <li class="" data-PaneID="pane-docs"><span message_id="plugin_editor.4">AJXP_MESSAGE[plugin_editor.4]</span></li>
 	            </ul>
 	            <div class="tabpanes">
 	            </div>

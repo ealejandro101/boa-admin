@@ -394,14 +394,14 @@
 				<clientForm id="webdav_pref_form"><![CDATA[
 					<div id="webdav_pref_form" action="webdav_pref_form" box_width="450">
 					    <div class="dialogContentMainTitle">WebDAV Access</div>
-						<div class="dialogLegend" style="margin-bottom: 2px;padding: 0 5px;" ajxp_message_id="404">BOA_MESSAGE[404]</div>
+						<div class="dialogLegend" style="margin-bottom: 2px;padding: 0 5px;" message_id="404">BOA_MESSAGE[404]</div>
 						<div style="padding:10px;"><input type="checkbox" id="webdav_activator" style="width:16px;" name="webdav_activator"> <label for="webdav_activator">BOA_MESSAGE[406]</label></div>
 						<div class="dialogButtons" id="webdav_password_form" style="display:none;text-align: left;padding-left: 15px;height: 42px;font-size: 0.9em;padding-top: 5px;">
 							<div style="width: 70%; float: left; padding-right: 5px; text-align: right;">BOA_MESSAGE[407]</div><input type="password" id="webdav_password" style="float:left;height: 24px;width: 80px;"> <input type="image" src="BOA_THEME_FOLDER/images/actions/22/dialog_ok_apply.png" height="22" width="22" title="OK" id="webdav_pass_saver">
 						</div>
-						<div class="dialogLegend" style="margin: 5px;" ajxp_message_id="405">BOA_MESSAGE[405]</div>
+						<div class="dialogLegend" style="margin: 5px;" message_id="405">BOA_MESSAGE[405]</div>
 						<input type="text" id="webdav_main_access" value="BOA_MESSAGE[466]" readonly/>
-						<div class="dialogLegend" id="perworkspace-urls-toggle" style="margin-bottom: 2px; padding:5px;" ajxp_message_id="405">
+						<div class="dialogLegend" id="perworkspace-urls-toggle" style="margin-bottom: 2px; padding:5px;" message_id="405">
 						<span class="icon-caret-right"></span>BOA_MESSAGE[465]</div>
 						<div id="webdav_repo_list" style="display:none; height: 200px; overflow:auto;"></div>
 						<input type="hidden" name="get_action" value="webdav_preferences">									

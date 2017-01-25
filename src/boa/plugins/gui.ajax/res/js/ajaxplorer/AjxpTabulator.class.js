@@ -42,7 +42,7 @@ Class.create("AjxpTabulator", AjxpPane, {
             if(tabInfo.iconClass){
                 td.insert(new Element('span', {className:tabInfo.iconClass}));
             }
-            td.insert('<span class="tab_label" ajxp_message_id="'+tabInfo.label+'">'+MessageHash[tabInfo.label]+'</span>');
+            td.insert('<span class="tab_label" message_id="'+tabInfo.label+'">'+MessageHash[tabInfo.label]+'</span>');
 			td.observe('click', function(){
 				this.switchTabulator(tabInfo.id);
 			}.bind(this) );

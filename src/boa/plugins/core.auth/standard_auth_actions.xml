@@ -74,18 +74,18 @@
 						<input type="hidden" name="get_action" value="login">
 						<input type="hidden" name="login_seed" id="login_seed" value="">
 						<a style="float:right;" href="javascript:ajaxplorer.actionBar.fireAction('switch_language');" title="BOA_MESSAGE[190]" alt="BOA_MESSAGE[190]" class="icon-flag"/>&nbsp;</a>
-						<div class="dialogLegend" style="margin-bottom: 3px;margin-top:4px;" ajxp_message_id="180">BOA_MESSAGE[180]</div>
+						<div class="dialogLegend" style="margin-bottom: 3px;margin-top:4px;" message_id="180">BOA_MESSAGE[180]</div>
 						<div style="width:100%;">
 							<div class="SF_element">
-								<div class="SF_label"><ajxp:message ajxp_message_id="181">BOA_MESSAGE[181]</ajxp:message></div>
+								<div class="SF_label"><ajxp:message message_id="181">BOA_MESSAGE[181]</ajxp:message></div>
 								<div class="SF_input"><input type="text" name="userid" style="width: 100px; padding:0px;" class="dialogFocus"></div>
 							</div>
 							<div class="SF_element">
-								<div class="SF_label"><ajxp:message ajxp_message_id="182">BOA_MESSAGE[182]</ajxp:message></div>
+								<div class="SF_label"><ajxp:message message_id="182">BOA_MESSAGE[182]</ajxp:message></div>
 								<div class="SF_input"><input type="password" name="password"  style="width: 100px; padding:0px;"></div>
 							</div>
 							<div class="SF_element">
-								<input type="checkbox" class="radio" name="remember_me" style="border: none; width:20px !important;"/><ajxp:message ajxp_message_id="261">BOA_MESSAGE[261]</ajxp:message>
+								<input type="checkbox" class="radio" name="remember_me" style="border: none; width:20px !important;"/><ajxp:message message_id="261">BOA_MESSAGE[261]</ajxp:message>
 							</div>
 						</div>
 						</div>					
@@ -181,13 +181,13 @@
 					<div id="pass_change_form" action="pass_change_form" box_width="210">					
 						<input type="hidden" name="pass_seed" id="pass_seed" value="">
 						<div class="SF_element">
-							<div class="SF_label" ajxp_message_id="237">BOA_MESSAGE[237] : </div><input id="user_change_ownpass_old" type="password" class="dialogFocus SF_input"/>
+							<div class="SF_label" message_id="237">BOA_MESSAGE[237] : </div><input id="user_change_ownpass_old" type="password" class="dialogFocus SF_input"/>
 						</div>
 						<div class="SF_element">
-							<div class="SF_label" ajxp_message_id="198">BOA_MESSAGE[198] : </div><input id="user_change_ownpass1" value="" type="password" class="SF_input"/>
+							<div class="SF_label" message_id="198">BOA_MESSAGE[198] : </div><input id="user_change_ownpass1" value="" type="password" class="SF_input"/>
 						</div>
 						<div class="SF_element">						
-							<div class="SF_label" ajxp_message_id="199">BOA_MESSAGE[199] : </div><input id="user_change_ownpass2" value="" type="password" class="SF_input"/>
+							<div class="SF_label" message_id="199">BOA_MESSAGE[199] : </div><input id="user_change_ownpass2" value="" type="password" class="SF_input"/>
 						</div>
 						<div class="SF_element" id="pwd_strength_container"></div>						
 					</div>
