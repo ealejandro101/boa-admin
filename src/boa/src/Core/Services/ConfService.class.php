@@ -1201,7 +1201,7 @@ class ConfService
     }
 
     /**
-     * Search the manifests declaring ajxpdriver as their root node. Remove boaconf & shared
+     * Search the manifests declaring coredriver as their root node. Remove boaconf & shared
      * @static
      * @param string $filterByTagName
      * @param string $filterByDriverName
@@ -1209,7 +1209,7 @@ class ConfService
      * @return string
      */
     public static function availableDriversToXML($filterByTagName = "", $filterByDriverName="", $limitToEnabledPlugins = false){
-        $nodeList = PluginsService::searchAllManifests("//ajxpdriver", "node", false, $limitToEnabledPlugins);
+        $nodeList = PluginsService::searchAllManifests("//coredriver", "node", false, $limitToEnabledPlugins);
         $xmlBuffer = "";
         foreach($nodeList as $node){
             $dName = $node->getAttribute("name");
@@ -1222,13 +1222,13 @@ class ConfService
             $q = new DOMXPath($node->ownerDocument);            
             $cNodes = $q->query("//".$filterByTagName, $node);
             $nodeAttr = $node->attributes;
-            $xmlBuffer .= "<ajxpdriver ";
+            $xmlBuffer .= "<coredriver ";
             foreach($node->attributes as $attr) $xmlBuffer.= " $attr->name=\"$attr->value\" ";
             $xmlBuffer .=">";
             foreach($cNodes as $child){
                 $xmlBuffer .= $child->ownerDocument->saveXML($child);
             }
-            $xmlBuffer .= "</ajxpdriver>";
+            $xmlBuffer .= "</coredriver>";
         }
         return $xmlBuffer;
     }

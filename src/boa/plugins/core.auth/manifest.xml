@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ajxpcore id="core.auth" label="CONF_MESSAGE[Authentification]" description="CONF_MESSAGE[Options applied to all auth drivers]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
+<core id="core.auth" label="CONF_MESSAGE[Authentification]" description="CONF_MESSAGE[Options applied to all auth drivers]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
 	<class_definition classname="BoA\Plugins\Core\Auth\CoreAuthLoader" filename="core.auth/CoreAuthLoader.class.php"/>
     <client_settings>
         <resources>
@@ -24,4 +24,4 @@
         <global_param group="CONF_MESSAGE[Secondary Instance (optional)]" name="MULTI_USER_BASE_DRIVER" type="select" choices="master|Master Only,slave|Slave Only,both|Both" label="CONF_MESSAGE[Users Listing]" description="CONF_MESSAGE[In Master_Slave mode, use this option to limit the users listing in the administration to one driver only (leave empty if you want to see all users)]" mandatory="false"/>
         <global_param type="plugin_instance:auth" name="SLAVE_INSTANCE_CONFIG" group="CONF_MESSAGE[Secondary Instance (optional)]" label="CONF_MESSAGE[Instance Type]" description="CONF_MESSAGE[Choose the configuration plugin]" mandatory="false" default=""/>
     </server_settings>
-</ajxpcore>
+</core>

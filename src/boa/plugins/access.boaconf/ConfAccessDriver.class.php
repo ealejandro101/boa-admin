@@ -85,7 +85,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $pId = $parentPlugin->attributes->getNamedItem("id")->nodeValue;
                     if(empty($pId)){
                         $pId = $parentPlugin->nodeName .".";
-                        if($pId == "ajxpdriver.") $pId = "access.";
+                        if($pId == "coredriver.") $pId = "access.";
                         $pId .= $parentPlugin->attributes->getNamedItem("name")->nodeValue;
                     }
                     //echo($pId." : ". $node->attributes->getNamedItem("name")->nodeValue . " (".$messId.")<br>");
@@ -113,7 +113,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $pId = $parentPlugin->attributes->getNamedItem("id")->nodeValue;
                     if(empty($pId)){
                         $pId = $parentPlugin->nodeName .".";
-                        if($pId == "ajxpdriver.") $pId = "access.";
+                        if($pId == "coredriver.") $pId = "access.";
                         $pId .= $parentPlugin->attributes->getNamedItem("name")->nodeValue;
                     }
                     //echo($pId." : ". $node->attributes->getNamedItem("name")->nodeValue . " (".$messId.")<br>");
@@ -1068,7 +1068,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				}
 				$manifest = $plug->getManifestRawContent("server_settings/param");
                 $manifest = XMLWriter::replaceAjxpXmlKeywords($manifest);
-				print("<ajxpdriver name=\"".$repository->accessType."\">$manifest</ajxpdriver>");
+				print("<coredriver name=\"".$repository->accessType."\">$manifest</coredriver>");
 				print("<metasources>");
 				$metas = $pServ->getPluginsByType("metastore");
 				$metas = array_merge($metas, $pServ->getPluginsByType("meta"));

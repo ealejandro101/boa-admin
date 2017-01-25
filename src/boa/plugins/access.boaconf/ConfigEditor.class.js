@@ -285,7 +285,7 @@ Class.create("ConfigEditor",{
             if(root.getAttribute("allowed") == "false"){
                 this.drivers.NOT_ALLOWED = true;
             }
-			var driverNodes = XPathSelectNodes(xmlData, "drivers/ajxpdriver");
+			var driverNodes = XPathSelectNodes(xmlData, "drivers/coredriver");
 			for(var i=0;i<driverNodes.length;i++){				
 				var driver = driverNodes[i];
 				var driverDef = new Hash();

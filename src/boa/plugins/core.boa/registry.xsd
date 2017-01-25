@@ -181,13 +181,13 @@
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="ajxp_plugin"/>
                 <xs:element ref="confdriver"/>
                 <xs:element ref="authdriver"/>
-                <xs:element ref="ajxpdriver"/>
+                <xs:element ref="coredriver"/>
                 <xs:element ref="metastore"/>
                 <xs:element maxOccurs="unbounded" ref="meta"/>
                 <xs:element ref="indexer"/>
                 <xs:element ref="guidriver"/>
                 <xs:element maxOccurs="unbounded" ref="editor"/>
-                <xs:element maxOccurs="unbounded" ref="ajxpcore"/>
+                <xs:element maxOccurs="unbounded" ref="core"/>
                 <xs:element maxOccurs="unbounded" ref="uploader"/>
             </xs:choice>
             <xs:attribute name="uuidAttr" use="required" type="xs:NCName"/>
@@ -221,7 +221,7 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-    <xs:element name="ajxpdriver">
+    <xs:element name="coredriver">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="ajxp_plugin_type">
@@ -302,7 +302,7 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-    <xs:element name="ajxpcore">
+    <xs:element name="core">
         <xs:complexType>
             <xs:complexContent>
                 <xs:extension base="ajxp_plugin_type"/>

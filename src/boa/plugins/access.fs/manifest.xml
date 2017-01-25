@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ajxpdriver name="fs" label="CONF_MESSAGE[File System (Standard)]" description="CONF_MESSAGE[The most standard access to a filesystem located on the server.]" mixins="filesystem_commons,slug_provider,template_provider" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
+<coredriver name="fs" label="CONF_MESSAGE[File System (Standard)]" description="CONF_MESSAGE[The most standard access to a filesystem located on the server.]" mixins="filesystem_commons,slug_provider,template_provider" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
 	<class_definition classname="BoA\Plugins\Access\Fs\FsAccessDriver" filename="access.fs/FsAccessDriver.class.php"/>
     <client_settings icon="plugins/access.fs/icon.png">
         <resources>
@@ -38,4 +38,4 @@
         </hooks>
 	</registry_contributions>
     <class_stream_wrapper filename="access.fs/FsAccessWrapper.class.php" classname="BoA\Plugins\Access\Fs\FsAccessWrapper" protocol="ajxp.fs"/>
-</ajxpdriver>
+</coredriver>
