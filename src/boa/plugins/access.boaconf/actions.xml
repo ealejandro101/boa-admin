@@ -155,7 +155,7 @@
 				</processing>
 		</action>
 		<action name="create_role">
-			<gui text="boaconf.75" title="boaconf.75" iconClass="icon-th" src="user_group_new.png" accessKey="ajxp_conf.role_access" hasAccessKey="true">
+			<gui text="boaconf.75" title="boaconf.75" iconClass="icon-th" src="user_group_new.png" accessKey="conf.role_access" hasAccessKey="true">
 				<context selection="false" dir="false" recycle="hidden"  behaviour="hidden"
 					actionBar="false" contextMenu="false" infoPanel="false"
 					actionBarGroup="put" inZip="false">
@@ -179,7 +179,7 @@
 			</processing>
 		</action>
 		<action name="create_group">
-			<gui text="boaconf.118" title="boaconf.118" iconClass="icon-group" src="user_group_new.png" accessKey="ajxp_conf.group_access" hasAccessKey="true">
+			<gui text="boaconf.118" title="boaconf.118" iconClass="icon-group" src="user_group_new.png" accessKey="conf.group_access" hasAccessKey="true">
 				<context selection="false" dir="false" recycle="hidden"  behaviour="hidden"
 					actionBar="false" contextMenu="false" infoPanel="false"
 					actionBarGroup="put" inZip="false">
@@ -207,7 +207,7 @@
 			</processing>
 		</action>
 		<action name="user_update_group" dragndropDefault="true">
-			<gui text="boaconf.119" title="boaconf.119" src="user_group_new.png" accessKey="ajxp_conf.role_access" hasAccessKey="true">
+			<gui text="boaconf.119" title="boaconf.119" src="user_group_new.png" accessKey="conf.role_access" hasAccessKey="true">
 				<context selection="false" dir="false" recycle="hidden"  behaviour="hidden"
 					actionBar="false" contextMenu="false" infoPanel="false"
 					actionBarGroup="put" inZip="false">
@@ -222,7 +222,7 @@
             </processing>
 		</action>
 		<action name="create_repository">
-			<gui text="299" title="300" iconClass="icon-sitemap" src="hdd_external_unmount.png" accessKey="ajxp_conf.repository_access_key" hasAccessKey="false">
+			<gui text="299" title="300" iconClass="icon-sitemap" src="hdd_external_unmount.png" accessKey="conf.repository_access_key" hasAccessKey="false">
 				<context selection="false" dir="false" recycle="hidden"  behaviour="hidden"
 					actionBar="true" contextMenu="false" infoPanel="false"
 					actionBarGroup="put" inZip="false">

@@ -230,7 +230,7 @@ abstract class AbstractUser
         if($repositoryObject == null) return false;
         return ConfService::repositoryIsAccessible($repositoryId, $repositoryObject, $this, false, false);
         /*
-		if($repositoryObject->getAccessType() == "ajxp_conf" && !$this->isAdmin()) return false;
+		if($repositoryObject->getAccessType() == "boaconf" && !$this->isAdmin()) return false;
         if($repositoryObject->getUniqueUser() && $this->id != $repositoryObject->getUniqueUser()) return false;
 		return ($this->mergedRole->canRead($repositoryId) || $this->mergedRole->canWrite($repositoryId)) ;
         */

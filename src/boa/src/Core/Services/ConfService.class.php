@@ -1201,7 +1201,7 @@ class ConfService
     }
 
     /**
-     * Search the manifests declaring ajxpdriver as their root node. Remove ajxp_conf & ajxp_shared
+     * Search the manifests declaring ajxpdriver as their root node. Remove boaconf & shared
      * @static
      * @param string $filterByTagName
      * @param string $filterByDriverName

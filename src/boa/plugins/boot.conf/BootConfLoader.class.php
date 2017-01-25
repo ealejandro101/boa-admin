@@ -73,7 +73,7 @@ class BootConfLoader extends AbstractConfDriver {
     }
 
     /**
-     * Transmit to the ajxp_conf load_plugin_manifest action
+     * Transmit to the conf load_plugin_manifest action
      * @param $action
      * @param $httpVars
      * @param $fileVars
@@ -114,7 +114,7 @@ class BootConfLoader extends AbstractConfDriver {
     }
 
     /**
-     * Transmit to the ajxp_conf load_plugin_manifest action
+     * Transmit to the conf load_plugin_manifest action
      * @param $action
      * @param $httpVars
      * @param $fileVars

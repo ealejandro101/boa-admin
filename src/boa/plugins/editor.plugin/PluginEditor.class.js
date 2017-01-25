@@ -67,7 +67,7 @@ Class.create("PluginEditor", AbstractEditor, {
         toSubmit.set("plugin_id", this.pluginId);
         var missing = this.formManager.serializeParametersInputs(this.infoPane.down("div.driver_form"), toSubmit, 'DRIVER_OPTION_');
         if(missing){
-            ajaxplorer.displayMessage("ERROR", MessageHash['ajxp_conf.36']);
+            ajaxplorer.displayMessage("ERROR", MessageHash['conf.36']);
         }else{
             var conn = new Connexion();
             conn.setParameters(toSubmit);
@@ -131,7 +131,7 @@ Class.create("PluginEditor", AbstractEditor, {
                 driverParamsHash.push($H({
                     name:'AJXP_PLUGIN_ENABLED',
                     type:'boolean',
-                    label:MessageHash['ajxp_conf.104'],
+                    label:MessageHash['conf.104'],
                     description:""
                 }));
             }
@@ -165,7 +165,7 @@ Class.create("PluginEditor", AbstractEditor, {
             if(driverParamsHash.size()){
                 this.formManager.createParametersInputs(form, driverParamsHash, true, (paramsValues.size()?paramsValues:null));
             }else{
-                form.update(MessageHash['ajxp_conf.105']);
+                form.update(MessageHash['conf.105']);
             }
 
             if(form.SF_accordion){
