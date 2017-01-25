@@ -22,6 +22,7 @@ namespace BoA\Core\Utils;
 
 use BoA\Core\Http\Controller;
 use BoA\Core\Plugins\Plugin;
+use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Filters\VarsFilter;
