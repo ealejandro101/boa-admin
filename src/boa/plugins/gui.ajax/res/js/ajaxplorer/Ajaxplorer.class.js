@@ -100,14 +100,14 @@ Class.create("Ajaxplorer", {
 		var connexion = new Connexion();
 		connexion.onComplete = function(transport){
 			if(transport.responseXML == null || transport.responseXML.documentElement == null) return;
-			if(transport.responseXML.documentElement.nodeName == "ajxp_registry"){
+			if(transport.responseXML.documentElement.nodeName == "registry"){
 				this._registry = transport.responseXML.documentElement;
 				modal.updateLoadingProgress('XML Registry loaded');
 				if(!sync) {
 					//console.log('firing registry_loaded');
 					document.fire("boa:registry_loaded", this._registry);
 				}
-			}else if(transport.responseXML.documentElement.nodeName == "ajxp_registry_part"){
+			}else if(transport.responseXML.documentElement.nodeName == "registry_part"){
 				this.refreshXmlRegistryPart(transport.responseXML.documentElement);
 			}
 		}.bind(this);

@@ -138,11 +138,11 @@ class ClientDriver extends Plugin
 				if(isSet($_GET["xPath"])){
 					//$regPath = new DOMXPath($regDoc);
 					$nodes = $clonePath->query($_GET["xPath"]);
-					XMLWriter::header("ajxp_registry_part", array("xPath"=>$_GET["xPath"]));
+					XMLWriter::header("registry_part", array("xPath"=>$_GET["xPath"]));
 					if($nodes->length){
 						print(XMLWriter::replaceAjxpXmlKeywords($clone->saveXML($nodes->item(0))));
 					}
-					XMLWriter::close("ajxp_registry_part");
+					XMLWriter::close("registry_part");
 				}else{
                     Utils::safeIniSet("zlib.output_compression", "4096");
 					header('Content-Type: application/xml; charset=UTF-8');

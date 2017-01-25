@@ -545,14 +545,14 @@ class PluginsService{
     }
     /**
      * Go through all plugins and call their getRegistryContributions() method.
-     * Add all these contributions to the main XML ajxp_registry document.
+     * Add all these contributions to the main XML registry document.
      * @param bool $extendedVersion Will be passed to the plugin, for optimization purpose.
      * @return void
      */
     public function buildXmlRegistry($extendedVersion = true){
         $actives = $this->getActivePlugins();
         $reg = new \DOMDocument();
-        $reg->loadXML("<ajxp_registry></ajxp_registry>");
+        $reg->loadXML("<registry></registry>");
         foreach($actives as $activeName=>$status){
             if($status === false) continue;
             $plug = $this->getPluginById($activeName);
