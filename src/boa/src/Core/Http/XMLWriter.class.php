@@ -504,11 +504,11 @@ class XMLWriter
 			if(!$details){
 				$buffer.="<active_repo id=\"".ConfService::getCurrentRepositoryId()."\" write=\"".($loggedUser->canWrite(ConfService::getCurrentRepositoryId())?"1":"0")."\" read=\"".($loggedUser->canRead(ConfService::getCurrentRepositoryId())?"1":"0")."\"/>";
 			}else{
-				$buffer .= "<ajxp_roles>";
+				$buffer .= "<roles>";
 				foreach ($loggedUser->getRoles() as $roleId => $boolean){
 					if($boolean === true) $buffer.= "<role id=\"$roleId\"/>";
 				}
-				$buffer .= "</ajxp_roles>";
+				$buffer .= "</roles>";
 			}
 			$buffer.= XMLWriter::writeRepositoriesData($loggedUser, $details);
 			$buffer.="<preferences>";

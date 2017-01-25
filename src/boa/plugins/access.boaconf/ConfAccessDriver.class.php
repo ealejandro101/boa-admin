@@ -724,17 +724,17 @@ class ConfAccessDriver extends AbstractAccessDriver
 				}
 				$count = count($files);
 				XMLWriter::header("admin_data");
-				print("<user><ajxp_roles>");
+				print("<user><roles>");
 				foreach ($detectedRoles as $roleId => $roleCount){
 					if($roleCount < $count) continue;
 					print("<role id=\"$roleId\"/>");
 				}				
-				print("</ajxp_roles></user>");
-				print("<ajxp_roles>");
+				print("</roles></user>");
+				print("<roles>");
 				foreach (AuthService::getRolesList(array(), !$this->listSpecialRoles) as $roleId => $roleObject){
 					print("<role id=\"$roleId\"/>");
 				}
-				print("</ajxp_roles>");				
+				print("</roles>");				
 				XMLWriter::close("admin_data");
 			
 			break;
@@ -1545,7 +1545,7 @@ class ConfAccessDriver extends AbstractAccessDriver
         $columns = '<columns switchDisplayMode="list" switchGridMode="filelist" template_name="conf.users">
         			<column messageId="boaconf.6" attributeName="ajxp_label" sortType="String" defaultWidth="40%"/>
         			<column messageId="boaconf.7" attributeName="isAdmin" sortType="String" defaultWidth="10%"/>
-        			<column messageId="boaconf.70" attributeName="ajxp_roles" sortType="String" defaultWidth="15%"/>
+        			<column messageId="boaconf.70" attributeName="roles" sortType="String" defaultWidth="15%"/>
         			<column messageId="boaconf.62" attributeName="rights_summary" sortType="String" defaultWidth="15%"/>
         			</columns>';
         if(AuthService::driverSupportsAuthSchemes()){
@@ -1553,7 +1553,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             			<column messageId="boaconf.6" attributeName="ajxp_label" sortType="String" defaultWidth="40%"/>
             			<column messageId="boaconf.115" attributeName="auth_scheme" sortType="String" defaultWidth="5%"/>
             			<column messageId="boaconf.7" attributeName="isAdmin" sortType="String" defaultWidth="5%"/>
-            			<column messageId="boaconf.70" attributeName="ajxp_roles" sortType="String" defaultWidth="15%"/>
+            			<column messageId="boaconf.70" attributeName="roles" sortType="String" defaultWidth="15%"/>
             			<column messageId="boaconf.62" attributeName="rights_summary" sortType="String" defaultWidth="15%"/>
             </columns>';
         }
@@ -1629,7 +1629,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				"icon" => $icon.".png",
                 "auth_scheme" => ($scheme != null? $scheme : ""),
 				"rights_summary" => $rightsString,
-				"ajxp_roles" => implode(", ", array_keys($userObject->getRoles())),
+				"roles" => implode(", ", array_keys($userObject->getRoles())),
 				"boa_mime" => "user".(($userId!="guest"&&$userId!=$loggedUser->getId())?"_editable":"")
 			));
 		}

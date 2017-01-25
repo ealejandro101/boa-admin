@@ -57,8 +57,8 @@ Class.create("ConfigEditor",{
 
 	populateRoles : function(xmlData){
 		var rolesPane = this.form.down('[id="roles_pane"]');
-		var availableRoles = XPathSelectNodes(xmlData, "admin_data/ajxp_roles/role");
-		var userRoles = XPathSelectNodes(xmlData, "admin_data/user/ajxp_roles/role");
+		var availableRoles = XPathSelectNodes(xmlData, "admin_data/roles/role");
+		var userRoles = XPathSelectNodes(xmlData, "admin_data/user/roles/role");
 		var availSelect = rolesPane.down('div#available_roles');
 		var userSelect = rolesPane.down('div#user_roles');
 		var rolesId = $A();
