@@ -380,13 +380,13 @@ Class.create("InfoPanel", AjxpPane, {
 					}
 					else if(attName == 'escaped_filename' && metadata.get('filename')){
 						this[attName] = escape(encodeURIComponent(metadata.get('filename')));					
-					}else if(attName == 'formated_date' && metadata.get('ajxp_modiftime')){
-						var modiftime = metadata.get('ajxp_modiftime');
+					}else if(attName == 'formated_date' && metadata.get('modiftime')){
+						var modiftime = metadata.get('modiftime');
 						if(modiftime instanceof Object){
 							this[attName] = formatDate(modiftime);
 						}else{
 							var date = new Date();
-							date.setTime(parseInt(metadata.get('ajxp_modiftime'))*1000);
+							date.setTime(parseInt(metadata.get('modiftime'))*1000);
 							this[attName] = formatDate(date);
 						}
 					}

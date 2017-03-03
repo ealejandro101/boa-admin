@@ -63,7 +63,7 @@
 		}.bind(this));
 		document.observe("boa:add_bookmark", function(){
 			var node = ajaxplorer.getUserSelection().getUniqueNode();
-            if(node.getMetadata().get('ajxp_bookmarked') && node.getMetadata().get('ajxp_bookmarked') == 'true'){
+            if(node.getMetadata().get('bookmarked') && node.getMetadata().get('bookmarked') == 'true'){
                 this.removeBookmark(node.getPath(), function(){ajaxplorer.fireNodeRefresh(node);});
             }else{
                 this.addBookmark(node.getPath(), node.getLabel(),function(){ajaxplorer.fireNodeRefresh(node);});

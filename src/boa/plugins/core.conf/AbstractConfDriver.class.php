@@ -498,7 +498,7 @@ abstract class AbstractConfDriver extends Plugin {
 						$bmUser->addBookMark(SystemTextEncoding::magicDequote($httpVars["bm_path"]), SystemTextEncoding::magicDequote($title));
                         if($driver){
                             $node = new ManifestNode($driver->getResourceUrl(SystemTextEncoding::magicDequote($httpVars["bm_path"])));
-                            $node->setMetadata("ajxp_bookmarked", array("ajxp_bookmarked" => "true"), true, BOA_METADATA_SCOPE_REPOSITORY, true);
+                            $node->setMetadata("bookmarked", array("bookmarked" => "true"), true, BOA_METADATA_SCOPE_REPOSITORY, true);
                         }
 					}
 					else if($httpVars["bm_action"] == "delete_bookmark")
@@ -506,7 +506,7 @@ abstract class AbstractConfDriver extends Plugin {
 						$bmUser->removeBookmark($httpVars["bm_path"]);
                         if($driver){
                             $node = new ManifestNode($driver->getResourceUrl(SystemTextEncoding::magicDequote($httpVars["bm_path"])));
-                            $node->removeMetadata("ajxp_bookmarked", true, BOA_METADATA_SCOPE_REPOSITORY, true);
+                            $node->removeMetadata("bookmarked", true, BOA_METADATA_SCOPE_REPOSITORY, true);
                         }
                     }
 					else if($httpVars["bm_action"] == "rename_bookmark" && isset($httpVars["bm_title"]))

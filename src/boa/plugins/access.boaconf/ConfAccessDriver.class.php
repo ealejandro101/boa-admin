@@ -1493,7 +1493,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $isMain = ($pObject->getId() == "core.boa");
 					$meta = array(				
 						"icon" 		=> ($isMain?"preferences_desktop.png":"desktop.png"),
-						"boa_mime" => "ajxp_plugin",
+						"boa_mime" => "plugin",
 						"plugin_id" => $pObject->getId(),						
 						"plugin_description" => $pObject->getManifestDescription()
 					);
@@ -1530,7 +1530,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				}
 				$meta = array(				
 					"icon" 		=> "preferences_plugin.png",
-					"boa_mime" => "ajxp_plugin",
+					"boa_mime" => "plugin",
 					"can_active"	=> $errors,
 					"enabled"	=> ($pObject->isEnabled()?$mess[440]:$mess[441]),
 					"plugin_id" => $pObject->getId(),

@@ -12,7 +12,7 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="ajxp_mixins">
+    <xs:element name="mixins">
         <xs:complexType>
             <xs:sequence>
                 <xs:any/>
@@ -157,7 +157,7 @@
     </xs:element>
 
 
-    <xs:complexType name="ajxp_plugin_type">
+    <xs:complexType name="plugin_type">
         <xs:choice maxOccurs="unbounded">
             <xs:element minOccurs="0" ref="plugin_info" />
             <xs:element minOccurs="0" ref="class_definition" />
@@ -178,7 +178,7 @@
     <xs:element name="plugins">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded">
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="ajxp_plugin"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" ref="plugin"/>
                 <xs:element ref="confdriver"/>
                 <xs:element ref="authdriver"/>
                 <xs:element ref="coredriver"/>
@@ -193,38 +193,38 @@
             <xs:attribute name="uuidAttr" use="required" type="xs:NCName"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="ajxp_plugin">
+    <xs:element name="plugin">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="confdriver">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="authdriver">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="logdriver">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="coredriver">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type">
+                <xs:extension base="plugin_type">
                     <xs:choice minOccurs="0">
                         <xs:element ref="class_stream_wrapper"/>
                     </xs:choice>
@@ -235,28 +235,28 @@
     <xs:element name="metastore">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="meta">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="notify">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="indexer">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type">
+                <xs:extension base="plugin_type">
                     <xs:attribute name="indexed_meta_fields" use="optional"/>
                 </xs:extension>
             </xs:complexContent>
@@ -266,14 +266,14 @@
     <xs:element name="guidriver">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="editor">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type">
+                <xs:extension base="plugin_type">
                     <xs:sequence>
                         <xs:choice maxOccurs="unbounded">
                             <xs:element minOccurs="0" ref="plugin_info" />
@@ -305,14 +305,14 @@
     <xs:element name="core">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type"/>
+                <xs:extension base="plugin_type"/>
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
     <xs:element name="uploader">
         <xs:complexType>
             <xs:complexContent>
-                <xs:extension base="ajxp_plugin_type">
+                <xs:extension base="plugin_type">
                     <xs:sequence>
                         <xs:element minOccurs="0" ref="processing"/>
                     </xs:sequence>

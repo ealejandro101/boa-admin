@@ -25,7 +25,7 @@
 					<column messageId="1" attributeName="boa_label" sortType="StringDirFile" defaultWidth="48%"/>
 					<column messageId="2" attributeName="filesize" sortType="CellSorterValue" modifier="FilesList.prototype.partSizeCellRenderer" defaultWidth="9%"/>
 					<column messageId="3" attributeName="mimestring" sortType="String" defaultWidth="5%" defaultVisibilty="hidden"/>
-					<column messageId="4" attributeName="ajxp_modiftime" sortType="MyDate" defaultWidth="19%"/>
+					<column messageId="4" attributeName="modiftime" sortType="MyDate" defaultWidth="19%"/>
 				</columns>
 			</component_config>
 			<component_config className="FoldersTree">

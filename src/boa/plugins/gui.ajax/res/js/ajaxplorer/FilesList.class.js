@@ -177,7 +177,7 @@ Class.create("FilesList", SelectableElements, {
             this.columnsDef.push({messageId:1,attributeName:'boa_label'});
             this.columnsDef.push({messageId:2,attributeName:'filesize'});
             this.columnsDef.push({messageId:3,attributeName:'mimestring'});
-            this.columnsDef.push({messageId:4,attributeName:'ajxp_modiftime'});
+            this.columnsDef.push({messageId:4,attributeName:'modiftime'});
             // Associated Defaults
             this.defaultSortTypes = ["StringDirFile", "NumberKo", "String", "MyDate"];
         }
@@ -1553,10 +1553,10 @@ Class.create("FilesList", SelectableElements, {
                     }.bind(this), 500);
                 }
 				
-			}else if(s=="ajxp_modiftime"){
+			}else if(s=="modiftime"){
 				var date = new Date();
 				date.setTime(parseInt(metaData.get(s))*1000);
-				newRow.ajxp_modiftime = date;
+				newRow.modiftime = date;
 				tableCell.update('<span class="text_label'+fullview+'">' + formatDate(date) + '</span>');
 			}
 			else
@@ -1800,10 +1800,10 @@ Class.create("FilesList", SelectableElements, {
             if(s == "boa_label")
             {
                 continue;
-            }else if(s=="ajxp_modiftime"){
+            }else if(s=="modiftime"){
                 var date = new Date();
                 date.setTime(parseInt(metaData.get(s))*1000);
-                newRow.ajxp_modiftime = date;
+                newRow.modiftime = date;
                 cell.update('<span class="text_label">' + formatDate(date) + '</span>');
             }else if(s == "filesize" && metaData.get(s) == "-"){
 

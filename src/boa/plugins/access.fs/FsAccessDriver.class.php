@@ -956,14 +956,14 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         $vRoots = $this->repository->listVirtualRoots();
         if(!empty($crtPath)){
             if(!@$this->isWriteable($ajxpNode->getUrl())){
-               $metaData["ajxp_readonly"] = "true";
+               $metaData["readonly"] = "true";
             }
             if(isSet($vRoots[ltrim($crtPath, "/")])){
-                $metaData["ajxp_readonly"] = $vRoots[ltrim($crtPath, "/")]["right"] == "r" ? "true" : "false";
+                $metaData["readonly"] = $vRoots[ltrim($crtPath, "/")]["right"] == "r" ? "true" : "false";
             }
         }else{
             if(count($vRoots)) {
-                $metaData["ajxp_readonly"] = "true";
+                $metaData["readonly"] = "true";
             }
         }
         $fPerms = @fileperms($ajxpNode->getUrl());
@@ -974,7 +974,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         }
         $metaData["file_perms"] = $fPerms;
         $datemodif = $this->date_modif($ajxpNode->getUrl());
-        $metaData["ajxp_modiftime"] = ($datemodif ? $datemodif : "0");
+        $metaData["modiftime"] = ($datemodif ? $datemodif : "0");
         $metaData["bytesize"] = 0;
         if($isLeaf){
             $metaData["bytesize"] = $this->filesystemFileSize($ajxpNode->getUrl());
@@ -989,7 +989,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                 "is_file" => $metaData["is_file"],
                 "filename" => $metaData["filename"],
                 "bytesize" => $metaData["bytesize"],
-                "ajxp_modiftime" => $metaData["ajxp_modiftime"],
+                "modiftime" => $metaData["modiftime"],
             );
             $ajxpNode->mergeMetadata($miniMeta);
         }else{

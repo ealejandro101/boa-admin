@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<editor id="editor.ajxp_plugin" openable="true" order="10" text="plugin_editor.2"
+<editor id="editor.plugin" openable="true" order="10" text="plugin_editor.2"
         title="plugin_editor.1" icon="edit.png" className="PluginEditor"
-        mimes="ajxp_plugin" formId="plugin_edit_box" label="CONF_MESSAGE[Plugin Editor]"
+        mimes="plugin" formId="plugin_edit_box" label="CONF_MESSAGE[Plugin Editor]"
         description="CONF_MESSAGE[Plugin Editor]"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">

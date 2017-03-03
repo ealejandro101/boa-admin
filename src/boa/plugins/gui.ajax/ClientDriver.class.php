@@ -183,7 +183,7 @@ class ClientDriver extends Plugin
 				
 				$START_PARAMETERS = array(
                     "BOOTER_URL"=>"index.php?get_action=get_boot_conf",
-                    "MAIN_ELEMENT" => "ajxp_desktop"
+                    "MAIN_ELEMENT" => "desktop"
                 );
 				if(AuthService::usersEnabled())
 				{
@@ -331,10 +331,10 @@ class ClientDriver extends Plugin
     function nodeBookmarkMetadata(&$ajxpNode){
         $user = AuthService::getLoggedUser();
         if($user == null) return;
-        $metadata = $ajxpNode->retrieveMetadata("ajxp_bookmarked", true, BOA_METADATA_SCOPE_REPOSITORY, true);
+        $metadata = $ajxpNode->retrieveMetadata("bookmarked", true, BOA_METADATA_SCOPE_REPOSITORY, true);
         if(is_array($metadata) && count($metadata)){
             $ajxpNode->mergeMetadata(array(
-                     "ajxp_bookmarked" => "true",
+                     "bookmarked" => "true",
                      "overlay_icon"  => "bookmark.png"
                 ), true);
             return;
@@ -345,10 +345,10 @@ class ClientDriver extends Plugin
         foreach(self::$loadedBookmarks as $bm){
             if($bm["PATH"] == $ajxpNode->getPath()){
                 $ajxpNode->mergeMetadata(array(
-                         "ajxp_bookmarked" => "true",
+                         "bookmarked" => "true",
                          "overlay_icon"  => "bookmark.png"
                     ), true);
-                $ajxpNode->setMetadata("ajxp_bookmarked", array("ajxp_bookmarked"=> "true"), true, BOA_METADATA_SCOPE_REPOSITORY, true);
+                $ajxpNode->setMetadata("bookmarked", array("bookmarked"=> "true"), true, BOA_METADATA_SCOPE_REPOSITORY, true);
             }
         }
     }

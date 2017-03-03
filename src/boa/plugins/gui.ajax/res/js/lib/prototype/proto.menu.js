@@ -211,7 +211,7 @@ Proto.Menu = Class.create({
             var img = '';
             if(item.icon_class && window.ajaxplorer.currentThemeUsesIconFonts){
                 img = new Element('span', {
-                    className:item.icon_class + ' ajxp_icon_span',
+                    className:item.icon_class + ' icon_span',
                     title:item.alt
                 });
             }else if(item.image){

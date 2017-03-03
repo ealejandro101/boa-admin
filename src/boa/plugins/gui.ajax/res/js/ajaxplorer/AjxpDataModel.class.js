@@ -409,7 +409,7 @@ Class.create("AjxpDataModel", {
     hasReadOnly : function(){
         var test = false;
         this._selectedNodes.each(function(node){
-            if(node.hasMetadataInBranch("ajxp_readonly", "true")) {
+            if(node.hasMetadataInBranch("readonly", "true")) {
                 test = true;
                 throw $break;
             }

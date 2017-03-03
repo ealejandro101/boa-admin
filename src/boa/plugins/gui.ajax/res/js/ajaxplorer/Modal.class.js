@@ -66,7 +66,7 @@ Class.create("Modal", {
         var closeBtn;
         if(window.ajaxplorer.currentThemeUsesIconFonts){
             if(sIconClass){
-                hString = "<span class=\"titleString\"><span class='"+sIconClass+" ajxp_icon_span'></span>";
+                hString = "<span class=\"titleString\"><span class='"+sIconClass+" icon_span'></span>";
             }
             closeBtn = '<span id="modalCloseBtn" class="icon-remove-sign" style="cursor:pointer;float:right;"></span>';
         }else{

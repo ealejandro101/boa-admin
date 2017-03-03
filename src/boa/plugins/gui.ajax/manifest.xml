@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<guidriver name="ajxp_client" label="CONF_MESSAGE[Client Plugin]" description="CONF_MESSAGE[Browser-based rich interface. Contains configurations for theming, custom welcome message, etc.]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
+<guidriver name="browser_client" label="CONF_MESSAGE[Client Plugin]" description="CONF_MESSAGE[Browser-based rich interface. Contains configurations for theming, custom welcome message, etc.]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
 	<class_definition classname="BoA\Plugins\Gui\Ajax\ClientDriver" filename="gui.ajax/ClientDriver.class.php"/>
     <client_settings>
         <resources>
@@ -56,7 +56,7 @@
         </hooks>
 		<external_file filename="gui.ajax/client_actions.xml" include="actions/*" exclude=""/>
 		<client_configs uuidAttr="name">
-			<template name="main_oxygen" element="ajxp_desktop" position="top" theme="oxygen"><![CDATA[
+			<template name="main_oxygen" element="desktop" position="top" theme="oxygen"><![CDATA[
 				<div id="toolbars">
 					<div id="action_bar">
 						<div id="buttons_bar" class="action_bar" ajxpClass="ActionsToolbar"></div>
@@ -70,7 +70,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"ajxp_desktop"}'>
+				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"desktop"}'>
 					<div id="vertical_splitter" style="background-color: #fff;" ajxpClass="Splitter" ajxpOptions='{"direction": "vertical", "initA": 200, "maxA":600, "minA":50,"fit":"height","fitParent":"browser"}'>
 						<div id="sidebar_splitter" style="float:left; overflow:hidden;" ajxpClass="Splitter" ajxpOptions='{"direction":"horizontal","initB":200,"minB":24,"maxB":500}'>
 							<div id="topPane" ajxpClass="FoldersTree" ajxpOptions='{"display":"dz"}' ajxpPaneHeader="130" style="border: 1px solid #676965;"></div>
@@ -83,7 +83,7 @@
 					</div>
 				</div>
 			]]></template>
-            <template name="main_umbra" element="ajxp_desktop" position="top" theme="umbra"><![CDATA[
+            <template name="main_umbra" element="desktop" position="top" theme="umbra"><![CDATA[
 				<div id="toolbars">
 					<div>
 						<div id="buttons_bar" class="action_bar" ajxpClass="ActionsToolbar" ajxpOptions='{"skipBubbling":true,"defaultIconSize":16,"defaultStyle":"icon_text","styles":{"icons_only":"Icons Only","icon_text":"Icons and Text","text_only":"Text only"},"stylesImgSizes":{"icons_only":22,"icon_text":16,"text_only":16},"stylesBarSizes":{"icons_only":40,"icon_text":51,"text_only":30}}' class="soft_css_gradient"></div>
@@ -97,7 +97,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"ajxp_desktop"}'>
+				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"desktop"}'>
 					<div id="vertical_splitter" ajxpClass="Splitter" ajxpOptions='{"direction": "vertical", "initA": 350, "maxA":600, "minA":0,"fit":"height","fitParent":"browser", "minSize":0, "foldingButton":true}'>
 						<div id="sidebar_splitter" style="float:left; overflow:hidden;" ajxpClass="Splitter" ajxpOptions='{"direction":"horizontal","initB":300,"minB":57}'>
 							<div id="topPane" ajxpClass="FoldersTree" ajxpOptions='{"display":"dz","replaceScroller":true}' ajxpPaneHeader="130" ajxpPaneIcon="view_tree.png" style="margin:20px;margin-bottom:10px;padding-right: 10px;"></div>
@@ -110,7 +110,7 @@
 					</div>
 				</div>
 			]]></template>
-            <template name="main_vision" element="ajxp_desktop" position="top" theme="vision"><![CDATA[
+            <template name="main_vision" element="desktop" position="top" theme="vision"><![CDATA[
 				<div id="toolbars">
 					<div id="global_toolbar" ajxpClass="LogoWidget">
 					    <div id="logging_string" ajxpClass="UserWidget" ajxpOptions='{"menuEvent" : "over"}'></div>
@@ -128,13 +128,13 @@
 						<div style="clear:both;" class="skipSibling"/>
 					</div>
 				</div>
-				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"ajxp_desktop"}'>
+				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"desktop"}'>
 					<div id="vertical_splitter" ajxpClass="Splitter" ajxpOptions='{"direction": "vertical", "initA":"70%", "minB":26,"fit":"height","fitParent":"browser", "minSize":0, "foldingButton":"B"}'>
     					<div id="vertical_splitter2" ajxpClass="Splitter" ajxpOptions='{"direction": "vertical", "initA": "50%", "minA":26, "maxA":450, "fit":"height","fitParent":"browser", "minSize":0, "foldingButton":"A"}'>
     					    <div id="topPane" ajxpClass="AjxpTabulator" ajxpOptions='{"defaultTabId": "folders","tabInfos" : [{"id":"folders","label":"130","iconClass":"icon-folder-open","element":"folder_pane"},{"id":"shared","label":"363","iconClass":"icon-share","element":"shared_elements"},{"id":"flagged","label":"147","iconClass":"icon-star","element":"flagged_elements"}],"headerToolbarOptions":{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["filter","vertical_splitter2-actions"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}}'>
     							<div id="folder_pane" ajxpClass="FoldersTree" ajxpOptions='{"display":"dz","replaceScroller":true}' ></div>
     							<div id="shared_elements" ajxpClass="FetchedResultPane" ajxpOptions='{"nodeProviderProperties":{"get_action":"search", "query":"keyword:ajxp_shared"},"reloadOnServerMessage":"tree/reload_shared_elements"}'></div>
-    							<div id="flagged_elements" ajxpClass="FetchedResultPane" ajxpOptions='{"nodeProviderProperties":{"get_action":"search", "query":"keyword:ajxp_bookmarked"},"reloadOnServerMessage":"tree/reload_bookmarks"}'></div>
+    							<div id="flagged_elements" ajxpClass="FetchedResultPane" ajxpOptions='{"nodeProviderProperties":{"get_action":"search", "query":"keyword:bookmarked"},"reloadOnServerMessage":"tree/reload_bookmarks"}'></div>
     					    </div>
 							<div id="cpane_container" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"browser"}'>
 							    <div id="cpane_header" class="panelHeader">
@@ -148,7 +148,7 @@
                     </div>
 				</div>
 			]]></template>
-            <template name="widget_umbra" element="ajxp_widget" position="top" theme="umbra"><![CDATA[
+            <template name="widget_umbra" element="widget" position="top" theme="umbra"><![CDATA[
 				<div id="toolbars">
 					<div>
 						<div id="buttons_bar" class="action_bar" ajxpClass="ActionsToolbar" ajxpOptions='{"skipBubbling":true,"defaultIconSize":16,"defaultStyle":"icon_text","styles":{"icons_only":"Icons Only","icon_text":"Icons and Text","text_only":"Text only"},"stylesImgSizes":{"icons_only":22,"icon_text":16,"text_only":16},"stylesBarSizes":{"icons_only":40,"icon_text":51,"text_only":30}}' class="soft_css_gradient"></div>
@@ -160,15 +160,15 @@
 						</div>
 					</div>
 				</div>
-				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"ajxp_widget"}'>
+				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"widget"}'>
 					<div id="content_pane" ajxpClass="FilesList"  ajxpOptions='{"fit":"height","fitParent":"browser"}'  style="margin:0px;"></div>
 				</div>				
 			]]></template>
-            <template name="widget_vision" element="ajxp_widget" position="top" theme="vision"><![CDATA[
+            <template name="widget_vision" element="widget" position="top" theme="vision"><![CDATA[
 				<div id="toolbars">
     			    <div id="buttons_bar" class="action_bar" ajxpClass="ActionsToolbar" ajxpOptions='{"toolbarsList":["put", "get"],"groupOtherToolbars":["more", "change", "remote"], "groupOtherLabel":"More","skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
 				</div>
-				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"ajxp_desktop"}'>
+				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"desktop"}'>
                     <div id="cpane_container" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"browser"}'>
                         <div id="cpane_header" class="panelHeader">
                             <div id="display_toolbar" ajxpClass="ActionsToolbar" ajxpOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["default"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
@@ -178,8 +178,8 @@
                     </div>
 				</div>
 			]]></template>
-            <template name="minisite_vision" element="ajxp_shared_folder" position="top" theme="vision"><![CDATA[
-				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"ajxp_shared_folder"}'>
+            <template name="minisite_vision" element="shared_folder" position="top" theme="vision"><![CDATA[
+				<div id="browser" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"shared_folder"}'>
       			    <div id="buttons_bar" class="action_bar" ajxpClass="ActionsToolbar" ajxpOptions='{"toolbarsList":["minisite"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
                     <div id="cpane_container" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height","fitParent":"browser"}'>
                         <div id="cpane_header" class="panelHeader">

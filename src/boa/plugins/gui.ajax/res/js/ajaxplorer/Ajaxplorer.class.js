@@ -763,7 +763,7 @@ Class.create("Ajaxplorer", {
 	},
 	
 	getPluginConfigs : function(pluginQuery){
-		var properties = XPathSelectNodes(this._registry, 'plugins/'+pluginQuery+'/plugin_configs/property | plugins/core[@id="core.'+pluginQuery+'"]/plugin_configs/property | plugins/ajxp_plugin[@id="core.'+pluginQuery+'"]/plugin_configs/property');
+		var properties = XPathSelectNodes(this._registry, 'plugins/'+pluginQuery+'/plugin_configs/property | plugins/core[@id="core.'+pluginQuery+'"]/plugin_configs/property | plugins/plugin[@id="core.'+pluginQuery+'"]/plugin_configs/property');
 		var configs = $H();
 		for(var i = 0; i<properties.length; i++){
 			var propNode = properties[i];
@@ -774,9 +774,9 @@ Class.create("Ajaxplorer", {
 
     hasPluginOfType : function(type, name){
         if(name == null){
-            var node = XPathSelectSingleNode(this._registry, 'plugins/ajxp_plugin[contains(@id, "'+type+'.")] | plugins/' + type + '[@id]');
+            var node = XPathSelectSingleNode(this._registry, 'plugins/plugin[contains(@id, "'+type+'.")] | plugins/' + type + '[@id]');
         }else{
-            var node = XPathSelectSingleNode(this._registry, 'plugins/ajxp_plugin[@id="'+type+'.'+name+'"] | plugins/' + type + '[@id="'+type+'.'+name+'"]');
+            var node = XPathSelectSingleNode(this._registry, 'plugins/plugin[@id="'+type+'.'+name+'"] | plugins/' + type + '[@id="'+type+'.'+name+'"]');
         }
         if(node) return true;
         return false;

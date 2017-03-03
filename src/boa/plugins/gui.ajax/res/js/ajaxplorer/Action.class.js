@@ -208,7 +208,7 @@ Class.create("Action", {
             crtInZip = crtNode.hasAjxpMimeInBranch("browsable_archive");
             crtIsRoot = crtNode.isRoot();
             crtAjxpMime = crtNode.getAjxpMime();
-            crtIsReadOnly = crtNode.hasMetadataInBranch("ajxp_readonly", "true");
+            crtIsReadOnly = crtNode.hasMetadataInBranch("readonly", "true");
         }
 
 		if(this.options.listeners["contextChange"]){
@@ -540,9 +540,9 @@ Class.create("Action", {
         if(iconClass){
             previousIconClass = this.options.icon_class;
             this.options.icon_class = iconClass;
-            if(iconClass && $(this.options.name +'_button')&& $(this.options.name +'_button').down('span.ajxp_icon_span')){
-                $(this.options.name +'_button').down('span.ajxp_icon_span').removeClassName(previousIconClass);
-                $(this.options.name +'_button').down('span.ajxp_icon_span').addClassName(iconClass);
+            if(iconClass && $(this.options.name +'_button')&& $(this.options.name +'_button').down('span.icon_span')){
+                $(this.options.name +'_button').down('span.icon_span').removeClassName(previousIconClass);
+                $(this.options.name +'_button').down('span.icon_span').addClassName(iconClass);
             }
         }
 		if($(this.options.name +'_button_icon')){

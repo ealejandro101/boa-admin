@@ -444,7 +444,7 @@ var AjxpDroppables = {
 	},
 
 	add: function(element, ajxpNode){
-        if(ajxpNode && ajxpNode.hasMetadataInBranch("ajxp_readonly", "true")){
+        if(ajxpNode && ajxpNode.hasMetadataInBranch("readonly", "true")){
             return;
         }
 		Droppables.add(element, this.options);

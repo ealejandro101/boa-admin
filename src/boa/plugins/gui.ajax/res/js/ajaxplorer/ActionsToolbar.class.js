@@ -313,7 +313,7 @@ Class.create("ActionsToolbar", {
         var img;
         if(action.options.icon_class && window.ajaxplorer.currentThemeUsesIconFonts){
             img = new Element('span', {
-                className:action.options.icon_class + ' ajxp_icon_span',
+                className:action.options.icon_class + ' icon_span',
                 title:action.options.title
             });
         }else{

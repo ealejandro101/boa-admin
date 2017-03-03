@@ -173,7 +173,7 @@
                         icon_class:'icon-plus-sign',
                         callback:function(e){
                             var node = ajaxplorer.getContextNode();
-                            node.getMetadata().set('ajxp_bookmarked', 'true');
+                            node.getMetadata().set('bookmarked', 'true');
                             node.getMetadata().set('overlay_icon', 'bookmark.png');
                             bmBar.addBookmark(node.getPath(), node.getLabel());
                         }.bind(this)

@@ -97,7 +97,7 @@ Class.create("FormManager", {
 			var disabledString = (disabled || param.get('readonly')?' disabled="true" ':'');
             var commonAttributes = {
                 'name'                  : name,
-                'data-ajxp_type'        : type,
+                'data-ctrl_type'        : type,
                 'data-ajxp_mandatory'   : (mandatory?'true':'false')
             };
             if(disabled || param.get('readonly')){
@@ -172,9 +172,9 @@ Class.create("FormManager", {
 
             }else if(type == 'textarea'){
                 if(defaultValue) defaultValue = defaultValue.replace(new RegExp("__LBR__", "g"), "\n");
-                element = '<textarea class="SF_input" style="height:70px;" data-ajxp_type="'+type+'" data-ajxp_mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
+                element = '<textarea class="SF_input" style="height:70px;" data-ctrl_type="'+type+'" data-ajxp_mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
 		    }else if(type == 'password'){
-				element = '<input type="password" autocomplete="off" data-ajxp_type="'+type+'" data-ajxp_mandatory="'+(mandatory?'true':'false')+'" name="'+name+'" value="'+defaultValue+'"'+disabledString+' class="SF_input">';
+				element = '<input type="password" autocomplete="off" data-ctrl_type="'+type+'" data-ajxp_mandatory="'+(mandatory?'true':'false')+'" name="'+name+'" value="'+defaultValue+'"'+disabledString+' class="SF_input">';
 			}else if(type == 'boolean'){
 				var selectTrue, selectFalse;
 				if(defaultValue !== undefined){
@@ -182,8 +182,8 @@ Class.create("FormManager", {
 					if(defaultValue == "false" || defaultValue == "0" || defaultValue === false) selectFalse = true;
 				}
                 if(!selectTrue && !selectFalse) selectFalse = true;
-				element = '<input type="radio" data-ajxp_type="'+type+'" class="SF_box" name="'+name+'" id="'+name+'-true" value="true" '+(selectTrue?'checked':'')+''+disabledString+'><label for="'+name+'-true">'+MessageHash[440]+'</label>';
-				element = element + '<input type="radio" data-ajxp_type="'+type+'" class="SF_box" name="'+name+'" id="'+name+'-false"  '+(selectFalse?'checked':'')+' value="false"'+disabledString+'><label for="'+name+'-false">'+MessageHash[441] + '</label>';
+				element = '<input type="radio" data-ctrl_type="'+type+'" class="SF_box" name="'+name+'" id="'+name+'-true" value="true" '+(selectTrue?'checked':'')+''+disabledString+'><label for="'+name+'-true">'+MessageHash[440]+'</label>';
+				element = element + '<input type="radio" data-ctrl_type="'+type+'" class="SF_box" name="'+name+'" id="'+name+'-false"  '+(selectFalse?'checked':'')+' value="false"'+disabledString+'><label for="'+name+'-false">'+MessageHash[441] + '</label>';
 				element = '<div class="SF_input">'+element+'</div>';
 			}else if(type == 'select'){
                 var choices, json_list;
@@ -237,8 +237,8 @@ Class.create("FormManager", {
                 element = "<div class='SF_image_block'><img src='"+imgSrc+"' class='SF_image small'><span class='SF_image_link image_update'>"+
                     (param.get("uploadLegend")?param.get("uploadLegend"):MessageHash[457])+"</span><span class='SF_image_link image_remove'>"+
                     (param.get("removeLegend")?param.get("removeLegend"):MessageHash[458])+"</span>" +
-                    "<input type='hidden' name='"+param.get("name")+"' data-ajxp_type='binary'>" +
-                    "<input type='hidden' name='"+param.get("name")+"_original_binary' value='"+ defaultValue +"' data-ajxp_type='string'></div>";
+                    "<input type='hidden' name='"+param.get("name")+"' data-ctrl_type='binary'>" +
+                    "<input type='hidden' name='"+param.get("name")+"_original_binary' value='"+ defaultValue +"' data-ctrl_type='string'></div>";
             }else if(type.indexOf("group_switch:") === 0){
 
                 // Get all values
@@ -269,7 +269,7 @@ Class.create("FormManager", {
                         switchValues[p.get('group_switch_value')].values.set(vKey, values.get(vKey));
                     }
                 });
-                var selector = new Element('select', {className:'SF_input', name:name, "data-ajxp_mandatory":(mandatory?'true':'false'), "data-ajxp_type":type});
+                var selector = new Element('select', {className:'SF_input', name:name, "data-ajxp_mandatory":(mandatory?'true':'false'), "data-ctrl_type":type});
                 if(!mandatory){
                     selector.insert(new Element('option'));
                 }
@@ -508,7 +508,7 @@ Class.create("FormManager", {
                 imgSrc.src = conn._baseUrl + "&get_action=" + param.get("loadAction")+"&tmp_file="+result.trim();
                 imgSrc.next("input[type='hidden']").setValue(result.trim());
                 this.triggerEvent(imgSrc.next("input[type='hidden']"), 'change');
-                imgSrc.next("input[type='hidden']").setAttribute("data-ajxp_type", "binary");
+                imgSrc.next("input[type='hidden']").setAttribute("data-ctrl_type", "binary");
                 window.formManagerHiddenIFrameSubmission = null;
             }.bind(this);
             pane.down("#formManager_uploader").submit();
@@ -593,8 +593,8 @@ Class.create("FormManager", {
 			else if(el.type=="radio" && el.checked){
 				parametersHash.set(prefix+el.name, el.value)
 			};
-			if(el.getAttribute('data-ajxp_type')){
-				parametersHash.set(prefix+el.name+'_ajxptype', el.getAttribute('data-ajxp_type'));
+			if(el.getAttribute('data-ctrl_type')){
+				parametersHash.set(prefix+el.name+'_ajxptype', el.getAttribute('data-ctrl_type'));
 			}
             if(form.down('[name="SFCB_'+el.name+'"]')){
                 checkboxesActive = true;
@@ -608,8 +608,8 @@ Class.create("FormManager", {
 			if(el.getAttribute("data-ajxp_mandatory") == 'true' && el.getValue() == '' && !el.disabled){
 				missingMandatory.push(el);
 			}
-            if(el.getAttribute('data-ajxp_type')){
-                parametersHash.set(prefix+el.name+'_ajxptype', el.getAttribute('data-ajxp_type'));
+            if(el.getAttribute('data-ctrl_type')){
+                parametersHash.set(prefix+el.name+'_ajxptype', el.getAttribute('data-ctrl_type'));
             }
             parametersHash.set(prefix+el.name, el.getValue());
             if(form.down('[name="SFCB_'+el.name+'"]')){

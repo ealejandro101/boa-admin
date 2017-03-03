@@ -369,7 +369,7 @@
                 <serverCallback methodName="switchAction"></serverCallback>
                 </processing>
         </action>
-		<action name="ajxp_link">
+		<action name="link">
 			<gui text="369" title="369" src="ajxp-link.png" iconClass="icon-link" hasAccessKey="false">
 				<context selection="true" dir="" recycle="false" actionBar="true" actionBarGroup="remote"
                          contextMenu="true" infoPanel="true"/>
@@ -401,16 +401,16 @@
                         }
 						input.select();
 					};
-                    modal.showDialogForm('Get', 'ajxp_link_form', loadFunc, function(){
+                    modal.showDialogForm('Get', 'link_form', loadFunc, function(){
                         hideLightBox(true);
                         return false;
                     }, null, true);
 				]]></clientCallback>
-				<clientForm id="ajxp_link_form"><![CDATA[
-				<div id="ajxp_link_form" title="BOA_MESSAGE[369]"  box_width="280" action="ajxp_link">
+				<clientForm id="link_form"><![CDATA[
+				<div id="link_form" title="BOA_MESSAGE[369]"  box_width="280" action="link">
 				<fieldset>
 					<legend message_id="296">BOA_MESSAGE[296]</legend>
-					<input type="text" style="width:195px;margin-right:5px;" id="ajxp_link_container" class="dialogFocus"/>
+					<input type="text" style="width:195px;margin-right:5px;" id="link_container" class="dialogFocus"/>
                     <a id="email" title="BOA_MESSAGE[323]"><span class="icon-envelope-alt"></span><img style="border:none;" align="absmiddle" src="BOA_THEME_FOLDER/images/actions/22/mail_generic.png" height="22" width="22"/></a>
                   </fieldset>
 				</div>
@@ -589,7 +589,7 @@
 						getAction.value = 'copy';					
 						this.treeSelector = new TreeSelector(oForm, {
                             nodeFilter : function(ajxpNode){
-                                return (!ajxpNode.isLeaf() && !ajxpNode.hasMetadataInBranch("ajxp_readonly", "true"));
+                                return (!ajxpNode.isLeaf() && !ajxpNode.hasMetadataInBranch("readonly", "true"));
                             }
                         });
 						if(!ajaxplorer.getUserSelection().hasDir() && user && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
@@ -701,7 +701,7 @@
 						getAction.value = 'move';
 						this.treeSelector = new TreeSelector(oForm, {
 						    nodeFilter : function(ajxpNode){
-                                return (!ajxpNode.isLeaf() && !ajxpNode.hasMetadataInBranch("ajxp_readonly", "true"));
+                                return (!ajxpNode.isLeaf() && !ajxpNode.hasMetadataInBranch("readonly", "true"));
                             }
 						});
 						this.treeSelector.load();

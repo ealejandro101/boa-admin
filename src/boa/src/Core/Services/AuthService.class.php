@@ -435,7 +435,7 @@ class AuthService
             $rootRole = new Role("MINISITE");
             $rootRole->setLabel("Minisite Users");
             $actions = array(
-                "access.fs" => array("ajxp_link", "chmod", "purge"),
+                "access.fs" => array("link", "chmod", "purge"),
                 "meta.watch" => array("toggle_watch"),
                 "conf.serial"=> array("get_bookmarks"),
                 "conf.sql"=> array("get_bookmarks"),

@@ -264,7 +264,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 				repo_accesses="'.implode(", ", $repoAccesses).'"
 				parentname="/users" 
 				is_file="1" 
-				ajxp_mime="shared_user"
+				boa_mime="shared_user"
 				/>';
 		}
 	}
