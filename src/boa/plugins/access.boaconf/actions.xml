@@ -297,7 +297,7 @@
 					</div>				
 				]]></clientForm>
 				<serverCallback methodName="switchAction" restParams="/json_data">
-                    <input_param description="A JSON object containing the following mandatory keys : DISPLAY (string), DRIVER (string), DRIVER_OPTIONS (array of options) and optional keys : DISPLAY_ID (string), DESCRIPTION_ID (string), BOA_SLUG (string), IS_TEMPLATE (boolean). &lt;br&gt;&lt;br&gt; The expected DRIVER value can be either an access type plugin name (fs, ftp, etc), or a template id by using the ajxp_template_ prefix (ajxp_template_TEMPLATE_ID). The DRIVER_OPTIONS array may depend on the used access type." name="json_data" type="JSON"/>
+                    <input_param description="A JSON object containing the following mandatory keys : DISPLAY (string), DRIVER (string), DRIVER_OPTIONS (array of options) and optional keys : DISPLAY_ID (string), DESCRIPTION_ID (string), BOA_SLUG (string), IS_TEMPLATE (boolean). &lt;br&gt;&lt;br&gt; The expected DRIVER value can be either an access type plugin name (fs, ftp, etc), or a template id by using the template_ prefix (template_TEMPLATE_ID). The DRIVER_OPTIONS array may depend on the used access type." name="json_data" type="JSON"/>
 				</serverCallback>
 				</processing>
 		</action>	
@@ -557,7 +557,7 @@
 		   		    		var meta = node.getMetadata();	   		    		
 		   		    		for(var i=0;i<attributes.length;i++){
 		   		    			var attName = attributes[i];
-		   		    			if(attName == "ajxp_label") attName = "text";
+		   		    			if(attName == "boa_label") attName = "text";
 		   		    			message += meta.get(attName) + '\t';
 		   		    		}
 			   		    	message += '\n';

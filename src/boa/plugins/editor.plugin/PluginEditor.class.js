@@ -45,7 +45,7 @@ Class.create("PluginEditor", AbstractEditor, {
         this.actions.get("saveButton").observe("click", this.save.bind(this) );
         modal.setCloseValidation(function(){
             if(this.isDirty()){
-                var confirm = window.confirm(MessageHash["ajxp_role_editor.19"]);
+                var confirm = window.confirm(MessageHash["boa_role_editor.19"]);
                 if(!confirm) return false;
             }
             return true;

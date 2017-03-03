@@ -83,10 +83,10 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                 }
             }
             $dataTemplate = $this->repository->getOption("DATA_TEMPLATE");
-            if(!empty($dataTemplate) && is_dir($dataTemplate) && !is_file($path."/.ajxp_template")){
+            if(!empty($dataTemplate) && is_dir($dataTemplate) && !is_file($path."/.template")){
                 $errs = array();$succ = array();
                 $this->dircopy($dataTemplate, $path, $succ, $errs, false, false);
-                touch($path."/.ajxp_template");
+                touch($path."/.template");
             }
         }else{
             if(!is_dir($path)){
@@ -936,7 +936,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
             $metaData["icon"] = $recycleIcon;
             $metaData["mimestring"] = $mess[122];
             $ajxpNode->setLabel($mess[122]);
-            $metaData["boa_mime"] = "ajxp_recycle";
+            $metaData["boa_mime"] = "recycle";
         }else{
             $mimeData = Utils::mimeData($ajxpNode->getUrl(), !$isLeaf);
             $metaData["mimestring_id"] = $mimeData[0]; //Utils::mimetype($ajxpNode->getUrl(), "type", !$isLeaf);
@@ -981,7 +981,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         }
         $metaData["filesize"] = Utils::roundSize($metaData["bytesize"]);
         if(Utils::isBrowsableArchive($nodeName)){
-            $metaData["boa_mime"] = "ajxp_browsable_archive";
+            $metaData["boa_mime"] = "browsable_archive";
         }
 
         if($details == "minimal"){

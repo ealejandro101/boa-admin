@@ -8,7 +8,7 @@
 	<client_settings>
         <resources>
             <js file="plugins/editor.plugin/PluginEditor.class.js" className="PluginEditor"/>
-            <!--css file="plugins/editor.ajxp_role/rolesEditor.css" /-->
+            <!--css file="plugins/editor.boa_role/rolesEditor.css" /-->
             <i18n namespace="plugin_editor" path="editor.plugin/i18n"/>
         </resources>
 	</client_settings>

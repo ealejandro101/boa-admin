@@ -444,7 +444,7 @@ class Utils
             return "mp3";
         } else if ($keyword == "zip") {
             if (ConfService::zipEnabled()) {
-                return "zip,ajxp_browsable_archive";
+                return "zip,browsable_archive";
             } else {
                 return "none_allowed";
             }

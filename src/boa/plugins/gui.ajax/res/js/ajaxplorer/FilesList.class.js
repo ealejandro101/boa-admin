@@ -174,7 +174,7 @@ Class.create("FilesList", SelectableElements, {
             }
         }else{
             this.columnsDef = $A([]);
-            this.columnsDef.push({messageId:1,attributeName:'ajxp_label'});
+            this.columnsDef.push({messageId:1,attributeName:'boa_label'});
             this.columnsDef.push({messageId:2,attributeName:'filesize'});
             this.columnsDef.push({messageId:3,attributeName:'mimestring'});
             this.columnsDef.push({messageId:4,attributeName:'ajxp_modiftime'});
@@ -636,7 +636,7 @@ Class.create("FilesList", SelectableElements, {
 				}
 				var label = (column.messageId?MessageHash[column.messageId]:column.messageString);
 				var leftPadding = this.options.cellPaddingCorrection || 0 ;
-				if(column.attributeName == "ajxp_label"){// Will contain an icon
+				if(column.attributeName == "boa_label"){// Will contain an icon
 					leftPadding = 24;
 				}
 				headerData.push({label:label, size:userWidth, leftPadding:leftPadding});				
@@ -1483,10 +1483,10 @@ Class.create("FilesList", SelectableElements, {
 			if(this._fullview){
 				fullview = ' full';
 			}
-			if(s == "ajxp_label")
+			if(s == "boa_label")
 			{
                 var textLabel = new Element("span", {
-                    id          :'ajxp_label',
+                    id          :'boa_label',
                     className   :'text_label'+fullview
                 }).update(metaData.get('text'));
 
@@ -1532,7 +1532,7 @@ Class.create("FilesList", SelectableElements, {
 				// Defer Drag'n'drop assignation for performances
                 if(this.options.draggable == undefined || this.options.draggable === true){
                     window.setTimeout(function(){
-                        if(ajxpNode.getAjxpMime() != "ajxp_recycle"){
+                        if(ajxpNode.getAjxpMime() != "recycle"){
                             var newDrag = new AjxpDraggable(
                                 innerSpan,
                                 {
@@ -1797,7 +1797,7 @@ Class.create("FilesList", SelectableElements, {
         for(var i = 0; i<attKeys.length;i++ ){
             var s = attKeys[i];
             var cell = new Element("span", {className:'metadata_chunk'});
-            if(s == "ajxp_label")
+            if(s == "boa_label")
             {
                 continue;
             }else if(s=="ajxp_modiftime"){
@@ -2110,7 +2110,7 @@ Class.create("FilesList", SelectableElements, {
 	 */
 	fireDblClick: function (e) 
 	{
-		if(this.getCurrentContextNode().getAjxpMime() == "ajxp_recycle")
+		if(this.getCurrentContextNode().getAjxpMime() == "recycle")
 		{
 			return; // DO NOTHING IN RECYCLE BIN
 		}

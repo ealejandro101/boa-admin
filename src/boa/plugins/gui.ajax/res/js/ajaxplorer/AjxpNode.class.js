@@ -249,7 +249,7 @@ Class.create("AjxpNode", {
 	 * @returns Boolean
 	 */
 	isRecycle : function(){
-		return (this.getAjxpMime() == 'ajxp_recycle');
+		return (this.getAjxpMime() == 'recycle');
 	},
 	/**
 	 * NOT IMPLEMENTED, USE hasAjxpMimeInBranch instead

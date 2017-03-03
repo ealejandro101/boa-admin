@@ -112,7 +112,7 @@ class RecycleBinManager
      */
 	public static function getCacheFileName()
 	{
-		return ".ajxp_recycle_cache.ser";
+		return ".recycle_cache.ser";
 	}
 	/**
      * Update metadata

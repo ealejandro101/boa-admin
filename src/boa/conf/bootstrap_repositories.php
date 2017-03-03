@@ -42,7 +42,7 @@ $REPOSITORIES[0] = array(
 		"PAGINATION_NUMBER" => 200,
 		"META_SOURCES"		=> array(
 			"metastore.serial"=> array(
-				"METADATA_FILE"	=> ".ajxp_meta",
+				"METADATA_FILE"	=> ".boa",
                 "METADATA_FILE_LOCATION" => "infolders"
             ),
             "meta.user"     => array(
@@ -80,7 +80,7 @@ $REPOSITORIES[1] = array(
 		"PAGINATION_NUMBER" => 200,
 		"META_SOURCES"		=> array(
 			"metastore.serial"=> array(
-				"METADATA_FILE"	=> ".ajxp_meta",
+				"METADATA_FILE"	=> ".boa",
                 "METADATA_FILE_LOCATION" => "infolders"
             ),
             "meta.user"     => array(
@@ -137,7 +137,7 @@ $REPOSITORIES["fs_template"] = array(
         "CHARSET"           => "",
 		"META_SOURCES"		=> array(
 			"metastore.serial"=> array(
-				"METADATA_FILE"	=> ".ajxp_meta",
+				"METADATA_FILE"	=> ".boa",
                 "METADATA_FILE_LOCATION" => "infolders"
             ),
             "meta.user"     => array(

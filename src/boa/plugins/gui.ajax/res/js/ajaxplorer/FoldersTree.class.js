@@ -150,7 +150,7 @@ Class.create("FoldersTree", AjxpPane, {
 		var z = (displayOptions.indexOf("z") > -1);
 		var f = (displayOptions.indexOf("f") > -1);
 		var filter = function(ajxpNode){
-			return (((d && !ajxpNode.isLeaf()) || (f && ajxpNode.isLeaf()) || (z && (ajxpNode.getAjxpMime()=="zip" || ajxpNode.getAjxpMime()=="ajxp_browsable_archive"))) && (ajxpNode.getParent().getAjxpMime() != "ajxp_recycle"));
+			return (((d && !ajxpNode.isLeaf()) || (f && ajxpNode.isLeaf()) || (z && (ajxpNode.getAjxpMime()=="zip" || ajxpNode.getAjxpMime()=="browsable_archive"))) && (ajxpNode.getParent().getAjxpMime() != "recycle"));
 		};
 		return filter;		
 	},

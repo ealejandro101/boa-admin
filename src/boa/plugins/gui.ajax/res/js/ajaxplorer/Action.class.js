@@ -204,8 +204,8 @@ Class.create("Action", {
 
         var crtNode = arguments[2];
         if(crtNode){
-            crtIsRecycle = (crtNode.getAjxpMime() == "ajxp_recycle");
-            crtInZip = crtNode.hasAjxpMimeInBranch("ajxp_browsable_archive");
+            crtIsRecycle = (crtNode.getAjxpMime() == "recycle");
+            crtInZip = crtNode.hasAjxpMimeInBranch("browsable_archive");
             crtIsRoot = crtNode.isRoot();
             crtAjxpMime = crtNode.getAjxpMime();
             crtIsReadOnly = crtNode.hasMetadataInBranch("ajxp_readonly", "true");

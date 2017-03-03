@@ -331,7 +331,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                 }
                 if(isSet($nodes)){
                     XMLWriter::header();
-                    if(!isSet($httpVars["file"])) XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail"><column messageId="boaconf.1" attributeName="ajxp_label" sortType="String"/><column messageId="boaconf.102" attributeName="description" sortType="String"/></columns>');
+                    if(!isSet($httpVars["file"])) XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail"><column messageId="boaconf.1" attributeName="boa_label" sortType="String"/><column messageId="boaconf.102" attributeName="description" sortType="String"/></columns>');
                     foreach ($nodes as $key => $data){
                         print '<tree text="'.Utils::xmlEntities($data["LABEL"]).'" description="'.Utils::xmlEntities($data["DESCRIPTION"]).'" icon="'.$data["ICON"].'" filename="'.$parentName.$key.'"/>';
                     }
@@ -893,7 +893,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					$repDef["DRIVER_OPTIONS"] = $options;
                     unset($repDef["DRIVER_OPTIONS"]["BOA_GROUP_PATH_PARAMETER"]);
 				}
-				if(strstr($repDef["DRIVER"], "ajxp_template_") !== false){
+				if(strstr($repDef["DRIVER"], "template_") !== false){
 					$templateId = substr($repDef["DRIVER"], 14);
 					$templateRepo = ConfService::getRepositoryById($templateId);
 					$newRep = $templateRepo->createTemplateChild($repDef["DISPLAY"], $repDef["DRIVER_OPTIONS"]);
@@ -1468,7 +1468,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             if($dir == "/core_plugins") $uniqTypes = $coreTypes;
             else $uniqTypes = array_diff(array_keys($types), $coreTypes);
 			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" template_name="conf.plugins_folder">
-			<column messageId="boaconf.101" attributeName="ajxp_label" sortType="String"/>
+			<column messageId="boaconf.101" attributeName="boa_label" sortType="String"/>
 			</columns>');		
 			ksort($types);
 			foreach( $types as $t => $tPlugs){
@@ -1481,7 +1481,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 			}
 		}else if($dir == "/core"){
 			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" switchDisplayMode="detail"  template_name="conf.plugins">
-			<column messageId="boaconf.101" attributeName="ajxp_label" sortType="String"/>
+			<column messageId="boaconf.101" attributeName="boa_label" sortType="String"/>
 			<column messageId="boaconf.102" attributeName="plugin_id" sortType="String"/>
 			<column messageId="boaconf.103" attributeName="plugin_description" sortType="String"/>
 			</columns>');		
@@ -1514,7 +1514,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 			if(empty($split[0])) array_shift($split);
 			$type = $split[1];
 			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" switchDisplayMode="full" template_name="conf.plugin_detail">
-			<column messageId="boaconf.101" attributeName="ajxp_label" sortType="String" defaultWidth="10%"/>
+			<column messageId="boaconf.101" attributeName="boa_label" sortType="String" defaultWidth="10%"/>
 			<column messageId="boaconf.102" attributeName="plugin_id" sortType="String" defaultWidth="10%"/>
 			<column messageId="boaconf.103" attributeName="plugin_description" sortType="String" defaultWidth="60%"/>
 			<column messageId="boaconf.104" attributeName="enabled" sortType="String" defaultWidth="10%"/>
@@ -1543,14 +1543,14 @@ class ConfAccessDriver extends AbstractAccessDriver
 	
 	function listUsers($root, $child, $hashValue = null){
         $columns = '<columns switchDisplayMode="list" switchGridMode="filelist" template_name="conf.users">
-        			<column messageId="boaconf.6" attributeName="ajxp_label" sortType="String" defaultWidth="40%"/>
+        			<column messageId="boaconf.6" attributeName="boa_label" sortType="String" defaultWidth="40%"/>
         			<column messageId="boaconf.7" attributeName="isAdmin" sortType="String" defaultWidth="10%"/>
         			<column messageId="boaconf.70" attributeName="roles" sortType="String" defaultWidth="15%"/>
         			<column messageId="boaconf.62" attributeName="rights_summary" sortType="String" defaultWidth="15%"/>
         			</columns>';
         if(AuthService::driverSupportsAuthSchemes()){
             $columns = '<columns switchDisplayMode="list" switchGridMode="filelist" template_name="conf.users_authscheme">
-            			<column messageId="boaconf.6" attributeName="ajxp_label" sortType="String" defaultWidth="40%"/>
+            			<column messageId="boaconf.6" attributeName="boa_label" sortType="String" defaultWidth="40%"/>
             			<column messageId="boaconf.115" attributeName="auth_scheme" sortType="String" defaultWidth="5%"/>
             			<column messageId="boaconf.7" attributeName="isAdmin" sortType="String" defaultWidth="5%"/>
             			<column messageId="boaconf.70" attributeName="roles" sortType="String" defaultWidth="15%"/>
@@ -1637,7 +1637,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 	
 	function listRoles(){
 		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" template_name="conf.roles">
-			<column messageId="boaconf.6" attributeName="ajxp_label" sortType="String"/>			
+			<column messageId="boaconf.6" attributeName="boa_label" sortType="String"/>			
 			<column messageId="boaconf.114" attributeName="is_default" sortType="String"/>
 			<column messageId="boaconf.62" attributeName="rights_summary" sortType="String"/>
 			</columns>');
@@ -1689,7 +1689,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 	function listRepositories(){
 		$repos = ConfService::getRepositoriesList("all");
 		XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="list" switchGridMode="filelist" template_name="conf.repositories">
-			<column messageId="boaconf.8" attributeName="ajxp_label" sortType="String"/>
+			<column messageId="boaconf.8" attributeName="boa_label" sortType="String"/>
 			<column messageId="boaconf.9" attributeName="accessType" sortType="String"/>
 			<column messageId="shared.27" attributeName="owner" sortType="String"/>
 			<column messageId="boaconf.106" attributeName="repository_id" sortType="String"/>
@@ -1766,7 +1766,7 @@ class ConfAccessDriver extends AbstractAccessDriver
         if(count($parts) == 1){
             // list all types
             XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" template_name="conf.plugins_folder">
-			<column messageId="boaconf.101" attributeName="ajxp_label" sortType="String"/>
+			<column messageId="boaconf.101" attributeName="boa_label" sortType="String"/>
 			</columns>');
             ksort($types);
             foreach( $types as $t => $tPlugs){
@@ -1781,7 +1781,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             // list plugs
             $type = $parts[1];
             XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail" template_name="conf.plugins_folder">
-                <column messageId="boaconf.101" attributeName="ajxp_label" sortType="String"/>
+                <column messageId="boaconf.101" attributeName="boa_label" sortType="String"/>
                 <column messageId="boaconf.103" attributeName="actions" sortType="String"/>
 			</columns>');
             $pObject = new Plugin("","");
@@ -1807,7 +1807,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             $name = $parts[2];
             $mess = ConfService::getMessages();
             XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="full" template_name="conf.plugins_folder">
-                <column messageId="boaconf.101" attributeName="ajxp_label" sortType="String" defaultWidth="10%"/>
+                <column messageId="boaconf.101" attributeName="boa_label" sortType="String" defaultWidth="10%"/>
                 <column messageId="boaconf.103" attributeName="parameters" sortType="String" fixedWidth="30%"/>
 			</columns>');
             $pObject = new Plugin("","");
@@ -1871,7 +1871,7 @@ class ConfAccessDriver extends AbstractAccessDriver
     function listHooks($dir, $root = NULL){
         $jsonContent = json_decode(file_get_contents(Utils::getHooksFile()), true);
         $config = '<columns switchDisplayMode="full" template_name="hooks.list">
-				<column messageId="boaconf.17" attributeName="ajxp_label" sortType="String" defaultWidth="20%"/>
+				<column messageId="boaconf.17" attributeName="boa_label" sortType="String" defaultWidth="20%"/>
 				<column messageId="boaconf.18" attributeName="description" sortType="String" defaultWidth="20%"/>
 				<column messageId="boaconf.19" attributeName="triggers" sortType="String" defaultWidth="25%"/>
 				<column messageId="boaconf.20" attributeName="listeners" sortType="String" defaultWidth="25%"/>
@@ -1915,7 +1915,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 			$date = $parts[count($parts)-1];
 			$logger->xmlLogs($dir, $date, "tree", $root."/logs");
 		}else{
-			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.16" attributeName="ajxp_label" sortType="String"/></columns>');
+			XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.16" attributeName="boa_label" sortType="String"/></columns>');
 			$logger->xmlListLogFiles("tree", (count($parts)>2?$parts[2]:null), (count($parts)>3?$parts[3]:null), $root."/logs");
 		}
 	}
@@ -1925,7 +1925,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 		$testedParams = array();
 		$passed = Utils::runTests($outputArray, $testedParams);
 		Utils::testResultsToFile($outputArray, $testedParams);		
-		XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="list" switchGridMode="fileList" template_name="conf.diagnostic" defaultWidth="20%"><column messageId="boaconf.23" attributeName="ajxp_label" sortType="String"/><column messageId="boaconf.24" attributeName="data" sortType="String"/></columns>');		
+		XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="list" switchGridMode="fileList" template_name="conf.diagnostic" defaultWidth="20%"><column messageId="boaconf.23" attributeName="boa_label" sortType="String"/><column messageId="boaconf.24" attributeName="data" sortType="String"/></columns>');		
 		if(is_file(TESTS_RESULT_FILE)){
 			include_once(TESTS_RESULT_FILE);
             if(isset($diagResults)){
@@ -1939,7 +1939,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 	
 	function listSharedFiles(){
 		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist" template_name="conf.shared">
-				<column messageId="shared.4" attributeName="ajxp_label" sortType="String" defaultWidth="30%"/>
+				<column messageId="shared.4" attributeName="boa_label" sortType="String" defaultWidth="30%"/>
 				<column messageId="shared.27" attributeName="owner" sortType="String" defaultWidth="10%"/>
 				<column messageId="shared.17" attributeName="download_url" sortType="String" defaultWidth="40%"/>
 				<column messageId="shared.6" attributeName="password" sortType="String" defaultWidth="4%"/>

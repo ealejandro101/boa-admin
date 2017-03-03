@@ -281,7 +281,7 @@
                     actionBar="true" contextMenu="true" infoPanel="false"
                     actionBarGroup="get" inZip="false">
                 </context>
-                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="BOA_MIMES_EDITABLE,^ajxp_browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
+                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="BOA_MIMES_EDITABLE,^browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
             <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
             <subMenu>
                 <dynamicBuilder><![CDATA[
@@ -349,7 +349,7 @@
                     actionBar="true" contextMenu="true" infoPanel="false"
                     actionBarGroup="inline" inZip="false">
                 </context>
-                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="BOA_MIMES_EDITABLE,^ajxp_browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
+                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="BOA_MIMES_EDITABLE,^browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
             <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
             <processing>
                 <clientCallback prepareModal="false"><![CDATA[
@@ -664,10 +664,10 @@
 							ajaxplorer.actionBar.defaultActions.unset('ctrldragndrop');
 							ajaxplorer.actionBar.defaultActions.unset('dragndrop');
 						}
-						if(ajxpUser && ajxpUser.canWrite() && ajaxplorer.getContextNode().hasAjxpMimeInBranch("ajxp_browsable_archive")){
+						if(ajxpUser && ajxpUser.canWrite() && ajaxplorer.getContextNode().hasAjxpMimeInBranch("browsable_archive")){
 						    action.rightsContext.write = false;
 						}
-						if(ajaxplorer.getContextNode().hasAjxpMimeInBranch("ajxp_browsable_archive")){
+						if(ajaxplorer.getContextNode().hasAjxpMimeInBranch("browsable_archive")){
 							action.setLabel(247, 248);
 							action.setIconSrc('ark_extract.png');
 						}else{
@@ -770,7 +770,7 @@
 					var onLoad = function(oForm){
 				    	var message = MessageHash[177];
 				    	var repoHasRecycle = ajaxplorer.getContextHolder().getRootNode().getMetadata().get("repo_has_recycle");
-				    	if(repoHasRecycle && repoHasRecycle == "true" && ajaxplorer.getContextNode().getAjxpMime() != "ajxp_recycle"){
+				    	if(repoHasRecycle && repoHasRecycle == "true" && ajaxplorer.getContextNode().getAjxpMime() != "recycle"){
 				    		message = MessageHash[176];
 				    	}
 		   		    	$(oForm).getElementsBySelector('span[id="delete_message"]')[0].innerHTML = message;

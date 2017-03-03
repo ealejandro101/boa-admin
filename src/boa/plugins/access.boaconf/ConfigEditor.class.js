@@ -64,19 +64,19 @@ Class.create("ConfigEditor",{
 		var rolesId = $A();
 		userRoles.each(function(xmlElement){
 			var id = xmlElement.getAttribute('id');
-			var option = new Element('div', {id:id, className:'ajxp_role user_role'}).update(id);
+			var option = new Element('div', {id:id, className:'boa_role user_role'}).update(id);
 			userSelect.insert(option);
 			rolesId.push(id);
 		});
 		availableRoles.each(function(xmlElement){
 			var id = xmlElement.getAttribute('id');
 			if(!rolesId.include(id)){
-				var option = new Element('div', {id:id, className:'ajxp_role available_role'}).update(id);
+				var option = new Element('div', {id:id, className:'boa_role available_role'}).update(id);
 				availSelect.insert(option);
 			}
 		});
 		this.draggables = $A();
-		rolesPane.select("div.ajxp_role").each(function(item){
+		rolesPane.select("div.boa_role").each(function(item){
 			var container = item.parentNode;
 			this.draggables.push(new Draggable(item, {
 				revert:true,
@@ -85,14 +85,14 @@ Class.create("ConfigEditor",{
 					container.parentNode.insert(item);
 				},
 				onEnd : function(){
-					if(item.ajxp_dropped) return;
+					if(item.dropped) return;
 					container.insert(item);
 				},
 				reverteffect:function(element){element.setStyle({top:0,left:0});}
 			}));
 		}.bind(this));
 		var dropFunc = function(dragged, dropped, event){
-			dragged.ajxp_dropped = true;
+			dragged.dropped = true;
 			dropped.insert(dragged);
 			dragged.setStyle({top:0,left:0});
 			var action = "edit";
@@ -189,7 +189,7 @@ Class.create("ConfigEditor",{
 		this.submitForm("create_user", 'create_user', parameters, null, function(responseXML){
             // success callback
             hideLightBox();
-            var editorData = ajaxplorer.findEditorById("editor.ajxp_role");
+            var editorData = ajaxplorer.findEditorById("editor.boa_role");
             ajaxplorer.loadEditorResources(editorData.resourcesManager);
             var node = new AjxpNode(currentPath + "/"+newUserName, true);
             node.getMetadata().set("boa_mime", "user");
@@ -342,7 +342,7 @@ Class.create("ConfigEditor",{
 			this.driverSelector.insert(new Element('optgroup', {label:"Repository Templates"}));
 			this.templates.each(function(pair){
 				var option = new Element('option');
-				option.setAttribute('value', 'ajxp_template_'+pair.key);
+				option.setAttribute('value', 'template_'+pair.key);
 				option.update(pair.value.get('label'));
 				this.driverSelector.insert({'bottom':option});			
 			}.bind(this));			
@@ -363,7 +363,7 @@ Class.create("ConfigEditor",{
 	driverSelectorChange : function(){
 		var height = (Prototype.Browser.IE?62:32);
 		var dName = this.driverSelector.getValue();
-		if(dName.indexOf("ajxp_template_") === 0){
+		if(dName.indexOf("template_") === 0){
 			var templateName = dName.substring(14);
 			this.createDriverFormFromTemplate(templateName);
 		}else{			

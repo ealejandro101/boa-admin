@@ -40,8 +40,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 {	
 
     function initRepository(){
-    	die('init repo');
-        require_once BOA_PLUGINS_FOLDER."/action.share/class.ShareCenter.php";        
+      //ToDo: Review how to include this file. require_once BOA_PLUGINS_FOLDER."/action.share/class.ShareCenter.php";        
     }
 
 	function switchAction($action, $httpVars, $fileVars){
@@ -88,7 +87,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 					exit(1);
 				}else{
 					XMLWriter::header();
-					XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="shared.8" attributeName="ajxp_label" sortType="String"/><column messageId="shared.31" attributeName="description" sortType="String"/></columns>');
+					XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="shared.8" attributeName="boa_label" sortType="String"/><column messageId="shared.31" attributeName="description" sortType="String"/></columns>');
 					foreach ($rootNodes as $key => $data){
 						print '<tree text="'.$data["LABEL"].'" icon="'.$data["ICON"].'" filename="/'.$key.'" parentname="/" description="'.$data["DESCRIPTION"].'" />';
 					}
@@ -160,7 +159,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 	
 	function listSharedFiles(){
 		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist">
-				<column messageId="shared.4" attributeName="ajxp_label" sortType="String" width="20%"/>
+				<column messageId="shared.4" attributeName="boa_label" sortType="String" width="20%"/>
 				<column messageId="shared.17" attributeName="download_url" sortType="String" width="20%"/>
 				<column messageId="shared.20" attributeName="download_count" sortType="String" width="2%"/>
                 <column messageId="share_center.22" attributeName="download_limit" sortType="String" width="2%"/>
@@ -230,13 +229,12 @@ class SharedAccessDriver extends AbstractAccessDriver
 	}
 
 	function listUsers(){
-		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.6" attributeName="ajxp_label" sortType="String"/><column messageId="shared.10" attributeName="repo_accesses" sortType="String"/></columns>');		
+		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.6" attributeName="boa_label" sortType="String"/><column messageId="shared.10" attributeName="repo_accesses" sortType="String"/></columns>');		
 		if(!AuthService::usersEnabled()) return ;
 		$users = AuthService::listUsers();
 		$mess = ConfService::getMessages();
 		$loggedUser = AuthService::getLoggedUser();		
 		$repoList = ConfService::getRepositoriesList("all");
-		die('listUsers');
         $userArray = array();
 		foreach ($users as $userIndex => $userObject){
 			$label = $userObject->getId();
@@ -273,7 +271,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 	
 	function listRepositories(){
 		$repos = ConfService::getRepositoriesList("all");
-		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.8" attributeName="ajxp_label" sortType="String"/><column messageId="boaconf.9" attributeName="accessType" sortType="String"/><column messageId="shared.9" attributeName="repo_accesses" sortType="String"/></columns>');		
+		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.8" attributeName="boa_label" sortType="String"/><column messageId="boaconf.9" attributeName="accessType" sortType="String"/><column messageId="shared.9" attributeName="repo_accesses" sortType="String"/></columns>');		
         $repoArray = array();
         $childRepos = array();
         $loggedUser = AuthService::getLoggedUser();        
