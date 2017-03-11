@@ -2613,7 +2613,7 @@ div#rights_pane{
 	width: 100%;
 }
 
-div.boa_role{
+div.role{
 	background-color:#FFFFFF;
 	border-left:7px solid #DDDDDD;
 	cursor:move;

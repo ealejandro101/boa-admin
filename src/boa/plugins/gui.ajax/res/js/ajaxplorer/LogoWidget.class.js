@@ -51,7 +51,7 @@ Class.create("LogoWidget", AjxpPane, {
             if(configs.get("CUSTOM_TOP_LOGO_ISTMP")){
                 parameter = 'tmp_file';
             }
-            var url = window.ajxpServerAccessPath + "&get_action=get_global_binary_param&"+parameter+"=" + configs.get("CUSTOM_TOP_LOGO");
+            var url = window.appServerAccessPath + "&get_action=get_global_binary_param&"+parameter+"=" + configs.get("CUSTOM_TOP_LOGO");
             if(configs.get("CUSTOM_TOP_LOGO").indexOf('plugins/') === 0){
                 // It's not a binary but directly an image.
                 url = configs.get("CUSTOM_TOP_LOGO");

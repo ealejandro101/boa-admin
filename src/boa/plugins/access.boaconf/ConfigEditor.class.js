@@ -45,7 +45,7 @@ Class.create("ConfigEditor",{
 //		this.form.down('#rights_legend').remove();
 		this.form.down('#roles_pane').select('.dialogLegend')[0].update(MessageHash['boaconf.83']);
 //		this.form.down('#roles_pane').select('span')[1].update(MessageHash['boaconf.84']);
-		var url = window.ajxpServerAccessPath + '&get_action=user_update_role';
+		var url = window.appServerAccessPath + '&get_action=user_update_role';
 		this.selectionUrl = selection.updateFormOrUrl(null, url);
 		var connexion = new Connexion(this.selectionUrl);
 		connexion.onComplete = function(transport){			
@@ -64,19 +64,19 @@ Class.create("ConfigEditor",{
 		var rolesId = $A();
 		userRoles.each(function(xmlElement){
 			var id = xmlElement.getAttribute('id');
-			var option = new Element('div', {id:id, className:'boa_role user_role'}).update(id);
+			var option = new Element('div', {id:id, className:'role user_role'}).update(id);
 			userSelect.insert(option);
 			rolesId.push(id);
 		});
 		availableRoles.each(function(xmlElement){
 			var id = xmlElement.getAttribute('id');
 			if(!rolesId.include(id)){
-				var option = new Element('div', {id:id, className:'boa_role available_role'}).update(id);
+				var option = new Element('div', {id:id, className:'role available_role'}).update(id);
 				availSelect.insert(option);
 			}
 		});
 		this.draggables = $A();
-		rolesPane.select("div.boa_role").each(function(item){
+		rolesPane.select("div.role").each(function(item){
 			var container = item.parentNode;
 			this.draggables.push(new Draggable(item, {
 				revert:true,
@@ -189,7 +189,7 @@ Class.create("ConfigEditor",{
 		this.submitForm("create_user", 'create_user', parameters, null, function(responseXML){
             // success callback
             hideLightBox();
-            var editorData = ajaxplorer.findEditorById("editor.boa_role");
+            var editorData = ajaxplorer.findEditorById("editor.role");
             ajaxplorer.loadEditorResources(editorData.resourcesManager);
             var node = new AjxpNode(currentPath + "/"+newUserName, true);
             node.getMetadata().set("boa_mime", "user");

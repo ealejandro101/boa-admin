@@ -98,7 +98,7 @@ Class.create("FormManager", {
             var commonAttributes = {
                 'name'                  : name,
                 'data-ctrl_type'        : type,
-                'data-ajxp_mandatory'   : (mandatory?'true':'false')
+                'data-mandatory'   : (mandatory?'true':'false')
             };
             if(disabled || param.get('readonly')){
                 commonAttributes['disabled'] = 'true';
@@ -172,9 +172,9 @@ Class.create("FormManager", {
 
             }else if(type == 'textarea'){
                 if(defaultValue) defaultValue = defaultValue.replace(new RegExp("__LBR__", "g"), "\n");
-                element = '<textarea class="SF_input" style="height:70px;" data-ctrl_type="'+type+'" data-ajxp_mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
+                element = '<textarea class="SF_input" style="height:70px;" data-ctrl_type="'+type+'" data-mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
 		    }else if(type == 'password'){
-				element = '<input type="password" autocomplete="off" data-ctrl_type="'+type+'" data-ajxp_mandatory="'+(mandatory?'true':'false')+'" name="'+name+'" value="'+defaultValue+'"'+disabledString+' class="SF_input">';
+				element = '<input type="password" autocomplete="off" data-ctrl_type="'+type+'" data-mandatory="'+(mandatory?'true':'false')+'" name="'+name+'" value="'+defaultValue+'"'+disabledString+' class="SF_input">';
 			}else if(type == 'boolean'){
 				var selectTrue, selectFalse;
 				if(defaultValue !== undefined){
@@ -205,7 +205,7 @@ Class.create("FormManager", {
                 }
                 if(!choices) choices = [];
                 var multiple = param.get("multiple") ? "multiple='true'":"";
-                element = '<select class="SF_input" name="'+name+'" data-ajxp_mandatory="'+(mandatory?'true':'false')+'" '+multiple+'>';
+                element = '<select class="SF_input" name="'+name+'" data-mandatory="'+(mandatory?'true':'false')+'" '+multiple+'>';
                 if(!mandatory && !multiple) element += '<option value=""></option>';
                 for(var k=0;k<choices.length;k++){
                     var cLabel, cValue;
@@ -269,7 +269,7 @@ Class.create("FormManager", {
                         switchValues[p.get('group_switch_value')].values.set(vKey, values.get(vKey));
                     }
                 });
-                var selector = new Element('select', {className:'SF_input', name:name, "data-ajxp_mandatory":(mandatory?'true':'false'), "data-ctrl_type":type});
+                var selector = new Element('select', {className:'SF_input', name:name, "data-mandatory":(mandatory?'true':'false'), "data-ctrl_type":type});
                 if(!mandatory){
                     selector.insert(new Element('option'));
                 }
@@ -288,7 +288,7 @@ Class.create("FormManager", {
                 element = new Element("div").update(selector);
                 var subFields = new Element("div");
                 element.insert(subFields);
-                if(form.ajxpPaneObject) subFields.ajxpPaneObject = form.ajxpPaneObject;
+                if(form.paneObject) subFields.paneObject = form.paneObject;
                 selector.FIELDS_CONTAINER = subFields;
 
                 selector.observe("change", function(e){
@@ -468,7 +468,7 @@ Class.create("FormManager", {
                 cb.observe("click", function(event){
                     var cbox = event.target;
                     var state = !cbox.checked;
-                    var fElement = cbox.next("input.SF_input,select.SF_input,div.SF_input");
+                    var fElement = cbox.next("input.SF_input,select.SF_input,div.SF_input,textarea.SF_input");
                     var fElements;
                     if(fElement && fElement.nodeName.toLowerCase() == "div") {
                         fElements = fElement.select("input");
@@ -556,8 +556,8 @@ Class.create("FormManager", {
                 realCallback();
             });
         }.bind(this) );
-        if(form.ajxpPaneObject){
-            form.ajxpPaneObject.observe("after_replicate_row", function(replicate){
+        if(form.paneObject){
+            form.paneObject.observe("after_replicate_row", function(replicate){
                 replicate.select("div.SF_element").each(function(element){
                     element.select("input,textarea,select").invoke("observe", "change", realCallback);
                     element.select("input,textarea").invoke("observe", "keydown", function(event){
@@ -585,7 +585,7 @@ Class.create("FormManager", {
         var checkboxesActive = false;
 		form.select('input,textarea').each(function(el){
 			if(el.type == "text" || el.type == "hidden" || el.type == "password" || el.nodeName.toLowerCase() == 'textarea'){
-				if(el.getAttribute('data-ajxp_mandatory') == 'true' && el.value == '' && !el.disabled){
+				if(el.getAttribute('data-mandatory') == 'true' && el.value == '' && !el.disabled){
 					missingMandatory.push(el);
 				}
 				parametersHash.set(prefix+el.name, el.value);				
@@ -605,7 +605,7 @@ Class.create("FormManager", {
             }
 		});
 		form.select('select').each(function(el){
-			if(el.getAttribute("data-ajxp_mandatory") == 'true' && el.getValue() == '' && !el.disabled){
+			if(el.getAttribute("data-mandatory") == 'true' && el.getValue() == '' && !el.disabled){
 				missingMandatory.push(el);
 			}
             if(el.getAttribute('data-ctrl_type')){
@@ -687,7 +687,7 @@ Class.create("FormManager", {
 	 * @param form HTMLForm
 	 */
 	replicateRow : function(templateRow, number, form, values){
-        if(form.ajxpPaneObject) form.ajxpPaneObject.notify('before_replicate_row', templateRow);
+        if(form.paneObject) form.paneObject.notify('before_replicate_row', templateRow);
         var repIndex = templateRow.getAttribute('data-ajxp-replication-index');
         if(repIndex === null){
             repIndex = 0;
@@ -729,7 +729,7 @@ Class.create("FormManager", {
             });
             tr.insert(removeButton);
 		}
-        if(form.ajxpPaneObject) form.ajxpPaneObject.notify('after_replicate_row', tr);
+        if(form.paneObject) form.paneObject.notify('after_replicate_row', tr);
         /*
 		templateRow.select('input', 'select', 'textarea').each(function(origInput){
 			var newName = origInput.getAttribute('name')+'_0';

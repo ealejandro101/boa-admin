@@ -45,7 +45,7 @@ Class.create("PluginEditor", AbstractEditor, {
         this.actions.get("saveButton").observe("click", this.save.bind(this) );
         modal.setCloseValidation(function(){
             if(this.isDirty()){
-                var confirm = window.confirm(MessageHash["boa_role_editor.19"]);
+                var confirm = window.confirm(MessageHash["role_editor.19"]);
                 if(!confirm) return false;
             }
             return true;
@@ -160,7 +160,7 @@ Class.create("PluginEditor", AbstractEditor, {
             }
 
             this.infoPane.insert({bottom:form});
-            form.ajxpPaneObject = this;
+            form.paneObject = this;
 
             if(driverParamsHash.size()){
                 this.formManager.createParametersInputs(form, driverParamsHash, true, (paramsValues.size()?paramsValues:null));

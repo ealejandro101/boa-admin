@@ -26,7 +26,7 @@ Class.create("AjxpInstaller", AjxpPane, {
         });
         this.formManager = new FormManager();
         this.formElement = this.htmlElement.down("#the_form");
-        this.formElement.ajxpPaneObject = this;
+        this.formElement.paneObject = this;
         this.initForm();
     },
 
@@ -76,7 +76,7 @@ Class.create("AjxpInstaller", AjxpPane, {
             }.bind(this));
             this.updateAndBindButton(this.htmlElement.select('.SF_inlineButton').last());
             this.bindPassword(this.formElement.down('input[name="ADMIN_USER_PASS"]').up('div.accordion_content'));
-            this.formElement.ajxpPaneObject.observe("after_replicate_row", function(newRow){
+            this.formElement.paneObject.observe("after_replicate_row", function(newRow){
                 this.bindPassword(newRow);
             }.bind(this));
             this.htmlElement.down("#start_button").observe("click", function(){

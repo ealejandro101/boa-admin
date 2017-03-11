@@ -37,11 +37,11 @@ Class.create("AjxpPane", {
 			throw new Error('Cannot find element for AjxpPane : ' + this.__className);
 		}
 		this.options = options || {};
-		this.htmlElement.ajxpPaneObject = this;
-		if(this.htmlElement.getAttribute('ajxpPaneHeader')){
+		this.htmlElement.paneObject = this;
+		if(this.htmlElement.getAttribute('appPaneHeader')){
 			this.addPaneHeader(
-				this.htmlElement.getAttribute('ajxpPaneHeader'), 
-				this.htmlElement.getAttribute('ajxpPaneIcon'));
+				this.htmlElement.getAttribute('appPaneHeader'), 
+				this.htmlElement.getAttribute('appPaneIcon'));
 		}
         if(this.htmlElement && this.options.elementStyle){
             this.htmlElement.setStyle(this.options.elementStyle);
@@ -78,8 +78,8 @@ Class.create("AjxpPane", {
 
         if(this.options.bindSizeTo.width.checkSiblings){
             this.htmlElement.siblings().each(function(s){
-                if(s.ajxpPaneObject){
-                    s.ajxpPaneObject.resize();
+                if(s.paneObject){
+                    s.paneObject.resize();
                 }
             });
         }
@@ -91,8 +91,8 @@ Class.create("AjxpPane", {
         var siblingWidth = 0;
         this.htmlElement.siblings().each(function(s){
             if(s.hasClassName('skipSibling')) return;
-            if(s.ajxpPaneObject && s.ajxpPaneObject.getActualWidth){
-                siblingWidth+=s.ajxpPaneObject.getActualWidth();
+            if(s.paneObject && s.paneObject.getActualWidth){
+                siblingWidth+=s.paneObject.getActualWidth();
             }else{
                 siblingWidth+=s.getWidth();
             }
@@ -146,11 +146,11 @@ Class.create("AjxpPane", {
 	scanChildrenPanes : function(element){
         if(!element.childNodes) return;
 		$A(element.childNodes).each(function(c){
-			if(c.ajxpPaneObject) {
+			if(c.paneObject) {
 				if(!this.childrenPanes){
                     this.childrenPanes = $A();
                 }
-                this.childrenPanes.push(c.ajxpPaneObject);
+                this.childrenPanes.push(c.paneObject);
 			}else{
 				this.scanChildrenPanes(c);
 			}

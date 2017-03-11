@@ -245,10 +245,10 @@ class XMLWriter
 		}else{
 			$xml = str_replace("BOA_SERVER_ACCESS", BOA_SERVER_ACCESS, $xml);
 		}
-		$xml = str_replace("BOA_MIMES_EDITABLE", Utils::getAjxpMimes("editable"), $xml);
-		$xml = str_replace("BOA_MIMES_IMAGE", Utils::getAjxpMimes("image"), $xml);
-		$xml = str_replace("BOA_MIMES_AUDIO", Utils::getAjxpMimes("audio"), $xml);
-		$xml = str_replace("BOA_MIMES_ZIP", Utils::getAjxpMimes("zip"), $xml);
+		$xml = str_replace("BOA_MIMES_EDITABLE", Utils::getMimes("editable"), $xml);
+		$xml = str_replace("BOA_MIMES_IMAGE", Utils::getMimes("image"), $xml);
+		$xml = str_replace("BOA_MIMES_AUDIO", Utils::getMimes("audio"), $xml);
+		$xml = str_replace("BOA_MIMES_ZIP", Utils::getMimes("zip"), $xml);
 		$authDriver = ConfService::getAuthDriverImpl();
 		if($authDriver != NULL){
 			$loginRedirect = $authDriver->getLoginRedirect();

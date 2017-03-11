@@ -41,14 +41,14 @@ class ConfService
     private $configs = array();
     
     /**
-     * @param PluginsService $ajxpPluginService
+     * @param PluginsService $pluginService
      * @return AbstractConfDriver 
      */
-    public function confPluginSoftLoad($ajxpPluginService){
+    public function confPluginSoftLoad($pluginService){
 
-        $booter = $ajxpPluginService->softLoad("boot.conf", array());
+        $booter = $pluginService->softLoad("boot.conf", array());
         $coreConfigs = $booter->loadPluginConfig("core", "conf");
-        $corePlug = $ajxpPluginService->softLoad("core.conf", array());
+        $corePlug = $pluginService->softLoad("core.conf", array());
         $corePlug->loadConfigs($coreConfigs);
         return $corePlug->getConfImpl();
     }

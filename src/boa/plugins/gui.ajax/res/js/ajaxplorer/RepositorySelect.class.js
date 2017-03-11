@@ -32,7 +32,7 @@ Class.create("RepositorySelect", {
 	 */
 	initialize : function(oElement, options){
 		this.element = oElement;
-		this.element.ajxpPaneObject = this;
+		this.element.paneObject = this;
 		this.show = true;
         if(options){
             this.options = options;

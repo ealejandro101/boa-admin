@@ -187,15 +187,15 @@ Class.create("ActionsManager", {
 	
 	/**
 	 * Generic method to get actions for a given component part.
-	 * @param ajxpClassName String 
+	 * @param appClassName String 
 	 * @param widgetId String
 	 * @returns $A()
 	 */
-	getActionsForAjxpWidget:function(ajxpClassName, widgetId){
+	getActionsForAjxpWidget:function(appClassName, widgetId){
 		var actions = $A([]);
 		this.actions.each(function(pair){
 			var action = pair.value;
-			if(action.context.ajxpWidgets && (action.context.ajxpWidgets.include(ajxpClassName+'::'+widgetId)||action.context.ajxpWidgets.include(ajxpClassName)) && !action.deny) actions.push(action);
+			if(action.context.ajxpWidgets && (action.context.ajxpWidgets.include(appClassName+'::'+widgetId)||action.context.ajxpWidgets.include(appClassName)) && !action.deny) actions.push(action);
 		});
 		return actions;		
 	},
@@ -497,9 +497,9 @@ Class.create("ActionsManager", {
 			{
 				if(childs[i].getAttribute("secure_token")){
 					Connexion.SECURE_TOKEN = childs[i].getAttribute("secure_token");
-					var parts = window.ajxpServerAccessPath.split("?secure_token");
-					window.ajxpServerAccessPath = parts[0] + "?secure_token=" + Connexion.SECURE_TOKEN;
-					window._bootstrap.parameters.set('ajxpServerAccess', window.ajxpServerAccessPath);
+					var parts = window.appServerAccessPath.split("?secure_token");
+					window.appServerAccessPath = parts[0] + "?secure_token=" + Connexion.SECURE_TOKEN;
+					window._bootstrap.parameters.set('ajxpServerAccess', window.appServerAccessPath);
 				}
                 if($("generic_dialog_box") && $("generic_dialog_box").down(".ajxp_login_error")){
                     $("generic_dialog_box").down(".ajxp_login_error").remove();

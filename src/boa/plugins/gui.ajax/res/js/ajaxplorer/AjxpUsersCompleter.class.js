@@ -134,7 +134,7 @@ Class.create("AjxpUsersCompleter", Ajax.Autocompleter, {
         this.options.asynchronous  = true;
         this.options.onComplete    = this.onComplete.bind(this);
         this.options.defaultParams = this.options.parameters || null;
-        this.url                   = this.options.url || window.ajxpServerAccessPath + "&get_action=user_list_authorized_users";
+        this.url                   = this.options.url || window.appServerAccessPath + "&get_action=user_list_authorized_users";
 
 
         this.options.onComplete  = function(transport){

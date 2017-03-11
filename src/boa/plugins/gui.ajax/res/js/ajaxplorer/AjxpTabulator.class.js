@@ -87,8 +87,8 @@ Class.create("AjxpTabulator", AjxpPane, {
 		}.bind(this));
 		if(toShow){
 			toShow.showElement(true);
-            if(this.htmlElement.up('div[ajxpClass="Splitter"]') && this.htmlElement.up('div[ajxpClass="Splitter"]').ajxpPaneObject){
-                var splitter = this.htmlElement.up('div[ajxpClass="Splitter"]').ajxpPaneObject;
+            if(this.htmlElement.up('div[appClass="Splitter"]') && this.htmlElement.up('div[appClass="Splitter"]').paneObject){
+                var splitter = this.htmlElement.up('div[appClass="Splitter"]').paneObject;
                 if(splitter.splitbar.hasClassName('folded')){
                     splitter.unfold();
                 }
@@ -174,8 +174,8 @@ Class.create("AjxpTabulator", AjxpPane, {
 	 */
 	getAndSetAjxpObject : function(tabInfo){
 		var ajxpObject = tabInfo.ajxpObject || null;
-		if($(tabInfo.element) && $(tabInfo.element).ajxpPaneObject && (!ajxpObject || ajxpObject != $(tabInfo.element).ajxpPaneObject) ){
-			ajxpObject = tabInfo.ajxpObject = $(tabInfo.element).ajxpPaneObject;
+		if($(tabInfo.element) && $(tabInfo.element).paneObject && (!ajxpObject || ajxpObject != $(tabInfo.element).paneObject) ){
+			ajxpObject = tabInfo.ajxpObject = $(tabInfo.element).paneObject;
 		}
 		return ajxpObject;		
 	}

@@ -249,9 +249,9 @@ Class.create("Ajaxplorer", {
         if(compRegistry.length){
             for(var i=compRegistry.length;i>0;i--){
                 var el = compRegistry[i-1];
-                var ajxpId = el.ajxpId;
-                compRegistry[i-1] = new el['ajxpClass'](el.ajxpNode, el.ajxpOptions);
-                window[ajxpId] = compRegistry[i-1];
+                var appId = el.appId;
+                compRegistry[i-1] = new el['appClass'](el.ajxpNode, el.appOptions);
+                window[appId] = compRegistry[i-1];
                 lastInst = compRegistry[i-1];
             }
             if(lastInst){
@@ -285,19 +285,19 @@ Class.create("Ajaxplorer", {
             compRegistry = this.guiCompRegistry;
         }
 		domNode = $(domNode);
-		var ajxpClassName = domNode.readAttribute("ajxpClass") || "";
-		var ajxpClass = Class.getByName(ajxpClassName);
-		var ajxpId = domNode.readAttribute("id") || "";
-		var ajxpOptions = {};
-		if(domNode.readAttribute("ajxpOptions")){
+		var appClassName = domNode.readAttribute("appClass") || "";
+		var appClass = Class.getByName(appClassName);
+		var appId = domNode.readAttribute("id") || "";
+		var appOptions = {};
+		if(domNode.readAttribute("appOptions")){
             try{
-                ajxpOptions = domNode.readAttribute("ajxpOptions").evalJSON();
+                appOptions = domNode.readAttribute("appOptions").evalJSON();
             }catch(e){
-                alert("Error while parsing JSON for GUI template part " + ajxpId + "!");
+                alert("Error while parsing JSON for GUI template part " + appId + "!");
             }
 		}
-		if(ajxpClass && ajxpId && Class.objectImplements(ajxpClass, "IAjxpWidget")){
-			compRegistry.push({ajxpId:ajxpId, ajxpNode:domNode, ajxpClass:ajxpClass, ajxpOptions:ajxpOptions});
+		if(appClass && appId && Class.objectImplements(appClass, "IAjxpWidget")){
+			compRegistry.push({appId:appId, ajxpNode:domNode, appClass:appClass, appOptions:appOptions});
 		}		
 		$A(domNode.childNodes).each(function(node){
 			this.buildGUI(node, compRegistry);
@@ -317,29 +317,29 @@ Class.create("Ajaxplorer", {
             if(parts[i].getAttribute("theme") && parts[i].getAttribute("theme") != window._bootstrap.parameters.get("theme")){
                 continue;
             }
-			var ajxpId = parts[i].getAttribute("ajxpId");
-			var ajxpClassName = parts[i].getAttribute("ajxpClass");
-			var ajxpOptionsString = parts[i].getAttribute("ajxpOptions");
+			var appId = parts[i].getAttribute("appId");
+			var appClassName = parts[i].getAttribute("appClass");
+			var appOptionsString = parts[i].getAttribute("appOptions");
             var cdataContent = "";
             if(parts[i].firstChild && parts[i].firstChild.nodeType == 4 && parts[i].firstChild.nodeValue != ""){
                 cdataContent = parts[i].firstChild.nodeValue;
             }
 			
-			var ajxpClass = Class.getByName(ajxpClassName);
-			if(ajxpClass && ajxpId && Class.objectImplements(ajxpClass, "IAjxpWidget")){				
-				toUpdate[ajxpId] = [ajxpClass, ajxpClassName, ajxpOptionsString, cdataContent];
-				this.templatePartsToRestore = this.templatePartsToRestore.without(ajxpId);
+			var appClass = Class.getByName(appClassName);
+			if(appClass && appId && Class.objectImplements(appClass, "IAjxpWidget")){				
+				toUpdate[appId] = [appClass, appClassName, appOptionsString, cdataContent];
+				this.templatePartsToRestore = this.templatePartsToRestore.without(appId);
 			}
 		}
         var futurePartsToRestore = $A(Object.keys(toUpdate));
 		this.templatePartsToRestore.each(function(key){
 			var part = this.findOriginalTemplatePart(key);
             if(part){
-                var ajxpClassName = part.getAttribute("ajxpClass");
-                var ajxpOptionsString = part.getAttribute("ajxpOptions");
+                var appClassName = part.getAttribute("appClass");
+                var appOptionsString = part.getAttribute("appOptions");
                 var cdataContent = part.innerHTML;
-                var ajxpClass = Class.getByName(ajxpClassName);
-                toUpdate[key] = [ajxpClass, ajxpClassName, ajxpOptionsString, cdataContent];
+                var appClass = Class.getByName(appClassName);
+                toUpdate[key] = [appClass, appClassName, appOptionsString, cdataContent];
             }
 		}.bind(this));
 		
@@ -352,20 +352,20 @@ Class.create("Ajaxplorer", {
 	/**
 	 * Applies a template_part by removing existing components at this location
 	 * and recreating new ones.
-	 * @param ajxpId String The id of the DOM anchor
-	 * @param ajxpClass IAjxpWidget A widget class
-	 * @param ajxpOptions Object A set of options that may have been decoded from json.
+	 * @param appId String The id of the DOM anchor
+	 * @param appClass IAjxpWidget A widget class
+	 * @param appOptions Object A set of options that may have been decoded from json.
 	 */
-	refreshGuiComponent:function(ajxpId, ajxpClass, ajxpClassName, ajxpOptionsString, cdataContent){
-		if(!window[ajxpId]) return;
+	refreshGuiComponent:function(appId, appClass, appClassName, appOptionsString, cdataContent){
+		if(!window[appId]) return;
 		// First destroy current component, unregister actions, etc.			
-		var oldObj = window[ajxpId];
-		if(oldObj.__className == ajxpClassName && oldObj.__ajxpOptionsString == ajxpOptionsString){
+		var oldObj = window[appId];
+		if(oldObj.__className == appClassName && oldObj.__appOptionsString == appOptionsString){
 			return;
 		}
-		var ajxpOptions = {};
-		if(ajxpOptionsString){
-			ajxpOptions = ajxpOptionsString.evalJSON();			
+		var appOptions = {};
+		if(appOptionsString){
+			appOptions = appOptionsString.evalJSON();			
 		}
 		if(Class.objectImplements(oldObj, "IFocusable")){
 			this._focusables = this._focusables.without(oldObj);
@@ -386,7 +386,7 @@ Class.create("Ajaxplorer", {
             }.bind(this));
             if(compReg.length) this.initAjxpWidgets(compReg);
         }
-		var obj = new ajxpClass($(ajxpId), ajxpOptions);
+		var obj = new appClass($(appId), appOptions);
 		if(Class.objectImplements(obj, "IFocusable")){
 			obj.setFocusBehaviour();
 			this._focusables.push(obj);
@@ -398,13 +398,13 @@ Class.create("Ajaxplorer", {
 			if(!this.guiActions) this.guiActions = new Hash();
 			this.guiActions.update(obj.getActions());
 		}
-        if($(ajxpId).parentNode && $(ajxpId).parentNode.ajxpPaneObject && $(ajxpId).parentNode.ajxpPaneObject.scanChildrenPanes){
-            $(ajxpId).parentNode.ajxpPaneObject.scanChildrenPanes($(ajxpId).parentNode.ajxpPaneObject.htmlElement);
+        if($(appId).parentNode && $(appId).parentNode.paneObject && $(appId).parentNode.paneObject.scanChildrenPanes){
+            $(appId).parentNode.paneObject.scanChildrenPanes($(appId).parentNode.paneObject.htmlElement);
         }
 
-            obj.__ajxpOptionsString = ajxpOptionsString;
+            obj.__appOptionsString = appOptionsString;
 		
-		window[ajxpId] = obj;
+		window[appId] = obj;
 		obj.resize();
 		delete(oldObj);
 	},
@@ -860,11 +860,11 @@ Class.create("Ajaxplorer", {
 		modal.updateLoadingProgress('Html templates loaded');	
 	},
 		
-	findOriginalTemplatePart : function(ajxpId){
+	findOriginalTemplatePart : function(appId){
 		var tmpElement = new Element("div", {style:"display:none;"});
 		$$("body")[0].insert(tmpElement);
 		this.initTemplates(tmpElement);
-		var tPart = tmpElement.down('[id="'+ajxpId+'"]');
+		var tPart = tmpElement.down('[id="'+appId+'"]');
         if(tPart) tPart = tPart.clone(true);
 		tmpElement.remove();
 		return tPart;
@@ -933,7 +933,7 @@ Class.create("Ajaxplorer", {
 		connexion.onComplete = function(transport){
 			if(transport.responseJSON){
 				seedInputField.value = transport.responseJSON.seed;
-				var src = window.ajxpServerAccessPath + '&get_action=get_captcha&sid='+Math.random();
+				var src = window.appServerAccessPath + '&get_action=get_captcha&sid='+Math.random();
 				var refreshSrc = ajxpResourcesFolder + '/images/actions/16/reload.png';
 				if(existingCaptcha){
 					existingCaptcha.src = src;
@@ -950,7 +950,7 @@ Class.create("Ajaxplorer", {
 					modal.refreshDialogPosition();
 					modal.refreshDialogAppearance();
 					$('captcha_refresh').observe('click', function(){
-						$('captcha_image').src = window.ajxpServerAccessPath + '&get_action=get_captcha&sid='+Math.random();
+						$('captcha_image').src = window.appServerAccessPath + '&get_action=get_captcha&sid='+Math.random();
 					});
 				}
 			}else{

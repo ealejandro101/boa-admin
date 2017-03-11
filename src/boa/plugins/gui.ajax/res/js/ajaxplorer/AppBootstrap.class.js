@@ -62,7 +62,7 @@ Class.create("AppBootstrap", {
 		}.bind(this));
 		document.observe("boa:before_gui_load", function(e){
 			var desktop = $(this.parameters.get('MAIN_ELEMENT'));
-			var options = desktop.getAttribute("ajxpOptions").evalJSON(false);
+			var options = desktop.getAttribute("appOptions").evalJSON(false);
 			if(options.fit && options.fit == 'height'){
 				var marginBottom = 0;
 				if(options.fitMarginBottom){
@@ -161,7 +161,7 @@ Class.create("AppBootstrap", {
 		}
 
 		// Refresh window variable
-		window.ajxpServerAccessPath = this.parameters.get('ajxpServerAccess');
+		window.appServerAccessPath = this.parameters.get('ajxpServerAccess');
 		var cssRes = this.parameters.get("cssResources");
 		if(cssRes) cssRes.each(this.loadCSSResource.bind(this));
 		if(this.parameters.get('ajxpResourcesFolder')){
@@ -218,8 +218,8 @@ Class.create("AppBootstrap", {
 		if(booterUrl.indexOf("?") > -1){
 			booterUrl = booterUrl.substring(0, booterUrl.indexOf("?"));
 		}
-		this.parameters.set('ajxpServerAccessPath', booterUrl);
-		window.ajxpServerAccessPath = booterUrl;
+		this.parameters.set('appServerAccessPath', booterUrl);
+		window.appServerAccessPath = booterUrl;
 	},
 	/**
 	 * Inserts a progress bar 
@@ -253,11 +253,12 @@ Class.create("AppBootstrap", {
             var titleDivSize = (customWording.iconHeight ? 'height:' + customWording.iconHeight + ';' : '');
 			html+=' <div style="margin-bottom:0px; font-size:'+fontSize+';font-weight:bold; background-image:url(\''+ (this.parameters.get("SERVER_PREFIX_URI") || '') + icon+'\');background-position:left center;background-repeat:no-repeat;padding-left:'+iconWidth+';'+titleDivSize+'color:#0077b3;">'+(customWording.iconOnly?'':title)+'</div>';
 			if(customWording.title.toLowerCase() != "ajaxplorer"){
-				//html+='	<div style="padding:4px 7px;position: relative;"><div>AjaXplorer Community Edition<span id="version_span"></span></div>';
+				html+='	<div style="padding:4px 7px;position: relative;"><div>BoA - Explorer<span id="version_span"></span></div>';
 			}else{
 				html+='	<div style="padding:4px 7px;position: relative;"><div>The web data-browser<span id="version_span"></span></div>';
 			}
-			html+='	Copyright C. du Jeu 2008-2013 - AGPL License. <div id="progressCustomMessage" style="margin-top: 35px;font-weight: bold;padding-bottom: 5px;">';
+			//html+='	Copyright C. du Jeu 2008-2013 - AGPL License. <div id="progressCustomMessage" style="margin-top: 35px;font-weight: bold;padding-bottom: 5px;">';
+      html+=' Copyright BoA 2017 - AGPL License. <div id="progressCustomMessage" style="margin-top: 35px;font-weight: bold;padding-bottom: 5px;">';
 			if(customWording.welcomeMessage){
 				html+= customWording.welcomeMessage.replace(new RegExp("\n", "g"), "<br>");
 			}

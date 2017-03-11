@@ -249,7 +249,7 @@ Class.create("AjxpNode", {
 	 * @returns Boolean
 	 */
 	isRecycle : function(){
-		return (this.getAjxpMime() == 'recycle');
+		return (this.getMime() == 'recycle');
 	},
 	/**
 	 * NOT IMPLEMENTED, USE hasAjxpMimeInBranch instead
@@ -263,10 +263,10 @@ Class.create("AjxpNode", {
 	 * @returns Boolean
 	 */
 	hasAjxpMimeInBranch: function(ajxpMime){
-		if(this.getAjxpMime() == ajxpMime.toLowerCase()) return true;
+		if(this.getMime() == ajxpMime.toLowerCase()) return true;
 		var parent, crt = this;
 		while(parent =crt._parentNode){
-			if(parent.getAjxpMime() == ajxpMime.toLowerCase()){return true;}
+			if(parent.getMime() == ajxpMime.toLowerCase()){return true;}
 			crt = parent;
 		}
 		return false;
@@ -366,12 +366,12 @@ Class.create("AjxpNode", {
 		return (childPath.substring(0,parentPath.length) == parentPath);
 	},	
 	/**
-	 * Gets the current's node mime type, either by ajxp_mime or by extension.
+	 * Gets the current's node mime type, either by boa_mime or by extension.
 	 * @returns String
 	 */
-	getAjxpMime : function(){
+	getMime : function(){
 		if(this._metadata && this._metadata.get("boa_mime")) return this._metadata.get("boa_mime").toLowerCase();
-		if(this._metadata && this.isLeaf()) return getAjxpMimeType(this._metadata).toLowerCase();
+		if(this._metadata && this.isLeaf()) return getMimeType(this._metadata).toLowerCase();
 		return "";
 	}
 });

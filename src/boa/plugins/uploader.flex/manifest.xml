@@ -35,7 +35,7 @@
 			</div>
 		]]></clientForm>
 		<dialogOnOpen><![CDATA[
-        var src = window.ajxpServerAccessPath + '&get_action=get_template&template_name=flash_tpl.html&pluginName=uploader.flex&encode=false';
+        var src = window.appServerAccessPath + '&get_action=get_template&template_name=flash_tpl.html&pluginName=uploader.flex&encode=false';
         modal.getForm().down('#flashframe').src = src;
 		]]></dialogOnOpen>
 		<activeCondition><![CDATA[

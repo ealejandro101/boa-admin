@@ -1,0 +1,8 @@
+ajxp_type -> ctrl_type
+ajxp:message -> gui:message
+ajxp_conf -> boaconf
+admin_data/ajxpdriver/param -> admin_data/driver/param
+ajxpServerAccessPath -> appServerAccessPath
+ajxpId -> appId
+ajxpClass -> appClass
+ajxpOptions -> appOptions

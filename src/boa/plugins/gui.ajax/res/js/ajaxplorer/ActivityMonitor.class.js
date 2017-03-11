@@ -112,7 +112,7 @@ Class.create("ActivityMonitor", {
 	 * Pings the server
 	 */
 	serverObserver : function(){
-		new Ajax.Request(window.ajxpServerAccessPath, 
+		new Ajax.Request(window.appServerAccessPath, 
 		{
 			method:'get',
 			parameters:{get_action:'ping'}

@@ -30,7 +30,7 @@ Class.create("ActionsToolbar", {
 	 */
 	initialize : function(oElement, options){
 		this.element = oElement;		
-		this.element.ajxpPaneObject = this;
+		this.element.paneObject = this;
 		this.options = Object.extend({
 			buttonRenderer : 'this',
             skipBubbling: false,
@@ -506,9 +506,9 @@ Class.create("ActionsToolbar", {
             style = command.getAttribute("title");
             this.style = style;
         }
-        var parent = this.element.up("div[@ajxpClass]");
-        while(parent.up("div[@ajxpClass]") != undefined){
-            parent = parent.up("div[@ajxpClass]");
+        var parent = this.element.up("div[@appClass]");
+        while(parent.up("div[@appClass]") != undefined){
+            parent = parent.up("div[@appClass]");
         }
         var actBar = this.element.up("div.action_bar");
 
@@ -522,7 +522,7 @@ Class.create("ActionsToolbar", {
                     img.src = resolveImageSource(img.getAttribute("data-action-src"),Action.prototype.__DEFAULT_ICON_PATH, this.options.stylesImgSizes[style]);
                 }.bind(this));
             }
-            if(parent.ajxpPaneObject) parent.ajxpPaneObject.resize();
+            if(parent.paneObject) parent.paneObject.resize();
             if(ajaxplorer.user && !start){
                 ajaxplorer.user.setPreference("action_bar_style", style);
                 ajaxplorer.user.savePreference("action_bar_style");
@@ -536,7 +536,7 @@ Class.create("ActionsToolbar", {
                 afterFinish:applyResize,
                 afterUpdate:function(){
                     actBar.select("div.separator").invoke("setStyle", {height:(actBar.getHeight()-1)+"px"});
-                    if(parent.ajxpPaneObject) parent.ajxpPaneObject.resize();
+                    if(parent.paneObject) parent.paneObject.resize();
                 }
             });
         }else{

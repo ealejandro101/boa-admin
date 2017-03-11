@@ -46,7 +46,7 @@ Class.create("PreviewFactory", {
 
     enrichBasePreview: function(ajxpNode, mainObject){
 
-        var editors = ajaxplorer.findEditorsForMime((ajxpNode.isLeaf()?ajxpNode.getAjxpMime():"mime_folder"), true);
+        var editors = ajaxplorer.findEditorsForMime((ajxpNode.isLeaf()?ajxpNode.getMime():"mime_folder"), true);
 		if(editors && editors.length)
 		{
 			this._crtImageIndex ++;

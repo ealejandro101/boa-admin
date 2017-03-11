@@ -33,14 +33,14 @@ function getRepName(fileName)
 	return repName;	
 }
 
-function getAjxpMimeType(item){
+function getMimeType(item){
 	if(!item) return "";
 	if(Object.isHash(item)){
-		return (item.get('ajxp_mime') || getFileExtension(item.get('filename')));
+		return (item.get('boa_mime') || getFileExtension(item.get('filename')));
 	}else if(Object.isFunction(item.getMetadata)){
-		return (item.getMetadata().get('ajxp_mime') || getFileExtension(item.getPath()));
+		return (item.getMetadata().get('boa_mime') || getFileExtension(item.getPath()));
 	}else{
-		return (item.getAttribute('ajxp_mime') || getFileExtension(item.getAttribute('filename')));
+		return (item.getAttribute('boa_mime') || getFileExtension(item.getAttribute('filename')));
 	}	
 }
 
@@ -336,8 +336,8 @@ function fitHeightToBottom(element, parentElement, addMarginBottom, listen)
 		}
 		if(!margin) margin = 0;
 		element.setStyle({height:(Math.max(0,wh-top-mrg-brd-pad-margin-addMarginBottom))+'px'});
-		if(element.ajxpPaneObject && listen){
-			element.ajxpPaneObject.resize();
+		if(element.paneObject && listen){
+			element.paneObject.resize();
 		}
 		element.fire("resize");
 	};

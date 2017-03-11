@@ -61,7 +61,7 @@ class Router {
         {
             // Don't overwrite cookie
             if (!isSet($_COOKIE[self::APP_SESSION_COOKIE]))
-                $_COOKIE[self::APP_SESSION_COOKIE] = $_GET["ajxp_sessid"];
+                $_COOKIE[self::APP_SESSION_COOKIE] = $_GET["app_sessid"];
         }
 
         header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");

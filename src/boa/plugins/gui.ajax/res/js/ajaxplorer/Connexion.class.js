@@ -31,7 +31,7 @@ Class.create("Connexion", {
 	 */
 	initialize: function(baseUrl)
 	{
-		this._baseUrl = window.ajxpServerAccessPath;
+		this._baseUrl = window.appServerAccessPath;
 		if(baseUrl) this._baseUrl = baseUrl;
 		this._libUrl = window.ajxpResourcesFolder+'/js';
 		this._parameters = new Hash();

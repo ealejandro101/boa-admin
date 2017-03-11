@@ -479,9 +479,9 @@
     <xs:element name="template_part">
         <xs:complexType mixed="true">
             <xs:attribute name="theme" use="optional" type="xs:NCName"/>
-            <xs:attribute name="ajxpClass" use="required" type="xs:NCName"/>
-            <xs:attribute name="ajxpId" use="required" type="xs:NCName"/>
-            <xs:attribute name="ajxpOptions" use="required"/>
+            <xs:attribute name="appClass" use="required" type="xs:NCName"/>
+            <xs:attribute name="appId" use="required" type="xs:NCName"/>
+            <xs:attribute name="appOptions" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="hooks">
@@ -627,8 +627,8 @@
     </xs:element>
     <xs:element name="node_provider">
         <xs:complexType>
-            <xs:attribute name="ajxpClass" use="required" type="xs:NCName"/>
-            <xs:attribute name="ajxpOptions" use="required"/>
+            <xs:attribute name="appClass" use="required" type="xs:NCName"/>
+            <xs:attribute name="appOptions" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="server_settings">

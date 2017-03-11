@@ -30,7 +30,7 @@ Class.create("UserWidget", {
 	 */
 	initialize: function(element, options){
 		this.element = element;
-		this.element.ajxpPaneObject = this;
+		this.element.paneObject = this;
         if(options){
             this.options = options;
         }
@@ -65,7 +65,7 @@ Class.create("UserWidget", {
 		{
 			if(oUser.id != 'guest') 
 			{
-                var label = '<ajxp:message message_id="142">'+MessageHash[142]+'</ajxp:message><i ajxp_message_title_id="189" title="'+MessageHash[189]+'">'+ oUser.id +' </i>';
+                var label = '<gui:message message_id="142">'+MessageHash[142]+'</gui:message><i message_title_id="189" title="'+MessageHash[189]+'">'+ oUser.id +' </i>';
                 if(oUser.getPreference('USER_DISPLAY_NAME')){
                     var img = '';
                     if(oUser.getPreference("avatar")){
@@ -73,7 +73,7 @@ Class.create("UserWidget", {
                         var imgSrc = conn._baseUrl + "&get_action=get_binary_param&binary_id=" + oUser.getPreference("avatar") + "&user_id=" + oUser.id;
                         img = '<img src="'+imgSrc+'" alt="avatar" class="user_widget_mini">';
                     }
-                    label = '<i ajxp_message_title_id="189" title="'+MessageHash[189]+'">' + img + oUser.getPreference('USER_DISPLAY_NAME') + '</i>';
+                    label = '<i message_title_id="189" title="'+MessageHash[189]+'">' + img + oUser.getPreference('USER_DISPLAY_NAME') + '</i>';
                 }
 				logging_string = '<div class="user_widget_label '+(img?'withImage':'')+'">'+label+'</div><div class="inlineBarButtonLeft" style="-moz-border-radius: 0pt 5px 5px 0pt;border-radius: 0pt 5px 5px 0pt;border-left-style:none; border-width:1px;"><img width="16" height="16" style="height: 6px; width: 10px; margin-top: 9px; margin-left: 3px; margin-right: 3px;" ajxp_message_title="189" title="'+MessageHash[189]+'" src="'+ajxpResourcesFolder+'/images/arrow_down.png"></div>';
 				this.element.removeClassName('disabled');
@@ -84,13 +84,13 @@ Class.create("UserWidget", {
 			}
 			else 
 			{
-				logging_string = '<div style="padding:3px 0 3px 7px;"><ajxp:message message_id="143">'+MessageHash[143]+'</ajxp:message></div>';
+				logging_string = '<div style="padding:3px 0 3px 7px;"><gui:message message_id="143">'+MessageHash[143]+'</gui:message></div>';
 				this.element.addClassName('disabled');
 			}
 		}
 		else 
 		{
-			logging_string = '<div style="padding:3px 0 3px 7px;"><ajxp:message message_id="142">'+MessageHash[144]+'</ajxp:message></div>';
+			logging_string = '<div style="padding:3px 0 3px 7px;"><gui:message message_id="142">'+MessageHash[144]+'</gui:message></div>';
 			this.element.addClassName('disabled');
 		}
 		this.element.update(logging_string);

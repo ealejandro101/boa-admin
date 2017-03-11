@@ -31,7 +31,7 @@ Class.create("Breadcrumb", {
 	 */
 	initialize : function(oElement, options){
 		this.element = oElement;
-		this.element.ajxpPaneObject = this;
+		this.element.paneObject = this;
         this.options = options || {};
         this.element.update('Files');
         document.observe("boa:context_changed", function(event){
@@ -85,8 +85,8 @@ Class.create("Breadcrumb", {
 			var parentWidth = $(this.options.flexTo).getWidth();
 			var siblingWidth = 0;
 			this.element.siblings().each(function(s){
-				if(s.ajxpPaneObject && s.ajxpPaneObject.getActualWidth){
-					siblingWidth+=s.ajxpPaneObject.getActualWidth();
+				if(s.paneObject && s.paneObject.getActualWidth){
+					siblingWidth+=s.paneObject.getActualWidth();
 				}else{
 					siblingWidth+=s.getWidth();
 				}

@@ -43,7 +43,7 @@ Class.create("FilesList", SelectableElements, {
 	initialize: function($super, oElement, initDefaultDispOrOptions)
 	{
 		$super(null, true);
-		$(oElement).ajxpPaneObject = this;
+		$(oElement).paneObject = this;
 		this.htmlElement = $(oElement);
         this._previewFactory = new PreviewFactory();
         this._previewFactory.sequencialLoading = true;
@@ -1532,7 +1532,7 @@ Class.create("FilesList", SelectableElements, {
 				// Defer Drag'n'drop assignation for performances
                 if(this.options.draggable == undefined || this.options.draggable === true){
                     window.setTimeout(function(){
-                        if(ajxpNode.getAjxpMime() != "recycle"){
+                        if(ajxpNode.getMime() != "recycle"){
                             var newDrag = new AjxpDraggable(
                                 innerSpan,
                                 {
@@ -2110,7 +2110,7 @@ Class.create("FilesList", SelectableElements, {
 	 */
 	fireDblClick: function (e) 
 	{
-		if(this.getCurrentContextNode().getAjxpMime() == "recycle")
+		if(this.getCurrentContextNode().getMime() == "recycle")
 		{
 			return; // DO NOTHING IN RECYCLE BIN
 		}

@@ -123,11 +123,11 @@
 						}
 						var agent = navigator.userAgent;
 						if(agent && (agent.indexOf('iPhone')!=-1||agent.indexOf('iPod')!=-1||agent.indexOf('iPad')!=-1||agent.indexOf('iOs')!=-1||agent.indexOf('Safari')!=-1)){
-							var downloadUrl = ajxpServerAccessPath+'&get_action=download';
+							var downloadUrl = appServerAccessPath+'&get_action=download';
 							downloadUrl = userSelection.updateFormOrUrl(null,downloadUrl);
 							document.location.href=downloadUrl;
 						}else{
-							$('download_form').action = window.ajxpServerAccessPath;
+							$('download_form').action = window.appServerAccessPath;
 							$('download_form').secure_token.value = Connexion.SECURE_TOKEN;
 							$('download_form').select("input").each(function(input){
 								if(input.name!='get_action' && input.name!='secure_token') input.remove();
@@ -144,7 +144,7 @@
 					{
 						var loadFunc = function(oForm){							
 							var dObject = oForm.getElementsBySelector('div[id="multiple_download_container"]')[0];
-							var downloader = new MultiDownloader(dObject, ajxpServerAccessPath+'&action=download&file=');
+							var downloader = new MultiDownloader(dObject, appServerAccessPath+'&action=download&file=');
 							downloader.triggerEnd = function(){hideLightBox()};
 							fileNames = userSelection.getFileNames();
 							for(var i=0; i<fileNames.length;i++)
@@ -287,7 +287,7 @@
                 <dynamicBuilder><![CDATA[
                     var context = window.builderContext;
                     context.builderMenuItems = $A([]);
-                    var selectedMime = getAjxpMimeType(ajaxplorer.getUserSelection().getUniqueNode());
+                    var selectedMime = getMimeType(ajaxplorer.getUserSelection().getUniqueNode());
                     var editors = ajaxplorer.findEditorsForMime(selectedMime);
                     if(editors.length){
                         var index = 0;
@@ -325,7 +325,7 @@
                 <clientCallback prepareModal="false"><![CDATA[
                     var editorData = window.actionArguments[0];
                     if(!editorData){
-                        var selectedMime = getAjxpMimeType(ajaxplorer.getUserSelection().getUniqueNode());
+                        var selectedMime = getMimeType(ajaxplorer.getUserSelection().getUniqueNode());
                         var editors = ajaxplorer.findEditorsForMime(selectedMime);
                         if(editors.length && editors[0].openable){
                             editorData = editors[0];
@@ -355,7 +355,7 @@
                 <clientCallback prepareModal="false"><![CDATA[
                     var editorData = window.actionArguments[0];
                     if(!editorData){
-                        var selectedMime = getAjxpMimeType(ajaxplorer.getUserSelection().getUniqueNode());
+                        var selectedMime = getMimeType(ajaxplorer.getUserSelection().getUniqueNode());
                         var editors = ajaxplorer.findEditorsForMime(selectedMime);
                         if(editors.length && editors[0].openable){
                             editorData = editors[0];
@@ -770,7 +770,7 @@
 					var onLoad = function(oForm){
 				    	var message = MessageHash[177];
 				    	var repoHasRecycle = ajaxplorer.getContextHolder().getRootNode().getMetadata().get("repo_has_recycle");
-				    	if(repoHasRecycle && repoHasRecycle == "true" && ajaxplorer.getContextNode().getAjxpMime() != "recycle"){
+				    	if(repoHasRecycle && repoHasRecycle == "true" && ajaxplorer.getContextNode().getMime() != "recycle"){
 				    		message = MessageHash[176];
 				    	}
 		   		    	$(oForm).getElementsBySelector('span[id="delete_message"]')[0].innerHTML = message;
@@ -857,7 +857,7 @@
 							var downloader = new MultiDownloader(dObject, '');
 							conn.onComplete = function(transp){
 								var chunkData = transp.responseJSON;
-								downloader.setDownloadUrl(ajxpServerAccessPath+'&action=download_chunk&file_id='+chunkData.file_id);
+								downloader.setDownloadUrl(appServerAccessPath+'&action=download_chunk&file_id='+chunkData.file_id);
 								downloader.triggerEnd = function(){hideLightBox();};
 								for(var i=0; i<chunkData.chunk_count;i++){
 									downloader.addListRow("&chunk_index=" + i, chunkData.localname + " (part " + (i + 1) + ")");

@@ -209,7 +209,7 @@ Class.create("InfoPanel", AjxpPane, {
 		if(uniqNode) isFile = uniqNode.isLeaf();
 		this.evalTemplateForMime((isFile?'generic_file':'generic_dir'), uniqNode);
 		
-		var extension = getAjxpMimeType(uniqNode);
+		var extension = getMimeType(uniqNode);
         var metadata = uniqNode.getMetadata();
         this.registeredMimes.each(function(pair){
             "use strict";
@@ -453,7 +453,7 @@ Class.create("InfoPanel", AjxpPane, {
 	 * @returns String
 	 */
 	getPreviewElement : function(ajxpNode, getTemplateElement){
-		var editors = ajaxplorer.findEditorsForMime(ajxpNode.getAjxpMime(), true);
+		var editors = ajaxplorer.findEditorsForMime(ajxpNode.getMime(), true);
 		if(editors && editors.length)
 		{
 			ajaxplorer.loadEditorResources(editors[0].resourcesManager);

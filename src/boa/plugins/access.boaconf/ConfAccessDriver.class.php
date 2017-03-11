@@ -22,6 +22,8 @@
 namespace BoA\Plugins\Access\BoAConf;
 
 use BoA\Core\Http\Controller;
+use BoA\Core\Http\HTMLWriter;
+use BoA\Core\Http\XMLWriter;
 use BoA\Core\Plugins\Plugin;
 use BoA\Core\Security\Role;
 use BoA\Core\Services\AuthService;
@@ -29,7 +31,6 @@ use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Text\SystemTextEncoding;
-use BoA\Core\Http\XMLWriter;
 use BoA\Plugins\Core\Access\AbstractAccessDriver;
 use BoA\Plugins\Core\Log\Logger;
 
@@ -1336,10 +1337,10 @@ class ConfAccessDriver extends AbstractAccessDriver
 			break;			
 			
 			case "get_plugin_manifest" : 
-				$ajxpPlugin = PluginsService::getInstance()->getPluginById($httpVars["plugin_id"]);
+				$plugin = PluginsService::getInstance()->getPluginById($httpVars["plugin_id"]);
 				XMLWriter::header("admin_data");
 
-                $fullManifest = $ajxpPlugin->getManifestRawContent("", "xml");
+                $fullManifest = $plugin->getManifestRawContent("", "xml");
                 $xPath = new \DOMXPath($fullManifest->ownerDocument);
                 $addParams = "";
                 $pInstNodes = $xPath->query("server_settings/global_param[contains(@type, 'plugin_instance:')]");
@@ -1369,8 +1370,8 @@ class ConfAccessDriver extends AbstractAccessDriver
                 $allParams = str_replace("</server_settings>", $addParams."</server_settings>", $allParams);
 
                 echo($allParams);
-				$definitions = $ajxpPlugin->getConfigsDefinitions();
-				$values = $ajxpPlugin->getConfigs();
+				$definitions = $plugin->getConfigsDefinitions();
+				$values = $plugin->getConfigs();
                 if(!is_array($values)) $values = array();
                 echo("<plugin_settings_values>");
                 foreach($values as $key => $value){
@@ -1396,13 +1397,13 @@ class ConfAccessDriver extends AbstractAccessDriver
                         echo("<param name=\"$key\" cdatavalue=\"true\"><![CDATA[".$value."]]></param>");
                     }
                 }
-                if($ajxpPlugin->getType() != "core"){
-                    echo("<param name=\"BOA_PLUGIN_ENABLED\" value=\"".($ajxpPlugin->isEnabled()?"true":"false")."\"/>");
+                if($plugin->getType() != "core"){
+                    echo("<param name=\"BOA_PLUGIN_ENABLED\" value=\"".($plugin->isEnabled()?"true":"false")."\"/>");
                 }
                 echo("</plugin_settings_values>");
-                echo("<plugin_doc><![CDATA[<p>".$ajxpPlugin->getPluginInformationHTML("Charles du Jeu", "http://ajaxplorer.info/plugins/")."</p>");
-                if(file_exists($ajxpPlugin->getBaseDir()."/plugin_doc.html")){
-                    echo(file_get_contents($ajxpPlugin->getBaseDir()."/plugin_doc.html"));
+                echo("<plugin_doc><![CDATA[<p>".$plugin->getPluginInformationHTML("Charles du Jeu", "http://ajaxplorer.info/plugins/")."</p>");
+                if(file_exists($plugin->getBaseDir()."/plugin_doc.html")){
+                    echo(file_get_contents($plugin->getBaseDir()."/plugin_doc.html"));
                 }
                 echo("]]></plugin_doc>");
 				XMLWriter::close("admin_data");
@@ -1931,7 +1932,7 @@ class ConfAccessDriver extends AbstractAccessDriver
             if(isset($diagResults)){
                 foreach ($diagResults as $id => $value){
                     $value = Utils::xmlEntities($value);
-                    print "<tree icon=\"susehelpcenter.png\" is_file=\"1\" filename=\"$id\" text=\"$id\" data=\"$value\" ajxp_mime=\"testResult\"/>";
+                    print "<tree icon=\"susehelpcenter.png\" is_file=\"1\" filename=\"$id\" text=\"$id\" data=\"$value\" boa_mime=\"testResult\"/>";
                 }
             }
 		}

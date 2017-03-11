@@ -478,7 +478,7 @@ Class.create("AjxpDataModel", {
 		mimeTypes.each(function(mime){
 			if(has) return;
 			has = this._selectedNodes.any(function(node){
-				return (getAjxpMimeType(node) == mime);
+				return (getMimeType(node) == mime);
 			});
 		}.bind(this) );
 		return has;

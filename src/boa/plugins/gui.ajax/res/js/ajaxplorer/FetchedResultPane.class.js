@@ -30,15 +30,15 @@ Class.create("FetchedResultPane", FilesList, {
 	 * Constructor
 	 * @param $super klass Superclass reference
 	 * @param mainElementName String
-	 * @param ajxpOptions Object
+	 * @param appOptions Object
 	 */
-	initialize: function($super, mainElementName, ajxpOptions)
+	initialize: function($super, mainElementName, appOptions)
 	{
 
         var dataModel = new AjxpDataModel(true);
         var rNodeProvider = new RemoteNodeProvider();
         dataModel.setAjxpNodeProvider(rNodeProvider);
-        rNodeProvider.initProvider(ajxpOptions.nodeProviderProperties);
+        rNodeProvider.initProvider(appOptions.nodeProviderProperties);
         this._rootNode = new AjxpNode("/", false, "Results", "folder.png", rNodeProvider);
         dataModel.setRootNode(this._rootNode);
         $super($(mainElementName), {
@@ -77,9 +77,9 @@ Class.create("FetchedResultPane", FilesList, {
 
         mainElementName.addClassName('class-FetchedResultPane');
 
-        if(ajxpOptions.reloadOnServerMessage){
+        if(appOptions.reloadOnServerMessage){
             ajaxplorer.observe("server_message", function(event){
-                var newValue = XPathSelectSingleNode(event, ajxpOptions.reloadOnServerMessage);
+                var newValue = XPathSelectSingleNode(event, appOptions.reloadOnServerMessage);
                 if(newValue && this._dataLoaded){
                     this._rootNode.clear();
                     this._dataLoaded = false;

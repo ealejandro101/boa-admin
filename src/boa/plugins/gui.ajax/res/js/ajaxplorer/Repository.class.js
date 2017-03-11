@@ -204,7 +204,7 @@ Class.create("Repository", {
                 this.description = childNode.firstChild.nodeValue;
             }else if(childNode.nodeName == "client_settings"){
                 if(childNode.getAttribute('icon_tpl_id')){
-                    this.setIcon(window.ajxpServerAccessPath+'&get_action=get_user_template_logo&template_id='+childNode.getAttribute('icon_tpl_id')+'&icon_format=small');
+                    this.setIcon(window.appServerAccessPath+'&get_action=get_user_template_logo&template_id='+childNode.getAttribute('icon_tpl_id')+'&icon_format=small');
                 }else{
                     this.setIcon(childNode.getAttribute('icon'));
                 }
@@ -213,8 +213,8 @@ Class.create("Repository", {
                     if(subCh.nodeName == 'resources'){
                         this.resourcesManager.loadFromXmlNode(subCh);
                     }else if(subCh.nodeName == 'node_provider'){
-                        var nodeProviderName = subCh.getAttribute("ajxpClass");
-                        var nodeProviderOptions = subCh.getAttribute("ajxpOptions").evalJSON();
+                        var nodeProviderName = subCh.getAttribute("appClass");
+                        var nodeProviderOptions = subCh.getAttribute("appOptions").evalJSON();
                         this.nodeProviderDef = {name:nodeProviderName, options:nodeProviderOptions};
                     }
                 }

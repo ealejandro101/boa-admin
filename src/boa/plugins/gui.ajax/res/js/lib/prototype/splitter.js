@@ -91,7 +91,7 @@ Class.create("Splitter", AjxpPane, {
 		else Object.extend(this.options, horizontalOpts);
 		
 		this.htmlElement = $(container);
-		this.htmlElement.ajxpPaneObject = this;
+		this.htmlElement.paneObject = this;
 		
 		this.group = $(container).setStyle({position:'relative'});
 		var divs = this.group.childElements();
@@ -191,12 +191,12 @@ Class.create("Splitter", AjxpPane, {
         document.stopObserving("boa:user_logged",this.userLoggedObs);
         document.stopObserving("boa:component_config_changed", this.compConfigObs);
         this.splitbar.remove();
-        if(this.paneA.ajxpPaneObject) {
-            this.paneA.ajxpPaneObject.destroy();
+        if(this.paneA.paneObject) {
+            this.paneA.paneObject.destroy();
             this.paneA.remove();
         }
-        if(this.paneB.ajxpPaneObject) {
-            this.paneB.ajxpPaneObject.destroy();
+        if(this.paneB.paneObject) {
+            this.paneB.paneObject.destroy();
             this.paneB.remove();
         }
     },
@@ -367,11 +367,11 @@ Class.create("Splitter", AjxpPane, {
                 'view_left_'+ (state?'right':'close') + '.png',
                 (state?(pane == this.paneA?'icon-caret-right':'icon-caret-left'):'icon-remove-sign'));
         }
-        if(pane == this.paneA && $(this.paneA).ajxpPaneObject){
-            $(this.paneA).ajxpPaneObject.resize();
+        if(pane == this.paneA && $(this.paneA).paneObject){
+            $(this.paneA).paneObject.resize();
         }
-        if(pane == this.paneB && $(this.paneB).ajxpPaneObject){
-            $(this.paneB).ajxpPaneObject.resize();
+        if(pane == this.paneB && $(this.paneB).paneObject){
+            $(this.paneB).paneObject.resize();
         }
     },
 
@@ -524,11 +524,11 @@ Class.create("Splitter", AjxpPane, {
 		if(this.options.endDrag){
 			this.options.endDrag(this.getCurrentSize());
 		}
-		if($(this.paneA).ajxpPaneObject){
-			$(this.paneA).ajxpPaneObject.resize();
+		if($(this.paneA).paneObject){
+			$(this.paneA).paneObject.resize();
 		}
-		if($(this.paneB).ajxpPaneObject){
-			$(this.paneB).ajxpPaneObject.resize();
+		if($(this.paneB).paneObject){
+			$(this.paneB).paneObject.resize();
 		}
         this.setUserPreference("size", this.getCurrentSize());
 	},
@@ -572,11 +572,11 @@ Class.create("Splitter", AjxpPane, {
 			this.paneB.fire("resize");
 		}
 		if(this.options.onDrag) this.options.onDrag();
-		if($(this.paneA).ajxpPaneObject){
-			$(this.paneA).ajxpPaneObject.resize();
+		if($(this.paneA).paneObject){
+			$(this.paneA).paneObject.resize();
 		}
-		if($(this.paneB).ajxpPaneObject){
-			$(this.paneB).ajxpPaneObject.resize();
+		if($(this.paneB).paneObject){
+			$(this.paneB).paneObject.resize();
 		}
         if(forceFolded){
             if(!this.prefoldValue) this.prefoldValue = 150;

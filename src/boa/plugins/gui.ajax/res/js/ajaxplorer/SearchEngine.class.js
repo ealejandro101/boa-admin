@@ -36,7 +36,7 @@ Class.create("SearchEngine", AjxpPane, {
 	state: 'idle',
 	_runningQueries:undefined,
 	_queriesIndex:0,
-	_ajxpOptions:undefined,
+	_appOptions:undefined,
 	
 	_queue : undefined,
 
@@ -51,20 +51,20 @@ Class.create("SearchEngine", AjxpPane, {
 	 * Constructor
 	 * @param $super klass Superclass reference
 	 * @param mainElementName String
-	 * @param ajxpOptions Object
+	 * @param appOptions Object
 	 */
-	initialize: function($super, mainElementName, ajxpOptions)
+	initialize: function($super, mainElementName, appOptions)
 	{
-        this._ajxpOptions = {
+        this._appOptions = {
             toggleResultsVisibility : false
         };
         if($(mainElementName).getAttribute("data-globalOptions")){
-            this._ajxpOptions = $(mainElementName).getAttribute("data-globalOptions").evalJSON();
+            this._appOptions = $(mainElementName).getAttribute("data-globalOptions").evalJSON();
         }
-        if(ajxpOptions){
-            this._ajxpOptions = Object.extend(this._ajxpOptions, ajxpOptions);
+        if(appOptions){
+            this._appOptions = Object.extend(this._appOptions, appOptions);
         }
-		$super($(mainElementName), this._ajxpOptions);
+		$super($(mainElementName), this._appOptions);
         this.updateSearchModeFromRegistry();
         this.searchModeObserver = this.updateSearchModeFromRegistry.bind(this);
         document.observe("boa:registry_loaded", this.searchModeObserver);
@@ -96,9 +96,9 @@ Class.create("SearchEngine", AjxpPane, {
                 if(this.indexedFields["indexed_meta_fields"]){
                     var addColumns = this.indexedFields["additionnal_meta_columns"];
                     this.indexedFields = $A(this.indexedFields["indexed_meta_fields"]);
-                    if(!this._ajxpOptions.metaColumns) this._ajxpOptions.metaColumns = {};
+                    if(!this._appOptions.metaColumns) this._appOptions.metaColumns = {};
                     for(var key in addColumns){
-                        this._ajxpOptions.metaColumns[key] = addColumns[key];
+                        this._appOptions.metaColumns[key] = addColumns[key];
                     }
                 }else{
                     this.indexedFields = $A(this.indexedFields);
@@ -117,10 +117,10 @@ Class.create("SearchEngine", AjxpPane, {
         if($('search_form') && $('search_form').down('#search_meta')) {
             $('search_form').down('#search_meta').remove();
         }
-        if(this._ajxpOptions && this._ajxpOptions.metaColumns){
-            var cols = this._ajxpOptions.metaColumns;
-            if(this._ajxpOptions.toggleResultsVisibility && $(this._ajxpOptions.toggleResultsVisibility) && this.htmlElement){
-                this.htmlElement.down("#" + this._ajxpOptions.toggleResultsVisibility).insert({top:'<div id="search_meta">'+MessageHash[344]+' : <span id="search_meta_options"></span></div>'});
+        if(this._appOptions && this._appOptions.metaColumns){
+            var cols = this._appOptions.metaColumns;
+            if(this._appOptions.toggleResultsVisibility && $(this._appOptions.toggleResultsVisibility) && this.htmlElement){
+                this.htmlElement.down("#" + this._appOptions.toggleResultsVisibility).insert({top:'<div id="search_meta">'+MessageHash[344]+' : <span id="search_meta_options"></span></div>'});
             }else if($('search_form')){
                 $('search_form').insert({bottom:'<div id="search_meta">'+MessageHash[344]+' : <span id="search_meta_options"></span></div>'});
             }
@@ -142,10 +142,10 @@ Class.create("SearchEngine", AjxpPane, {
 		
 		if(!this.htmlElement) return;
 		
-		this.htmlElement.insert('<div id="search_panel"><div id="search_form"><input style="float:left;" type="text" id="search_txt" placeholder="'+ MessageHash[87] +'" name="search_txt" onfocus="blockEvents=true;" onblur="blockEvents=false;"><a href="" id="search_button" class="icon-search" ajxp_message_title_id="184" title="'+MessageHash[184]+'"><img width="16" height="16" align="absmiddle" src="'+ajxpResourcesFolder+'/images/actions/16/search.png" border="0"/></a><a class="icon-remove" href="" id="stop_search_button" ajxp_message_title_id="185" title="'+MessageHash[185]+'"><img width="16" height="16" align="absmiddle" src="'+ajxpResourcesFolder+'/images/actions/16/fileclose.png" border="0" /></a></div><div id="search_results"></div></div>');
-        if(this._ajxpOptions.toggleResultsVisibility){
-            this.htmlElement.down("#search_results").insert({before:"<div style='display: none;' id='"+this._ajxpOptions.toggleResultsVisibility+"'></div>"});
-            this.htmlElement.down("#" + this._ajxpOptions.toggleResultsVisibility).insert(this.htmlElement.down("#search_results"));
+		this.htmlElement.insert('<div id="search_panel"><div id="search_form"><input style="float:left;" type="text" id="search_txt" placeholder="'+ MessageHash[87] +'" name="search_txt" onfocus="blockEvents=true;" onblur="blockEvents=false;"><a href="" id="search_button" class="icon-search" message_title_id="184" title="'+MessageHash[184]+'"><img width="16" height="16" align="absmiddle" src="'+ajxpResourcesFolder+'/images/actions/16/search.png" border="0"/></a><a class="icon-remove" href="" id="stop_search_button" message_title_id="185" title="'+MessageHash[185]+'"><img width="16" height="16" align="absmiddle" src="'+ajxpResourcesFolder+'/images/actions/16/fileclose.png" border="0" /></a></div><div id="search_results"></div></div>');
+        if(this._appOptions.toggleResultsVisibility){
+            this.htmlElement.down("#search_results").insert({before:"<div style='display: none;' id='"+this._appOptions.toggleResultsVisibility+"'></div>"});
+            this.htmlElement.down("#" + this._appOptions.toggleResultsVisibility).insert(this.htmlElement.down("#search_results"));
         }
         if(this.htmlElement.down('div.panelHeader')){
             this.htmlElement.down('div#search_panel').insert({top:this.htmlElement.down('div.panelHeader')});
@@ -155,10 +155,10 @@ Class.create("SearchEngine", AjxpPane, {
         if(this.htmlElement.down('#search_meta')){
             this.htmlElement.down('#search_meta').remove();
         }
-		if(this._ajxpOptions && this._ajxpOptions.metaColumns){
-            var cols = this._ajxpOptions.metaColumns;
-            if(this._ajxpOptions.toggleResultsVisibility){
-                this.htmlElement.down("#" + this._ajxpOptions.toggleResultsVisibility).insert({top:'<div id="search_meta">'+MessageHash[344]+' : <span id="search_meta_options"></span></div>'});
+		if(this._appOptions && this._appOptions.metaColumns){
+            var cols = this._appOptions.metaColumns;
+            if(this._appOptions.toggleResultsVisibility){
+                this.htmlElement.down("#" + this._appOptions.toggleResultsVisibility).insert({top:'<div id="search_meta">'+MessageHash[344]+' : <span id="search_meta_options"></span></div>'});
             }else{
                 $('search_form').insert({bottom:'<div id="search_meta">'+MessageHash[344]+' : <span id="search_meta_options"></span></div>'});
             }
@@ -217,9 +217,9 @@ Class.create("SearchEngine", AjxpPane, {
 			ajaxplorer.disableNavigation();
 			this.hasFocus = true;
 			this._inputBox.select();
-            if(this.hasResults && this._ajxpOptions.toggleResultsVisibility && !$(this._ajxpOptions.toggleResultsVisibility).visible()){
-                this.updateSearchResultPosition($(this._ajxpOptions.toggleResultsVisibility));
-                $(this._ajxpOptions.toggleResultsVisibility).setStyle({
+            if(this.hasResults && this._appOptions.toggleResultsVisibility && !$(this._appOptions.toggleResultsVisibility).visible()){
+                this.updateSearchResultPosition($(this._appOptions.toggleResultsVisibility));
+                $(this._appOptions.toggleResultsVisibility).setStyle({
                     display:'block'
                 });
             }
@@ -247,7 +247,7 @@ Class.create("SearchEngine", AjxpPane, {
             this._inputBox.setValue("");
             this.clearResults();
             if($(this.options.toggleResultsVisibility)){
-                $(this._ajxpOptions.toggleResultsVisibility).setStyle({display:'none'});
+                $(this._appOptions.toggleResultsVisibility).setStyle({display:'none'});
             }
         }.bind(this);
 
@@ -268,11 +268,11 @@ Class.create("SearchEngine", AjxpPane, {
 	 * Resize the widget
 	 */
 	resize: function($super){
-        if(this._ajxpOptions.toggleResultsVisibility){
-            fitHeightToBottom($(this._ajxpOptions.toggleResultsVisibility), null, (this._ajxpOptions.fitMarginBottom?this._ajxpOptions.fitMarginBottom:0));
+        if(this._appOptions.toggleResultsVisibility){
+            fitHeightToBottom($(this._appOptions.toggleResultsVisibility), null, (this._appOptions.fitMarginBottom?this._appOptions.fitMarginBottom:0));
             fitHeightToBottom($(this._resultsBoxId));
         }else{
-            fitHeightToBottom($(this._resultsBoxId), null, (this._ajxpOptions.fitMarginBottom?this._ajxpOptions.fitMarginBottom:0));
+            fitHeightToBottom($(this._resultsBoxId), null, (this._appOptions.fitMarginBottom?this._appOptions.fitMarginBottom:0));
         }
         if(this._fileList){
             this._fileList.resize();
@@ -289,14 +289,14 @@ Class.create("SearchEngine", AjxpPane, {
             this._fileList = null;
         }
         if(this.htmlElement) {
-            var ajxpId = this.htmlElement.id;
+            var appId = this.htmlElement.id;
             this.htmlElement.update('');
         }
         document.stopObserving("boa:repository_list_refreshed", this.refreshObserver);
         document.stopObserving("boa:registry_loaded", this.searchModeObserver);
 		this.htmlElement = null;
-        if(ajxpId && window[ajxpId]){
-            try {delete window[ajxpId];}catch(e){}
+        if(appId && window[appId]){
+            try {delete window[appId];}catch(e){}
         }
 	},
 	/**
@@ -387,25 +387,25 @@ Class.create("SearchEngine", AjxpPane, {
 		this._state = 'searching';
 		$(this._searchButtonName).addClassName("disabled");
 		$('stop_'+this._searchButtonName).removeClassName("disabled");
-        if(this._ajxpOptions.toggleResultsVisibility){
-            if(!$(this._ajxpOptions.toggleResultsVisibility).down("div.panelHeader.toggleResults")){
-                $(this._ajxpOptions.toggleResultsVisibility).insert({top:"<div class='panelHeader toggleResults'>Results<span class='close_results icon-remove-sign'></span></div>"});
-                this.resultsDraggable = new Draggable(this._ajxpOptions.toggleResultsVisibility, {
+        if(this._appOptions.toggleResultsVisibility){
+            if(!$(this._appOptions.toggleResultsVisibility).down("div.panelHeader.toggleResults")){
+                $(this._appOptions.toggleResultsVisibility).insert({top:"<div class='panelHeader toggleResults'>Results<span class='close_results icon-remove-sign'></span></div>"});
+                this.resultsDraggable = new Draggable(this._appOptions.toggleResultsVisibility, {
                     handle:"panelHeader",
                     zindex:999,
                     starteffect : function(element){},
                     endeffect : function(element){}
                 });
             }
-            if($(this._ajxpOptions.toggleResultsVisibility).down("span.close_results")){
-                $(this._ajxpOptions.toggleResultsVisibility).down("span.close_results").observe("click", function(){
-                    $(this._ajxpOptions.toggleResultsVisibility).setStyle({display:"none"});
+            if($(this._appOptions.toggleResultsVisibility).down("span.close_results")){
+                $(this._appOptions.toggleResultsVisibility).down("span.close_results").observe("click", function(){
+                    $(this._appOptions.toggleResultsVisibility).setStyle({display:"none"});
                 }.bind(this));
             }
 
-            if(!$(this._ajxpOptions.toggleResultsVisibility).visible()){
-                this.updateSearchResultPosition($(this._ajxpOptions.toggleResultsVisibility));
-                $(this._ajxpOptions.toggleResultsVisibility).setStyle({
+            if(!$(this._appOptions.toggleResultsVisibility).visible()){
+                this.updateSearchResultPosition($(this._appOptions.toggleResultsVisibility));
+                $(this._appOptions.toggleResultsVisibility).setStyle({
                     display:"block",
                     position: "absolute"
                 });

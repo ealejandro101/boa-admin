@@ -34,7 +34,7 @@ Class.create("LocationBar", {
 	 */
 	initialize : function(oElement, options){
 		this.element = oElement;
-		this.element.ajxpPaneObject = this;
+		this.element.paneObject = this;
 		this.realPath = '/';
         this.options = options || {};
 		this.createGui();
@@ -239,8 +239,8 @@ Class.create("LocationBar", {
 			var parentWidth = $(this.options.flexTo).getWidth();
 			var siblingWidth = 0;
 			this.element.siblings().each(function(s){
-				if(s.ajxpPaneObject && s.ajxpPaneObject.getActualWidth){
-					siblingWidth+=s.ajxpPaneObject.getActualWidth();
+				if(s.paneObject && s.paneObject.getActualWidth){
+					siblingWidth+=s.paneObject.getActualWidth();
 				}else{
 					siblingWidth+=s.getWidth();
 				}

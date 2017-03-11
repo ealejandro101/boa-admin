@@ -400,7 +400,7 @@
                 <clientCallback prepareModal="false"><![CDATA[
                     var editorData = window.actionArguments[0];
                     if(!editorData){
-                        var selectedMime = getAjxpMimeType(ajaxplorer.getUserSelection().getUniqueNode());
+                        var selectedMime = getMimeType(ajaxplorer.getUserSelection().getUniqueNode());
                         var editors = ajaxplorer.findEditorsForMime(selectedMime);
                         if(editors.length && editors[0].openable){
                             editorData = editors[0];

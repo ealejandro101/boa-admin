@@ -419,7 +419,7 @@ class Utils
      * @param string $keyword "editable", "image", "audio", "zip"
      * @return string
      */
-    static function getAjxpMimes($keyword)
+    static function getMimes($keyword)
     {
         if ($keyword == "editable") {
             // Gather editors!
