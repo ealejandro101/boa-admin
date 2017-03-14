@@ -111,24 +111,24 @@ class SerialUser extends AbstractUser
         if(count($this->rights) == 0) $this->create = true;
 		$this->prefs = Utils::loadSerialFile($this->getStoragePath()."/prefs.ser");
 		$this->bookmarks = Utils::loadSerialFile($this->getStoragePath()."/bookmarks.ser");
-		if(isSet($this->rights["ajxp.admin"]) && $this->rights["ajxp.admin"] === true){
+		if(isSet($this->rights["app.admin"]) && $this->rights["app.admin"] === true){
 			$this->setAdmin(true);
 		}
-		if(isSet($this->rights["ajxp.parent_user"])){
-			//$this->setParent($this->rights["ajxp.parent_user"]);
-            parent::setParent($this->rights["ajxp.parent_user"]);
+		if(isSet($this->rights["app.parent_user"])){
+			//$this->setParent($this->rights["app.parent_user"]);
+            parent::setParent($this->rights["app.parent_user"]);
 		}
-        if(isSet($this->rights["ajxp.group_path"])){
-            $this->setGroupPath($this->rights["ajxp.group_path"]);
+        if(isSet($this->rights["app.group_path"])){
+            $this->setGroupPath($this->rights["app.group_path"]);
         }
-        if(isSet($this->rights["ajxp.children_pointer"])){
-            $this->childrenPointer = $this->rights["ajxp.children_pointer"];
+        if(isSet($this->rights["app.children_pointer"])){
+            $this->childrenPointer = $this->rights["app.children_pointer"];
         }
 
         // LOAD ROLES
         $rolesToLoad = array();
-        if(isSet($this->rights["ajxp.roles"])) {
-            $rolesToLoad = array_keys($this->rights["ajxp.roles"]);
+        if(isSet($this->rights["app.roles"])) {
+            $rolesToLoad = array_keys($this->rights["app.roles"]);
         }
         if($this->groupPath != null){
             $base = "";
@@ -145,9 +145,9 @@ class SerialUser extends AbstractUser
 			foreach ($rolesToLoad as $roleId){
 				if(isSet($allRoles[$roleId])){
 					$this->roles[$roleId] = $allRoles[$roleId];
-                    $this->rights["ajxp.roles"][$roleId] = true;
-				}else if(is_array($this->rights["ajxp.roles"]) && isSet($this->rights["ajxp.roles"][$roleId])){
-					unset($this->rights["ajxp.roles"][$roleId]);
+                    $this->rights["app.roles"][$roleId] = true;
+				}else if(is_array($this->rights["app.roles"]) && isSet($this->rights["app.roles"][$roleId])){
+					unset($this->rights["app.roles"][$roleId]);
 				}
 			}
 		}
@@ -169,17 +169,17 @@ class SerialUser extends AbstractUser
 	
 	function save($context = "superuser"){
 		if($this->isAdmin() === true){
-			$this->rights["ajxp.admin"] = true;
+			$this->rights["app.admin"] = true;
 		}else{
-			$this->rights["ajxp.admin"] = false;
+			$this->rights["app.admin"] = false;
 		}
 		if($this->hasParent()){
-			$this->rights["ajxp.parent_user"] = $this->parentUser;
+			$this->rights["app.parent_user"] = $this->parentUser;
 		}
         if(isSet($this->childrenPointer)){
-            $this->rights["ajxp.children_pointer"] = $this->childrenPointer;
+            $this->rights["app.children_pointer"] = $this->childrenPointer;
         }
-        $this->rights["ajxp.group_path"] = $this->getGroupPath();
+        $this->rights["app.group_path"] = $this->getGroupPath();
 
         if($context == "superuser"){
             $this->registerForSave["rights"] = true;
@@ -194,7 +194,7 @@ class SerialUser extends AbstractUser
         $fastCheck = ($fastCheck == "true" || $fastCheck == true);
         if(isSet($this->registerForSave["rights"]) || $this->create){
             $filteredRights = $this->rights;
-            if(isSet($filteredRights["ajxp.roles"])) $filteredRights["ajxp.roles"] = $this->filterRolesForSaving($filteredRights["ajxp.roles"]);
+            if(isSet($filteredRights["app.roles"])) $filteredRights["app.roles"] = $this->filterRolesForSaving($filteredRights["app.roles"]);
             Utils::saveSerialFile($this->getStoragePath()."/rights.ser", $this->rights, !$fastCheck);
             Utils::saveSerialFile($this->getStoragePath()."/role.ser", $this->personalRole, !$fastCheck);
         }

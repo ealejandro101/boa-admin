@@ -163,7 +163,7 @@ Class.create("XHRUploader", {
         if(this.mainForm.down('#optClosButtonsContainer')){
             var totalDiv = new Element('div', {id:'total_files_list'});
             this.mainForm.down('#optClosButtonsContainer').insert({after:new Element('td', {style:'vertical-align:bottom'}).update(totalDiv)});
-            totalDiv.insert('<img src="'+ajxpResourcesFolder+'/images/actions/22/trashcan_empty.png" class="fakeUploadButton fakeOptionButton" id="clear_list_button"\
+            totalDiv.insert('<img src="'+resourcesFolder+'/images/actions/22/trashcan_empty.png" class="fakeUploadButton fakeOptionButton" id="clear_list_button"\
 			width="22" height="22" style="float:right;margin-top:3px;padding:4px;width:22px;" title="'+MessageHash[216]+'"/>\
 			<span id="totalStrings">'+MessageHash[258]+' : 0 '+MessageHash[259]+' : 0Kb</span>\
 			<div style="padding-top:3px;">\
@@ -175,8 +175,8 @@ Class.create("XHRUploader", {
 			animate		: false,									// Animate the progress? - default: true
 			showText	: false,									// show text with percentage in next to the progressbar? - default : true
 			width		: 154,										// Width of the progressbar - don't forget to adjust your image too!!!
-			boxImage	: ajxpResourcesFolder+'/images/progress_box.gif',			// boxImage : image around the progress bar
-			barImage	: ajxpResourcesFolder+'/images/progress_bar.gif',	// Image to use in the progressbar. Can be an array of images too.
+			boxImage	: resourcesFolder+'/images/progress_box.gif',			// boxImage : image around the progress bar
+			barImage	: resourcesFolder+'/images/progress_bar.gif',	// Image to use in the progressbar. Can be an array of images too.
 			height		: 4										// Height of the progressbar - don't forget to adjust your image too!!!
 		};
 		this.mainForm.down('#clear_list_button').observe("click", function(e){
@@ -273,7 +273,7 @@ Class.create("XHRUploader", {
 				ajaxplorer.user.setPreference('upload_auto_send', (autoSendOpt?'true':'false'));
 				ajaxplorer.user.savePreference('upload_auto_send');
 			}else{
-				 setAjxpCookie('upload_auto_send', (autoSendOpt?'true':'false'));
+				 setAppCookie('upload_auto_send', (autoSendOpt?'true':'false'));
 			}			
 		});
 		optionPane.autoCloseCheck.observe("click", function(e){				
@@ -282,7 +282,7 @@ Class.create("XHRUploader", {
 				ajaxplorer.user.setPreference('upload_auto_close', (autoCloseOpt?'true':'false'));
 				ajaxplorer.user.savePreference('upload_auto_close');
 			}else{
-				 setAjxpCookie('upload_auto_close', (autoCloseOpt?'true':'false'));
+				 setAppCookie('upload_auto_close', (autoCloseOpt?'true':'false'));
 			}			
 		});
 		optionPane.existingRadio.each(function(el){
@@ -292,7 +292,7 @@ Class.create("XHRUploader", {
 					ajaxplorer.user.setPreference('upload_existing', value);
 					ajaxplorer.user.savePreference('upload_existing');
 				}else{
-					 setAjxpCookie('upload_existing', value);
+					 setAppCookie('upload_existing', value);
 				}							
 			});
 		});
@@ -315,7 +315,7 @@ Class.create("XHRUploader", {
             }else if(this._globalConfigs.get('DEFAULT_AUTO_START')){
                 autoSendValue = this._globalConfigs.get('DEFAULT_AUTO_START');
 			}else{
-				var value = getAjxpCookie('upload_auto_send');
+				var value = getAppCookie('upload_auto_send');
 				autoSendValue = ((value && value == "true")?true:false);				
 			}
 			optionPane.autoSendCheck.checked = autoSendValue;
@@ -327,7 +327,7 @@ Class.create("XHRUploader", {
             }else if(this._globalConfigs.get('DEFAULT_AUTO_CLOSE')){
                 autoCloseValue = this._globalConfigs.get('DEFAULT_AUTO_CLOSE');
 			}else{
-				var value = getAjxpCookie('upload_auto_close');
+				var value = getAppCookie('upload_auto_close');
 				autoCloseValue = ((value && value == "true")?true:false);				
 			}
 			optionPane.autoCloseCheck.checked = autoCloseValue;
@@ -337,8 +337,8 @@ Class.create("XHRUploader", {
 				existingValue = ajaxplorer.user.getPreference('upload_existing');
             }else if(this._globalConfigs.get('DEFAULT_EXISTING')){
                 existingValue = this._globalConfigs.get('DEFAULT_EXISTING');
-			}else if(getAjxpCookie('upload_existing')){
-				var value = getAjxpCookie('upload_existing');				
+			}else if(getAppCookie('upload_existing')){
+				var value = getAppCookie('upload_existing');				
 			}
 			optionPane.down('#uploader_existing_' + existingValue).checked = true;
 			
@@ -430,7 +430,7 @@ Class.create("XHRUploader", {
 		var item = new Element( 'div' );		
 		// Delete button
 		var delButton = new Element( 'img', {
-			src:ajxpResourcesFolder+'/images/actions/16/editdelete.png',
+			src:resourcesFolder+'/images/actions/16/editdelete.png',
 			className : 'fakeUploadButton',
 			align : 'absmiddle',
 			style : '-moz-border-radius:3px;border-radius:3px;float:left;margin:1px 7px 2px 0px;padding:3px;width:16px;background-position:center top;',
@@ -487,8 +487,8 @@ Class.create("XHRUploader", {
 			animate		: false,
 			showText	: false,
 			width		: 154,
-			boxImage	: ajxpResourcesFolder+'/images/progress_box.gif',
-			barImage	: ajxpResourcesFolder+'/images/progress_bar.gif',
+			boxImage	: resourcesFolder+'/images/progress_box.gif',
+			barImage	: resourcesFolder+'/images/progress_bar.gif',
 			height		: 4
 		};
 		item.pgBar = new JS_BRAMUS.jsProgressBar(div, 0, options);
@@ -633,7 +633,7 @@ Class.create("XHRUploader", {
 	initializeXHR : function(item, queryStringParam){
 
 		var xhr = new XMLHttpRequest();
-		var uri = window._bootstrap.parameters.get('ajxpServerAccess')+"&get_action=upload&xhr_uploader=true&dir="+encodeURIComponent(this.crtContext.getContextNode().getPath());
+		var uri = window._bootstrap.parameters.get('appServerAccess')+"&get_action=upload&xhr_uploader=true&dir="+encodeURIComponent(this.crtContext.getContextNode().getPath());
 		if(queryStringParam){
 			uri += '&' + queryStringParam;
 		}
@@ -794,7 +794,7 @@ Class.create("XHRUploader", {
         	item.statusText.update('[error]');        	
         };
         
-        var url = window._bootstrap.parameters.get('ajxpServerAccess')+"&get_action=upload&xhr_uploader=true&input_stream=true&dir="+encodeURIComponent(this.crtContext.getContextNode().getPath());
+        var url = window._bootstrap.parameters.get('appServerAccess')+"&get_action=upload&xhr_uploader=true&input_stream=true&dir="+encodeURIComponent(this.crtContext.getContextNode().getPath());
         if(auto_rename){
         	url += '&auto_rename=true';
         }

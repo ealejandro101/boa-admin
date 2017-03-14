@@ -250,7 +250,7 @@ Class.create("Ajaxplorer", {
             for(var i=compRegistry.length;i>0;i--){
                 var el = compRegistry[i-1];
                 var appId = el.appId;
-                compRegistry[i-1] = new el['appClass'](el.ajxpNode, el.appOptions);
+                compRegistry[i-1] = new el['appClass'](el.node, el.appOptions);
                 window[appId] = compRegistry[i-1];
                 lastInst = compRegistry[i-1];
             }
@@ -297,7 +297,7 @@ Class.create("Ajaxplorer", {
             }
 		}
 		if(appClass && appId && Class.objectImplements(appClass, "IAjxpWidget")){
-			compRegistry.push({appId:appId, ajxpNode:domNode, appClass:appClass, appOptions:appOptions});
+			compRegistry.push({appId:appId, node:domNode, appClass:appClass, appOptions:appOptions});
 		}		
 		$A(domNode.childNodes).each(function(node){
 			this.buildGUI(node, compRegistry);
@@ -934,7 +934,7 @@ Class.create("Ajaxplorer", {
 			if(transport.responseJSON){
 				seedInputField.value = transport.responseJSON.seed;
 				var src = window.appServerAccessPath + '&get_action=get_captcha&sid='+Math.random();
-				var refreshSrc = ajxpResourcesFolder + '/images/actions/16/reload.png';
+				var refreshSrc = resourcesFolder + '/images/actions/16/reload.png';
 				if(existingCaptcha){
 					existingCaptcha.src = src;
 				}else{
@@ -1009,16 +1009,16 @@ Class.create("Ajaxplorer", {
 
 	/**
 	 * Accessor for updating the datamodel context
-	 * @param ajxpContextNode AjxpNode
-	 * @param ajxpSelectedNodes AjxpNode[]
+	 * @param contextNode AjxpNode
+	 * @param selectedNodes AjxpNode[]
 	 * @param selectionSource String
 	 */
-	updateContextData : function(ajxpContextNode, ajxpSelectedNodes, selectionSource){
-		if(ajxpContextNode){
-			this._contextHolder.requireContextChange(ajxpContextNode);
+	updateContextData : function(contextNode, selectedNodes, selectionSource){
+		if(contextNode){
+			this._contextHolder.requireContextChange(contextNode);
 		}
-		if(ajxpSelectedNodes){
-			this._contextHolder.setSelectedNodes(ajxpSelectedNodes, selectionSource);
+		if(selectedNodes){
+			this._contextHolder.setSelectedNodes(selectedNodes, selectionSource);
 		}
 	},
 	

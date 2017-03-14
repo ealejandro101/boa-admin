@@ -1479,8 +1479,8 @@ class Utils
                 && strpos($key, "_original_binary") === false
                 && strpos($key, "_replication") === false
                 && strpos($key, "_checkbox") === false){
-                if(isSet($repDef[$key."_ajxptype"])){
-                    $type = $repDef[$key."_ajxptype"];
+                if(isSet($repDef[$key."_apptype"])){
+                    $type = $repDef[$key."_apptype"];
                     if($type == "boolean"){
                         $value = ($value == "true"?true:false);
                     }else if($type == "integer"){
@@ -1523,7 +1523,7 @@ class Utils
                     if(!in_array($type, array("textarea", "boolean", "text/json"))){
                         $value = Utils::sanitize($value, BOA_SANITIZE_HTML);
                     }
-                    unset($repDef[$key."_ajxptype"]);
+                    unset($repDef[$key."_apptype"]);
                 }
                 if(isSet($repDef[$key."_checkbox"])){
                     $checked = $repDef[$key."_checkbox"] == "checked";

@@ -913,33 +913,33 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
     }
 
     /**
-     * @param ManifestNode $ajxpNode
+     * @param ManifestNode $node
      * @param bool $parentNode
      * @param bool $details
      * @return void
      */
-    function loadNodeInfo(&$ajxpNode, $parentNode = false, $details = false){
+    function loadNodeInfo(&$node, $parentNode = false, $details = false){
 
-        $nodeName = basename($ajxpNode->getPath());
-        $metaData = $ajxpNode->metadata;
+        $nodeName = basename($node->getPath());
+        $metaData = $node->metadata;
         if(!isSet($metaData["is_file"])){
-            $isLeaf = is_file($ajxpNode->getUrl()) || Utils::isBrowsableArchive($nodeName);
+            $isLeaf = is_file($node->getUrl()) || Utils::isBrowsableArchive($nodeName);
             $metaData["is_file"] = ($isLeaf?"1":"0");
         }else{
             $isLeaf = $metaData["is_file"] == "1" ? true : false;
         }
-        $metaData["filename"] = $ajxpNode->getPath();
+        $metaData["filename"] = $node->getPath();
 
-        if(RecycleBinManager::recycleEnabled() && $ajxpNode->getPath() == RecycleBinManager::getRelativeRecycle()){
+        if(RecycleBinManager::recycleEnabled() && $node->getPath() == RecycleBinManager::getRelativeRecycle()){
             $mess = ConfService::getMessages();
-            $recycleIcon = ($this->countFiles($ajxpNode->getUrl(), false, true)>0?"trashcan_full.png":"trashcan.png");
+            $recycleIcon = ($this->countFiles($node->getUrl(), false, true)>0?"trashcan_full.png":"trashcan.png");
             $metaData["icon"] = $recycleIcon;
             $metaData["mimestring"] = $mess[122];
-            $ajxpNode->setLabel($mess[122]);
+            $node->setLabel($mess[122]);
             $metaData["boa_mime"] = "recycle";
         }else{
-            $mimeData = Utils::mimeData($ajxpNode->getUrl(), !$isLeaf);
-            $metaData["mimestring_id"] = $mimeData[0]; //Utils::mimetype($ajxpNode->getUrl(), "type", !$isLeaf);
+            $mimeData = Utils::mimeData($node->getUrl(), !$isLeaf);
+            $metaData["mimestring_id"] = $mimeData[0]; //Utils::mimetype($node->getUrl(), "type", !$isLeaf);
             $metaData["icon"] = $mimeData[1]; //Utils::mimetype($nodeName, "image", !$isLeaf);
             if($metaData["icon"] == "folder.png"){
                 $metaData["openicon"] = "folder_open.png";
@@ -950,12 +950,12 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         }
         //if($lsOptions["l"]){
 
-        $metaData["file_group"] = @filegroup($ajxpNode->getUrl()) || "unknown";
-        $metaData["file_owner"] = @fileowner($ajxpNode->getUrl()) || "unknown";
-        $crtPath = $ajxpNode->getPath();
+        $metaData["file_group"] = @filegroup($node->getUrl()) || "unknown";
+        $metaData["file_owner"] = @fileowner($node->getUrl()) || "unknown";
+        $crtPath = $node->getPath();
         $vRoots = $this->repository->listVirtualRoots();
         if(!empty($crtPath)){
-            if(!@$this->isWriteable($ajxpNode->getUrl())){
+            if(!@$this->isWriteable($node->getUrl())){
                $metaData["readonly"] = "true";
             }
             if(isSet($vRoots[ltrim($crtPath, "/")])){
@@ -966,18 +966,18 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                 $metaData["readonly"] = "true";
             }
         }
-        $fPerms = @fileperms($ajxpNode->getUrl());
+        $fPerms = @fileperms($node->getUrl());
         if($fPerms !== false){
             $fPerms = substr(decoct( $fPerms ), ($isLeaf?2:1));
         }else{
             $fPerms = '0000';
         }
         $metaData["file_perms"] = $fPerms;
-        $datemodif = $this->date_modif($ajxpNode->getUrl());
+        $datemodif = $this->date_modif($node->getUrl());
         $metaData["modiftime"] = ($datemodif ? $datemodif : "0");
         $metaData["bytesize"] = 0;
         if($isLeaf){
-            $metaData["bytesize"] = $this->filesystemFileSize($ajxpNode->getUrl());
+            $metaData["bytesize"] = $this->filesystemFileSize($node->getUrl());
         }
         $metaData["filesize"] = Utils::roundSize($metaData["bytesize"]);
         if(Utils::isBrowsableArchive($nodeName)){
@@ -991,9 +991,9 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                 "bytesize" => $metaData["bytesize"],
                 "modiftime" => $metaData["modiftime"],
             );
-            $ajxpNode->mergeMetadata($miniMeta);
+            $node->mergeMetadata($miniMeta);
         }else{
-            $ajxpNode->mergeMetadata($metaData);
+            $node->mergeMetadata($metaData);
         }
 
     }

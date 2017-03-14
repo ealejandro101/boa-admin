@@ -59,7 +59,7 @@ Class.create("AjxpDraggable", Draggable, {
 	 */
 	initialize: function($super, element, options, component, componentType){		
 		element = $(element);
-		element.addClassName('ajxp_draggable');
+		element.addClassName('draggable');
         if(!options.zindex) options.zindex = 900;
 		$super(element, options);
 		this.options.reverteffect =  function(element, top_offset, left_offset) {
@@ -78,7 +78,7 @@ Class.create("AjxpDraggable", Draggable, {
 	 */
 	destroy : function(){
 	    Event.stopObserving(this.handle, "mousedown", this.eventMouseDown);
-	    this.element.removeClassName('ajxp_draggable');
+	    this.element.removeClassName('draggable');
 	    this.element = null;
 	    Draggables.unregister(this);
 	},
@@ -144,7 +144,7 @@ Class.create("AjxpDraggable", Draggable, {
 			
 			this._draggingMultiple = true;
 			this._clone = new Element('div');
-			$(this._clone).addClassName("ajxp_draggable");
+			$(this._clone).addClassName("draggable");
 			$(this._clone).addClassName('multiple_selection_draggable');
 			this._clone.setAttribute('user_selection', 'true');
 			$(window._bootstrap.parameters.get("MAIN_ELEMENT")).insert(this._clone);
@@ -408,14 +408,14 @@ var AjxpDroppables = {
 	options : 
 	{
 		hoverclass:'droppableZone', 
-		accept:'ajxp_draggable',		
+		accept:'draggable',		
 		onDrop:function(draggable, droppable, event)
 				{
-					if(!(draggable.ajxpNode || draggable.getAttribute('user_selection')) || !droppable.ajxpNode) return;
-					var targetName = droppable.ajxpNode.getPath();
+					if(!(draggable.node || draggable.getAttribute('user_selection')) || !droppable.node) return;
+					var targetName = droppable.node.getPath();
 					var srcName;
-					if(draggable.ajxpNode){
-						var srcName = draggable.ajxpNode.getPath();
+					if(draggable.node){
+						var srcName = draggable.node.getPath();
 					}
                     if(WebFXtimer) clearTimeout(WebFXtimer);
                     var nodeId = null;
@@ -443,8 +443,8 @@ var AjxpDroppables = {
 				}
 	},
 
-	add: function(element, ajxpNode){
-        if(ajxpNode && ajxpNode.hasMetadataInBranch("readonly", "true")){
+	add: function(element, node){
+        if(node && node.hasMetadataInBranch("readonly", "true")){
             return;
         }
 		Droppables.add(element, this.options);

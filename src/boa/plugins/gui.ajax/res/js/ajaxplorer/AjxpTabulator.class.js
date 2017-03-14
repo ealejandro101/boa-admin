@@ -69,19 +69,19 @@ Class.create("AjxpTabulator", AjxpPane, {
 	switchTabulator:function(tabId){
 		var toShow ;
 		this.tabulatorData.each(function(tabInfo){
-			var ajxpObject = this.getAndSetAjxpObject(tabInfo);
+			var appObject = this.getAndSetAjxpObject(tabInfo);
 			if(tabInfo.id == tabId){				
 				tabInfo.headerElement.removeClassName("toggleInactive");
 				if(tabInfo.headerElement.down('img')) tabInfo.headerElement.down('img').show();
-				if(ajxpObject){
-					toShow = ajxpObject;
+				if(appObject){
+					toShow = appObject;
 				}
 				this.selectedTabInfo = tabInfo;
 			}else{
 				tabInfo.headerElement.addClassName("toggleInactive");
                 if(tabInfo.headerElement.down('img')) tabInfo.headerElement.down('img').hide();
-				if(ajxpObject){
-					ajxpObject.showElement(false);
+				if(appObject){
+					appObject.showElement(false);
 				}
 			}
 		}.bind(this));
@@ -104,9 +104,9 @@ Class.create("AjxpTabulator", AjxpPane, {
 	 */
 	resize : function(){
 		if(!this.selectedTabInfo) return;
-		var ajxpObject = this.getAndSetAjxpObject(this.selectedTabInfo);
-		if(ajxpObject){
-			ajxpObject.resize();
+		var appObject = this.getAndSetAjxpObject(this.selectedTabInfo);
+		if(appObject){
+			appObject.resize();
             var left ;
             var total = 0;
             var cont = this.htmlElement.down('div.tabulatorContainer');
@@ -155,9 +155,9 @@ Class.create("AjxpTabulator", AjxpPane, {
 	 */
 	destroy : function(){
 		this.tabulatorData.each(function(tabInfo){
-			var ajxpObject = this.getAndSetAjxpObject(tabInfo);
+			var appObject = this.getAndSetAjxpObject(tabInfo);
 			tabInfo.headerElement.stopObserving("click");
-			ajxpObject.destroy();
+			appObject.destroy();
 		}.bind(this));
 		this.htmlElement.update("");
         if(window[this.htmlElement.id]){
@@ -173,11 +173,11 @@ Class.create("AjxpTabulator", AjxpPane, {
 	 * @returns IAjxpWidget
 	 */
 	getAndSetAjxpObject : function(tabInfo){
-		var ajxpObject = tabInfo.ajxpObject || null;
-		if($(tabInfo.element) && $(tabInfo.element).paneObject && (!ajxpObject || ajxpObject != $(tabInfo.element).paneObject) ){
-			ajxpObject = tabInfo.ajxpObject = $(tabInfo.element).paneObject;
+		var appObject = tabInfo.appObject || null;
+		if($(tabInfo.element) && $(tabInfo.element).paneObject && (!appObject || appObject != $(tabInfo.element).paneObject) ){
+			appObject = tabInfo.appObject = $(tabInfo.element).paneObject;
 		}
-		return ajxpObject;		
+		return appObject;		
 	}
 	
 });

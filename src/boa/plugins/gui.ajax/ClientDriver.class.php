@@ -272,11 +272,11 @@ class ClientDriver extends Plugin
             $_SESSION["BOA_SERVER_PREFIX_URI"] = str_replace("_UP_", "..", $_GET["server_prefix_uri"]);
         }
         $config = array();
-        $config["ajxpResourcesFolder"] = "plugins/gui.ajax/res";
+        $config["resourcesFolder"] = "plugins/gui.ajax/res";
         if(session_name() == "AjaXplorer_Shared"){
-            $config["ajxpServerAccess"] = "index_shared.php";
+            $config["appServerAccess"] = "index_shared.php";
         }else{
-            $config["ajxpServerAccess"] = BOA_SERVER_ACCESS;
+            $config["appServerAccess"] = BOA_SERVER_ACCESS;
         }
         $config["zipEnabled"] = ConfService::zipEnabled();
         $config["multipleFilesDownloadEnabled"] = ConfService::getCoreConf("ZIP_CREATION");
@@ -305,8 +305,8 @@ class ClientDriver extends Plugin
         $config["client_timeout_warning"] = $this->pluginConf["CLIENT_TIMEOUT_WARN"];
         $config["availableLanguages"] = ConfService::getConf("AVAILABLE_LANG");
         $config["usersEditable"] = ConfService::getAuthDriverImpl()->usersEditable();
-        $config["ajxpVersion"] = BOA_VERSION;
-        $config["ajxpVersionDate"] = BOA_VERSION_DATE;
+        $config["appVersion"] = BOA_VERSION;
+        $config["appVersionDate"] = BOA_VERSION_DATE;
         if(stristr($_SERVER["HTTP_USER_AGENT"], "msie 6")){
             $config["cssResources"] = array("css/pngHack/pngHack.css");
         }
@@ -325,15 +325,15 @@ class ClientDriver extends Plugin
     }
 
     /**
-     * @param ManifestNode $ajxpNode
+     * @param ManifestNode $node
      * @return void
      */
-    function nodeBookmarkMetadata(&$ajxpNode){
+    function nodeBookmarkMetadata(&$node){
         $user = AuthService::getLoggedUser();
         if($user == null) return;
-        $metadata = $ajxpNode->retrieveMetadata("bookmarked", true, BOA_METADATA_SCOPE_REPOSITORY, true);
+        $metadata = $node->retrieveMetadata("bookmarked", true, BOA_METADATA_SCOPE_REPOSITORY, true);
         if(is_array($metadata) && count($metadata)){
-            $ajxpNode->mergeMetadata(array(
+            $node->mergeMetadata(array(
                      "bookmarked" => "true",
                      "overlay_icon"  => "bookmark.png"
                 ), true);
@@ -343,12 +343,12 @@ class ClientDriver extends Plugin
             self::$loadedBookmarks = $user->getBookmarks();
         }
         foreach(self::$loadedBookmarks as $bm){
-            if($bm["PATH"] == $ajxpNode->getPath()){
-                $ajxpNode->mergeMetadata(array(
+            if($bm["PATH"] == $node->getPath()){
+                $node->mergeMetadata(array(
                          "bookmarked" => "true",
                          "overlay_icon"  => "bookmark.png"
                     ), true);
-                $ajxpNode->setMetadata("bookmarked", array("bookmarked"=> "true"), true, BOA_METADATA_SCOPE_REPOSITORY, true);
+                $node->setMetadata("bookmarked", array("bookmarked"=> "true"), true, BOA_METADATA_SCOPE_REPOSITORY, true);
             }
         }
     }

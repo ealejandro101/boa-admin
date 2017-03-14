@@ -179,8 +179,8 @@ class UserSelection
         $currentFile = $this->getUniqueFile();
         $wrapperData = $accessDriver->detectStreamWrapper(false);
         $urlBase = $wrapperData["protocol"]."://".$accessDriver->repository->getId();
-        $ajxpNode = new ManifestNode($urlBase.$currentFile);
-        return $ajxpNode;
+        $node = new ManifestNode($urlBase.$currentFile);
+        return $node;
 
     }
 

@@ -60,7 +60,7 @@ function addImageLibrary(aliasName, aliasPath){
 function resolveImageSource(src, defaultPath, size){
 	if(!src) return "";
 	if(!window.AjxpImageLibraries || src.indexOf("/")==-1){
-		return ajxpResourcesFolder + (defaultPath?(size?defaultPath.replace("ICON_SIZE", size):defaultPath):'')+ '/' +  src;
+		return resourcesFolder + (defaultPath?(size?defaultPath.replace("ICON_SIZE", size):defaultPath):'')+ '/' +  src;
 	}
 	var radic = src.substring(0,src.indexOf("/"));
 	if(window.AjxpImageLibraries[radic]){
@@ -70,7 +70,7 @@ function resolveImageSource(src, defaultPath, size){
         }
 		return (size?src.replace("ICON_SIZE", size):src);
 	}else{
-		return ajxpResourcesFolder + (defaultPath?(size?defaultPath.replace("ICON_SIZE", size):defaultPath):'')+ '/' +  src;
+		return resourcesFolder + (defaultPath?(size?defaultPath.replace("ICON_SIZE", size):defaultPath):'')+ '/' +  src;
 	}
 }
 
@@ -154,34 +154,34 @@ function parseUrl(data) {
 
 
 function storeRememberData(user, pass){
-	setAjxpCookie('remember', {user:user,pass:pass});
+	setAppCookie('remember', {user:user,pass:pass});
 }
 
 function retrieveRememberData(){
-	return getAjxpCookie('remember');
+	return getAppCookie('remember');
 }
 
 function clearRememberData(){
-	deleteAjxpCookie('remember');
+	deleteAppCookie('remember');
 }
 
-function setAjxpCookie(name, value){
+function setAppCookie(name, value){
 	var cookieJar = new CookieJar({
 		expires: 3600*24*10,
 		path: '/',
 		secure: true
 	});
-	cookieJar.put('ajxp_'+name, value);	
+	cookieJar.put('boa_'+name, value);	
 }
 
-function getAjxpCookie(name){
+function getAppCookie(name){
 	var cookieJar = new CookieJar({path: '/',secure:true});
-	return cookieJar.get('ajxp_'+name);	
+	return cookieJar.get('boa_'+name);	
 }
 
-function deleteAjxpCookie(name){
+function deleteAppCookie(name){
 	var cookieJar = new CookieJar({path: '/',secure:true});
-	cookieJar.remove('ajxp_'+name);	
+	cookieJar.remove('boa_'+name);	
 }
 
 function refreshPNGImages(element){
@@ -579,14 +579,14 @@ function ajxpCorners(oElement, cornersString)
 	{
 		var botDiv = new Element('div');
 		botDiv.setStyle({marginTop:'-5px', zoom:1, width:'100%'});
-		botDiv.innerHTML = (bl?'<div style="overflow: hidden; width: 5px; background-color: rgb(255, 255, 255); height: 5px; float: left;background-image:url('+ajxpResourcesFolder+'/images/corners/5px_bl.gif);"></div>':'')+(br?'<div style="border-style: none; overflow: hidden; float: right; background-color: rgb(255, 255, 255); height: 5px; width: 5px;background-image:url('+ajxpResourcesFolder+'/images/corners/5px_br.gif);"></div>':'');
+		botDiv.innerHTML = (bl?'<div style="overflow: hidden; width: 5px; background-color: rgb(255, 255, 255); height: 5px; float: left;background-image:url('+resourcesFolder+'/images/corners/5px_bl.gif);"></div>':'')+(br?'<div style="border-style: none; overflow: hidden; float: right; background-color: rgb(255, 255, 255); height: 5px; width: 5px;background-image:url('+resourcesFolder+'/images/corners/5px_br.gif);"></div>':'');
 		oElement.appendChild(botDiv);
 	}
 	if(tr || tl)
 	{
 		var topDiv = new Element('div');
 		topDiv.setStyle({marginBottom:'-5px', zoom:1, width:'100%'});
-		topDiv.innerHTML = (tl?'<div style="overflow: hidden; width: 5px; background-color: rgb(255, 255, 255); height: 5px; float: left;background-image:url('+ajxpResourcesFolder+'/images/corners/5px_tl.gif);"></div>':'')+(tr?'<div style="border-style: none; overflow: hidden; float: right; background-color: rgb(255, 255, 255); height: 5px; width: 5px;background-image:url('+ajxpResourcesFolder+'/images/corners/5px_tr.gif);"></div>':'');
+		topDiv.innerHTML = (tl?'<div style="overflow: hidden; width: 5px; background-color: rgb(255, 255, 255); height: 5px; float: left;background-image:url('+resourcesFolder+'/images/corners/5px_tl.gif);"></div>':'')+(tr?'<div style="border-style: none; overflow: hidden; float: right; background-color: rgb(255, 255, 255); height: 5px; width: 5px;background-image:url('+resourcesFolder+'/images/corners/5px_tr.gif);"></div>':'');
 		if(oElement.firstChild)
 		{
 			oElement.insertBefore(topDiv, oElement.firstChild);
@@ -758,7 +758,7 @@ function scrollByTouch(event, direction, targetId){
 }
 
 function attachMobileScroll(targetId, direction){
-	if(!window.ajxpMobile) return;
+	if(!window.isMobile) return;
 	if(typeof (targetId) == "string"){
 		var target = $(targetId);
 	}else{

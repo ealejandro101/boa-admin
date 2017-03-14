@@ -594,7 +594,7 @@ Class.create("FormManager", {
 				parametersHash.set(prefix+el.name, el.value)
 			};
 			if(el.getAttribute('data-ctrl_type')){
-				parametersHash.set(prefix+el.name+'_ajxptype', el.getAttribute('data-ctrl_type'));
+				parametersHash.set(prefix+el.name+'_apptype', el.getAttribute('data-ctrl_type'));
 			}
             if(form.down('[name="SFCB_'+el.name+'"]')){
                 checkboxesActive = true;
@@ -609,7 +609,7 @@ Class.create("FormManager", {
 				missingMandatory.push(el);
 			}
             if(el.getAttribute('data-ctrl_type')){
-                parametersHash.set(prefix+el.name+'_ajxptype', el.getAttribute('data-ctrl_type'));
+                parametersHash.set(prefix+el.name+'_apptype', el.getAttribute('data-ctrl_type'));
             }
             parametersHash.set(prefix+el.name, el.getValue());
             if(form.down('[name="SFCB_'+el.name+'"]')){
@@ -638,8 +638,8 @@ Class.create("FormManager", {
         var treeKeys = {};
         allKeys.each(function(key){
             if(key.indexOf("/") === -1) return;
-            if(key.endsWith("_ajxptype")) return;
-            var typeKey = key + "_ajxptype";
+            if(key.endsWith("_apptype")) return;
+            var typeKey = key + "_apptype";
             var parts = key.split("/");
             var parentName = parts.shift();
             var parentKey;
@@ -669,12 +669,12 @@ Class.create("FormManager", {
             parametersHash.unset(key);
         });
         $H(treeKeys).each(function(pair){
-            if(parametersHash.get(pair.key + '_ajxptype') && parametersHash.get(pair.key + '_ajxptype').startsWith('group_switch:')
+            if(parametersHash.get(pair.key + '_apptype') && parametersHash.get(pair.key + '_apptype').startsWith('group_switch:')
                 && !pair.value['group_switch_value']){
                 pair.value['group_switch_value'] = parametersHash.get(pair.key);
             }
             parametersHash.set(pair.key, Object.toJSON(pair.value));
-            parametersHash.set(pair.key+"_ajxptype", "text/json");
+            parametersHash.set(pair.key+"_apptype", "text/json");
         });
 
 		return missingMandatory.size();

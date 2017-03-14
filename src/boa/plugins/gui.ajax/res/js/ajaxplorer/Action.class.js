@@ -65,7 +65,7 @@ Class.create("Action", {
 			actionBar:false,
 			actionBarGroup:'default',
 			contextMenu:false,
-			ajxpWidgets:null,
+			appWidgets:null,
 			infoPanel:false			
 			}, arguments[1] || { });
 			
@@ -405,14 +405,14 @@ Class.create("Action", {
 				for(var j=0; j<node.childNodes.length;j++){
 					if(node.childNodes[j].nodeName == "context"){
 						this.attributesToObject(this.context, node.childNodes[j]);
-						if(this.context.ajxpWidgets){
-							this.context.ajxpWidgets = $A(this.context.ajxpWidgets.split(','));
+						if(this.context.appWidgets){
+							this.context.appWidgets = $A(this.context.appWidgets.split(','));
 						}else{
-							this.context.ajxpWidgets = $A();
+							this.context.appWidgets = $A();
 						}
 						// Backward compatibility
-						if(this.context.infoPanel) this.context.ajxpWidgets.push('InfoPanel');
-						if(this.context.actionBar) this.context.ajxpWidgets.push('ActionsToolbar');
+						if(this.context.infoPanel) this.context.appWidgets.push('InfoPanel');
+						if(this.context.actionBar) this.context.appWidgets.push('ActionsToolbar');
 					}
 					else if(node.childNodes[j].nodeName == "selectionContext"){
 						this.attributesToObject(this.selectionContext, node.childNodes[j]);

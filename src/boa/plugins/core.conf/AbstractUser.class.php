@@ -104,7 +104,7 @@ abstract class AbstractUser
         array_push($hashes, $newHash);
         $this->setPref("cookie_hash", implode(",",$hashes));
         $this->save("user");
-		return $newHash; //md5($this->id.":".$newHash.":ajxp");
+		return $newHash; //md5($this->id.":".$newHash.":boa");
 	}
 	
 	function getId(){
@@ -135,34 +135,34 @@ abstract class AbstractUser
             // NOTHING SPECIAL TO DO !
             return;
         }
-		if(!isSet($this->rights["ajxp.roles"])) $this->rights["ajxp.roles"] = array();
-		$this->rights["ajxp.roles"][$roleObject->getId()] = true;
-        uksort($this->rights["ajxp.roles"], array($this, "orderRoles"));
+		if(!isSet($this->rights["app.roles"])) $this->rights["app.roles"] = array();
+		$this->rights["app.roles"][$roleObject->getId()] = true;
+        uksort($this->rights["app.roles"], array($this, "orderRoles"));
         $this->roles[$roleObject->getId()] = $roleObject;
         $this->recomputeMergedRole();
 	}
 	
 	function removeRole($roleId){
-		if(isSet($this->rights["ajxp.roles"]) && isSet($this->rights["ajxp.roles"][$roleId])){
-			unset($this->rights["ajxp.roles"][$roleId]);
-            uksort($this->rights["ajxp.roles"], array($this, "orderRoles"));
+		if(isSet($this->rights["app.roles"]) && isSet($this->rights["app.roles"][$roleId])){
+			unset($this->rights["app.roles"][$roleId]);
+            uksort($this->rights["app.roles"], array($this, "orderRoles"));
             if(isSet($this->roles[$roleId])) unset($this->roles[$roleId]);
         }
         $this->recomputeMergedRole();
 	}
 	
 	function getRoles(){
-		if(isSet($this->rights["ajxp.roles"])) {
-            uksort($this->rights["ajxp.roles"], array($this, "orderRoles"));
-            return $this->rights["ajxp.roles"];
+		if(isSet($this->rights["app.roles"])) {
+            uksort($this->rights["app.roles"], array($this, "orderRoles"));
+            return $this->rights["app.roles"];
         }else {
             return array();
         }
 	}
 
     function getProfile(){
-        if(isSet($this->rights["ajxp.profile"])) {
-            return $this->rights["ajxp.profile"];
+        if(isSet($this->rights["app.profile"])) {
+            return $this->rights["app.profile"];
         }
         if($this->isAdmin()) return "admin";
         if($this->hasParent()) return "shared";
@@ -171,20 +171,20 @@ abstract class AbstractUser
     }
 
     function setProfile($profile){
-        $this->rights["ajxp.profile"] = $profile;
+        $this->rights["app.profile"] = $profile;
     }
 
     function setLock($lockAction){
-        $this->rights["ajxp.lock"] = $lockAction;
+        $this->rights["app.lock"] = $lockAction;
     }
 
     function removeLock(){
-        $this->rights["ajxp.lock"] = false;
+        $this->rights["app.lock"] = false;
     }
 
     function getLock(){
-        if(!empty($this->rights["ajxp.lock"])){
-            return $this->rights["ajxp.lock"];
+        if(!empty($this->rights["app.lock"])){
+            return $this->rights["app.lock"];
         }
         return false;
     }
@@ -210,12 +210,12 @@ abstract class AbstractUser
 	}
 	
 	function canRead($rootDirId){
-        if(!empty($this->rights["ajxp.lock"])) return false;
+        if(!empty($this->rights["app.lock"])) return false;
         return $this->mergedRole->canRead($rootDirId);
 	}
 	
 	function canWrite($rootDirId){
-        if(!empty($this->rights["ajxp.lock"])) return false;
+        if(!empty($this->rights["app.lock"])) return false;
         return $this->mergedRole->canWrite($rootDirId);
     }
 
@@ -383,7 +383,7 @@ abstract class AbstractUser
         $this->personalRole = new Role("BOA_USR_"."/".$this->id);
         $this->roles["BOA_USR_"."/".$this->id] = $this->personalRole;
         foreach($this->rights as $rightKey => $rightValue){
-            if($rightKey == "ajxp.actions" && is_array($rightValue)){
+            if($rightKey == "app.actions" && is_array($rightValue)){
                 foreach($rightValue as $repoId => $repoData){
                     foreach($repoData as $actionName => $actionState){
                         $this->personalRole->setActionState("plugin.all", $actionName, $repoId, $actionState);
@@ -391,7 +391,7 @@ abstract class AbstractUser
                 }
                 unset($this->rights[$rightKey]);
             }
-            if(strpos($rightKey, "ajxp.") === 0) continue;
+            if(strpos($rightKey, "app.") === 0) continue;
             $this->personalRole->setAcl($rightKey, $rightValue);
             unset($this->rights[$rightKey]);
         }

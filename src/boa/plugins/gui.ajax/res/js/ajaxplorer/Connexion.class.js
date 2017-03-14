@@ -33,7 +33,7 @@ Class.create("Connexion", {
 	{
 		this._baseUrl = window.appServerAccessPath;
 		if(baseUrl) this._baseUrl = baseUrl;
-		this._libUrl = window.ajxpResourcesFolder+'/js';
+		this._libUrl = window.resourcesFolder+'/js';
 		this._parameters = new Hash();
 		this._method = 'get';
 	},
@@ -82,7 +82,7 @@ Class.create("Connexion", {
                 id:'AjxpConnexion-loader',
                 style:'position:absolute;top:2px;right:2px;z-index:40000;display:none;'});
             var img = new Element("img", {
-                src:ajxpResourcesFolder+"/images/loadingImage.gif"
+                src:resourcesFolder+"/images/loadingImage.gif"
             });
             span.insert(img);
             $$('body')[0].insert(span);
@@ -199,8 +199,8 @@ Class.create("Connexion", {
 	 * @param onLoadedCode Function Callback
 	 */
 	loadLibrary : function(fileName, onLoadedCode){
-        if(window._bootstrap && window._bootstrap.parameters.get("ajxpVersion") && fileName.indexOf("?")==-1){
-            fileName += "?v="+window._bootstrap.parameters.get("ajxpVersion");
+        if(window._bootstrap && window._bootstrap.parameters.get("appVersion") && fileName.indexOf("?")==-1){
+            fileName += "?v="+window._bootstrap.parameters.get("appVersion");
         }
         var path = (this._libUrl?this._libUrl+'/'+fileName:fileName);
 		new Ajax.Request(path,

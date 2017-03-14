@@ -41,14 +41,14 @@ Class.create("MetaCellRenderer", {
 	},
 	
 	/* LABELS SYSTEM */
-	cssLabelsFilter : function(element, ajxpNode, type, ajxpNodeObject){
-        if(!element && ajxpNodeObject){
-            var content = ajxpNode.getMetadata().get('css_label');
+	cssLabelsFilter : function(element, node, type, nodeObject){
+        if(!element && nodeObject){
+            var content = node.getMetadata().get('css_label');
             if(content){
                 var obj = new MetaCellRenderer();
                 var rule = obj.findCssRule(content.strip());
                 if(rule){
-                    ajxpNodeObject.addClassName(rule.cssClass);
+                    nodeObject.addClassName(rule.cssClass);
                 }
             }
         }else if(type == 'row'){
@@ -67,7 +67,7 @@ Class.create("MetaCellRenderer", {
 				}
 			}
 		}else if(type =='thumb'){
-			var content = ajxpNode.getMetadata().get('css_label');
+			var content = node.getMetadata().get('css_label');
 			if(content){
 				var obj = new MetaCellRenderer();
 				var rule = obj.findCssRule(content.strip());
@@ -110,7 +110,7 @@ Class.create("MetaCellRenderer", {
 	},
 	
 	/* STARS RATE SYSTEM */
-	starsRateFilter: function(element, ajxpNode, type){
+	starsRateFilter: function(element, node, type){
 		if(type == 'thumb') return;
         if(!element) return;
 		var value = 0;

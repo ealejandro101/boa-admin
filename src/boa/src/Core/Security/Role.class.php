@@ -48,14 +48,14 @@ class Role implements GroupPathProvider
     }
 
     public function migrateDeprectated($repositoriesList, AjxpRole $oldRole){
-        $repositoriesList["ajxp.all"] = "";
+        $repositoriesList["app.all"] = "";
         foreach($repositoriesList as $repoId => $repoObject){
             $right = $oldRole->getRight($repoId);
             if(!empty($right)) $this->setAcl($repoId, $right);
             $actions = $oldRole->getSpecificActionsRights($repoId);
             if(count($actions)){
                 foreach($actions as $act => $status){
-                    if($repoId == "ajxp.all"){
+                    if($repoId == "app.all"){
                         $this->setActionState(BOA_PLUGINS_SCOPE_ALL, $act, BOA_REPO_SCOPE_ALL, $status);
                     }else{
                         $this->setActionState(BOA_PLUGINS_SCOPE_ALL, $act, $repoId, $status);

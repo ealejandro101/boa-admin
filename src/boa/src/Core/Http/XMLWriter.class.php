@@ -118,15 +118,15 @@ class XMLWriter
 
     /**
      * @static
-     * @param ManifestNode $ajxpNode
+     * @param ManifestNode $node
      * @return void
      */
-    static function renderAjxpHeaderNode($ajxpNode){
+    static function renderAjxpHeaderNode($node){
         header('Content-Type: text/xml; charset=UTF-8');
         header('Cache-Control: no-cache');
         print('<?xml version="1.0" encoding="UTF-8"?>');
         self::$headerSent = "tree";
-        self::renderAjxpNode($ajxpNode, false);
+        self::renderAjxpNode($node, false);
     }
 
     /**
@@ -162,17 +162,17 @@ class XMLWriter
 
     /**
      * @static
-     * @param ManifestNode $ajxpNode
+     * @param ManifestNode $node
      * @param bool $close
      * @param bool $print
      * @return void|string
      */
-    static function renderAjxpNode($ajxpNode, $close = true, $print = true){
+    static function renderAjxpNode($node, $close = true, $print = true){
         return XMLWriter::renderNode(
-            $ajxpNode->getPath(),
-            $ajxpNode->getLabel(),
-            $ajxpNode->isLeaf(),
-            $ajxpNode->metadata,
+            $node->getPath(),
+            $node->getLabel(),
+            $node->isLeaf(),
+            $node->metadata,
             $close,
             $print);
     }
@@ -329,24 +329,24 @@ class XMLWriter
         }
         if(isSet($diffNodes["ADD"]) && count($diffNodes["ADD"])){
             $buffer .= "<add>";
-            foreach($diffNodes["ADD"] as $ajxpNode){
-                $ajxpNode->loadNodeInfo(false, false, "all");
-                if(!empty($ajxpNode->metaData["mimestring_id"]) && array_key_exists($ajxpNode->metaData["mimestring_id"], $mess)){
-                    $ajxpNode->mergeMetadata(array("mimestring" =>  $mess[$ajxpNode->metaData["mimestring_id"]]));
+            foreach($diffNodes["ADD"] as $node){
+                $node->loadNodeInfo(false, false, "all");
+                if(!empty($node->metaData["mimestring_id"]) && array_key_exists($node->metaData["mimestring_id"], $mess)){
+                    $node->mergeMetadata(array("mimestring" =>  $mess[$node->metaData["mimestring_id"]]));
                 }
-                $buffer .=  self::renderAjxpNode($ajxpNode, true, false);
+                $buffer .=  self::renderAjxpNode($node, true, false);
             }
             $buffer .= "</add>";
         }
         if(isSet($diffNodes["UPDATE"]) && count($diffNodes["UPDATE"])){
             $buffer .= "<update>";
-            foreach($diffNodes["UPDATE"] as $originalPath => $ajxpNode){
-                $ajxpNode->loadNodeInfo(false, false, "all");
-                if(!empty($ajxpNode->metaData["mimestring_id"]) && array_key_exists($ajxpNode->metaData["mimestring_id"], $mess)){
-                    $ajxpNode->mergeMetadata(array("mimestring" =>  $mess[$ajxpNode->metaData["mimestring_id"]]));
+            foreach($diffNodes["UPDATE"] as $originalPath => $node){
+                $node->loadNodeInfo(false, false, "all");
+                if(!empty($node->metaData["mimestring_id"]) && array_key_exists($node->metaData["mimestring_id"], $mess)){
+                    $node->mergeMetadata(array("mimestring" =>  $mess[$node->metaData["mimestring_id"]]));
                 }
-                $ajxpNode->original_path = $originalPath;
-                $buffer .= self::renderAjxpNode($ajxpNode, true, false);
+                $node->original_path = $originalPath;
+                $buffer .= self::renderAjxpNode($node, true, false);
             }
             $buffer .= "</update>";
         }

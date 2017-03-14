@@ -34,8 +34,8 @@ Class.create("TreeSelector", {
 			targetField : 'input[name="dest"]',
 			targetNode: 'input[name="dest_node"]',
 			treeContainer : '.treeCopyContainer',
-            nodeFilter : function(ajxpNode){
-                return (!ajxpNode.isLeaf());
+            nodeFilter : function(node){
+                return (!node.isLeaf());
             }
 		}, options || {});
 	},
@@ -54,8 +54,8 @@ Class.create("TreeSelector", {
 		this.filterSelector.hide();
 		this._nodeActionCallback = function(e){
 			// Warning, this is the tree object
-			target.value = this.ajxpNode.getPath();
-			targetNode.value = this.ajxpNode.getPath();
+			target.value = this.node.getPath();
+			targetNode.value = this.node.getPath();
  			this.select();			
 		};
 		if(!rootNode){
@@ -144,11 +144,11 @@ Class.create("TreeSelector", {
 	},
 	/**
 	 * Reload the root node of the tree
-	 * @param ajxpNode AjxpNode
+	 * @param node AjxpNode
 	 */
-	resetAjxpRootNode : function(ajxpNode){
-		this.treeCopy.ajxpNode.clear();
-		this.treeCopy.setAjxpRootNode(ajxpNode);		
-		this.treeCopy.ajxpNode.load();
+	resetAjxpRootNode : function(node){
+		this.treeCopy.node.clear();
+		this.treeCopy.setAjxpRootNode(node);		
+		this.treeCopy.node.load();
 	}
 });

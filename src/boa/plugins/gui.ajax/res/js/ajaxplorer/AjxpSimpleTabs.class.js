@@ -118,9 +118,9 @@ Class.create("AjxpSimpleTabs", AjxpPane, {
 	destroy : function(){
         /*
 		this.tabulatorData.each(function(tabInfo){
-			var ajxpObject = this.getAndSetAjxpObject(tabInfo);
+			var appObject = this.getAndSetAjxpObject(tabInfo);
 			tabInfo.headerElement.stopObserving("click");
-			ajxpObject.destroy();
+			appObject.destroy();
 		}.bind(this));
 		this.htmlElement.update("");
         if(window[this.htmlElement.id]){

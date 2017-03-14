@@ -6,3 +6,29 @@ ajxpServerAccessPath -> appServerAccessPath
 ajxpId -> appId
 ajxpClass -> appClass
 ajxpOptions -> appOptions
+ajxpPaneHeader -> appPaneHeader
+ajxpPaneIcon -> appPaneIcon
+ajxpPaneObject -> paneObject
+$ajxpNode -> $node
+ajxp.fs -> app.fs
+ajxp. -> app.
+ajxpUser -> user
+ajxpWidgets -> appWidgets
+ajxpAction -> action
+ajxpResourcesFolder -> resourcesFolder
+_ajxptype -> _apptype
+ajxpServerAccess -> appServerAccess
+.ajxp_meta -> .metadata
+ajxp_shared -> app_shared
+ajxpDataNode -> dataNode
+ajxp_access.log -> access.log
+ajxpVersion -> appVersion
+:ajxp -> :boa
+ajxpContextNode -> contextNode
+ajxpSelectedNode -> selectedNode
+ajxp_folder -> boa_folder
+ajxp_login_error -> login_error
+ajxp_icon_arrow -> icon_arrow
+ajxp_draggable -> draggable
+
+BOA_REPO_SCOPE_ALL

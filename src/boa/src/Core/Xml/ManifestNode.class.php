@@ -34,7 +34,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
  */
 class ManifestNode{
     /**
-     * @var string URL of the node in the form ajxp.protocol://repository_id/path/to/node
+     * @var string URL of the node in the form app.protocol://repository_id/path/to/node
      */
 	protected $_url;
     /**
@@ -76,7 +76,7 @@ class ManifestNode{
     private $_indexableMetaKeys = array();
 
     /**
-     * @param string $url URL of the node in the form ajxp.protocol://repository_id/path/to/node
+     * @param string $url URL of the node in the form app.protocol://repository_id/path/to/node
      * @param array $metadata Node metadata
      */
 	public function __construct($url, $metadata = array()){
@@ -90,7 +90,7 @@ class ManifestNode{
     }
 
     /**
-     * @param String $url of the node in the form ajxp.protocol://repository_id/path/to/node
+     * @param String $url of the node in the form app.protocol://repository_id/path/to/node
      * @return void
      */
     public function setUrl($url){
@@ -278,7 +278,7 @@ class ManifestNode{
 	}
 
     /**
-     * @return string URL of the node in the form ajxp.protocol://repository_id/path/to/node
+     * @return string URL of the node in the form app.protocol://repository_id/path/to/node
      */
 	public function getUrl(){
 		return $this->_url;
@@ -378,7 +378,7 @@ class ManifestNode{
             $this->urlParts = parse_url($this->_url);
         }
 
-		if(strstr($this->urlParts["scheme"], "ajxp.")!==false){
+		if(strstr($this->urlParts["scheme"], "app.")!==false){
 			$pServ = PluginsService::getInstance();
 			$this->_wrapperClassName = $pServ->getWrapperClassName($this->urlParts["scheme"]);
 		}

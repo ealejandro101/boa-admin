@@ -79,7 +79,7 @@ Class.create("RoleEditor", AbstractEditor, {
                 fManager.serializeParametersInputs(formPane, parametersHash, "ROLE_PARAM_");
                 parametersHash.each(function(pair){
                     var pName = pair.key.replace("ROLE_PARAM_", "");
-                    if(pName.endsWith("_ajxptype") || pName.endsWith("_replication") || pName.endsWith("_checkbox")) return;
+                    if(pName.endsWith("_apptype") || pName.endsWith("_replication") || pName.endsWith("_checkbox")) return;
                     if(this.isInherited(['PARAMETERS', repoScope, pluginId, pName])){
                         if(this.roleParent['PARAMETERS'][repoScope] &&
                             this.roleParent['PARAMETERS'][repoScope][pluginId]
@@ -95,7 +95,7 @@ Class.create("RoleEditor", AbstractEditor, {
         fManager.serializeParametersInputs(this.element.down("#pane-infos").down("#account_custom"), customFieldsHash, "ROLE_CUSTOM_");
         customFieldsHash.each(function(pair){
             var pName = pair.key.replace("ROLE_CUSTOM_", "");
-            if(pName.endsWith("_ajxptype") || pName.endsWith("_replication") || pName.endsWith("_checkbox")) return;
+            if(pName.endsWith("_apptype") || pName.endsWith("_replication") || pName.endsWith("_checkbox")) return;
             var objectValue = pair.value.evalJSON();
             var repoScope = pName;
             for(var pluginId in objectValue){
@@ -109,8 +109,8 @@ Class.create("RoleEditor", AbstractEditor, {
                     if(!fullPostData['FORMS'][repoScope]) fullPostData['FORMS'][repoScope] = {};
                     if(!fullPostData['FORMS'][repoScope][pluginId]) fullPostData['FORMS'][repoScope][pluginId] = $H({});
                     fullPostData['FORMS'][repoScope][pluginId].set("ROLE_PARAM_"+paramName, pluginData[paramName]);
-                    if(customFieldsHash.get(pName + "_ajxptype")){
-                        fullPostData['FORMS'][repoScope][pluginId].set("ROLE_PARAM_"+paramName+"_ajxptype", customFieldsHash.get(pName + "_ajxptype"));
+                    if(customFieldsHash.get(pName + "_apptype")){
+                        fullPostData['FORMS'][repoScope][pluginId].set("ROLE_PARAM_"+paramName+"_apptype", customFieldsHash.get(pName + "_apptype"));
                     }
                     if(customFieldsHash.get(pName + "_checkbox")){
                         fullPostData['FORMS'][repoScope][pluginId].set("ROLE_PARAM_"+paramName+"_checkbox", customFieldsHash.get(pName + "_checkbox"));
@@ -583,7 +583,7 @@ Class.create("RoleEditor", AbstractEditor, {
             rightsCell.insert(blockBox);
             rightsCell.insert('<label for="chck_'+repoId+'_block">' + MessageHash["role_editor.37"] + '</label> ');
    			var tr = new Element('div', {className:"repositoryEntry"});
-   			var titleCell = new Element('div', {className:"repositoryLabel"}).update('<img src="'+ajxpResourcesFolder+'/images/mimes/16/folder_red.png" style="float:left;margin-right:5px;">');
+   			var titleCell = new Element('div', {className:"repositoryLabel"}).update('<img src="'+resourcesFolder+'/images/mimes/16/folder_red.png" style="float:left;margin-right:5px;">');
             var theLabel = new Element("span",{style:'cursor:pointer;', 'data-repoId':repoId}).update(repoLabel);
             titleCell.insert(theLabel);
             if(this.isInherited(["ACL", repoId])) {
@@ -636,7 +636,7 @@ Class.create("RoleEditor", AbstractEditor, {
                         el.addClassName("inherited");
                         if(state == 'disabled'){
                             remove.update(MessageHash["role_editor.40"]);
-                            remove.setAttribute("data-ajxpEnable", "true");
+                            remove.setAttribute("data-appEnable", "true");
                         }else{
                             remove.update(MessageHash["role_editor.39"]);
                         }
@@ -771,7 +771,7 @@ Class.create("RoleEditor", AbstractEditor, {
     actionListRemoveObserver : function(scope, plugin, action){
         return function(event){
             try{
-                if(event.target.getAttribute("data-ajxpEnable")){
+                if(event.target.getAttribute("data-appEnable")){
                     this.addActionToList(plugin, action, scope, true);
                     return;
                 }else{

@@ -8,7 +8,7 @@
 		</action>
         <action name="user_create_repository">
             <gui text="417" title="418" src="user-create-repository.png" accessKey="" hasAccessKey="false" iconClass="icon-plus-sign">
-                <context selection="false" dir="" recycle="true" ajxpWidgets="RepositorySelect"/>
+                <context selection="false" dir="" recycle="true" appWidgets="RepositorySelect"/>
             </gui>
             <rightsContext adminOnly="false" noUser="false" read="false" userLogged="only" write="false"/>
             <processing>
@@ -17,7 +17,7 @@
                        var conn = new Connexion();
                        var okButton = oForm.down('.dialogButtons input');
                        var backButton = new Element('img', {
-                            src:ajxpResourcesFolder+'/images/actions/22/back_22.png',
+                            src:resourcesFolder+'/images/actions/22/back_22.png',
                             style:'float: left;margin-top: 7px;margin-left: 4px;cursor: pointer;',
                             title:'Back'
                        }).observe('click', function(e){
@@ -102,7 +102,7 @@
                             });
                             params.set("DISPLAY", params.get("DRIVER_OPTION_DISPLAY"));
                             params.unset("DRIVER_OPTION_DISPLAY");
-                            params.unset("DRIVER_OPTION_DISPLAY_ajxptype");
+                            params.unset("DRIVER_OPTION_DISPLAY_apptype");
                             var conn = new Connexion();
                             conn.setParameters(params);
                             conn.onComplete = function(transport){
@@ -169,7 +169,7 @@
                     bmBar.addBookmarkObject = {
                         name:bmAction.getKeyedText(),
                         alt:bmAction.options.title,
-                        image:ajxpResourcesFolder+'/images/actions/16/bookmark_add.png',
+                        image:resourcesFolder+'/images/actions/16/bookmark_add.png',
                         icon_class:'icon-plus-sign',
                         callback:function(e){
                             var node = ajaxplorer.getContextNode();
@@ -211,7 +211,7 @@
         </action>
         <action name="custom_data_edit">
       			<gui text="442" title="443" src="edit_user.png" iconClass="icon-reorder" accessKey="" hasAccessKey="false">
-      				<context selection="false" dir="" recycle="true" actionBar="false" actionBarGroup="utils" contextMenu="false" infoPanel="false" ajxpWidgets="UserWidget::logging_string"></context>
+      				<context selection="false" dir="" recycle="true" actionBar="false" actionBarGroup="utils" contextMenu="false" infoPanel="false" appWidgets="UserWidget::logging_string"></context>
       			</gui>
                 <rightsContext adminOnly="false" noUser="false" read="false" userLogged="only" write="false"/>
             <processing>
@@ -302,7 +302,7 @@
 		</action>
 		<action name="webdav_preferences">
 			<gui text="403" title="403" src="drive_remote.png" iconClass="icon-cog" accessKey="" hasAccessKey="false">
-				<context selection="false" dir="" recycle="true" actionBar="false" actionBarGroup="utils" contextMenu="false" infoPanel="false" ajxpWidgets="UserWidget::logging_string"></context>
+				<context selection="false" dir="" recycle="true" actionBar="false" actionBarGroup="utils" contextMenu="false" infoPanel="false" appWidgets="UserWidget::logging_string"></context>
 			</gui>
             <rightsContext noUser="false" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
 			<processing>				
@@ -412,7 +412,7 @@
 		</action>
         <action name="switch_to_settings">
             <gui src="drive_remote.png" text="165" title="165" accessKey="settings_access_key" hasAccessKey="true" iconClass="icon-cogs" >
-                <context dir="false" recycle="true" selection="false" actionBar="true" actionBarGroup="utils" ajxpWidgets="UserWidget::logging_string"/>
+                <context dir="false" recycle="true" selection="false" actionBar="true" actionBarGroup="utils" appWidgets="UserWidget::logging_string"/>
             </gui>
             <rightsContext adminOnly="true" noUser="true" read="false" userLogged="only" write="false"/>
             <processing>
@@ -425,7 +425,7 @@
         </action>
         <action name="switch_to_shared_elements">
             <gui src="drive_remote.png" text="467" title="467" hasAccessKey="false" iconClass="icon-share" >
-                <context dir="false" recycle="true" selection="false" actionBar="false" actionBarGroup="utils" ajxpWidgets="UserWidget::logging_string"/>
+                <context dir="false" recycle="true" selection="false" actionBar="false" actionBarGroup="utils" appWidgets="UserWidget::logging_string"/>
             </gui>
             <rightsContext adminOnly="false" noUser="false" read="false" userLogged="only" write="false"/>
             <processing>

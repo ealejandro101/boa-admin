@@ -8,7 +8,7 @@
 					actionBar="true" actionBarGroup="inline,put" contextMenu="true" infoPanel="true">
 				</context>
 				<selectionContext dir="true" file="true" recycle="false"
-					unique="true" allowedMimes="ajxp_folder,BOA_MIMES_ZIP" behaviour="hidden">
+					unique="true" allowedMimes="boa_folder,BOA_MIMES_ZIP" behaviour="hidden">
 				</selectionContext>
 			</gui>
 			<rightsContext noUser="true" userLogged="only" read="true"
@@ -370,7 +370,7 @@
                 </processing>
         </action>
 		<action name="link">
-			<gui text="369" title="369" src="ajxp-link.png" iconClass="icon-link" hasAccessKey="false">
+			<gui text="369" title="369" src="app-link.png" iconClass="icon-link" hasAccessKey="false">
 				<context selection="true" dir="" recycle="false" actionBar="true" actionBarGroup="remote"
                          contextMenu="true" infoPanel="true"/>
 				<selectionContext dir="true" file="true" recycle="false" unique="true"/>
@@ -588,8 +588,8 @@
 						var getAction = oForm.select('input[name="get_action"]')[0];
 						getAction.value = 'copy';					
 						this.treeSelector = new TreeSelector(oForm, {
-                            nodeFilter : function(ajxpNode){
-                                return (!ajxpNode.isLeaf() && !ajxpNode.hasMetadataInBranch("readonly", "true"));
+                            nodeFilter : function(node){
+                                return (!node.isLeaf() && !node.hasMetadataInBranch("readonly", "true"));
                             }
                         });
 						if(!ajaxplorer.getUserSelection().hasDir() && user && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
@@ -657,14 +657,14 @@
 					var action = ajaxplorer.getActionBar().getActionByName("copy");
 					if(action){
 						action.rightsContext.write = true;
-						var ajxpUser = ajaxplorer.user;
-						if(ajxpUser && !ajxpUser.canWrite() && ajxpUser.canCrossRepositoryCopy() && ajxpUser.hasCrossRepositories()){
+						var user = ajaxplorer.user;
+						if(user && !user.canWrite() && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
 							action.rightsContext.write = false;
 							action.selectionContext.dir = false;
 							ajaxplorer.actionBar.defaultActions.unset('ctrldragndrop');
 							ajaxplorer.actionBar.defaultActions.unset('dragndrop');
 						}
-						if(ajxpUser && ajxpUser.canWrite() && ajaxplorer.getContextNode().hasAjxpMimeInBranch("browsable_archive")){
+						if(user && user.canWrite() && ajaxplorer.getContextNode().hasAjxpMimeInBranch("browsable_archive")){
 						    action.rightsContext.write = false;
 						}
 						if(ajaxplorer.getContextNode().hasAjxpMimeInBranch("browsable_archive")){
@@ -700,8 +700,8 @@
 						var getAction = oForm.select('input[name="get_action"]')[0];
 						getAction.value = 'move';
 						this.treeSelector = new TreeSelector(oForm, {
-						    nodeFilter : function(ajxpNode){
-                                return (!ajxpNode.isLeaf() && !ajxpNode.hasMetadataInBranch("readonly", "true"));
+						    nodeFilter : function(node){
+                                return (!node.isLeaf() && !node.hasMetadataInBranch("readonly", "true"));
                             }
 						});
 						this.treeSelector.load();
@@ -941,7 +941,7 @@
                 </div>
 				<div class="infoPanelAllMetadata">
 				    <div>
-                        <div class="panelHeader infoPanelGroup"><span class="icon-info" data-ajxpAction="no-action"></span> #{header_string}</div>
+                        <div class="panelHeader infoPanelGroup"><span class="icon-info" data-action="no-action"></span> #{header_string}</div>
                         <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
                             <tr>
                                 <td class="infoPanelLabel">#{name_string}</td>
@@ -976,7 +976,7 @@
                     </div>
 					<div class="infoPanelAllMetadata">
 					    <div>
-                            <div class="panelHeader infoPanelGroup"><span class="icon-info" data-ajxpAction="no-action"></span> #{header_string}</div>
+                            <div class="panelHeader infoPanelGroup"><span class="icon-info" data-action="no-action"></span> #{header_string}</div>
                             <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
                                 <tr>
                                     <td class="infoPanelLabel">#{name_string}</td>

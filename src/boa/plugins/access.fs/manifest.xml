@@ -37,5 +37,5 @@
             <serverCallback hookName="node.info" methodName="loadNodeInfo"/>
         </hooks>
 	</registry_contributions>
-    <class_stream_wrapper filename="access.fs/FsAccessWrapper.class.php" classname="BoA\Plugins\Access\Fs\FsAccessWrapper" protocol="ajxp.fs"/>
+    <class_stream_wrapper filename="access.fs/FsAccessWrapper.class.php" classname="BoA\Plugins\Access\Fs\FsAccessWrapper" protocol="app.fs"/>
 </coredriver>

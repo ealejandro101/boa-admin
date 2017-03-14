@@ -91,14 +91,14 @@ function triggerFlashEvent(){
 			break;
 			case "getProperty":
 				var pName = arguments[1];
-				var value = parent.getAjxpCookie(pName);
+				var value = parent.getAppCookie(pName);
 				if(!value) return null;
 				return (value == "true"?true:false);
 			break;
 			case "storeProperty":
 				var pName = arguments[1];
 				var pValue = arguments[2];
-				return parent.setAjxpCookie(pName, pValue);
+				return parent.setAppCookie(pName, pValue);
 			break;
 			default: 
 			break;

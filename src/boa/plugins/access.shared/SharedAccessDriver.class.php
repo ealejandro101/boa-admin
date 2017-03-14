@@ -33,7 +33,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * @package AjaXplorer_Plugins
  * @subpackage Access
- * @class ajxpSharedAccessDriver
+ * @class SharedAccessDriver
  * Plugin to access the shared elements of the current user
  */
 class SharedAccessDriver extends AbstractAccessDriver 

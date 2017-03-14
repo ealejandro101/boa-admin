@@ -195,7 +195,7 @@ Class.create("ActionsManager", {
 		var actions = $A([]);
 		this.actions.each(function(pair){
 			var action = pair.value;
-			if(action.context.ajxpWidgets && (action.context.ajxpWidgets.include(appClassName+'::'+widgetId)||action.context.ajxpWidgets.include(appClassName)) && !action.deny) actions.push(action);
+			if(action.context.appWidgets && (action.context.appWidgets.include(appClassName+'::'+widgetId)||action.context.appWidgets.include(appClassName)) && !action.deny) actions.push(action);
 		});
 		return actions;		
 	},
@@ -499,10 +499,10 @@ Class.create("ActionsManager", {
 					Connexion.SECURE_TOKEN = childs[i].getAttribute("secure_token");
 					var parts = window.appServerAccessPath.split("?secure_token");
 					window.appServerAccessPath = parts[0] + "?secure_token=" + Connexion.SECURE_TOKEN;
-					window._bootstrap.parameters.set('ajxpServerAccess', window.appServerAccessPath);
+					window._bootstrap.parameters.set('appServerAccess', window.appServerAccessPath);
 				}
-                if($("generic_dialog_box") && $("generic_dialog_box").down(".ajxp_login_error")){
-                    $("generic_dialog_box").down(".ajxp_login_error").remove();
+                if($("generic_dialog_box") && $("generic_dialog_box").down(".login_error")){
+                    $("generic_dialog_box").down(".login_error").remove();
                 }
 				var result = childs[i].getAttribute('value');
                 var errorId = false;
@@ -540,7 +540,7 @@ Class.create("ActionsManager", {
                 if(errorId){
                     error = true;
                     if($("generic_dialog_box") && $("generic_dialog_box").visible() && $("generic_dialog_box").down("div.dialogLegend")){
-                        $("generic_dialog_box").down("div.dialogLegend").insert({bottom:'<div class="ajxp_login_error" style="background-color: #D33131;display: block;font-size: 9px;color: white;border-radius: 3px;padding: 2px 6px;">'+MessageHash[errorId]+'</div>'});
+                        $("generic_dialog_box").down("div.dialogLegend").insert({bottom:'<div class="login_error" style="background-color: #D33131;display: block;font-size: 9px;color: white;border-radius: 3px;padding: 2px 6px;">'+MessageHash[errorId]+'</div>'});
                         $("generic_dialog_box").shake();
                     }else{
                         alert(MessageHash[errorId]);

@@ -79,7 +79,7 @@ Class.create("Repository", {
 			this.label = MessageHash[391];
 		}
 		this.id = id;
-		this.icon = ajxpResourcesFolder+'/images/actions/16/network-wired.png';
+		this.icon = resourcesFolder+'/images/actions/16/network-wired.png';
 		this.resourcesManager = new ResourcesManager();
 		if(xmlDef) this.loadFromXml(xmlDef);
 	},

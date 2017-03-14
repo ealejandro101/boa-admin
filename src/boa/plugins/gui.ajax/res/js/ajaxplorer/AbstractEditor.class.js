@@ -60,9 +60,9 @@ Class.create("AbstractEditor" , {
 		}, options || { });		
 		this.element =  $(oContainer);
 		this.defaultActions = new Hash({
-			'fs' : '<a id="fsButton" class="icon-resize-full"><img src="'+ajxpResourcesFolder+'/images/actions/22/window_fullscreen.png"  width="22" height="22" alt="" border="0"><br><span message_id="235"></span></a>',
-			'nofs' : '<a id="nofsButton" class="icon-resize-small" style="display:none;"><img src="'+ajxpResourcesFolder+'/images/actions/22/window_nofullscreen.png"  width="22" height="22" alt="" border="0"><br><span message_id="236"></span></a>',
-			'close':'<a id="closeButton" class="icon-remove-sign"><img src="'+ajxpResourcesFolder+'/images/actions/22/fileclose.png"  width="22" height="22" alt="" border="0"><br><span message_id="86"></span></a>'
+			'fs' : '<a id="fsButton" class="icon-resize-full"><img src="'+resourcesFolder+'/images/actions/22/window_fullscreen.png"  width="22" height="22" alt="" border="0"><br><span message_id="235"></span></a>',
+			'nofs' : '<a id="nofsButton" class="icon-resize-small" style="display:none;"><img src="'+resourcesFolder+'/images/actions/22/window_nofullscreen.png"  width="22" height="22" alt="" border="0"><br><span message_id="236"></span></a>',
+			'close':'<a id="closeButton" class="icon-remove-sign"><img src="'+resourcesFolder+'/images/actions/22/fileclose.png"  width="22" height="22" alt="" border="0"><br><span message_id="86"></span></a>'
 		});
         if(this.editorOptions.actions){
             this.defaultActions = $H(Object.extend(this.defaultActions._object, this.editorOptions.actions));
@@ -136,7 +136,7 @@ Class.create("AbstractEditor" , {
 				}
 				return true;
 			}.bind(this) );			
-			if(window.ajxpMobile){
+			if(window.isMobile){
 				// Make sure "Close" is the first.
 				this.actionBar.insert({top:this.actions.get("closeButton")});
 			}
@@ -343,7 +343,7 @@ Class.create("AbstractEditor" , {
 	setOnLoad : function(element){
         if(!element) element = this.element;
 		addLightboxMarkupToElement(element);
-		var img = new Element("img", {src: ajxpResourcesFolder+"/images/loadingImage.gif"});
+		var img = new Element("img", {src: resourcesFolder+"/images/loadingImage.gif"});
 		$(element).down("#element_overlay").insert(img);
 		this.loading = true;
 	},
@@ -359,13 +359,13 @@ Class.create("AbstractEditor" , {
 
 	/**
 	 * Called by the other components to create a preview (thumbnail) of a given node
-	 * @param ajxpNode AjxpNode The node to display
+	 * @param node AjxpNode The node to display
 	 * @param rich Boolean whether to display a rich content (flash, video, etc...) or not (image)
 	 * @returns Element
 	 */
-	getPreview : function(ajxpNode, rich){
+	getPreview : function(node, rich){
 		// Return icon if not overriden by derived classes
-		src = AbstractEditor.prototype.getThumbnailSource(ajxpNode);
+		src = AbstractEditor.prototype.getThumbnailSource(node);
 		imgObject = new Element("img", {src:src, width:64, height:64, align:'absmiddle', border:0});
 		imgObject.resizePreviewElement = function(dimensionObject){
 			dimensionObject.maxWidth = dimensionObject.maxHeight = 64;
@@ -384,11 +384,11 @@ Class.create("AbstractEditor" , {
 	
 	/**
 	 * Gets the standard thumbnail source for previewing the node
-	 * @param ajxpNode AjxpNode
+	 * @param node AjxpNode
 	 * @returns String
 	 */
-	getThumbnailSource : function(ajxpNode){
-		return resolveImageSource(ajxpNode.getIcon(), "/images/mimes/ICON_SIZE", 64);
+	getThumbnailSource : function(node){
+		return resolveImageSource(node.getIcon(), "/images/mimes/ICON_SIZE", 64);
 	}
 	
 });

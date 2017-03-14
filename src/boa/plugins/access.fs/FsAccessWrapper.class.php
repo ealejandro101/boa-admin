@@ -254,7 +254,7 @@ class FsAccessWrapper implements FileWrapper {
     /**
      * Opens the strem
      *
-     * @param String $path Maybe in the form "ajxp.fs://repositoryId/pathToFile" 
+     * @param String $path Maybe in the form "app.fs://repositoryId/pathToFile" 
      * @param String $mode
      * @param unknown_type $options
      * @param unknown_type $context

@@ -98,7 +98,7 @@ class TextLogDriver extends AbstractLogDriver {
 				$this->stackFlush();
 			}
 			if($create && $this->fileHandle !== false){
-				$mainLink = $this->storageDir."ajxp_access.log";
+				$mainLink = $this->storageDir."access.log";
 				if(file_exists($mainLink)){
 					@unlink($mainLink);
 				}
@@ -239,7 +239,7 @@ class TextLogDriver extends AbstractLogDriver {
 		$months = array();
 		if(($handle = opendir($this->storageDir))!==false){
 			while($file = readdir($handle)){
-				if($file == "index.html" || $file == "ajxp_access.log") continue;
+				if($file == "index.html" || $file == "access.log") continue;
 				$split = explode(".", $file);
 				if(!count($split) || $split[0] == "") continue;
 				$split2 = explode("_", $split[0]);

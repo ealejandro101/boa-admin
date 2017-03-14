@@ -46,7 +46,7 @@ Class.create("InfoPanel", AjxpPane, {
         if(options.replaceScroller){
             this.scrollbar = new Control.ScrollBar('ip_content_'+id,'ip_scroller_'+id, {fixed_scroll_distance:50});
         }
-        if(window.ajxpMobile){
+        if(window.isMobile){
             attachMobileScroll(container, "vertical");
         }
         
@@ -220,10 +220,10 @@ Class.create("InfoPanel", AjxpPane, {
                 this.evalTemplateForMime(pair.key, uniqNode);
             }
         }.bind(this));
-        this.contentContainer.select('[data-ajxpAction]').each(function(act){
-            if(act.getAttribute('data-ajxpAction') != 'no-action'){
+        this.contentContainer.select('[data-action]').each(function(act){
+            if(act.getAttribute('data-action') != 'no-action'){
                 act.observe('click', function(event){
-                    window.ajaxplorer.actionBar.fireAction(event.target.getAttribute('data-ajxpAction'));
+                    window.ajaxplorer.actionBar.fireAction(event.target.getAttribute('data-action'));
                 }.bind(this));
             }else{
                 act.setStyle({cursor:"default"});
@@ -232,7 +232,7 @@ Class.create("InfoPanel", AjxpPane, {
             this.contributePanelHeaderIcon(
                 act.getAttribute("class"),
                 act.getAttribute("title"),
-                act.getAttribute('data-ajxpAction'),
+                act.getAttribute('data-action'),
                 panelPointer
             );
         }.bind(this));
@@ -271,7 +271,7 @@ Class.create("InfoPanel", AjxpPane, {
         if(div) div.update("");
     },
 
-    contributePanelHeaderIcon:function(iconClass, iconTitle, ajxpAction, panelPointer){
+    contributePanelHeaderIcon:function(iconClass, iconTitle, action, panelPointer){
         if(!this.htmlElement || !this.htmlElement.down('div.panelHeader')) return;
         var div = this.htmlElement.down('div.folded_icons');
         if(!div) {
@@ -282,10 +282,10 @@ Class.create("InfoPanel", AjxpPane, {
         }
         var ic = new Element("span", {className:iconClass, title: iconTitle});
         div.insert(ic);
-        if(ajxpAction){
+        if(action){
             ic.addClassName('clickable');
             ic.observe("click", function(){
-                ajaxplorer.actionBar.fireAction(ajxpAction);
+                ajaxplorer.actionBar.fireAction(action);
             }.bind(this));
         }
         if(panelPointer){
@@ -448,12 +448,12 @@ Class.create("InfoPanel", AjxpPane, {
 	},
 	/**
 	 * Use editors extensions to find a preview element for the current node
-	 * @param ajxpNode AjxpNode
+	 * @param node AjxpNode
 	 * @param getTemplateElement Boolean If true, will return a fake div that can be inserted in template and replaced later
 	 * @returns String
 	 */
-	getPreviewElement : function(ajxpNode, getTemplateElement){
-		var editors = ajaxplorer.findEditorsForMime(ajxpNode.getMime(), true);
+	getPreviewElement : function(node, getTemplateElement){
+		var editors = ajaxplorer.findEditorsForMime(node.getMime(), true);
 		if(editors && editors.length)
 		{
 			ajaxplorer.loadEditorResources(editors[0].resourcesManager);
@@ -463,12 +463,12 @@ Class.create("InfoPanel", AjxpPane, {
 				if(getTemplateElement){
 					return '<div id="preview_rich_fake_element"></div>';
 				}else{
-					var element = editorClass.prototype.getPreview(ajxpNode, true);
+					var element = editorClass.prototype.getPreview(node, true);
 					return element;	
 				}
 			}
 		}
-		return '<img src="' + resolveImageSource(ajxpNode.getIcon(), '/images/mimes/ICON_SIZE',64) + '" height="64" width="64">';
+		return '<img src="' + resolveImageSource(node.getIcon(), '/images/mimes/ICON_SIZE',64) + '" height="64" width="64">';
 	},
 	/**
 	 * Parses config node

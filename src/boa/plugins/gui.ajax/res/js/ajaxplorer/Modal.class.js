@@ -70,7 +70,7 @@ Class.create("Modal", {
             }
             closeBtn = '<span id="modalCloseBtn" class="icon-remove-sign" style="cursor:pointer;float:right;"></span>';
         }else{
-            closeBtn = '<img id="modalCloseBtn" style="cursor:pointer;float:right;margin-top:2px;" src="'+ajxpResourcesFolder+'/images/actions/16/window_close.png" />';
+            closeBtn = '<img id="modalCloseBtn" style="cursor:pointer;float:right;margin-top:2px;" src="'+resourcesFolder+'/images/actions/16/window_close.png" />';
         }
 
         hString += sTitle + '</span>';
@@ -460,7 +460,7 @@ Class.create("Modal", {
 		var okButton = new Element('input', {
 			type:'image',
 			name:(bOkButtonOnly?'ok':'ok'),
-			src:ajxpResourcesFolder+'/images/actions/22/'+(bOkButtonOnly?'dialog_ok_apply':(useNextButton?'forward':'dialog_ok_apply'))+'.png',
+			src:resourcesFolder+'/images/actions/22/'+(bOkButtonOnly?'dialog_ok_apply':(useNextButton?'forward':'dialog_ok_apply'))+'.png',
 			height:22,
 			width:22,
 			title:MessageHash[48]});
@@ -474,7 +474,7 @@ Class.create("Modal", {
 				name:"can",
 				height:22,
 				width:22,
-				src:ajxpResourcesFolder+'/images/actions/22/dialog_close.png',
+				src:resourcesFolder+'/images/actions/22/dialog_close.png',
 				title:MessageHash[49],
 				className:"dialogButton"
 			});

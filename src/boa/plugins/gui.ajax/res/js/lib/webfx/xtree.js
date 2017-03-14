@@ -73,7 +73,7 @@ var	webFXTreeConfig = {
 		usePersistence	: false
 };
 Event.observe(document, 'boa:boot_loaded', function(){
-	var resourcesFolder = window.ajxpResourcesFolder;
+	var resourcesFolder = window.resourcesFolder;
 	webFXTreeConfig.rootIcon        = resourcesFolder+'/images/foldericon.png';
 	webFXTreeConfig.openRootIcon    = resourcesFolder+'/images/openfoldericon.png';
 	webFXTreeConfig.folderIcon      = resourcesFolder+'/images/foldericon.png';
@@ -208,9 +208,9 @@ WebFXTreeAbstractNode.prototype.add = function (node, bNoIdent) {
 			foo = foo.parentNode;
 		}
 		$(this.id + '-cont').insert(node.toString());
-		$(node.id).ajxpNode = node.ajxpNode;
+		$(node.id).node = node.node;
 		if(!node.inZip){
-			AjxpDroppables.add(node.id, node.ajxpNode);
+			AjxpDroppables.add(node.id, node.node);
 		}		
 		//new Draggable(node.id, {revert:true,ghosting:true,constraint:'vertical'});
 		if(webFXTreeHandler.contextMenu){
@@ -240,7 +240,7 @@ WebFXTreeAbstractNode.prototype.add = function (node, bNoIdent) {
 		}
 		if (!this.folder) { this.folder = true; this.collapse(true); }
 		if (!bNoIdent) { this.indent(); }
-		if (this.ajxpNode && this.ajxpNode.fake){
+		if (this.node && this.node.fake){
 			if(this.parentNode){
 				this.parentNode.expand();
 			}

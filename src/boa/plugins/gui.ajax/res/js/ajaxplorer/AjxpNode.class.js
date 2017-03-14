@@ -119,10 +119,10 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Set the node children as a bunch
-	 * @param ajxpNodes AjxpNodes[]
+	 * @param nodes AjxpNodes[]
 	 */
-	setChildren : function(ajxpNodes){
-		this._children = $A(ajxpNodes);
+	setChildren : function(nodes){
+		this._children = $A(nodes);
 		this._children.invoke('setParent', this);
 	},
 	/**
@@ -134,55 +134,55 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Adds a child to children
-	 * @param ajxpNode AjxpNode The child
+	 * @param node AjxpNode The child
 	 */
-	addChild : function(ajxpNode){
-		ajxpNode.setParent(this);
-		if(this._iNodeProvider) ajxpNode._iNodeProvider = this._iNodeProvider;
-        var existingNode = this.findChildByPath(ajxpNode.getPath());
+	addChild : function(node){
+		node.setParent(this);
+		if(this._iNodeProvider) node._iNodeProvider = this._iNodeProvider;
+        var existingNode = this.findChildByPath(node.getPath());
 		if(existingNode && !Object.isString(existingNode)){
-			existingNode.replaceBy(ajxpNode, "override");
+			existingNode.replaceBy(node, "override");
 		}else{			
-			this._children.push(ajxpNode);
-			this.notify("child_added", ajxpNode.getPath());
+			this._children.push(node);
+			this.notify("child_added", node.getPath());
 		}
 	},
 	/**
 	 * Removes the child from the children
-	 * @param ajxpNode AjxpNode
+	 * @param node AjxpNode
 	 */
-	removeChild : function(ajxpNode){
-		var removePath = ajxpNode.getPath();
-		ajxpNode.notify("node_removed");
-        ajxpNode._parentNode = null;
-		this._children = this._children.without(ajxpNode);
+	removeChild : function(node){
+		var removePath = node.getPath();
+		node.notify("node_removed");
+        node._parentNode = null;
+		this._children = this._children.without(node);
 		this.notify("child_removed", removePath);
 	},
 	/**
 	 * Replaces the current node by a new one. Copy all properties deeply
-	 * @param ajxpNode AjxpNode
+	 * @param node AjxpNode
 	 */
-	replaceBy : function(ajxpNode, metaMerge){
-		this._isLeaf = ajxpNode._isLeaf;
-        if(ajxpNode.getPath() && this._path != ajxpNode.getPath()){
-            this._path = ajxpNode.getPath();
+	replaceBy : function(node, metaMerge){
+		this._isLeaf = node._isLeaf;
+        if(node.getPath() && this._path != node.getPath()){
+            this._path = node.getPath();
         }
-		if(ajxpNode._label){
-			this._label = ajxpNode._label;
+		if(node._label){
+			this._label = node._label;
 		}
-		if(ajxpNode._icon){
-			this._icon = ajxpNode._icon;
+		if(node._icon){
+			this._icon = node._icon;
 		}
-		if(ajxpNode._iNodeProvider){
-			this._iNodeProvider = ajxpNode._iNodeProvider;
+		if(node._iNodeProvider){
+			this._iNodeProvider = node._iNodeProvider;
 		}
-		this._isRoot = ajxpNode._isRoot;
-		this._isLoaded = ajxpNode._isLoaded;
-		this.fake = ajxpNode.fake;
-		ajxpNode.getChildren().each(function(child){
+		this._isRoot = node._isRoot;
+		this._isLoaded = node._isLoaded;
+		this.fake = node.fake;
+		node.getChildren().each(function(child){
 			this.addChild(child);
 		}.bind(this) );		
-		var meta = ajxpNode.getMetadata();
+		var meta = node.getMetadata();
         if(metaMerge == "override") this._metadata = $H();
 		meta.each(function(pair){
             if(metaMerge == "override"){

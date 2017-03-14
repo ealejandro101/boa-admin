@@ -95,7 +95,7 @@
 		</action>		
 		<action name="pass_change">
 			<gui text="194" title="194" src="yast_security.png" iconClass="icon-key" accessKey="" hasAccessKey="false">
-				<context selection="false" dir="" recycle="true" actionBarGroup="utils" ajxpWidgets="UserWidget::logging_string"></context>
+				<context selection="false" dir="" recycle="true" actionBarGroup="utils" appWidgets="UserWidget::logging_string"></context>
 			</gui>
             <rightsContext adminOnly="false" noUser="false" read="false" userLogged="only" write="false"/>
             <processing>
@@ -199,7 +199,7 @@
 			<gui text="164" title="169" src="decrypted.png" iconClass="icon-signout"
 				accessKey="" hasAccessKey="false">
 				<context selection="false" dir="" recycle="false"
-					contextMenu="false" actionBar="true" actionBarGroup="minisite" ajxpWidgets="UserWidget::logging_string">
+					contextMenu="false" actionBar="true" actionBarGroup="minisite" appWidgets="UserWidget::logging_string">
 				</context>
 			</gui>
 			<rightsContext noUser="false" userLogged="only" guestLogged="hidden" read="false" write="false" adminOnly=""></rightsContext>			

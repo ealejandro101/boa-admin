@@ -20,7 +20,7 @@ Proto.Menu = Class.create({
 			pageOffset: 25,
 			topOffset:0,
 			leftOffset:0,
-			submenuArrow:ajxpResourcesFolder+'/images/arrow_right.png',
+			submenuArrow:resourcesFolder+'/images/arrow_right.png',
 			position:'bottom',
 			menuTitle:'',
 			fade: false,
@@ -216,8 +216,8 @@ Proto.Menu = Class.create({
                 });
             }else if(item.image){
                 if(!item.separator) img = new Element('img', {src:item.image,border:'0',height:16,width:16,align:'absmiddle'});
-            }else if(item.pFactory && item.ajxpNode){
-                img = item.pFactory.generateBasePreview(item.ajxpNode);
+            }else if(item.pFactory && item.node){
+                img = item.pFactory.generateBasePreview(item.node);
             }
 
             if(item.separator && item.menuTitle){
@@ -287,9 +287,9 @@ Proto.Menu = Class.create({
 				this.subMenus.push(newItem.subMenu);
 			}			
 			list.insert(newItem);
-            if(item.pFactory && item.ajxpNode && img){
+            if(item.pFactory && item.node && img){
                 newItem.IMAGE_ELEMENT = img;
-                item.pFactory.enrichBasePreview(item.ajxpNode, newItem);
+                item.pFactory.enrichBasePreview(item.node, newItem);
             }
 		}.bind(this));
 		this.container.insert(list);

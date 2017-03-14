@@ -78,7 +78,7 @@ class Controller{
 		$loggedUser = AuthService::getLoggedUser();
 		if($loggedUser == null) return false;
 		$crtRepo = ConfService::getRepository();
-		$crtRepoId = BOA_REPO_SCOPE_ALL; // "ajxp.all";
+		$crtRepoId = BOA_REPO_SCOPE_ALL; // "app.all";
 		if($crtRepo != null && is_a($crtRepo, "Repository")){
 			$crtRepoId = $crtRepo->getId();
 		}

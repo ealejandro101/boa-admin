@@ -67,7 +67,7 @@
         <xs:complexType mixed="true">
             <xs:attribute name="actionBar" type="xs:boolean"/>
             <xs:attribute name="actionBarGroup" type="xs:string"/>
-            <xs:attribute name="ajxpWidgets" type="xs:NMTOKEN"/>
+            <xs:attribute name="appWidgets" type="xs:NMTOKEN"/>
             <xs:attribute name="behaviour" type="xs:NCName"/>
             <xs:attribute name="contextMenu" type="xs:boolean"/>
             <xs:attribute name="dir" use="required"/>

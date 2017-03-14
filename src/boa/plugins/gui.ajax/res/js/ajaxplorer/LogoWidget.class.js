@@ -117,7 +117,7 @@ Class.create("LogoWidget", AjxpPane, {
 
         if(!configs.get('SKIP_BY_LOGO')){
             this.htmlElement.setStyle({
-                backgroundImage : 'url(' + window.ajxpResourcesFolder + '/images/white_by.png)',
+                backgroundImage : 'url(' + window.resourcesFolder + '/images/white_by.png)',
                 backgroundSize : '66px',
                 backgroundPosition : (imgW+10) + 'px '+ (htHeight - 14) +'px'
             });

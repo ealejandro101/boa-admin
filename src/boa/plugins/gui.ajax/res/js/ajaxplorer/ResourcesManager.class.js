@@ -141,7 +141,7 @@ Class.create("ResourcesManager", {
 		var cssNode = new Element('link', {
 			type : 'text/css',
 			rel  : 'stylesheet',
-			href : fileName+"?v="+window._bootstrap.parameters.get("ajxpVersion"),
+			href : fileName+"?v="+window._bootstrap.parameters.get("appVersion"),
 			media : 'screen'
 		});
 		head.insert(cssNode);

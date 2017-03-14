@@ -100,10 +100,10 @@ Class.create("AppBootstrap", {
                 Connexion.SECURE_TOKEN = this.parameters.get('SECURE_TOKEN');
             }
             if(this.parameters.get('SERVER_PREFIX_URI')){
-                this.parameters.set('ajxpResourcesFolder', this.parameters.get('SERVER_PREFIX_URI') + this.parameters.get('ajxpResourcesFolder'));
-                this.parameters.set('ajxpServerAccess', this.parameters.get('SERVER_PREFIX_URI') + this.parameters.get('ajxpServerAccess') + '?' + (Connexion.SECURE_TOKEN? 'secure_token='+Connexion.SECURE_TOKEN:''));
+                this.parameters.set('resourcesFolder', this.parameters.get('SERVER_PREFIX_URI') + this.parameters.get('resourcesFolder'));
+                this.parameters.set('appServerAccess', this.parameters.get('SERVER_PREFIX_URI') + this.parameters.get('appServerAccess') + '?' + (Connexion.SECURE_TOKEN? 'secure_token='+Connexion.SECURE_TOKEN:''));
             }else{
-                this.parameters.set('ajxpServerAccess', this.parameters.get('ajxpServerAccess') + '?' + (Connexion.SECURE_TOKEN? 'secure_token='+Connexion.SECURE_TOKEN:''));
+                this.parameters.set('appServerAccess', this.parameters.get('appServerAccess') + '?' + (Connexion.SECURE_TOKEN? 'secure_token='+Connexion.SECURE_TOKEN:''));
             }
             this.refreshContextVariablesAndInit(new Connexion());
             return;
@@ -142,10 +142,10 @@ Class.create("AppBootstrap", {
 				Connexion.SECURE_TOKEN = this.parameters.get('SECURE_TOKEN');
 			}
 			if(this.parameters.get('SERVER_PREFIX_URI')){
-				this.parameters.set('ajxpResourcesFolder', this.parameters.get('SERVER_PREFIX_URI') + this.parameters.get('ajxpResourcesFolder'));
-				this.parameters.set('ajxpServerAccess', this.parameters.get('SERVER_PREFIX_URI') + this.parameters.get('ajxpServerAccess') + '?' + (Connexion.SECURE_TOKEN? 'secure_token='+Connexion.SECURE_TOKEN:''));
+				this.parameters.set('resourcesFolder', this.parameters.get('SERVER_PREFIX_URI') + this.parameters.get('resourcesFolder'));
+				this.parameters.set('appServerAccess', this.parameters.get('SERVER_PREFIX_URI') + this.parameters.get('appServerAccess') + '?' + (Connexion.SECURE_TOKEN? 'secure_token='+Connexion.SECURE_TOKEN:''));
 			}else{
-				this.parameters.set('ajxpServerAccess', this.parameters.get('ajxpServerAccess') + '?' + (Connexion.SECURE_TOKEN? 'secure_token='+Connexion.SECURE_TOKEN:''));
+				this.parameters.set('appServerAccess', this.parameters.get('appServerAccess') + '?' + (Connexion.SECURE_TOKEN? 'secure_token='+Connexion.SECURE_TOKEN:''));
 			}
 			
 			this.refreshContextVariablesAndInit(connexion);
@@ -161,19 +161,19 @@ Class.create("AppBootstrap", {
 		}
 
 		// Refresh window variable
-		window.appServerAccessPath = this.parameters.get('ajxpServerAccess');
+		window.appServerAccessPath = this.parameters.get('appServerAccess');
 		var cssRes = this.parameters.get("cssResources");
 		if(cssRes) cssRes.each(this.loadCSSResource.bind(this));
-		if(this.parameters.get('ajxpResourcesFolder')){
-            connexion._libUrl = this.parameters.get('ajxpResourcesFolder') + "/js";
-			window.ajxpResourcesFolder = this.parameters.get('ajxpResourcesFolder') + "/themes/" + this.parameters.get("theme");
+		if(this.parameters.get('resourcesFolder')){
+            connexion._libUrl = this.parameters.get('resourcesFolder') + "/js";
+			window.resourcesFolder = this.parameters.get('resourcesFolder') + "/themes/" + this.parameters.get("theme");
 		}
 		if(this.parameters.get('additional_js_resource')){
-			connexion.loadLibrary(this.parameters.get('additional_js_resource?v='+this.parameters.get("ajxpVersion")));
+			connexion.loadLibrary(this.parameters.get('additional_js_resource?v='+this.parameters.get("appVersion")));
 		}
 		this.insertLoaderProgress();
 		if(!this.parameters.get("debugMode")){
-			connexion.loadLibrary("ajaxplorer.js?v="+this.parameters.get("ajxpVersion"));
+			connexion.loadLibrary("ajaxplorer.js?v="+this.parameters.get("appVersion"));
 		}
 		window.MessageHash = this.parameters.get("i18nMessages");
         if(!Object.keys(MessageHash).length){
@@ -189,7 +189,7 @@ Class.create("AppBootstrap", {
 		if(this.parameters.get("currentLanguage")){
 			window.ajaxplorer.currentLanguage = this.parameters.get("currentLanguage");
 		}
-		$('version_span').update(' - Version '+this.parameters.get("ajxpVersion") + ' - '+ this.parameters.get("ajxpVersionDate"));
+		$('version_span').update(' - Version '+this.parameters.get("appVersion") + ' - '+ this.parameters.get("appVersionDate"));
 		window.ajaxplorer.init();		
 	},
 	
@@ -206,11 +206,11 @@ Class.create("AppBootstrap", {
 				}
                 var src = scriptTag.src.replace('/js/ajaxplorer/AppBootstrap.class.js','').replace('/js/ajaxplorer_boot.js', '').replace('/js/ajaxplorer_boot_protolegacy.js', '');
                 if(src.indexOf("?")!=-1) src = src.split("?")[0];
-				this.parameters.set("ajxpResourcesFolder", src);
+				this.parameters.set("resourcesFolder", src);
 			}
 		}.bind(this) );
-		if(this.parameters.get("ajxpResourcesFolder")){
-			window.ajxpResourcesFolder = this.parameters.get("ajxpResourcesFolder");		
+		if(this.parameters.get("resourcesFolder")){
+			window.resourcesFolder = this.parameters.get("resourcesFolder");		
 		}else{
 			alert("Cannot find resource folder");
 		}
@@ -243,9 +243,9 @@ Class.create("AppBootstrap", {
             }
 			html+='	<div id="progressBox" class="dialogBox" style="width: 320px;display:block;top:30%;z-index:2002;left:40%;position: absolute;background-color: #fff;padding: 0;">';
 			html+='	<div align="left" class="dialogContent" style="color:#676965;font-family:Trebuchet MS,sans-serif;font-size:11px;font-weight:normal;left:10px;padding:10px;">';
-			var icon = customWording.icon || ajxpResourcesFolder+'/../../../AjxpLogo250.png';
+			var icon = customWording.icon || resourcesFolder+'/../../../AjxpLogo250.png';
             if(customWording.icon_binary_url){
-                icon = this.parameters.get("ajxpServerAccess") + "&" + customWording.icon_binary_url;
+                icon = this.parameters.get("appServerAccess") + "&" + customWording.icon_binary_url;
             }
 			var title = customWording.title || "AjaXplorer";
 			var iconWidth = customWording.iconWidth || '35px';
@@ -285,8 +285,8 @@ Class.create("AppBootstrap", {
 			animate		: true,										// Animate the progress? - default: true
 			showText	: false,									// show text with percentage in next to the progressbar? - default : true
 			width		: 154,										// Width of the progressbar - don't forget to adjust your image too!!!
-			boxImage	: window.ajxpResourcesFolder+'/images/progress_box.gif',			// boxImage : image around the progress bar
-			barImage	: window.ajxpResourcesFolder+'/images/progress_bar.gif',	// Image to use in the progressbar. Can be an array of images too.
+			boxImage	: window.resourcesFolder+'/images/progress_box.gif',			// boxImage : image around the progress bar
+			barImage	: window.resourcesFolder+'/images/progress_bar.gif',	// Image to use in the progressbar. Can be an array of images too.
 			height		: 11,										// Height of the progressbar - don't forget to adjust your image too!!!
 			onTick		: function(pbObj) { 
 				if(pbObj.getPercentage() == 100){
@@ -334,7 +334,7 @@ Class.create("AppBootstrap", {
 		var cssNode = new Element('link', {
 			type : 'text/css',
 			rel  : 'stylesheet',
-			href : this.parameters.get("ajxpResourcesFolder") + '/' + fileName,
+			href : this.parameters.get("resourcesFolder") + '/' + fileName,
 			media : 'screen'
 		});
 		head.insert(cssNode);

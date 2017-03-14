@@ -36,17 +36,17 @@ Class.create("PreviewFactory", {
         this.imagesHash = $H();
     },
 
-    generateBasePreview: function(ajxpNode){
-        return AbstractEditor.prototype.getPreview(ajxpNode);
+    generateBasePreview: function(node){
+        return AbstractEditor.prototype.getPreview(node);
     },
 
     setThumbSize : function(tSize){
         this._thumbSize = tSize;
     },
 
-    enrichBasePreview: function(ajxpNode, mainObject){
+    enrichBasePreview: function(node, mainObject){
 
-        var editors = ajaxplorer.findEditorsForMime((ajxpNode.isLeaf()?ajxpNode.getMime():"mime_folder"), true);
+        var editors = ajaxplorer.findEditorsForMime((node.isLeaf()?node.getMime():"mime_folder"), true);
 		if(editors && editors.length)
 		{
 			this._crtImageIndex ++;
@@ -60,7 +60,7 @@ Class.create("PreviewFactory", {
 			if(editorClass){
 				var oImageToLoad = {
 					index:"ajxp_image_"+crtIndex,
-					ajxpNode:ajxpNode,
+					node:node,
 					editorClass:editorClass,
 					mainObject:mainObject
 				};
@@ -87,7 +87,7 @@ Class.create("PreviewFactory", {
    			var loader = function(){
    				var img = oImageToLoad.mainObject.IMAGE_ELEMENT || $(oImageToLoad.index);
    				if(img == null || oImageToLoad.PFacLoader == null) return;
-   				var newImg = oImageToLoad.editorClass.prototype.getPreview(oImageToLoad.ajxpNode);
+   				var newImg = oImageToLoad.editorClass.prototype.getPreview(oImageToLoad.node);
    				newImg.setAttribute("data-is_loaded", "true");
    				img.parentNode.replaceChild(newImg, img);
    				oImageToLoad.mainObject.IMAGE_ELEMENT = newImg;
@@ -95,7 +95,7 @@ Class.create("PreviewFactory", {
                 oImageToLoad.PFacLoader = null;
    				this.loadNextImage();
    			}.bind(this);
-            oImageToLoad.PFacLoader.src = oImageToLoad.editorClass.prototype.getThumbnailSource(oImageToLoad.ajxpNode);
+            oImageToLoad.PFacLoader.src = oImageToLoad.editorClass.prototype.getThumbnailSource(oImageToLoad.node);
    			if(oImageToLoad.PFacLoader.readyState && oImageToLoad.PFacLoader.readyState == "complete"){
    				loader();
    			}else{
@@ -114,11 +114,11 @@ Class.create("PreviewFactory", {
 
         var imageLoader = new Image();
         imageLoader.editorClass = oImageToLoad.editorClass;
-        imageLoader.src = imageLoader.editorClass.prototype.getThumbnailSource(oImageToLoad.ajxpNode);
+        imageLoader.src = imageLoader.editorClass.prototype.getThumbnailSource(oImageToLoad.node);
         var loader = function(){
             var img = oImageToLoad.mainObject.IMAGE_ELEMENT || $(oImageToLoad.index);
             if(img == null || imageLoader == null) return;
-            var newImg = imageLoader.editorClass.prototype.getPreview(oImageToLoad.ajxpNode);
+            var newImg = imageLoader.editorClass.prototype.getPreview(oImageToLoad.node);
             newImg.setAttribute("data-is_loaded", "true");
             img.parentNode.replaceChild(newImg, img);
             oImageToLoad.mainObject.IMAGE_ELEMENT = newImg;

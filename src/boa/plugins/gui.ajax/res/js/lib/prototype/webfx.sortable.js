@@ -376,7 +376,7 @@ SortableTable = Class.create({
         if(this.tBody){
             rows = this.tBody.rows;
         }else if(this.container){
-            rows = this.container.select(".ajxpNodeProvider");
+            rows = this.container.select(".nodeProvider");
         }else{
             return [];
         }
@@ -409,9 +409,9 @@ SortableTable = Class.create({
             var attName = colDef['attributeName'];
             var stringValue;
             if(this._sortTypeInfo[sType].getNodeValue){
-                stringValue = this._sortTypeInfo[sType].getNodeValue(oRow.ajxpNode, attName);
+                stringValue = this._sortTypeInfo[sType].getNodeValue(oRow.node, attName);
             }else{
-                stringValue = oRow.ajxpNode.getMetadata().get(attName);
+                stringValue = oRow.node.getMetadata().get(attName);
             }
             return this.getValueFromString(stringValue);
         }

@@ -93,7 +93,7 @@ Class.create("RepositorySelect", {
 			'inlineBarButton', 
 			200, 
 			200, 
-			ajxpResourcesFolder + '/images/arrow_down.png', 
+			resourcesFolder + '/images/arrow_down.png', 
 			16,
 			'inline_hover', null, true);
 		this.button.setStyle({marginRight:'7px'});		
@@ -227,7 +227,7 @@ Class.create("RepositorySelect", {
                 position: (this.options.menuPosition? this.options.menuPosition : 'bottom'),
 				createAnchor:false,
 				anchorContainer:$('dir_chooser'),
-				anchorSrc:ajxpResourcesFolder+'/images/arrow_down.png',
+				anchorSrc:resourcesFolder+'/images/arrow_down.png',
 				anchorTitle:MessageHash[200],
 				topOffset:(this.options.menuOffsetTop !== undefined ? this.options.menuOffsetTop: 2),
 				leftOffset:(this.options.menuOffsetLeft !== undefined ? this.options.menuOffsetLeft: -127),
@@ -271,7 +271,7 @@ Class.create("RepositorySelect", {
 		var removeAction = {
 				name:MessageHash[423],
 				alt:MessageHash[423],
-				image:ajxpResourcesFolder+'/images/actions/16/delete_bookmark.png',
+				image:resourcesFolder+'/images/actions/16/delete_bookmark.png',
                 icon_class:'icon-remove',
 				disabled:false,
 				className:"edit",

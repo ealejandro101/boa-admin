@@ -66,28 +66,28 @@ Class.create("AjxpDataModel", {
 
 	/**
 	 * Changes the current context node.
-	 * @param ajxpNode AjxpNode Target node, either an existing one or a fake one containing the target part.
+	 * @param node AjxpNode Target node, either an existing one or a fake one containing the target part.
 	 * @param forceReload Boolean If set to true, the node will be reloaded even if already loaded.
 	 */
-	requireContextChange : function(ajxpNode, forceReload){
-        if(ajxpNode == null) return;
-		var path = ajxpNode.getPath();
-		if((path == "" || path == "/") && ajxpNode != this._rootNode){
-			ajxpNode = this._rootNode;
+	requireContextChange : function(node, forceReload){
+        if(node == null) return;
+		var path = node.getPath();
+		if((path == "" || path == "/") && node != this._rootNode){
+			node = this._rootNode;
 		}
-		if(ajxpNode.getMetadata().get('paginationData') && ajxpNode.getMetadata().get('paginationData').get('new_page') 
-			&& ajxpNode.getMetadata().get('paginationData').get('new_page') != ajxpNode.getMetadata().get('paginationData').get('current')){
-				var paginationPage = ajxpNode.getMetadata().get('paginationData').get('new_page');
+		if(node.getMetadata().get('paginationData') && node.getMetadata().get('paginationData').get('new_page') 
+			&& node.getMetadata().get('paginationData').get('new_page') != node.getMetadata().get('paginationData').get('current')){
+				var paginationPage = node.getMetadata().get('paginationData').get('new_page');
 				forceReload = true;			
 		}
-		if(ajxpNode != this._rootNode && (!ajxpNode.getParent() || ajxpNode.fake)){
+		if(node != this._rootNode && (!node.getParent() || node.fake)){
 			// Find in arbo or build fake arbo
 			var fakeNodes = [];
-			ajxpNode = ajxpNode.findInArbo(this._rootNode, fakeNodes);
+			node = node.findInArbo(this._rootNode, fakeNodes);
 			if(fakeNodes.length){
 				var firstFake = fakeNodes.shift();
 				firstFake.observeOnce("first_load", function(e){					
-					this.requireContextChange(ajxpNode);
+					this.requireContextChange(node);
 				}.bind(this));
 				firstFake.observeOnce("error", function(message){
 					ajaxplorer.displayMessage("ERROR", message);
@@ -102,24 +102,24 @@ Class.create("AjxpDataModel", {
 				return;
 			}
 		}		
-		ajxpNode.observeOnce("loaded", function(){
-			this.setContextNode(ajxpNode, true);			
+		node.observeOnce("loaded", function(){
+			this.setContextNode(node, true);			
 			this.publish("context_loaded");
             if(this.getPendingSelection()){
-                var selPath = ajxpNode.getPath() + (ajxpNode.getPath() == "/" ? "" : "/" ) +this.getPendingSelection();
-                var selNode =  ajxpNode.findChildByPath(selPath);
+                var selPath = node.getPath() + (node.getPath() == "/" ? "" : "/" ) +this.getPendingSelection();
+                var selNode =  node.findChildByPath(selPath);
                 if(selNode) {
                     this.setSelectedNodes([selNode], this);
                 }else{
-                    if(ajxpNode.getMetadata().get("paginationData") && arguments.length < 3){
+                    if(node.getMetadata().get("paginationData") && arguments.length < 3){
                         var newPage;
-                        var currentPage = ajxpNode.getMetadata().get("current");
+                        var currentPage = node.getMetadata().get("current");
                         this.loadPathInfoSync(selPath, function(foundNode){
                             newPage = foundNode.getMetadata().get("page_position");
                         });
                         if(newPage && newPage != currentPage){
-                            ajxpNode.getMetadata().get("paginationData").set("new_page", newPage);
-                            this.requireContextChange(ajxpNode, true, true);
+                            node.getMetadata().get("paginationData").set("new_page", newPage);
+                            this.requireContextChange(node, true, true);
                             return;
                         }
                     }
@@ -127,7 +127,7 @@ Class.create("AjxpDataModel", {
                 this.clearPendingSelection();
             }
 		}.bind(this));
-		ajxpNode.observeOnce("error", function(message){
+		node.observeOnce("error", function(message){
 			ajaxplorer.displayMessage("ERROR", message);
 			this.publish("context_loaded");
 		}.bind(this));
@@ -135,11 +135,11 @@ Class.create("AjxpDataModel", {
 		try{
 			if(forceReload){
 				if(paginationPage){
-					ajxpNode.getMetadata().get('paginationData').set('current', paginationPage);
+					node.getMetadata().get('paginationData').set('current', paginationPage);
 				}
-				ajxpNode.reload(this._iAjxpNodeProvider);
+				node.reload(this._iAjxpNodeProvider);
 			}else{
-				ajxpNode.load(this._iAjxpNodeProvider);
+				node.load(this._iAjxpNodeProvider);
 			}
 		}catch(e){
 			this.publish("context_loaded");
@@ -198,16 +198,16 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Sets the current context node
-	 * @param ajxpDataNode AjxpNode
+	 * @param dataNode AjxpNode
 	 * @param forceEvent Boolean If set to true, event will be triggered even if the current node is already the same.
 	 */
-	setContextNode : function(ajxpDataNode, forceEvent){
-		if(this._contextNode && this._contextNode == ajxpDataNode && this._currentRep  == ajxpDataNode.getPath() && !forceEvent){
+	setContextNode : function(dataNode, forceEvent){
+		if(this._contextNode && this._contextNode == dataNode && this._currentRep  == dataNode.getPath() && !forceEvent){
 			return; // No changes
 		}
-		this._contextNode = ajxpDataNode;
-		this._currentRep = ajxpDataNode.getPath();
-        this.publish("context_changed", ajxpDataNode);
+		this._contextNode = dataNode;
+		this._currentRep = dataNode.getPath();
+        this.publish("context_changed", dataNode);
 	},
 
     /**
@@ -333,25 +333,25 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Set an array of nodes as the current selection
-	 * @param ajxpDataNodes AjxpNode[] The nodes to select
+	 * @param dataNodes AjxpNode[] The nodes to select
 	 * @param source String The source of this selection action
 	 */
-	setSelectedNodes : function(ajxpDataNodes, source){
+	setSelectedNodes : function(dataNodes, source){
 		if(!source){
 			this._selectionSource = {};
 		}else{
 			this._selectionSource = source;
 		}
-        ajxpDataNodes = $A(ajxpDataNodes).without(this._rootNode);
-		this._selectedNodes = $A(ajxpDataNodes);
-		this._bEmpty = ((ajxpDataNodes && ajxpDataNodes.length)?false:true);
+        dataNodes = $A(dataNodes).without(this._rootNode);
+		this._selectedNodes = $A(dataNodes);
+		this._bEmpty = ((dataNodes && dataNodes.length)?false:true);
 		this._bFile = this._bDir = this._isRecycle = false;
 		if(!this._bEmpty)
 		{
-			this._bUnique = ((ajxpDataNodes.length == 1)?true:false);
-			for(var i=0; i<ajxpDataNodes.length; i++)
+			this._bUnique = ((dataNodes.length == 1)?true:false);
+			for(var i=0; i<dataNodes.length; i++)
 			{
-				var selectedNode = ajxpDataNodes[i];
+				var selectedNode = dataNodes[i];
 				if(selectedNode.isLeaf()) this._bFile = true;
 				else this._bDir = true;
 				if(selectedNode.isRecycle()) this._isRecycle = true;

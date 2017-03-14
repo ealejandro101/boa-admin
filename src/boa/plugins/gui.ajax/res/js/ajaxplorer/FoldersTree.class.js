@@ -60,11 +60,11 @@ Class.create("FoldersTree", AjxpPane, {
 		var action = function(e){
 			if(!ajaxplorer) return;
 			ajaxplorer.focusOn(thisObject);
-			if(this.ajxpNode){
-                if(ajaxplorer.getUserSelection().getContextNode() != this.ajxpNode){
-                    ajaxplorer.actionBar.fireDefaultAction("dir", this.ajxpNode);
+			if(this.node){
+                if(ajaxplorer.getUserSelection().getContextNode() != this.node){
+                    ajaxplorer.actionBar.fireDefaultAction("dir", this.node);
                 }
-                ajaxplorer.getUserSelection().setSelectedNodes([this.ajxpNode], thisObject);
+                ajaxplorer.getUserSelection().setSelectedNodes([this.node], thisObject);
 			}
 		};
 		
@@ -74,13 +74,13 @@ Class.create("FoldersTree", AjxpPane, {
 		this.tree = new AJXPTree(fakeRootNode,  action, filter);		
 				
 		this.treeContainer.update(this.tree.toString());
-		$(this.tree.id).ajxpNode = this.tree.ajxpNode;	
+		$(this.tree.id).node = this.tree.node;	
 		$(this.tree.id).observe("click", function(e){
 			this.action(e);
 			Event.stop(e);
 		}.bind(this.tree));
 
-		AjxpDroppables.add(this.tree.id, this.tree.ajxpNode);
+		AjxpDroppables.add(this.tree.id, this.tree.node);
 		if(!this.tree.open && !this.tree.loading) {
 			this.tree.toggle();		
 		}
@@ -149,8 +149,8 @@ Class.create("FoldersTree", AjxpPane, {
 		var d = (displayOptions.indexOf("d") > -1);
 		var z = (displayOptions.indexOf("z") > -1);
 		var f = (displayOptions.indexOf("f") > -1);
-		var filter = function(ajxpNode){
-			return (((d && !ajxpNode.isLeaf()) || (f && ajxpNode.isLeaf()) || (z && (ajxpNode.getMime()=="zip" || ajxpNode.getMime()=="browsable_archive"))) && (ajxpNode.getParent().getMime() != "recycle"));
+		var filter = function(node){
+			return (((d && !node.isLeaf()) || (f && node.isLeaf()) || (z && (node.getMime()=="zip" || node.getMime()=="browsable_archive"))) && (node.getParent().getMime() != "recycle"));
 		};
 		return filter;		
 	},
@@ -162,8 +162,8 @@ Class.create("FoldersTree", AjxpPane, {
 		if(webFXTreeHandler.selected)
 		{
 			webFXTreeHandler.selected.focus();
-            if(webFXTreeHandler.selected.ajxpNode){
-                ajaxplorer.getUserSelection().setSelectedNodes([webFXTreeHandler.selected.ajxpNode], this);
+            if(webFXTreeHandler.selected.node){
+                ajaxplorer.getUserSelection().setSelectedNodes([webFXTreeHandler.selected.node], this);
             }
 		}
 		webFXTreeHandler.setFocus(true);
@@ -223,7 +223,7 @@ Class.create("FoldersTree", AjxpPane, {
 	 */
 	getNodeByPath : function(path){
 		for(var key in webFXTreeHandler.all){
-			if(webFXTreeHandler.all[key] && webFXTreeHandler.all[key].ajxpNode && webFXTreeHandler.all[key].ajxpNode.getPath() == path){
+			if(webFXTreeHandler.all[key] && webFXTreeHandler.all[key].node && webFXTreeHandler.all[key].node.getPath() == path){
 				return webFXTreeHandler.all[key];
 			}
 		}
@@ -317,7 +317,7 @@ Class.create("FoldersTree", AjxpPane, {
 
    		var pos = posSpan.cumulativeOffset();
    		var text = span.innerHTML;
-   		var edit = new Element('input', {value:item.ajxpNode.getLabel('text'), id:'editbox'}).setStyle({
+   		var edit = new Element('input', {value:item.node.getLabel('text'), id:'editbox'}).setStyle({
    			zIndex:5000,
    			position:'absolute',
    			marginLeft:'0px',
@@ -353,7 +353,7 @@ Class.create("FoldersTree", AjxpPane, {
    			var newValue = edit.getValue();
    			hideLightBox();
    			modal.close();
-   			callback(item.ajxpNode, newValue);
+   			callback(item.node, newValue);
    		};
    		edit.observe("keydown", function(event){
    			if(event.keyCode == Event.KEY_RETURN){

@@ -740,7 +740,7 @@ Class.create("FilesList", SelectableElements, {
 				this.headerMenu.destroy();
 				delete this.headerMenu;
 			}
-			var buffer = '<div class="panelHeader"><div style="float:right;padding-right:5px;font-size:1px;height:16px;"><input type="image" height="16" width="16" src="'+ajxpResourcesFolder+'/images/actions/16/zoom-in.png" id="slider-input-1" style="border:0px;width:16px;height:16px;margin-top:0px;padding:0px;" value="64"/></div>'+MessageHash[126]+'</div>';
+			var buffer = '<div class="panelHeader"><div style="float:right;padding-right:5px;font-size:1px;height:16px;"><input type="image" height="16" width="16" src="'+resourcesFolder+'/images/actions/16/zoom-in.png" id="slider-input-1" style="border:0px;width:16px;height:16px;margin-top:0px;padding:0px;" value="64"/></div>'+MessageHash[126]+'</div>';
 			buffer += '<div id="selectable_div-'+this.__currentInstanceIndex+'" class="selectable_div'+(this._displayMode == "detail" ? ' detailed':'')+'" style="overflow:auto;">';
 			this.htmlElement.update(buffer);
 			attachMobileScroll(this.htmlElement.down(".selectable_div"), "vertical");
@@ -1052,7 +1052,7 @@ Class.create("FilesList", SelectableElements, {
 				this._headerResizer.resize(this.htmlElement.getWidth()-2);
 			}
 		}
-		if(this.protoMenu)this.protoMenu.addElements('.ajxp_draggable');
+		if(this.protoMenu)this.protoMenu.addElements('.draggable');
 		var allItems = this.getItems();
 		for(var i=0; i<allItems.length;i++)
 		{
@@ -1084,7 +1084,7 @@ Class.create("FilesList", SelectableElements, {
     empty : function(skipFireChange){
         this._previewFactory.clear();
         if(this.protoMenu){
-            this.protoMenu.removeElements('.ajxp_draggable');
+            this.protoMenu.removeElements('.draggable');
             this.protoMenu.removeElements('.selectable_div');
         }
         for(var i = 0; i< AllAjxpDroppables.length;i++){
@@ -1119,25 +1119,25 @@ Class.create("FilesList", SelectableElements, {
         this.removeCurrentLines(skipFireChange);
     },
 
-    makeItemRefreshObserver: function (ajxpNode, item, renderer){
+    makeItemRefreshObserver: function (node, item, renderer){
         return function(){
             //try{
-                if(item.ajxpNode) {
-                    if(item.REMOVE_OBS) item.ajxpNode.stopObserving("node_removed", item.REMOVE_OBS);
-                    if(item.REPLACE_OBS) item.ajxpNode.stopObserving("node_replaced", item.REPLACE_OBS);
+                if(item.node) {
+                    if(item.REMOVE_OBS) item.node.stopObserving("node_removed", item.REMOVE_OBS);
+                    if(item.REPLACE_OBS) item.node.stopObserving("node_replaced", item.REPLACE_OBS);
                 }
                 if(!item.parentNode){
                     return;
                 }
-                var newItem = renderer(ajxpNode, item);
+                var newItem = renderer(node, item);
                 item.insert({before: newItem});
                 item.remove();
-                newItem.ajxpNode = ajxpNode;
+                newItem.node = node;
                 this.initRows();
-                item.ajxpNode = null;
+                item.node = null;
                 delete item;
-                newItem.REPLACE_OBS = this.makeItemRefreshObserver(ajxpNode, newItem, renderer);
-                ajxpNode.observe("node_replaced", newItem.REPLACE_OBS);
+                newItem.REPLACE_OBS = this.makeItemRefreshObserver(node, newItem, renderer);
+                node.observe("node_replaced", newItem.REPLACE_OBS);
                 var dm = (this._dataModel?this._dataModel:ajaxplorer.getContextHolder());
                 if(dm.getSelectedNodes() && dm.getSelectedNodes().length)
                 {
@@ -1158,19 +1158,19 @@ Class.create("FilesList", SelectableElements, {
         }.bind(this);
     },
 
-    makeItemRemovedObserver: function (ajxpNode, item){
+    makeItemRemovedObserver: function (node, item){
         return function(){
             try{
                 if(this.loading) return;
                 this.setItemSelected(item, false);
-                if(item.ajxpNode) {
-                    if(item.REMOVE_OBS) item.ajxpNode.stopObserving("node_removed", item.REMOVE_OBS);
-                    if(item.REPLACE_OBS) item.ajxpNode.stopObserving("node_replaced", item.REPLACE_OBS);
+                if(item.node) {
+                    if(item.REMOVE_OBS) item.node.stopObserving("node_removed", item.REMOVE_OBS);
+                    if(item.REPLACE_OBS) item.node.stopObserving("node_replaced", item.REPLACE_OBS);
                     if(!item.parentNode){
-                        item =  this.htmlElement.down('[id="'+item.ajxpNode.getPath()+'"]');
+                        item =  this.htmlElement.down('[id="'+item.node.getPath()+'"]');
                     }
                 }
-                item.ajxpNode = null;
+                item.node = null;
                 new Effect.Fade(item, {afterFinish:function(){
                     try{item.remove();}catch(e){}
                     delete item;
@@ -1191,13 +1191,13 @@ Class.create("FilesList", SelectableElements, {
     childAddedToContext : function(childPath){
 
         if(this.loading) return;
-        var renderer = this.getRenderer(); //(this._displayMode == "list"?this.ajxpNodeToTableRow.bind(this):this.ajxpNodeToDiv.bind(this));
+        var renderer = this.getRenderer(); //(this._displayMode == "list"?this.nodeToTableRow.bind(this):this.nodeToDiv.bind(this));
         var child = this.crtContext.findChildByPath(childPath);
         if(!child) return;
         var newItem;
         newItem = renderer(child);
-        newItem.ajxpNode = child;
-        newItem.addClassName("ajxpNodeProvider");
+        newItem.node = child;
+        newItem.addClassName("nodeProvider");
         newItem.REPLACE_OBS = this.makeItemRefreshObserver(child, newItem, renderer);
         newItem.REMOVE_OBS = this.makeItemRemovedObserver(child, newItem);
         child.observe("node_replaced", newItem.REPLACE_OBS);
@@ -1218,7 +1218,7 @@ Class.create("FilesList", SelectableElements, {
                     if(sortCache[i].element == newItem){
                         if(i == 0) $(newItem.parentNode).insert({top:newItem});
                         else {
-                            if(sortCache[i-1].element.ajxpNode.getPath() == newItem.ajxpNode.getPath()){
+                            if(sortCache[i-1].element.node.getPath() == newItem.node.getPath()){
                                 $(newItem.parentNode).remove(newItem);
                                 break;
                             }
@@ -1236,9 +1236,9 @@ Class.create("FilesList", SelectableElements, {
     },
 
     getRenderer : function(){
-        if(this._displayMode == "thumb") return this.ajxpNodeToDiv.bind(this);
-        else if(this._displayMode == "detail") return this.ajxpNodeToLargeDiv.bind(this);
-        else if(this._displayMode == "list") return this.ajxpNodeToTableRow.bind(this);
+        if(this._displayMode == "thumb") return this.nodeToDiv.bind(this);
+        else if(this._displayMode == "detail") return this.nodeToLargeDiv.bind(this);
+        else if(this._displayMode == "list") return this.nodeToTableRow.bind(this);
     },
 
 	/**
@@ -1281,14 +1281,14 @@ Class.create("FilesList", SelectableElements, {
 		// NOW PARSE LINES
 		this.parsingCache = new Hash();		
 		var children = contextNode.getChildren();
-        var renderer = this.getRenderer();// (this._displayMode == "list"?this.ajxpNodeToTableRow.bind(this):this.ajxpNodeToDiv.bind(this));
+        var renderer = this.getRenderer();// (this._displayMode == "list"?this.nodeToTableRow.bind(this):this.nodeToDiv.bind(this));
 		for (var i = 0; i < children.length ; i++) 
 		{
 			var child = children[i];
 			var newItem;
             newItem = renderer(child);
-			newItem.ajxpNode = child;
-            newItem.addClassName("ajxpNodeProvider");
+			newItem.node = child;
+            newItem.addClassName("nodeProvider");
             newItem.REPLACE_OBS = this.makeItemRefreshObserver(child, newItem, renderer);
             newItem.REMOVE_OBS = this.makeItemRemovedObserver(child, newItem);
             child.observe("node_replaced", newItem.REPLACE_OBS);
@@ -1362,7 +1362,7 @@ Class.create("FilesList", SelectableElements, {
         }
 		var pos = posSpan.cumulativeOffset();
 		var text = span.innerHTML;
-		var edit = new Element('input', {value:item.ajxpNode.getLabel('text'), id:'editbox'}).setStyle({
+		var edit = new Element('input', {value:item.node.getLabel('text'), id:'editbox'}).setStyle({
 			zIndex:5000, 
 			position:'absolute',
 			marginLeft:'0px',
@@ -1399,7 +1399,7 @@ Class.create("FilesList", SelectableElements, {
 			var newValue = edit.getValue();
 			hideLightBox();
 			modal.close();			
-			callback(item.ajxpNode, newValue);
+			callback(item.node, newValue);
 		};
 		edit.observe("keydown", function(event){
 			if(event.keyCode == Event.KEY_RETURN){				
@@ -1449,13 +1449,13 @@ Class.create("FilesList", SelectableElements, {
 	
 	/**
 	 * Populate a node as a TR element
-	 * @param ajxpNode AjxpNode
+	 * @param node AjxpNode
      * @param HTMLElement replaceItem
 	 * @returns HTMLElement
 	 */
-	ajxpNodeToTableRow: function(ajxpNode, replaceItem){
-		var metaData = ajxpNode.getMetadata();
-		var newRow = new Element("tr", {id:slugString(ajxpNode.getPath())});
+	nodeToTableRow: function(node, replaceItem){
+		var metaData = node.getMetadata();
+		var newRow = new Element("tr", {id:slugString(node.getPath())});
 		var tBody = this.parsingCache.get('tBody') || $(this._htmlElement).select("tbody")[0];
 		this.parsingCache.set('tBody', tBody);
 		metaData.each(function(pair){
@@ -1526,13 +1526,13 @@ Class.create("FilesList", SelectableElements, {
 					style:"cursor:default;display:block;"
 				}).update(textLabel);
 
-				innerSpan.ajxpNode = ajxpNode; // For draggable
+				innerSpan.node = node; // For draggable
 				tableCell.insert(innerSpan);
 				
 				// Defer Drag'n'drop assignation for performances
                 if(this.options.draggable == undefined || this.options.draggable === true){
                     window.setTimeout(function(){
-                        if(ajxpNode.getMime() != "recycle"){
+                        if(node.getMime() != "recycle"){
                             var newDrag = new AjxpDraggable(
                                 innerSpan,
                                 {
@@ -1546,9 +1546,9 @@ Class.create("FilesList", SelectableElements, {
                             );
                             if(this.protoMenu) this.protoMenu.addElements(innerSpan);
                         }
-                        if(!ajxpNode.isLeaf())
+                        if(!node.isLeaf())
                         {
-                            AjxpDroppables.add(innerSpan, ajxpNode);
+                            AjxpDroppables.add(innerSpan, node);
                         }
                     }.bind(this), 500);
                 }
@@ -1581,7 +1581,7 @@ Class.create("FilesList", SelectableElements, {
 			newRow.appendChild(tableCell);
 			if(attributeList.get(s).modifier){
 				var modifier = eval(attributeList.get(s).modifier);
-				modifier(tableCell, ajxpNode, 'row');
+				modifier(tableCell, node, 'row');
 			}
 		}
         // test hidden modifiers
@@ -1602,7 +1602,7 @@ Class.create("FilesList", SelectableElements, {
             this.parsingCache.set("hiddenModifiers", hiddenModifiers);
         }
         hiddenModifiers.each(function(mod){
-            mod(null,ajxpNode,'row', newRow);
+            mod(null,node,'row', newRow);
         });
 		tBody.appendChild(newRow);
         if(!replaceItem){
@@ -1614,7 +1614,7 @@ Class.create("FilesList", SelectableElements, {
             if(replaceItem.hasClassName('even')) $(newRow).addClassName('even');
         }
 
-        this.addInlineToolbar(textLabel ? textLabel : tableCell, ajxpNode);
+        this.addInlineToolbar(textLabel ? textLabel : tableCell, node);
 
 
         return newRow;
@@ -1622,20 +1622,20 @@ Class.create("FilesList", SelectableElements, {
 	
 	/**
 	 * Populates a node as a thumbnail div
-	 * @param ajxpNode AjxpNode
+	 * @param node AjxpNode
 	 * @returns HTMLElement
 	 */
-	ajxpNodeToDiv: function(ajxpNode){
+	nodeToDiv: function(node){
 		var newRow = new Element('div', {
             className:"thumbnail_selectable_cell",
-            id:slugString(ajxpNode.getPath())});
-		var metadata = ajxpNode.getMetadata();
+            id:slugString(node.getPath())});
+		var metadata = node.getMetadata();
 				
 		var innerSpan = new Element('span', {style:"cursor:default;"});
 
-        var img = this._previewFactory.generateBasePreview(ajxpNode);
+        var img = this._previewFactory.generateBasePreview(node);
 
-        var textNode = ajxpNode.getLabel();
+        var textNode = node.getLabel();
 		var label = new Element('div', {
 			className:"thumbLabel",
 			title:textNode
@@ -1646,9 +1646,9 @@ Class.create("FilesList", SelectableElements, {
 		newRow.insert({"bottom": innerSpan});
 		newRow.IMAGE_ELEMENT = img;
 		newRow.LABEL_ELEMENT = label;
-        if(ajxpNode.getMetadata().get("overlay_icon")){
+        if(node.getMetadata().get("overlay_icon")){
             var ovDiv = new Element("div");
-            var ovIcs = $A(ajxpNode.getMetadata().get("overlay_icon").split(","));
+            var ovIcs = $A(node.getMetadata().get("overlay_icon").split(","));
             var bgPos = $A();
             var bgImg = $A();
             var bgRep = $A();
@@ -1691,13 +1691,13 @@ Class.create("FilesList", SelectableElements, {
 			modifiers = this.parsingCache.get('modifiers');
 		}
 		modifiers.each(function(el){
-			el(newRow, ajxpNode, 'thumb');
+			el(newRow, node, 'thumb');
 		});
 
-        this._previewFactory.enrichBasePreview(ajxpNode, newRow);
+        this._previewFactory.enrichBasePreview(node, newRow);
 		
 		// Defer Drag'n'drop assignation for performances
-		if(!ajxpNode.isRecycle()){
+		if(!node.isRecycle()){
 			window.setTimeout(function(){
 				var newDrag = new AjxpDraggable(newRow, {
 					revert:true,
@@ -1707,37 +1707,37 @@ Class.create("FilesList", SelectableElements, {
 				}, this, 'filesList');
 			}.bind(this), 500);
 		}
-		if(!ajxpNode.isLeaf())
+		if(!node.isLeaf())
 		{
-			AjxpDroppables.add(newRow, ajxpNode);
+			AjxpDroppables.add(newRow, node);
 		}
 
-        this.addInlineToolbar(newRow, ajxpNode);
+        this.addInlineToolbar(newRow, node);
 
         return newRow;
 	},
 		
 	/**
 	 * Populates a node as a thumbnail div
-	 * @param ajxpNode AjxpNode
+	 * @param node AjxpNode
 	 * @returns HTMLElement
 	 */
-	ajxpNodeToLargeDiv: function(ajxpNode){
+	nodeToLargeDiv: function(node){
 
         var largeRow = new Element('div', {
             className:"thumbnail_selectable_cell detailed",
-            id:slugString(ajxpNode.getPath())+"-cont"
+            id:slugString(node.getPath())+"-cont"
         });
         var metadataDiv = new Element("div", {className:"thumbnail_cell_metadata"});
 
-        var newRow = new Element('div', {className:"thumbnail_selectable_cell", id:ajxpNode.getPath()});
-		var metaData = ajxpNode.getMetadata();
+        var newRow = new Element('div', {className:"thumbnail_selectable_cell", id:node.getPath()});
+		var metaData = node.getMetadata();
 
 		var innerSpan = new Element('span', {style:"cursor:default;"});
 
-        var img = this._previewFactory.generateBasePreview(ajxpNode);
+        var img = this._previewFactory.generateBasePreview(node);
 
-        var textNode = ajxpNode.getLabel();
+        var textNode = node.getLabel();
 		var label = new Element('div', {
 			className:"thumbLabel",
 			title:textNode
@@ -1748,9 +1748,9 @@ Class.create("FilesList", SelectableElements, {
 		newRow.insert({"bottom": innerSpan});
 		newRow.IMAGE_ELEMENT = img;
 		newRow.LABEL_ELEMENT = label;
-        if(ajxpNode.getMetadata().get("overlay_icon")){
+        if(node.getMetadata().get("overlay_icon")){
             var ovDiv = new Element("div");
-            var ovIcs = $A(ajxpNode.getMetadata().get("overlay_icon").split(","));
+            var ovIcs = $A(node.getMetadata().get("overlay_icon").split(","));
             var bgPos = $A();
             var bgImg = $A();
             var bgRep = $A();
@@ -1822,7 +1822,7 @@ Class.create("FilesList", SelectableElements, {
             first = false;
             if(attributeList.get(s).modifier){
                 var modifier = eval(attributeList.get(s).modifier);
-                modifier(cell, ajxpNode, 'row');
+                modifier(cell, node, 'row');
             }
         }
 
@@ -1845,13 +1845,13 @@ Class.create("FilesList", SelectableElements, {
 			modifiers = this.parsingCache.get('modifiers');
 		}
 		modifiers.each(function(el){
-			el(newRow, ajxpNode, 'thumb');
+			el(newRow, node, 'thumb');
 		});
 
-        this._previewFactory.enrichBasePreview(ajxpNode, newRow);
+        this._previewFactory.enrichBasePreview(node, newRow);
 
 		// Defer Drag'n'drop assignation for performances
-		if(!ajxpNode.isRecycle()){
+		if(!node.isRecycle()){
 			window.setTimeout(function(){
 				var newDrag = new AjxpDraggable(largeRow, {
 					revert:true,
@@ -1861,22 +1861,22 @@ Class.create("FilesList", SelectableElements, {
 				}, this, 'filesList');
 			}.bind(this), 500);
 		}
-		if(!ajxpNode.isLeaf())
+		if(!node.isLeaf())
 		{
-			AjxpDroppables.add(largeRow, ajxpNode);
+			AjxpDroppables.add(largeRow, node);
 		}
 
-        this.addInlineToolbar(largeRow, ajxpNode);
+        this.addInlineToolbar(largeRow, node);
 
         return largeRow;
 	},
 
-    addInlineToolbar : function(element, ajxpNode){
+    addInlineToolbar : function(element, node){
         if(this._inlineToolbarOptions){
             var options = this._inlineToolbarOptions;
             if(!this._inlineToolbarOptions.unique){
                 options = Object.extend(this._inlineToolbarOptions, {
-                    attachToNode: ajxpNode
+                    attachToNode: node
                 });
             }
             var tBarElement = new Element('div', {id:"FL-tBar-"+this._instanciatedToolbars.size(), className:"FL-inlineToolbar" + (this._inlineToolbarOptions.unique?' FL-inlineToolbarUnique':' FL-inlineToolbarMultiple')});
@@ -1891,7 +1891,7 @@ Class.create("FilesList", SelectableElements, {
                     button.stopObserving('click');
                     button.observe("click", function(event){
                         Event.stop(event);
-                        dm.setSelectedNodes([ajxpNode]);
+                        dm.setSelectedNodes([node]);
                         window.setTimeout(function(){
                             button.ACTION.apply();
                         }, 20);
@@ -1902,13 +1902,13 @@ Class.create("FilesList", SelectableElements, {
         }
     },
 
-	partSizeCellRenderer : function(element, ajxpNode, type){
+	partSizeCellRenderer : function(element, node, type){
         if(!element) return;
-		element.setAttribute("data-sorter_value", ajxpNode.getMetadata().get("bytesize"));
-		if(!ajxpNode.getMetadata().get("target_bytesize")){
+		element.setAttribute("data-sorter_value", node.getMetadata().get("bytesize"));
+		if(!node.getMetadata().get("target_bytesize")){
 			return;
 		}
-		var percent = parseInt( parseInt(ajxpNode.getMetadata().get("bytesize")) / parseInt(ajxpNode.getMetadata().get("target_bytesize")) * 100  );
+		var percent = parseInt( parseInt(node.getMetadata().get("bytesize")) / parseInt(node.getMetadata().get("target_bytesize")) * 100  );
 		var uuid = 'ajxp_'+(new Date()).getTime();		
 		var div = new Element('div', {style:'padding-left:3px;', className:'text_label'}).update('<span class="percent_text" style="line-height:19px;padding-left:5px;">'+percent+'%</span>');
 		var span = new Element('span', {id:uuid}).update('0%');		
@@ -1916,20 +1916,20 @@ Class.create("FilesList", SelectableElements, {
 			animate		: true,										// Animate the progress? - default: true
 			showText	: false,									// show text with percentage in next to the progressbar? - default : true
 			width		: 80,										// Width of the progressbar - don't forget to adjust your image too!!!
-			boxImage	: window.ajxpResourcesFolder+'/images/progress_box_80.gif',			// boxImage : image around the progress bar
-			barImage	: window.ajxpResourcesFolder+'/images/progress_bar_80.gif',	// Image to use in the progressbar. Can be an array of images too.
+			boxImage	: window.resourcesFolder+'/images/progress_box_80.gif',			// boxImage : image around the progress bar
+			barImage	: window.resourcesFolder+'/images/progress_bar_80.gif',	// Image to use in the progressbar. Can be an array of images too.
 			height		: 8,										// Height of the progressbar - don't forget to adjust your image too!!!
             visualStyle : 'position:relative;'
 		};
 		element.update(div);
 		div.insert({top:span});
-		if(ajxpNode.getMetadata().get("process_stoppable")){
+		if(node.getMetadata().get("process_stoppable")){
 			var stopButton = new Element('a', {className:'pg_cancel_button'}).update("X");
 			stopButton.observe("click", function(){
 				var conn = new Connexion();
 				conn.setParameters({
 					action: 'stop_dl',
-					file : ajxpNode.getPath(),
+					file : node.getPath(),
 					dir : this.getCurrentContextNode().getPath()
 				});
 				conn.onComplete = function(transport){
@@ -1945,7 +1945,7 @@ Class.create("FilesList", SelectableElements, {
 			});
 			div.insert({bottom:stopButton});			
 		}
-		span.setAttribute('data-target_size', ajxpNode.getMetadata().get("target_bytesize"));
+		span.setAttribute('data-target_size', node.getMetadata().get("target_bytesize"));
 		window.setTimeout(function(){
 			span.pgBar = new JS_BRAMUS.jsProgressBar(span, percent, options);
 			var pe = new PeriodicalExecuter(function(){
@@ -1956,7 +1956,7 @@ Class.create("FilesList", SelectableElements, {
 				var conn = new Connexion();
 				conn.setParameters({
 					action: 'update_dl_data',
-					file : ajxpNode.getPath()
+					file : node.getPath()
 				});
 				conn.onComplete = function(transport){
 					if(transport.responseText == 'stop'){
@@ -1985,7 +1985,7 @@ Class.create("FilesList", SelectableElements, {
 		else elList = this._htmlElement.select('div.thumbnail_selectable_cell');
 		elList.each(function(element){
             if(element.up('div.thumbnail_selectable_cell.detailed')) return;
-			var node = element.ajxpNode;
+			var node = element.node;
 			var image_element = element.IMAGE_ELEMENT || element.down('img');
 			var label_element = element.LABEL_ELEMENT || element.down('.thumbLabel');
             var elementsAreSiblings = (label_element && (label_element.siblings().indexOf(image_element) !== -1));
@@ -2043,9 +2043,9 @@ Class.create("FilesList", SelectableElements, {
 		for(var i=0; i<rows.length;i++)
 		{
 			try{
-                if(rows[i].ajxpNode){
-                    if(rows[i].REPLACE_OBS) rows[i].ajxpNode.stopObserving("node_replaced", rows[i].REPLACE_OBS);
-                    if(rows[i].REMOVE_OBS) rows[i].ajxpNode.stopObserving("node_removed", rows[i].REMOVE_OBS);
+                if(rows[i].node){
+                    if(rows[i].REPLACE_OBS) rows[i].node.stopObserving("node_replaced", rows[i].REPLACE_OBS);
+                    if(rows[i].REMOVE_OBS) rows[i].node.stopObserving("node_removed", rows[i].REMOVE_OBS);
                 }
                 rows[i].innerHTML = '';
 				if(rows[i].IMAGE_ELEMENT){
@@ -2075,7 +2075,7 @@ Class.create("FilesList", SelectableElements, {
         var element = this.htmlElement; // this.htmlElement.down('.selectable_div,.table_rows_container') || this.htmlElement;
 		addLightboxMarkupToElement(element);
 		var img = new Element('img', {
-			src : ajxpResourcesFolder+'/images/loadingImage.gif'
+			src : resourcesFolder+'/images/loadingImage.gif'
 		});
 		var overlay = this.htmlElement.down("#element_overlay");
 		overlay.insert(img);
@@ -2119,7 +2119,7 @@ Class.create("FilesList", SelectableElements, {
 		{
 			return; // Prevent from double clicking header!
 		}
-		var selNode = selRaw[0].ajxpNode;
+		var selNode = selRaw[0].node;
         if(this._doubleClickListener){
             this._doubleClickListener(selNode);
             return;
@@ -2150,7 +2150,7 @@ Class.create("FilesList", SelectableElements, {
 		var allItems = this.getItems();
 		for(var i=0; i<allItems.length; i++)
 		{
-			if(getBaseName(allItems[i].ajxpNode.getPath()) == getBaseName(fileName))
+			if(getBaseName(allItems[i].node.getPath()) == getBaseName(fileName))
 			{
 				this.setItemSelected(allItems[i], true);
 			}
