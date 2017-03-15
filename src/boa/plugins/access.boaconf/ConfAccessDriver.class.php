@@ -410,6 +410,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     $groupLabel = $groups[$key];
                     $roleGroup = true;
                 }
+
                 if(strpos($roleId, "BOA_USR_") === 0){
                     $usrId = str_replace("BOA_USR_/", "", $roleId);
                     $userObject = ConfService::getConfStorageImpl()->createUserObject($usrId);
@@ -417,6 +418,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                 }else{
                     $role = AuthService::getRole($roleId, $roleGroup);
                 }
+
 				if($role === false) {
                     throw new \Exception("Cant find role! ");
 				}

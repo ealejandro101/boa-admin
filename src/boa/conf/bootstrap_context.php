@@ -77,7 +77,7 @@ define("ADMIN_PASSWORD", "admin");
 // define("BOA_FORCE_LOGPATH", "/var/log/ajaxplorer/");
 // DEBUG OPTIONS
 define("BOA_CLIENT_DEBUG"  ,   true);
-define("BOA_SERVER_DEBUG"  ,   true);
+define("BOA_SERVER_DEBUG"  ,   false);
 define("BOA_SKIP_CACHE"    ,   true);
 
 //require(BOA_BIN_FOLDER."/compat.php");

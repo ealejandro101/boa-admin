@@ -29,6 +29,7 @@
  */
 namespace BoA\Core\Utils;
 
+use BoA\Core\Access\Repository;
 use BoA\Core\Http\Controller;
 use BoA\Core\Plugins\Plugin;
 use BoA\Core\Services\AuthService;
@@ -1149,8 +1150,6 @@ class Utils
         }
         // PREPARE REPOSITORY LISTS
         $repoList = array();
-        require_once("../classes/class.ConfService.php");
-        require_once("../classes/class.Repository.php");
         include(BOA_CONF_PATH . "/bootstrap_repositories.php");
         foreach ($REPOSITORIES as $index => $repo) {
             $repoList[] = ConfService::createRepositoryFromArray($index, $repo);
@@ -1163,7 +1162,7 @@ class Utils
         }
 
         // NOW TRY THE PLUGIN TESTS
-        chdir(BOA_INSTALL_PATH . "/" . BOA_PLUGINS_FOLDER);
+        chdir(BOA_PLUGINS_FOLDER);
         $files = glob('access.*/test.*.php');
         foreach ($files as $file)
         {

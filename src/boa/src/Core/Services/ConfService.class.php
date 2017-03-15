@@ -1229,7 +1229,7 @@ class ConfService
                 $xmlBuffer .= $node->ownerDocument->saveXML($node);
                 continue;
             }
-            $q = new DOMXPath($node->ownerDocument);            
+            $q = new \DOMXPath($node->ownerDocument);            
             $cNodes = $q->query("//".$filterByTagName, $node);
             $nodeAttr = $node->attributes;
             $xmlBuffer .= "<coredriver ";
