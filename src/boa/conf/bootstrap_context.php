@@ -15,7 +15,17 @@
 // along with BoA.  If not, see <http://www.gnu.org/licenses/>.
 //
 // The latest code can be found at <https://github.com/boa-project/>.
+ 
 /**
+ * This is a one-line short description of the file/class.
+ *
+ * You can have a rather longer description of the file/class as well,
+ * if you like, and it can span multiple lines.
+ *
+ * @package    [PACKAGE]
+ * @category   [CATEGORY]
+ * @copyright  2017 BoA Project
+ * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  * This is the main configuration file for configuring the core of the application.
  * In a standard usage, you should not have to change any variables.
  */
