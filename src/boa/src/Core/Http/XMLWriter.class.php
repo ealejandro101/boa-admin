@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Core\Http;
 
@@ -121,12 +121,12 @@ class XMLWriter
      * @param ManifestNode $node
      * @return void
      */
-    static function renderAjxpHeaderNode($node){
+    static function renderManifestHeaderNode($node){
         header('Content-Type: text/xml; charset=UTF-8');
         header('Cache-Control: no-cache');
         print('<?xml version="1.0" encoding="UTF-8"?>');
         self::$headerSent = "tree";
-        self::renderAjxpNode($node, false);
+        self::renderManifestNode($node, false);
     }
 
     /**
@@ -167,7 +167,7 @@ class XMLWriter
      * @param bool $print
      * @return void|string
      */
-    static function renderAjxpNode($node, $close = true, $print = true){
+    static function renderManifestNode($node, $close = true, $print = true){
         return XMLWriter::renderNode(
             $node->getPath(),
             $node->getLabel(),
@@ -236,7 +236,7 @@ class XMLWriter
      * @param bool $stripSpaces
      * @return mixed
      */
-	static function replaceAjxpXmlKeywords($xml, $stripSpaces = false){
+	static function replaceXmlKeywords($xml, $stripSpaces = false){
 		$messages = ConfService::getMessages();
         $confMessages = ConfService::getMessagesConf();
 		$matches = array();
@@ -334,7 +334,7 @@ class XMLWriter
                 if(!empty($node->metaData["mimestring_id"]) && array_key_exists($node->metaData["mimestring_id"], $mess)){
                     $node->mergeMetadata(array("mimestring" =>  $mess[$node->metaData["mimestring_id"]]));
                 }
-                $buffer .=  self::renderAjxpNode($node, true, false);
+                $buffer .=  self::renderManifestNode($node, true, false);
             }
             $buffer .= "</add>";
         }
@@ -346,7 +346,7 @@ class XMLWriter
                     $node->mergeMetadata(array("mimestring" =>  $mess[$node->metaData["mimestring_id"]]));
                 }
                 $node->original_path = $originalPath;
-                $buffer .= self::renderAjxpNode($node, true, false);
+                $buffer .= self::renderManifestNode($node, true, false);
             }
             $buffer .= "</update>";
         }

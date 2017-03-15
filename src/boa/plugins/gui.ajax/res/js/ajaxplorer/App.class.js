@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
- * This is the main JavaScript class instantiated by AjxpBoostrap at startup.
+ * This is the main JavaScript class instantiated by AppBoostrap at startup.
  */
-Class.create("Ajaxplorer", {
+Class.create("App", {
 
     blockEditorShortcuts : false,
     blockShortcuts : false,
@@ -39,8 +39,8 @@ Class.create("Ajaxplorer", {
 		this._initObj = true ;
 		this.usersEnabled = usersEnabled;
 		this._initLoggedUser = loggedUser;
-		this._contextHolder = new AjxpDataModel();
-		this._contextHolder.setAjxpNodeProvider(new RemoteNodeProvider());
+		this._contextHolder = new DataModel();
+		this._contextHolder.setManifestNodeProvider(new RemoteNodeProvider());
 		this._focusables = [];
 		this._registry = null;
 		this._resourcesRegistry = {};
@@ -229,7 +229,7 @@ Class.create("Ajaxplorer", {
 		document.fire("boa:before_gui_load");
 		// Rewind components creation!
 		if(this.guiCompRegistry){
-            this.initAjxpWidgets(this.guiCompRegistry);
+            this.initAppWidgets(this.guiCompRegistry);
 		}
 		this.guiLoaded = true;
 		document.fire("boa:gui_loaded");
@@ -244,7 +244,7 @@ Class.create("Ajaxplorer", {
 		document.fire("boa:registry_loaded", this._registry);		
 	},
 
-    initAjxpWidgets : function(compRegistry){
+    initAppWidgets : function(compRegistry){
         var lastInst;
         if(compRegistry.length){
             for(var i=compRegistry.length;i>0;i--){
@@ -296,7 +296,7 @@ Class.create("Ajaxplorer", {
                 alert("Error while parsing JSON for GUI template part " + appId + "!");
             }
 		}
-		if(appClass && appId && Class.objectImplements(appClass, "IAjxpWidget")){
+		if(appClass && appId && Class.objectImplements(appClass, "IAppWidget")){
 			compRegistry.push({appId:appId, node:domNode, appClass:appClass, appOptions:appOptions});
 		}		
 		$A(domNode.childNodes).each(function(node){
@@ -326,7 +326,7 @@ Class.create("Ajaxplorer", {
             }
 			
 			var appClass = Class.getByName(appClassName);
-			if(appClass && appId && Class.objectImplements(appClass, "IAjxpWidget")){				
+			if(appClass && appId && Class.objectImplements(appClass, "IAppWidget")){				
 				toUpdate[appId] = [appClass, appClassName, appOptionsString, cdataContent];
 				this.templatePartsToRestore = this.templatePartsToRestore.without(appId);
 			}
@@ -353,7 +353,7 @@ Class.create("Ajaxplorer", {
 	 * Applies a template_part by removing existing components at this location
 	 * and recreating new ones.
 	 * @param appId String The id of the DOM anchor
-	 * @param appClass IAjxpWidget A widget class
+	 * @param appClass IAppWidget A widget class
 	 * @param appOptions Object A set of options that may have been decoded from json.
 	 */
 	refreshGuiComponent:function(appId, appClass, appClassName, appOptionsString, cdataContent){
@@ -384,7 +384,7 @@ Class.create("Ajaxplorer", {
             $A(anchor.children).each(function(el){
                 this.buildGUI(el, compReg);
             }.bind(this));
-            if(compReg.length) this.initAjxpWidgets(compReg);
+            if(compReg.length) this.initAppWidgets(compReg);
         }
 		var obj = new appClass($(appId), appOptions);
 		if(Class.objectImplements(obj, "IFocusable")){
@@ -423,8 +423,8 @@ Class.create("Ajaxplorer", {
 	},
 	
 	/**
-	 * Apply the componentConfig to the AjxpObject of a node
-	 * @param domNode IAjxpWidget
+	 * Apply the componentConfig to the AppObject of a node
+	 * @param domNode IAppWidget
 	 */
 	setGuiComponentConfig : function(domNode){
 		var className = domNode.getAttribute("className");
@@ -560,12 +560,12 @@ Class.create("Ajaxplorer", {
 			if(providerDef.options){
 				provider.initProvider(providerDef.options);
 			}
-			this._contextHolder.setAjxpNodeProvider(provider);
-			var rootNode = new AjxpNode("/", false, repository.getLabel(), newIcon, provider);
+			this._contextHolder.setManifestNodeProvider(provider);
+			var rootNode = new ManifestNode("/", false, repository.getLabel(), newIcon, provider);
 		}else{
-			var rootNode = new AjxpNode("/", false, repository.getLabel(), newIcon);
+			var rootNode = new ManifestNode("/", false, repository.getLabel(), newIcon);
 			// Default
-			this._contextHolder.setAjxpNodeProvider(new RemoteNodeProvider());
+			this._contextHolder.setManifestNodeProvider(new RemoteNodeProvider());
 		}
 		this._contextHolder.setRootNode(rootNode);
 		this.repositoryId = repositoryId;
@@ -617,8 +617,8 @@ Class.create("Ajaxplorer", {
 	
 	/**
 	 * Require a context change to the given path
-	 * @param nodeOrPath AjxpNode|String A node or a path
-     * @param leaf AjxpNode|String path to the leaf item to be selected
+	 * @param nodeOrPath ManifestNode|String A node or a path
+     * @param leaf ManifestNode|String path to the leaf item to be selected
 	 */
 	goTo: function(nodeOrPath){
         var path;
@@ -637,7 +637,7 @@ Class.create("Ajaxplorer", {
 
         var gotoNode;
         if(path == "" || path == "/") {
-            gotoNode = new AjxpNode("/");
+            gotoNode = new ManifestNode("/");
             this._contextHolder.requireContextChange(gotoNode);
             return;
         }
@@ -646,7 +646,7 @@ Class.create("Ajaxplorer", {
             this._contextHolder.loadPathInfoSync(path, function(foundNode){
                 if(foundNode.isLeaf()) {
                     this._contextHolder.setPendingSelection(getBaseName(path));
-                    gotoNode = new AjxpNode(getRepName(path));
+                    gotoNode = new ManifestNode(getRepName(path));
                 }else{
                     gotoNode = foundNode;
                 }
@@ -1009,8 +1009,8 @@ Class.create("Ajaxplorer", {
 
 	/**
 	 * Accessor for updating the datamodel context
-	 * @param contextNode AjxpNode
-	 * @param selectedNodes AjxpNode[]
+	 * @param contextNode ManifestNode
+	 * @param selectedNodes ManifestNode[]
 	 * @param selectionSource String
 	 */
 	updateContextData : function(contextNode, selectedNodes, selectionSource){
@@ -1023,21 +1023,21 @@ Class.create("Ajaxplorer", {
 	},
 	
 	/**
-	 * @returns AjxpDataModel
+	 * @returns DataModel
 	 */
 	getContextHolder : function(){
 		return this._contextHolder;
 	},
 	
 	/**
-	 * @returns AjxpNode
+	 * @returns ManifestNode
 	 */
 	getContextNode : function(){
-		return this._contextHolder.getContextNode() || new AjxpNode("");
+		return this._contextHolder.getContextNode() || new ManifestNode("");
 	},
 	
 	/**
-	 * @returns AjxpDataModel
+	 * @returns DataModel
 	 */
 	getUserSelection : function(){
 		return this._contextHolder;
@@ -1144,7 +1144,7 @@ Class.create("Ajaxplorer", {
 	
 	/**
 	 * Focuses on a given widget
-	 * @param object IAjxpFocusable
+	 * @param object IFocusable
 	 */
 	focusOn : function(object){
 		this._focusables.each(function(obj){
@@ -1164,14 +1164,14 @@ Class.create("Ajaxplorer", {
 	},	
 	
 	/**
-	 * Find last focused IAjxpFocusable and focus it!
+	 * Find last focused IFocusable and focus it!
 	 */
 	focusLast : function(){
 		if(this._lastFocused) this.focusOn(this._lastFocused);
 	},
 	
 	/**
-	 * Create a Tab navigation between registerd IAjxpFocusable
+	 * Create a Tab navigation between registerd IFocusable
 	 */
 	initTabNavigation: function(){
 		// ASSIGN OBSERVER

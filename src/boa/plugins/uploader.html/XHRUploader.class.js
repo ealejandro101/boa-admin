@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  * Description : Class for simple XHR multiple upload, HTML5 only
  */
 Class.create("XHRUploader", {
@@ -674,7 +674,7 @@ Class.create("XHRUploader", {
 	sendFileMultipart : function(item){
     	var auto_rename = false;
 
-        var newNode = new AjxpNode(this.crtContext.getContextNode().getPath()+"/"+getBaseName(item.file.name));
+        var newNode = new ManifestNode(this.crtContext.getContextNode().getPath()+"/"+getBaseName(item.file.name));
         if(item.file.size){
             newNode.getMetadata().set("filesize", item.file.size);
         }

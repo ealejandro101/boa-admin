@@ -16,7 +16,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
 *
-* The latest code can be found at <http://www.ajaxplorer.info/>.
+* The latest code can be found at <http://https://github.com/boa-project/boa/>.
 */
 //	Turkish translation by: Heron / date: 23 october 2011 (second revision, it feels good to help!)
 //  transilated version: AjaXplorer-core-3.3.2 (release date: 25 septembre 2011)

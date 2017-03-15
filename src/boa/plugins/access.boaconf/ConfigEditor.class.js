@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -191,7 +191,7 @@ Class.create("ConfigEditor",{
             hideLightBox();
             var editorData = ajaxplorer.findEditorById("editor.role");
             ajaxplorer.loadEditorResources(editorData.resourcesManager);
-            var node = new AjxpNode(currentPath + "/"+newUserName, true);
+            var node = new ManifestNode(currentPath + "/"+newUserName, true);
             node.getMetadata().set("boa_mime", "user");
             modal.openEditorDialog(editorData, node);
         }.bind(this), function(responseXML){

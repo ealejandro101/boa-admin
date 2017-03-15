@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
-Class.create("AjxpSimpleTabs", AjxpPane, {
+Class.create("SimpleTabs", AppPane, {
 
     panes:null,
     tabRow:null,
@@ -106,19 +106,19 @@ Class.create("AjxpSimpleTabs", AjxpPane, {
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */
 	getDomNode : function(){
 		return this.htmlElement;
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */
 	destroy : function(){
         /*
 		this.tabulatorData.each(function(tabInfo){
-			var appObject = this.getAndSetAjxpObject(tabInfo);
+			var appObject = this.getAndSetAppObject(tabInfo);
 			tabInfo.headerElement.stopObserving("click");
 			appObject.destroy();
 		}.bind(this));

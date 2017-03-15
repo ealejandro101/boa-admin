@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -353,10 +353,10 @@ Class.create("HeaderResizer", {
         var sheet;
 		if(Prototype.Browser.IE){
 			return;
-			if(!window['ajxp_resizer_'+this.options.body.id]){
-		        window['ajxp_resizer_'+this.options.body.id] = document.createStyleSheet();
+			if(!window['resizer_'+this.options.body.id]){
+		        window['resizer_'+this.options.body.id] = document.createStyleSheet();
 			}
-			sheet = window['ajxp_resizer_'+this.options.body.id];
+			sheet = window['resizer_'+this.options.body.id];
 	        // Remove previous rules
 	        var rules = sheet.rules;
 	        var len = rules.length;	
@@ -382,9 +382,9 @@ Class.create("HeaderResizer", {
 		if(Prototype.Browser.IE){
 			return;
 
-			if(window['ajxp_resizer_'+this.options.body.id]){
+			if(window['resizer_'+this.options.body.id]){
 		        // Remove previous rules
-		        var sheet = window['ajxp_resizer_'+this.options.body.id];
+		        var sheet = window['resizer_'+this.options.body.id];
 		        var rules = sheet.rules;
 		        var len = rules.length;	
 		        for (var i=len-1; i>=0; i--) {
@@ -405,8 +405,8 @@ Class.create("HeaderResizer", {
 		if(Prototype.Browser.IE){
 			return false;
 		}
-		if(window.ajxp_resizer_csstest != undefined){
-			return window.ajxp_resizer_csstest;
+		if(window.resizer_csstest != undefined){
+			return window.resizer_csstest;
 		}
 		var sheet = this.createStyleSheet();
 		var detected = false;
@@ -418,7 +418,7 @@ Class.create("HeaderResizer", {
 			}
 			this.removeStyleSheet();
 		}catch(e){}
-		window.ajxp_resizer_csstest = detected;
+		window.resizer_csstest = detected;
 		return detected;
 	},
 	

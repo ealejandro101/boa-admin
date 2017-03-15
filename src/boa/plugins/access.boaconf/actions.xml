@@ -19,7 +19,7 @@
 					var path;					
 					if(window.actionArguments && window.actionArguments.length>0){
 						path = window.actionArguments[0];
-						if(Object.isString(path)){path = new AjxpNode(path,false,getBaseName(path));}
+						if(Object.isString(path)){path = new ManifestNode(path,false,getBaseName(path));}
 					}else{
 						userSelection = ajaxplorer.getUserSelection();
 						if(userSelection && userSelection.isUnique() && (userSelection.hasDir() || userSelection.hasMime(["zip"]))){

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /** 
@@ -199,15 +199,15 @@ Class.create("Action", {
         var crtIsRecycle = false;
         var crtInZip = false;
         var crtIsRoot = false;
-        var crtAjxpMime = '';
+        var crtMime = '';
         var crtIsReadOnly = false;
 
         var crtNode = arguments[2];
         if(crtNode){
             crtIsRecycle = (crtNode.getMime() == "recycle");
-            crtInZip = crtNode.hasAjxpMimeInBranch("browsable_archive");
+            crtInZip = crtNode.hasMimeInBranch("browsable_archive");
             crtIsRoot = crtNode.isRoot();
-            crtAjxpMime = crtNode.getMime();
+            crtMime = crtNode.getMime();
             crtIsReadOnly = crtNode.hasMetadataInBranch("readonly", "true");
         }
 
@@ -239,10 +239,10 @@ Class.create("Action", {
             return this.hideForContext();
         }
 		if(this.context.allowedMimes.length){
-			if( !this.context.allowedMimes.include("*") && !this.context.allowedMimes.include(crtAjxpMime)){
+			if( !this.context.allowedMimes.include("*") && !this.context.allowedMimes.include(crtMime)){
 				return this.hideForContext();
 			}
-            if( this.context.allowedMimes.include("^"+crtAjxpMime)){
+            if( this.context.allowedMimes.include("^"+crtMime)){
                 return this.hideForContext();
             }
 		}

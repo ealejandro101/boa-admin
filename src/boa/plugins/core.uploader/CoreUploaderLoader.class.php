@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Core\Uploader;
 
@@ -47,9 +47,13 @@ class CoreUploaderLoader extends Plugin{
 	}
 
 	private function filterData(&$data){
-
-        $confMaxSize = Utils::convertBytes($data["UPLOAD_MAX_SIZE"]);
-        $UploadMaxSize = min(Utils::convertBytes(ini_get('upload_max_filesize')), Utils::convertBytes(ini_get('post_max_size')));
+        $confMaxSize = 0;
+        if (isset($data["UPLOAD_MAX_SIZE"])) {
+            $confMaxSize = Utils::convertBytes($data["UPLOAD_MAX_SIZE"]);
+        }
+        $UploadMaxSize = min(Utils::convertBytes(ini_get('upload_max_filesize')),
+            Utils::convertBytes(ini_get('post_max_size')));
+        
         if(intval($confMaxSize) != 0) {
             $UploadMaxSize = min ($UploadMaxSize, $confMaxSize);
         }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 Class.create("PluginEditor", AbstractEditor, {
 
@@ -41,7 +41,7 @@ Class.create("PluginEditor", AbstractEditor, {
         docPane.resizeOnShow = function(tab){
             fitHeightToBottom(docPane, $("plugin_edit_box"), Prototype.Browser.IE ? 40 : 0);
         }
-        this.tab = new AjxpSimpleTabs(oFormObject.down("#pluginTabulator"));
+        this.tab = new SimpleTabs(oFormObject.down("#pluginTabulator"));
         this.actions.get("saveButton").observe("click", this.save.bind(this) );
         modal.setCloseValidation(function(){
             if(this.isDirty()){
@@ -129,7 +129,7 @@ Class.create("PluginEditor", AbstractEditor, {
             var driverParamsHash = $A([]);
             if(this.pluginId.split("\.")[0] != "core"){
                 driverParamsHash.push($H({
-                    name:'AJXP_PLUGIN_ENABLED',
+                    name:'BOA_PLUGIN_ENABLED',
                     type:'boolean',
                     label:MessageHash['conf.104'],
                     description:""
@@ -217,9 +217,9 @@ Class.create("PluginEditor", AbstractEditor, {
 
     updateBinaryContext : function(parameter){
         if(this.roleData.USER){
-            parameter.set("binary_context", "user_id="+this.roleId.replace("AJXP_USR_/", ""));
+            parameter.set("binary_context", "user_id="+this.roleId.replace("BOA_USR_/", ""));
         }else if(this.roleData.GROUP){
-            parameter.set("binary_context", "group_id="+this.roleId.replace("AJXP_GRP_/", ""));
+            parameter.set("binary_context", "group_id="+this.roleId.replace("BOA_GRP_/", ""));
         }else{
             parameter.set("binary_context", "role_id="+this.roleId);
         }

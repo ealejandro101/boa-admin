@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Core\Services;
 
@@ -40,6 +40,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 class AuthService
 {
     static $roles;
+    static $logName = "/failed.log";
     public static $useSession = true;
     private static $currentUser;
     /**
@@ -131,13 +132,13 @@ class AuthService
         return ;
     }
     /**
-     * The array is located in the AjxpTmpDir/failedAJXP.log
+     * The array is located in the AppTmpDir/failed.log
      * @static
      * @return array
      */
     static function getBruteForceLoginArray()
     {
-        $failedLog = Utils::getAjxpTmpDir()."/failedAJXP.log";
+        $failedLog = Utils::getAppTmpDir().$logName;
         $loginAttempt = @file_get_contents($failedLog);
         $loginArray = unserialize($loginAttempt);
         $ret = array();
@@ -159,7 +160,7 @@ class AuthService
      */
     static function setBruteForceLoginArray($loginArray)
     {
-        $failedLog = Utils::getAjxpTmpDir()."/failedAJXP.log";
+        $failedLog = Utils::getAppTmpDir().$logName;
         @file_put_contents($failedLog, serialize($loginArray));
     }
     /**
@@ -353,7 +354,7 @@ class AuthService
         if($user->getLock() == "logout"){
             return -1;
         }
-        if($authDriver->isAjxpAdmin($user_id)){
+        if($authDriver->isAppAdmin($user_id)){
             $user->setAdmin(true);
         }
         if($user->isAdmin())
@@ -974,7 +975,7 @@ class AuthService
         //Commented this section out because no longer required, there is no need to do Roles migration
         //$repoList = null;
         //foreach(self::$roles as $roleId => $roleObject){
-            //if(is_a($roleObject, "AjxpRole")){
+            //if(is_a($roleObject, "Role")){
                 //if($repoList == null) $repoList = ConfService::getRepositoriesList("all");
                 //$newRole = new Role($roleId);
                 //$newRole->migrateDeprectated($repoList, $roleObject);

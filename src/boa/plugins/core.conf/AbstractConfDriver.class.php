@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Core\Conf;
 
@@ -196,7 +196,7 @@ abstract class AbstractConfDriver extends Plugin {
 	// SAVE / EDIT / CREATE / DELETE REPOSITORY
 	/**
 	 * Returns a list of available repositories (dynamic ones only, not the ones defined in the config file).
-     * @param AbstractAjxpUser $user
+     * @param AbstractUser $user
 	 * @return Array
 	 */
 	abstract function listRepositories($user = null);
@@ -230,10 +230,10 @@ abstract class AbstractConfDriver extends Plugin {
 	abstract function deleteRepository($repositoryId);
 		
 	/**
-	 * Must return an associative array of roleId => AjxpRole objects.
+	 * Must return an associative array of roleId => Role objects.
      * @param array $roleIds
      * @param boolean $excludeReserved,
-     * @return array AjxpRole[]
+     * @return array Role[]
      */
 	abstract function listRoles($roleIds = array(), $excludeReserved = false);
 	abstract function saveRoles($roles);
@@ -286,10 +286,10 @@ abstract class AbstractConfDriver extends Plugin {
 
 
 	/**
-	 * Instantiate a new AbstractAjxpUser
+	 * Instantiate a new AbstractUser
 	 *
 	 * @param String $userId
-	 * @return AbstractAjxpUser
+	 * @return AbstractUser
 	 */
 	function createUserObject($userId){
 		$abstractUser = $this->instantiateAbstractUserImpl($userId);
@@ -314,7 +314,7 @@ abstract class AbstractConfDriver extends Plugin {
 	 * Instantiate the right class
 	 *
 	 * @param string $userId
-     * @return AbstractAjxpUser
+     * @return AbstractUser
 	 */
 	abstract function instantiateAbstractUserImpl($userId);
 	
@@ -323,7 +323,7 @@ abstract class AbstractConfDriver extends Plugin {
     /**
      * @abstract
      * @param $userId
-     * @return AbstractAjxpUser[]
+     * @return AbstractUser[]
      */
     abstract function getUserChildren($userId);
 
@@ -336,7 +336,7 @@ abstract class AbstractConfDriver extends Plugin {
 
 
     /**
-     * @param AbstractAjxpUser[] $flatUsersList
+     * @param AbstractUser[] $flatUsersList
      * @param string $baseGroup
      * @param bool $fullTree
      * @return void
@@ -378,7 +378,7 @@ abstract class AbstractConfDriver extends Plugin {
 	}
 
     /**
-     * @param AbstractAjxpUser $userObject
+     * @param AbstractUser $userObject
      * @return array()
      */
     function getExposedPreferences($userObject){
@@ -720,7 +720,7 @@ abstract class AbstractConfDriver extends Plugin {
                         }
                         if( in_array($paramNode->getAttribute("name"), $tplDefined) ) continue;
                         if($paramNode->getAttribute('no_templates') == 'true') continue;
-                        print(XMLWriter::replaceAjxpXmlKeywords($paramNode->ownerDocument->saveXML($paramNode)));
+                        print(XMLWriter::replaceXmlKeywords($paramNode->ownerDocument->saveXML($paramNode)));
                     }
                     // ADD LABEL
                     echo '<param name="DISPLAY" type="string" label="'.$mess[359].'" description="'.$mess[429].'" mandatory="true" default="'.$defaultLabel.'"/>';
@@ -843,7 +843,7 @@ abstract class AbstractConfDriver extends Plugin {
             case "get_binary_param" :
 
                 if(isSet($httpVars["tmp_file"])){
-                    $file = Utils::getAjxpTmpDir()."/".Utils::securePath($httpVars["tmp_file"]);
+                    $file = Utils::getAppTmpDir()."/".Utils::securePath($httpVars["tmp_file"]);
                     if(isSet($file)){
                         header("Content-Type:image/png");
                         readfile($file);
@@ -861,7 +861,7 @@ abstract class AbstractConfDriver extends Plugin {
             case "get_global_binary_param" :
 
                 if(isSet($httpVars["tmp_file"])){
-                    $file = Utils::getAjxpTmpDir()."/".Utils::securePath($httpVars["tmp_file"]);
+                    $file = Utils::getAppTmpDir()."/".Utils::securePath($httpVars["tmp_file"]);
                     if(isSet($file)){
                         header("Content-Type:image/png");
                         readfile($file);
@@ -882,10 +882,10 @@ abstract class AbstractConfDriver extends Plugin {
                     }else{
                         $rand = substr(md5(time()), 0, 6);
                         $tmp = $rand."-". $boxData["name"];
-                        @move_uploaded_file($boxData["tmp_name"], Utils::getAjxpTmpDir()."/". $tmp);
+                        @move_uploaded_file($boxData["tmp_name"], Utils::getAppTmpDir()."/". $tmp);
                     }
                 }
-                if(isSet($tmp) && file_exists(Utils::getAjxpTmpDir()."/".$tmp)) {
+                if(isSet($tmp) && file_exists(Utils::getAppTmpDir()."/".$tmp)) {
                     print('<script type="text/javascript">');
                     print('parent.formManagerHiddenIFrameSubmission("'.$tmp.'");');
                     print('</script>');

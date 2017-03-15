@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * Toolbar to display actions buttons
  */
 Class.create("ActionsToolbar", {
-	__implements : "IAjxpWidget",
+	__implements : "IAppWidget",
 	/**
 	 * Constructor
 	 * @param oElement Element The dom node
@@ -377,7 +377,7 @@ Class.create("ActionsToolbar", {
 
         if(this.options.attachToNode){
             action.fireContextChange(ajaxplorer.usersEnabled, ajaxplorer.user, this.options.attachToNode.getParent());
-            var fakeDm = new AjxpDataModel();
+            var fakeDm = new DataModel();
             fakeDm.setSelectedNodes([this.options.attachToNode]);
             action.fireSelectionChange(fakeDm);
             if(action.deny) {
@@ -631,7 +631,7 @@ Class.create("ActionsToolbar", {
 		}
 	},
 	/**
-	 * IAjxpWidget Implementation. Empty.
+	 * IAppWidget Implementation. Empty.
 	 * @param show Boolean
 	 */
 	showElement : function(show){}	

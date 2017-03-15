@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  *
  */
 namespace BoA\Plugins\Access\BoAConf;
@@ -121,7 +121,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                     if(!is_array($actions[$pId])) $actions[$pId] = array();
                     $actionName = $node->attributes->getNamedItem("name")->nodeValue;
                     $messId = $node->attributes->getNamedItem("label")->nodeValue;
-                    $actions[$pId][$actionName] = array( "parameter" => $actionName , "label" => XMLWriter::replaceAjxpXmlKeywords($messId));
+                    $actions[$pId][$actionName] = array( "parameter" => $actionName , "label" => XMLWriter::replaceXmlKeywords($messId));
 
                 }
                 foreach($actions as $actPid => $actionGroup){
@@ -159,7 +159,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                                 $n->appendChild($n->ownerDocument->createAttribute("default"));
                                 $n->attributes->getNamedItem("default")->nodeValue = $paramValue;
                             }
-                            echo(XMLWriter::replaceAjxpXmlKeywords($n->ownerDocument->saveXML($n)));
+                            echo(XMLWriter::replaceXmlKeywords($n->ownerDocument->saveXML($n)));
                         }
                     }
                     echo("</repoScope>");
@@ -447,7 +447,7 @@ class ConfAccessDriver extends AbstractAccessDriver
                         $node->attributes->getNamedItem("name")->nodeValue = "BOA_REPO_SCOPE_ALL/".$pId."/".$origName;
                         $nArr = array();
                         foreach($node->attributes as $attrib){
-                            $nArr[$attrib->nodeName] = XMLWriter::replaceAjxpXmlKeywords($attrib->nodeValue);
+                            $nArr[$attrib->nodeName] = XMLWriter::replaceXmlKeywords($attrib->nodeValue);
                         }
                         $data["SCOPE_PARAMS"][] = $nArr;
                     }
@@ -852,7 +852,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 			case  "get_drivers_definition":
 
 				XMLWriter::header("drivers", array("allowed" => $currentUserIsGroupAdmin ? "false" : "true"));
-				print(XMLWriter::replaceAjxpXmlKeywords(ConfService::availableDriversToXML("param", "", true)));
+				print(XMLWriter::replaceXmlKeywords(ConfService::availableDriversToXML("param", "", true)));
 				XMLWriter::close("drivers");
 				
 				
@@ -1068,7 +1068,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 					}
 				}
 				$manifest = $plug->getManifestRawContent("server_settings/param");
-                $manifest = XMLWriter::replaceAjxpXmlKeywords($manifest);
+                $manifest = XMLWriter::replaceXmlKeywords($manifest);
 				print("<coredriver name=\"".$repository->accessType."\">$manifest</coredriver>");
 				print("<metasources>");
 				$metas = $pServ->getPluginsByType("metastore");
@@ -1077,7 +1077,7 @@ class ConfAccessDriver extends AbstractAccessDriver
 				foreach ($metas as $metaPlug){
 					print("<meta id=\"".$metaPlug->getId()."\" label=\"".Utils::xmlEntities($metaPlug->getManifestLabel())."\">");
 					$manifest = $metaPlug->getManifestRawContent("server_settings/param");
-                    $manifest = XMLWriter::replaceAjxpXmlKeywords($manifest);
+                    $manifest = XMLWriter::replaceXmlKeywords($manifest);
 					print($manifest);
 					print("</meta>");
 				}
@@ -1134,10 +1134,10 @@ class ConfAccessDriver extends AbstractAccessDriver
                             AuthService::updateRole($defRole);
                         }
                     }
-					if(is_file(BOA_TESTS_FOLDER."/plugins/test.ajxp_".$repo->getAccessType().".php")){
+					if(is_file(BOA_TESTS_FOLDER."/plugins/test.app_".$repo->getAccessType().".php")){
 					    chdir(BOA_TESTS_FOLDER."/plugins");
-						include(BOA_TESTS_FOLDER."/plugins/test.ajxp_".$repo->getAccessType().".php");
-						$className = "ajxp_".$repo->getAccessType();
+						include(BOA_TESTS_FOLDER."/plugins/test.app_".$repo->getAccessType().".php");
+						$className = "app_".$repo->getAccessType();
 						$class = new $className();
 						$result = $class->doRepositoryTest($repo);
 						if(!$result){
@@ -1358,14 +1358,14 @@ class ConfAccessDriver extends AbstractAccessDriver
                         }catch (\Exception $e){
                             $checkErrorMessage = " (Warning : ".$e->getMessage().")";
                         }
-                        $tParams = XMLWriter::replaceAjxpXmlKeywords($typePlug->getManifestRawContent("server_settings/param[not(@group_switch_name)]"));
+                        $tParams = XMLWriter::replaceXmlKeywords($typePlug->getManifestRawContent("server_settings/param[not(@group_switch_name)]"));
                         $addParams .= '<global_param group_switch_name="'.$fieldName.'" name="instance_name" group_switch_label="'.$typePlug->getManifestLabel().$checkErrorMessage.'" group_switch_value="'.$typePlug->getId().'" default="'.$typePlug->getId().'" type="hidden"/>';
                         $addParams .= str_replace("<param", "<global_param group_switch_name=\"${fieldName}\" group_switch_label=\"".$typePlug->getManifestLabel().$checkErrorMessage."\" group_switch_value=\"".$typePlug->getId()."\" ", $tParams);
-                        $addParams .= str_replace("<param", "<global_param", XMLWriter::replaceAjxpXmlKeywords($typePlug->getManifestRawContent("server_settings/param[@group_switch_name]")));
-                        $addParams .= XMLWriter::replaceAjxpXmlKeywords($typePlug->getManifestRawContent("server_settings/global_param"));
+                        $addParams .= str_replace("<param", "<global_param", XMLWriter::replaceXmlKeywords($typePlug->getManifestRawContent("server_settings/param[@group_switch_name]")));
+                        $addParams .= XMLWriter::replaceXmlKeywords($typePlug->getManifestRawContent("server_settings/global_param"));
                     }
                 }
-                $allParams = XMLWriter::replaceAjxpXmlKeywords($fullManifest->ownerDocument->saveXML($fullManifest));
+                $allParams = XMLWriter::replaceXmlKeywords($fullManifest->ownerDocument->saveXML($fullManifest));
                 $allParams = str_replace('type="plugin_instance:', 'type="group_switch:', $allParams);
                 $allParams = str_replace("</server_settings>", $addParams."</server_settings>", $allParams);
 

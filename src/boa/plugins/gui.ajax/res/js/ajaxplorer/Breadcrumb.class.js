@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * Container for location components, go to parent, refresh.
  */
 Class.create("Breadcrumb", {
-	__implements : ["IAjxpWidget"],
+	__implements : ["IAppWidget"],
     currentPath : "",
 	/**
 	 * Constructor
@@ -37,7 +37,7 @@ Class.create("Breadcrumb", {
         document.observe("boa:context_changed", function(event){
             var newNode = event.memo;
             if(Object.isString(newNode)){
-                newNode = new AjxpNode(newNode);
+                newNode = new ManifestNode(newNode);
             }
             var newPath = newNode.getPath();
             var parts = $H();
@@ -51,22 +51,22 @@ Class.create("Breadcrumb", {
                 parts.set(newPath, newNode.getLabel());
             }
 
-            var clickPath = "<span class='icon-home ajxp-goto' data-goTo='/' title='"+MessageHash[459]+"'></span>";
+            var clickPath = "<span class='icon-home goto-link' data-goTo='/' title='"+MessageHash[459]+"'></span>";
             var lastValue = parts.values().last();
             parts.each(function(pair){
                 var refresh = '';
                 if(pair.value == lastValue){
-                    refresh = '<span class="icon-refresh ajxp-goto-refresh" title="'+MessageHash[149]+'"></span>';
+                    refresh = '<span class="icon-refresh goto-link-refresh" title="'+MessageHash[149]+'"></span>';
                 }
-                clickPath += "<span class='icon-chevron-right'></span>" + "<span class='ajxp-goto' data-goTo='"+pair.key+"'>"+pair.value+refresh+"</span>";
+                clickPath += "<span class='icon-chevron-right'></span>" + "<span class='goto-link' data-goTo='"+pair.key+"'>"+pair.value+refresh+"</span>";
             });
             this.element.update("<div class='inner_bread'>" + clickPath + "</div>");
 
-            this.element.select("span.ajxp-goto").invoke("observe", "click", function(event){
+            this.element.select("span.goto-link").invoke("observe", "click", function(event){
                 "use strict";
                 var target = event.target.getAttribute("data-goTo");
                 event.target.setAttribute("title", "Go to " + target);
-                if(event.target.down('span.ajxp-goto-refresh')){
+                if(event.target.down('span.goto-link-refresh')){
                     window.ajaxplorer.fireContextRefresh();
                 }else{
                     window.ajaxplorer.goTo(target);
@@ -106,14 +106,14 @@ Class.create("Breadcrumb", {
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */	
 	getDomNode : function(){
 		return this.element;
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */	
 	destroy : function(){
 		this.element = null;

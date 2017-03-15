@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * A selector for displaying repository list. Will hook to boa:repository_list_refreshed.
  */
 Class.create("RepositorySelect", {
-	__implements : "IAjxpWidget",
+	__implements : "IAppWidget",
 	_defaultString:'No Repository',
 	_defaultIcon : 'network-wired.png',
     options : {},
@@ -45,14 +45,14 @@ Class.create("RepositorySelect", {
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */	
 	getDomNode : function(){
 		return this.element;
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */	
 	destroy : function(){
 		this.element = null;
@@ -200,7 +200,7 @@ Class.create("RepositorySelect", {
             ajaxplorer.actionBar.loadActionsFromRegistry(ajaxplorer.getXmlRegistry());
             this.loadedOnce = true;
         }
-        var otherActions = ajaxplorer.actionBar.getActionsForAjxpWidget("RepositorySelect", this.element.id).each(function(otherAction){
+        var otherActions = ajaxplorer.actionBar.getActionsForAppWidget("RepositorySelect", this.element.id).each(function(otherAction){
             menuItems.push({
                 name:otherAction.getKeyedText(),
                 alt:otherAction.options.title,

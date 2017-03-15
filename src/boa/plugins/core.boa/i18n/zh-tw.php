@@ -16,7 +16,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
 *
-* The latest code can be found at <http://www.ajaxplorer.info/>.
+* The latest code can be found at <http://https://github.com/boa-project/boa/>.
 */
 //  Traditional Chinese (zh-tw UTF-8) translated by: Tommy Lam (Nov 13, 2008)
 //---------------------------------------------------------------------------------------------------

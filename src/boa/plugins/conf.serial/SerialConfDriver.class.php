@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Conf\Serial;
 
@@ -109,12 +109,12 @@ class SerialConfDriver extends AbstractConfDriver {
 
 	// SAVE / EDIT / CREATE / DELETE REPOSITORY
     /**
-     * @param AbstractAjxpUser $user
+     * @param AbstractUser $user
      * @return Array
      */
     function listRepositories($user = null){
 		$all = Utils::loadSerialFile($this->repoSerialFile);
-        if($user != null){
+        if($user != null && $all != null){
             foreach($all as $repoId => $repoObject){
                 if(!ConfService::repositoryIsAccessible($repoId, $repoObject, $user)){
                     unset($all[$repoId]);
@@ -148,7 +148,7 @@ class SerialConfDriver extends AbstractConfDriver {
 
     /**
      * @param Role $role
-     * @param AbstractAjxpUser|null $userObject
+     * @param AbstractUser|null $userObject
      */
     function updateRole($role, $userObject = null){
         if($userObject != null){
@@ -323,7 +323,7 @@ class SerialConfDriver extends AbstractConfDriver {
 
     /**
      * @param string $repositoryId
-     * @return AbstractAjxpUser[]
+     * @return AbstractUser[]
      */
     function getUsersForRepository($repositoryId){
         $result = array();

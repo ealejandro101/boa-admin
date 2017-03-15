@@ -1,26 +1,21 @@
 <?php
-/*
- * Copyright 2007-2011 Charles du Jeu <contact (at) cdujeu.me>
- * This file is part of AjaXplorer.
- *
- * AjaXplorer is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * AjaXplorer is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
- *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
- *
- * These configuration must be set at the very root loading of the framework
- */
-
+// This file is part of BoA - https://github.com/boa-project
+//
+// BoA is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// BoA is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with BoA.  If not, see <http://www.gnu.org/licenses/>.
+//
+// The latest code can be found at <https://github.com/boa-project/>.
+ 
 /*
  * If you have a charset warning, or problems displaying filenames with accented characters,
  * check your system locale and set it in the form lang_country.charset
@@ -35,7 +30,7 @@
 
 /*
  * If you encounter problems writing to the standard php tmp directory, you can
- * define your own tmp dir here. Suggested value is ajxp_path/data/tmp/
+ * define your own tmp dir here. Suggested value is boa_path/data/tmp/
  * BOA_DATA_PATH, BOA_INSTALL_PATH are replaced automatically.
  *
  * See php.ini settings below for the session.save_path value as well.

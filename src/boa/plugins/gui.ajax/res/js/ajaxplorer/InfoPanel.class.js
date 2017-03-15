@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * A dynamic panel displaying details on the current selection. Works with Templates.
  */
-Class.create("InfoPanel", AjxpPane, {
+Class.create("InfoPanel", AppPane, {
 
 	/**
 	 * Constructor
@@ -129,7 +129,7 @@ Class.create("InfoPanel", AjxpPane, {
 	 */
 	update : function(objectOrEvent){
 		if(!this.htmlElement) return;
-        if(objectOrEvent.__className && objectOrEvent.__className == "AjxpNode"){
+        if(objectOrEvent.__className && objectOrEvent.__className == "ManifestNode"){
             var passedNode = objectOrEvent;
         }
         var userSelection = ajaxplorer.getUserSelection();
@@ -334,7 +334,7 @@ Class.create("InfoPanel", AjxpPane, {
 	/**
 	 * Find template and evaluate it
 	 * @param mimeType String
-	 * @param fileNode AjxpNode
+	 * @param fileNode ManifestNode
 	 * @param tArgs Object
 	 */
 	evalTemplateForMime: function(mimeType, fileNode, tArgs){
@@ -429,7 +429,7 @@ Class.create("InfoPanel", AjxpPane, {
 	 */
 	addActions: function(selectionType){
         if(this.options.skipActions) return;
-		var actions = ajaxplorer.actionBar.getActionsForAjxpWidget("InfoPanel", this.htmlElement.id);
+		var actions = ajaxplorer.actionBar.getActionsForAppWidget("InfoPanel", this.htmlElement.id);
 		if(!actions.length) return;
 		var actionString = '<div class="panelHeader infoPanelGroup">'+MessageHash[5]+'</div><div class="infoPanelActions">';
 		var count = 0;
@@ -448,7 +448,7 @@ Class.create("InfoPanel", AjxpPane, {
 	},
 	/**
 	 * Use editors extensions to find a preview element for the current node
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 * @param getTemplateElement Boolean If true, will return a fake div that can be inserted in template and replaced later
 	 * @returns String
 	 */

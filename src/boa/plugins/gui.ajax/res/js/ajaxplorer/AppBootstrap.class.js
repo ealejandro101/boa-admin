@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -173,7 +173,7 @@ Class.create("AppBootstrap", {
 		}
 		this.insertLoaderProgress();
 		if(!this.parameters.get("debugMode")){
-			connexion.loadLibrary("ajaxplorer.js?v="+this.parameters.get("appVersion"));
+			connexion.loadLibrary("app.js?v="+this.parameters.get("appVersion"));
 		}
 		window.MessageHash = this.parameters.get("i18nMessages");
         if(!Object.keys(MessageHash).length){
@@ -185,7 +185,7 @@ Class.create("AppBootstrap", {
 		window.zipEnabled = this.parameters.get("zipEnabled");
 		window.multipleFilesDownloadEnabled = this.parameters.get("multipleFilesDownloadEnabled");
 		document.fire("boa:boot_loaded");
-		window.ajaxplorer = new Ajaxplorer(this.parameters.get("EXT_REP")||"", this.parameters.get("usersEnabled"), this.parameters.get("loggedUser"));
+		window.ajaxplorer = new App(this.parameters.get("EXT_REP")||"", this.parameters.get("usersEnabled"), this.parameters.get("loggedUser"));
 		if(this.parameters.get("currentLanguage")){
 			window.ajaxplorer.currentLanguage = this.parameters.get("currentLanguage");
 		}
@@ -198,13 +198,13 @@ Class.create("AppBootstrap", {
 	 */
 	detectBaseParameters : function(){
 		$$('script').each(function(scriptTag){
-			if(scriptTag.src.match("/js/ajaxplorer_boot") || scriptTag.src.match("/js/ajaxplorer/AppBootstrap.class.js")){
-				if(scriptTag.src.match("/js/ajaxplorer_boot")){
+			if(scriptTag.src.match("/js/app_boot") || scriptTag.src.match("/js/ajaxplorer/AppBootstrap.class.js")){
+				if(scriptTag.src.match("/js/app_boot")){
 					this.parameters.set("debugMode", false);
 				}else{
 					this.parameters.set("debugMode", true);
 				}
-                var src = scriptTag.src.replace('/js/ajaxplorer/AppBootstrap.class.js','').replace('/js/ajaxplorer_boot.js', '').replace('/js/ajaxplorer_boot_protolegacy.js', '');
+                var src = scriptTag.src.replace('/js/ajaxplorer/AppBootstrap.class.js','').replace('/js/app_boot.js', '').replace('/js/app_boot_protolegacy.js', '');
                 if(src.indexOf("?")!=-1) src = src.split("?")[0];
 				this.parameters.set("resourcesFolder", src);
 			}
@@ -243,7 +243,7 @@ Class.create("AppBootstrap", {
             }
 			html+='	<div id="progressBox" class="dialogBox" style="width: 320px;display:block;top:30%;z-index:2002;left:40%;position: absolute;background-color: #fff;padding: 0;">';
 			html+='	<div align="left" class="dialogContent" style="color:#676965;font-family:Trebuchet MS,sans-serif;font-size:11px;font-weight:normal;left:10px;padding:10px;">';
-			var icon = customWording.icon || resourcesFolder+'/../../../AjxpLogo250.png';
+			var icon = customWording.icon || resourcesFolder+'/../../../AppLogo250.png';
             if(customWording.icon_binary_url){
                 icon = this.parameters.get("appServerAccess") + "&" + customWording.icon_binary_url;
             }

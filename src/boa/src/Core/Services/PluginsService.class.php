@@ -16,11 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Core\Services;
 
 use BoA\Core\Plugins\Plugin; 
+use BoA\Core\Utils\Utils;
 
 defined('BOA_EXEC') or die( 'Access not allowed');
 
@@ -54,7 +55,6 @@ class PluginsService{
      * @param bool $rewriteCache Force a cache rewriting
      */
     public function loadPluginsRegistry($pluginFolder, $confStorage, $rewriteCache = false){
-        //var_dump($confStorage);
         if(!$rewriteCache && (!defined("BOA_SKIP_CACHE") || BOA_SKIP_CACHE === false)){
             $reqs = Utils::loadSerialFile(BOA_PLUGINS_REQUIRES_FILE);
             if(count($reqs)){

@@ -15,20 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * Abstract container for data
  */
-Class.create("AjxpNode", {
+Class.create("ManifestNode", {
 	/**
 	 * Constructor
 	 * @param path String
 	 * @param isLeaf Boolean
 	 * @param label String
 	 * @param icon String
-	 * @param iNodeProvider IAjxpNodeProvider
+	 * @param iNodeProvider IManifestNodeProvider
 	 */
 	initialize : function(path, isLeaf, label, icon, iNodeProvider){
 		this._path = path;
@@ -65,15 +65,15 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Loads the node using its own provider or the one passed
-	 * @param iAjxpNodeProvider IAjxpNodeProvider Optionnal
+	 * @param iManifestNodeProvider IManifestNodeProvider Optionnal
 	 */
-	load : function(iAjxpNodeProvider){		
+	load : function(iManifestNodeProvider){		
 		if(this.isLoading) return;		
-		if(!iAjxpNodeProvider){
+		if(!iManifestNodeProvider){
 			if(this._iNodeProvider){
-				iAjxpNodeProvider = this._iNodeProvider;
+				iManifestNodeProvider = this._iNodeProvider;
 			}else{
-				iAjxpNodeProvider = new RemoteNodeProvider();
+				iManifestNodeProvider = new RemoteNodeProvider();
 			}
 		}
 		this.isLoading = true;
@@ -83,7 +83,7 @@ Class.create("AjxpNode", {
 			this.notify("loaded");
 			return;
 		}
-		iAjxpNodeProvider.loadNode(this, function(node){
+		iManifestNodeProvider.loadNode(this, function(node){
 			this._isLoaded = true;
 			this.isLoading = false;
 			this.notify("loaded");
@@ -92,14 +92,14 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Remove children and reload node
-	 * @param iAjxpNodeProvider IAjxpNodeProvider Optionnal
+	 * @param iManifestNodeProvider IManifestNodeProvider Optionnal
 	 */
-	reload : function(iAjxpNodeProvider){
+	reload : function(iManifestNodeProvider){
 		this._children.each(function(child){
 			this.removeChild(child);
 		}.bind(this));
 		this._isLoaded = false;		
-		this.load(iAjxpNodeProvider);
+		this.load(iManifestNodeProvider);
 	},
 	/**
 	 * Unload child and notify "force_clear"
@@ -112,14 +112,14 @@ Class.create("AjxpNode", {
 		this.notify("force_clear");
 	},
 	/**
-	 * Sets this AjxpNode as being the root parent
+	 * Sets this ManifestNode as being the root parent
 	 */
 	setRoot : function(){
 		this._isRoot = true;
 	},
 	/**
 	 * Set the node children as a bunch
-	 * @param nodes AjxpNodes[]
+	 * @param nodes ManifestNodes[]
 	 */
 	setChildren : function(nodes){
 		this._children = $A(nodes);
@@ -127,14 +127,14 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Get all children as a bunch
-	 * @returns AjxpNode[]
+	 * @returns ManifestNode[]
 	 */
 	getChildren : function(){
 		return this._children;
 	},
 	/**
 	 * Adds a child to children
-	 * @param node AjxpNode The child
+	 * @param node ManifestNode The child
 	 */
 	addChild : function(node){
 		node.setParent(this);
@@ -149,7 +149,7 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Removes the child from the children
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 */
 	removeChild : function(node){
 		var removePath = node.getPath();
@@ -160,7 +160,7 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Replaces the current node by a new one. Copy all properties deeply
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 */
 	replaceBy : function(node, metaMerge){
 		this._isLeaf = node._isLeaf;
@@ -199,7 +199,7 @@ Class.create("AjxpNode", {
 	/**
 	 * Finds a child node by its path
 	 * @param path String
-	 * @returns AjxpNode
+	 * @returns ManifestNode
 	 */
 	findChildByPath : function(path){
 		return $A(this._children).find(function(child){
@@ -252,28 +252,28 @@ Class.create("AjxpNode", {
 		return (this.getMime() == 'recycle');
 	},
 	/**
-	 * NOT IMPLEMENTED, USE hasAjxpMimeInBranch instead
+	 * NOT IMPLEMENTED, USE hasMimeInBranch instead
 	 */	
 	inZip : function(){
 		
 	},
 	/**
 	 * Search the mime type in the parent branch
-	 * @param ajxpMime String
+	 * @param mime String
 	 * @returns Boolean
 	 */
-	hasAjxpMimeInBranch: function(ajxpMime){
-		if(this.getMime() == ajxpMime.toLowerCase()) return true;
+	hasMimeInBranch: function(mime){
+		if(this.getMime() == mime.toLowerCase()) return true;
 		var parent, crt = this;
 		while(parent =crt._parentNode){
-			if(parent.getMime() == ajxpMime.toLowerCase()){return true;}
+			if(parent.getMime() == mime.toLowerCase()){return true;}
 			crt = parent;
 		}
 		return false;
 	},	
 	/**
 	 * Search the mime type in the parent branch
-	 * @param ajxpMime String
+	 * @param mime String
 	 * @returns Boolean
 	 */
 	hasMetadataInBranch: function(metadataKey, metadataValue){
@@ -299,22 +299,22 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Sets a reference to the parent node
-	 * @param parentNode AjxpNode
+	 * @param parentNode ManifestNode
 	 */
 	setParent : function(parentNode){
 		this._parentNode = parentNode;
 	},
 	/**
 	 * Gets the parent Node
-	 * @returns AjxpNode
+	 * @returns ManifestNode
 	 */
 	getParent : function(){
 		return this._parentNode;
 	},
 	/**
 	 * Finds this node by path if it already exists in arborescence 
-	 * @param rootNode AjxpNode
-	 * @param fakeNodes AjxpNode[]
+	 * @param rootNode ManifestNode
+	 * @param fakeNodes ManifestNode[]
 	 */
 	findInArbo : function(rootNode, fakeNodes){
 		if(!this.getPath()) return;
@@ -330,7 +330,7 @@ Class.create("AjxpNode", {
 				crtNode = node;
 			}else{
                 if(fakeNodes === undefined) return false;
-				crtNode = new AjxpNode(crtPath, false, getBaseName(crtPath));
+				crtNode = new ManifestNode(crtPath, false, getBaseName(crtPath));
 				crtNode.fake = true;				
 				fakeNodes.push(crtNode);
 				crtParentNode.addChild(crtNode);
@@ -347,7 +347,7 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Check if it's the parent of the given node
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 * @returns Boolean
 	 */
 	isParentOf : function(node){
@@ -357,7 +357,7 @@ Class.create("AjxpNode", {
 	},
 	/**
 	 * Check if it's a child of the given node
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 * @returns Boolean
 	 */
 	isChildOf : function(node){

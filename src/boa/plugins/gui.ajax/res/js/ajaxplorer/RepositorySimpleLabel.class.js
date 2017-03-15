@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * A selector for displaying repository list. Will hook to boa:repository_list_refreshed.
  */
-Class.create("RepositorySimpleLabel", AjxpPane, {
+Class.create("RepositorySimpleLabel", AppPane, {
 
     _defaultString:'',
     _defaultIcon : 'network-wired.png',

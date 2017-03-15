@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * The Search Engine abstraction.
  */
-Class.create("SearchEngine", AjxpPane, {
+Class.create("SearchEngine", AppPane, {
 
 	/**
 	 * @var HTMLElement
@@ -69,8 +69,8 @@ Class.create("SearchEngine", AjxpPane, {
         this.searchModeObserver = this.updateSearchModeFromRegistry.bind(this);
         document.observe("boa:registry_loaded", this.searchModeObserver);
 
-        this._dataModel = new AjxpDataModel(true);
-        this._rootNode = new AjxpNode("/", false, "Results", "folder.png");
+        this._dataModel = new DataModel(true);
+        this._rootNode = new ManifestNode("/", false, "Results", "folder.png");
         this._dataModel.setRootNode(this._rootNode);
 
         this.initGUI();
@@ -454,7 +454,7 @@ Class.create("SearchEngine", AjxpPane, {
 	/**
 	 * Add a result to the list - Highlight search term
 	 * @param folderName String
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 * @param metaFound String
 	 */
 	addResult : function(folderName, node, metaFound){
@@ -533,7 +533,7 @@ Class.create("SearchEngine", AjxpPane, {
 	},
 	/**
 	 * Get a folder content and searches its children 
-	 * Should reference the IAjxpNodeProvider instead!! Still a "ls" here!
+	 * Should reference the IManifestNodeProvider instead!! Still a "ls" here!
 	 * @param currentFolder String
 	 */
 	searchFolderContent : function(currentFolder){
@@ -583,7 +583,7 @@ Class.create("SearchEngine", AjxpPane, {
 			{
 				if (nodes[i].tagName == "tree") 
 				{
-					var node = this.parseAjxpNode(nodes[i]);					
+					var node = this.parseManifestNode(nodes[i]);					
 					this._searchNode(node, currentFolder);
 					if(!node.isLeaf())
 					{
@@ -608,7 +608,7 @@ Class.create("SearchEngine", AjxpPane, {
 		{
 			if (nodes[i].tagName == "tree") 
 			{
-				var node = this.parseAjxpNode(nodes[i]);
+				var node = this.parseManifestNode(nodes[i]);
                 if(this.hasMetaSearch()){
                     var searchCols = this.getSearchColumns();
                     var added = false;
@@ -661,12 +661,12 @@ Class.create("SearchEngine", AjxpPane, {
 		}
 	},
 	/**
-	 * Parses an XMLNode and create an AjxpNode
+	 * Parses an XMLNode and create an ManifestNode
 	 * @param xmlNode XMLNode
-	 * @returns AjxpNode
+	 * @returns ManifestNode
 	 */
-	parseAjxpNode : function(xmlNode){
-		var node = new AjxpNode(
+	parseManifestNode : function(xmlNode){
+		var node = new ManifestNode(
 			xmlNode.getAttribute('filename'), 
 			(xmlNode.getAttribute('is_file') == "1" || xmlNode.getAttribute('is_file') == "true"), 
 			xmlNode.getAttribute('text'),
@@ -677,7 +677,7 @@ Class.create("SearchEngine", AjxpPane, {
 		{
 			metadata.set(xmlNode.attributes[i].nodeName, xmlNode.attributes[i].nodeValue);
 			if(Prototype.Browser.IE && xmlNode.attributes[i].nodeName == "ID"){
-				metadata.set("ajxp_sql_"+xmlNode.attributes[i].nodeName, xmlNode.attributes[i].nodeValue);
+				metadata.set("sql_"+xmlNode.attributes[i].nodeName, xmlNode.attributes[i].nodeValue);
 			}
 		}
 		node.setMetadata(metadata);

@@ -63,7 +63,7 @@
   // define( 'PCLZIP_TEMPORARY_DIR', '/temp/' );
   // define( 'PCLZIP_TEMPORARY_DIR', 'C:/Temp/' );
   if (!defined('PCLZIP_TEMPORARY_DIR')) {
-    define( 'PCLZIP_TEMPORARY_DIR', BoA\Core\Utils\Utils::getAjxpTmpDir().DIRECTORY_SEPARATOR );
+    define( 'PCLZIP_TEMPORARY_DIR', BoA\Core\Utils\Utils::getAppTmpDir().DIRECTORY_SEPARATOR );
   }
 
   // ----- Optional threshold ratio for use of temporary files

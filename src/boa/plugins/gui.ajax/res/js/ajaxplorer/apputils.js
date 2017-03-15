@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  * Description : Various functions used statically very often.
  */
 function getBaseName(fileName)
@@ -53,18 +53,18 @@ function getFileExtension(fileName)
 }
 
 function addImageLibrary(aliasName, aliasPath){		
-	if(!window.AjxpImageLibraries) window.AjxpImageLibraries = {};
-	window.AjxpImageLibraries[aliasName] = aliasPath;
+	if(!window.ImageLibraries) window.ImageLibraries = {};
+	window.ImageLibraries[aliasName] = aliasPath;
 }
 
 function resolveImageSource(src, defaultPath, size){
 	if(!src) return "";
-	if(!window.AjxpImageLibraries || src.indexOf("/")==-1){
+	if(!window.ImageLibraries || src.indexOf("/")==-1){
 		return resourcesFolder + (defaultPath?(size?defaultPath.replace("ICON_SIZE", size):defaultPath):'')+ '/' +  src;
 	}
 	var radic = src.substring(0,src.indexOf("/"));
-	if(window.AjxpImageLibraries[radic]){
-		var src = src.replace(radic, window.AjxpImageLibraries[radic]);
+	if(window.ImageLibraries[radic]){
+		var src = src.replace(radic, window.ImageLibraries[radic]);
         if(window._bootstrap.parameters.get("SERVER_PREFIX_URI")){
             src = window._bootstrap.parameters.get("SERVER_PREFIX_URI") + src;
         }
@@ -81,7 +81,7 @@ function simpleButton(id, cssClass, messageId, messageTitle, iconSrc, iconSize, 
 		width:iconSize,
 		height:iconSize,
 		title:MessageHash[messageTitle],
-		ajxp_message_title:MessageHash[messageTitle]
+		message_title:MessageHash[messageTitle]
 	});
 	button.update(img);
 	if(hoverClass){
@@ -132,12 +132,13 @@ function formatDate(dateObject, format){
 }
 
 function parseUrl(data) {
+  console.log(data);
 	var matches = $A();
     //var e=/((http|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+\.[^#?\s]+)(#[\w\-]+)?/;
-    var detect=/(((ajxp\.)(\w+)):\/)?\/?([^:\/\s]+)((\/\w+)*\/)(.*)(#[\w\-]+)?/g;
+    var detect=/(((boa\.)(\w+)):\/)?\/?([^:\/\s]+)((\/\w+)*\/)(.*)(#[\w\-]+)?/g; //aj xp -> boa
     var results = data.match(detect);
     if(results && results.length){
-    	var e=/^((ajxp\.(\w+)):\/)?\/?([^:\/\s]+)((\/\w+)*\/)(.*)(#[\w\-]+)?$/;
+    	var e=/^((boa\.(\w+)):\/)?\/?([^:\/\s]+)((\/\w+)*\/)(.*)(#[\w\-]+)?$/; //aj xp -> boa
     	for(var i=0;i<results.length;i++){
     		if(results[i].match(e)){
 		        matches.push({url: RegExp['$&'],
@@ -561,7 +562,7 @@ function slugString(value){
 }
 
 
-function ajxpCorners(oElement, cornersString)
+function corners(oElement, cornersString)
 {
 	var tr, tl, bl, br;
 	if(cornersString == null)

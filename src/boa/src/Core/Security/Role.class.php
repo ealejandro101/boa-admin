@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Core\Security;
 
@@ -47,7 +47,7 @@ class Role implements GroupPathProvider
         $this->roleId = $id;
     }
 
-    public function migrateDeprectated($repositoriesList, AjxpRole $oldRole){
+    public function migrateDeprectated($repositoriesList, Role $oldRole){
         $repositoriesList["app.all"] = "";
         foreach($repositoriesList as $repoId => $repoObject){
             $right = $oldRole->getRight($repoId);

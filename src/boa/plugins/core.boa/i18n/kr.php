@@ -16,7 +16,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
 *
-* The latest code can be found at <http://www.ajaxplorer.info/>.
+* The latest code can be found at <http://https://github.com/boa-project/boa/>.
 */
 //  Korean translation : minuki@gmail.com
 //  오타, 오역, 어색한 부분은 누구든지 수정하여 재 공유 부탁드립니다.

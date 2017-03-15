@@ -9,7 +9,7 @@ function splitOverlayIcons(node){
     return ret;
 }
 
-function AJXPTree(rootNode, sAction, filter) {
+function CustomXTree(rootNode, sAction, filter) {
 	this.WebFXTree = WebFXTree;
 	this.loaded = true;
 	this.node = rootNode;
@@ -43,21 +43,21 @@ function AJXPTree(rootNode, sAction, filter) {
 	}
 };
 
-AJXPTree.prototype = new WebFXTree;
+CustomXTree.prototype = new WebFXTree;
 
-AJXPTree.prototype._webfxtree_expand = WebFXTree.prototype.expand;
-AJXPTree.prototype.expand = function() {
+CustomXTree.prototype._webfxtree_expand = WebFXTree.prototype.expand;
+CustomXTree.prototype.expand = function() {
 	if(!this.node.fake){
 		this.node.load();
 	}
 	this._webfxtree_expand();
 };
 
-AJXPTree.prototype.destroy = function(){
+CustomXTree.prototype.destroy = function(){
     if(this.node) this.node.stopObserving();
 };
 
-AJXPTree.prototype.setAjxpRootNode = function(rootNode){
+CustomXTree.prototype.setRootNode = function(rootNode){
 	if(this.node){
 		var oldNode = this.node;
 	}
@@ -77,7 +77,7 @@ AJXPTree.prototype.setAjxpRootNode = function(rootNode){
 	//this.node.load();
 };
 
-AJXPTree.prototype.attachListeners = function(jsNode, node){
+CustomXTree.prototype.attachListeners = function(jsNode, node){
 	node.observe("child_added", function(childPath){
 		if(node.getMetadata().get('paginationData')){
 			var pData = node.getMetadata().get('paginationData');
@@ -131,7 +131,7 @@ AJXPTree.prototype.attachListeners = function(jsNode, node){
 	}.bind(jsNode) );
 };
 
-function AJXPTreeItem(node, sAction, eParent) {
+function CustomXTreeItem(node, sAction, eParent) {
 	this.WebFXTreeItem = WebFXTreeItem;
 	this.node = node;
 	var icon = node.getIcon();
@@ -170,15 +170,15 @@ function AJXPTreeItem(node, sAction, eParent) {
 	webFXTreeHandler.all[this.id] = this;
 };
 
-AJXPTreeItem.prototype = new WebFXTreeItem;
+CustomXTreeItem.prototype = new WebFXTreeItem;
 
-AJXPTreeItem.prototype._webfxtree_expand = WebFXTreeItem.prototype.expand;
-AJXPTreeItem.prototype.expand = function() {
+CustomXTreeItem.prototype._webfxtree_expand = WebFXTreeItem.prototype.expand;
+CustomXTreeItem.prototype.expand = function() {
 	this.node.load();
 	this._webfxtree_expand();
 };
 
-AJXPTreeItem.prototype.attachListeners = AJXPTree.prototype.attachListeners;
+CustomXTreeItem.prototype.attachListeners = CustomXTree.prototype.attachListeners;
 
 
 /*
@@ -189,7 +189,7 @@ function _nodeToTree(node, parentNode) {
 	if(parentNode.filter && !parentNode.filter(node)){
 		return false;
 	}
-	var jsNode = new AJXPTreeItem(node, null, parentNode);	
+	var jsNode = new CustomXTreeItem(node, null, parentNode);	
 	if(node.isLoaded())
 	{
 		jsNode.loaded = true;

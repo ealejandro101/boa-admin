@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -24,7 +24,7 @@
  */
 Class.create("FilesList", SelectableElements, {
 	
-	__implements : ["IAjxpWidget", "IFocusable", "IContextMenuable", "IActionProvider"],
+	__implements : ["IAppWidget", "IFocusable", "IContextMenuable", "IActionProvider"],
 
     __allObservers : null,
     __currentInstanceIndex:1,
@@ -223,14 +223,14 @@ Class.create("FilesList", SelectableElements, {
     },
 
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */
 	getDomNode : function(){
 		return this.htmlElement;
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */
 	destroy : function(){
         this._clearObservers();
@@ -681,7 +681,7 @@ Class.create("FilesList", SelectableElements, {
 					ajaxplorer.user.savePreference("columns_size");
 				}.bind(this), 2000);				
 			}.bind(this) );
-			this._sortableTable = new AjxpSortable(oElement, this.getVisibleSortTypes(), this.htmlElement.down('div.sort-table'));
+			this._sortableTable = new ExtSortable(oElement, this.getVisibleSortTypes(), this.htmlElement.down('div.sort-table'));
 			this._sortableTable.onsort = function(){
 				this.redistributeBackgrounds();
 				var ctxt = this.getCurrentContextNode();
@@ -760,7 +760,7 @@ Class.create("FilesList", SelectableElements, {
 				this._thumbSize = parseInt(this._fixedThumbSize);
 			}
 
-            this._sortableTable = new AjxpSortable(scrollElement, null, null);
+            this._sortableTable = new ExtSortable(scrollElement, null, null);
             this._sortableTable.setMetaSortType(this.columnsDef);
             this._sortableTable.onsort = function(){
                 var ctxt = this.getCurrentContextNode();
@@ -1087,28 +1087,28 @@ Class.create("FilesList", SelectableElements, {
             this.protoMenu.removeElements('.draggable');
             this.protoMenu.removeElements('.selectable_div');
         }
-        for(var i = 0; i< AllAjxpDroppables.length;i++){
-            var el = AllAjxpDroppables[i];
+        for(var i = 0; i< AllDroppables.length;i++){
+            var el = AllDroppables[i];
             if(this.isItem(el)){
-                Droppables.remove(AllAjxpDroppables[i]);
-                delete(AllAjxpDroppables[i]);
+                Droppables.remove(AllDroppables[i]);
+                delete(AllDroppables[i]);
             }
         }
-        for(i = 0;i< AllAjxpDraggables.length;i++){
-            if(AllAjxpDraggables[i] && AllAjxpDraggables[i].element && this.isItem(AllAjxpDraggables[i].element)){
-                  if(AllAjxpDraggables[i].element.IMAGE_ELEMENT){
+        for(i = 0;i< AllDraggables.length;i++){
+            if(AllDraggables[i] && AllDraggables[i].element && this.isItem(AllDraggables[i].element)){
+                  if(AllDraggables[i].element.IMAGE_ELEMENT){
                       try{
-                          if(AllAjxpDraggables[i].element.IMAGE_ELEMENT.destroyElement){
-                              AllAjxpDraggables[i].element.IMAGE_ELEMENT.destroyElement();
+                          if(AllDraggables[i].element.IMAGE_ELEMENT.destroyElement){
+                              AllDraggables[i].element.IMAGE_ELEMENT.destroyElement();
                           }
-                          AllAjxpDraggables[i].element.IMAGE_ELEMENT = null;
-                          delete AllAjxpDraggables[i].element.IMAGE_ELEMENT;
+                          AllDraggables[i].element.IMAGE_ELEMENT = null;
+                          delete AllDraggables[i].element.IMAGE_ELEMENT;
                       }catch(e){}
                   }
-                Element.remove(AllAjxpDraggables[i].element);
+                Element.remove(AllDraggables[i].element);
             }
         }
-        AllAjxpDraggables = $A([]);
+        AllDraggables = $A([]);
 
         var items = this.getSelectedItems();
         var setItemSelected = this.setItemSelected.bind(this);
@@ -1243,7 +1243,7 @@ Class.create("FilesList", SelectableElements, {
 
 	/**
 	 * Populates the list with the children of the passed contextNode
-	 * @param contextNode AjxpNode
+	 * @param contextNode ManifestNode
 	 */
 	fill: function(contextNode){
 
@@ -1449,7 +1449,7 @@ Class.create("FilesList", SelectableElements, {
 	
 	/**
 	 * Populate a node as a TR element
-	 * @param node AjxpNode
+	 * @param node ManifestNode
      * @param HTMLElement replaceItem
 	 * @returns HTMLElement
 	 */
@@ -1461,7 +1461,7 @@ Class.create("FilesList", SelectableElements, {
 		metaData.each(function(pair){
 			//newRow.setAttribute(pair.key, pair.value);
 			if(Prototype.Browser.IE && pair.key == "ID"){
-				newRow.setAttribute("ajxp_sql_"+pair.key, pair.value);
+				newRow.setAttribute("sql_"+pair.key, pair.value);
 			}			
 		});
 		var attributeList;
@@ -1533,7 +1533,7 @@ Class.create("FilesList", SelectableElements, {
                 if(this.options.draggable == undefined || this.options.draggable === true){
                     window.setTimeout(function(){
                         if(node.getMime() != "recycle"){
-                            var newDrag = new AjxpDraggable(
+                            var newDrag = new ExtDraggable(
                                 innerSpan,
                                 {
                                     revert:true,
@@ -1548,7 +1548,7 @@ Class.create("FilesList", SelectableElements, {
                         }
                         if(!node.isLeaf())
                         {
-                            AjxpDroppables.add(innerSpan, node);
+                            AppDroppables.add(innerSpan, node);
                         }
                     }.bind(this), 500);
                 }
@@ -1622,7 +1622,7 @@ Class.create("FilesList", SelectableElements, {
 	
 	/**
 	 * Populates a node as a thumbnail div
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 * @returns HTMLElement
 	 */
 	nodeToDiv: function(node){
@@ -1699,7 +1699,7 @@ Class.create("FilesList", SelectableElements, {
 		// Defer Drag'n'drop assignation for performances
 		if(!node.isRecycle()){
 			window.setTimeout(function(){
-				var newDrag = new AjxpDraggable(newRow, {
+				var newDrag = new ExtDraggable(newRow, {
 					revert:true,
 					ghosting:true,
 					scroll:($('tree_container')?'tree_container':null),
@@ -1709,7 +1709,7 @@ Class.create("FilesList", SelectableElements, {
 		}
 		if(!node.isLeaf())
 		{
-			AjxpDroppables.add(newRow, node);
+			AppDroppables.add(newRow, node);
 		}
 
         this.addInlineToolbar(newRow, node);
@@ -1719,7 +1719,7 @@ Class.create("FilesList", SelectableElements, {
 		
 	/**
 	 * Populates a node as a thumbnail div
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 * @returns HTMLElement
 	 */
 	nodeToLargeDiv: function(node){
@@ -1853,7 +1853,7 @@ Class.create("FilesList", SelectableElements, {
 		// Defer Drag'n'drop assignation for performances
 		if(!node.isRecycle()){
 			window.setTimeout(function(){
-				var newDrag = new AjxpDraggable(largeRow, {
+				var newDrag = new ExtDraggable(largeRow, {
 					revert:true,
 					ghosting:true,
 					scroll:($('tree_container')?'tree_container':null),
@@ -1863,7 +1863,7 @@ Class.create("FilesList", SelectableElements, {
 		}
 		if(!node.isLeaf())
 		{
-			AjxpDroppables.add(largeRow, node);
+			AppDroppables.add(largeRow, node);
 		}
 
         this.addInlineToolbar(largeRow, node);
@@ -1909,7 +1909,7 @@ Class.create("FilesList", SelectableElements, {
 			return;
 		}
 		var percent = parseInt( parseInt(node.getMetadata().get("bytesize")) / parseInt(node.getMetadata().get("target_bytesize")) * 100  );
-		var uuid = 'ajxp_'+(new Date()).getTime();		
+		var uuid = 'uuid_'+(new Date()).getTime();		
 		var div = new Element('div', {style:'padding-left:3px;', className:'text_label'}).update('<span class="percent_text" style="line-height:19px;padding-left:5px;">'+percent+'%</span>');
 		var span = new Element('span', {id:uuid}).update('0%');		
 		var options = {

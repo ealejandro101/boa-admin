@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Uploader\Html;
 
 use BoA\Core\Http\XMLWriter;
 use BoA\Core\Plugins\Plugin;
 use BoA\Core\Services\ConfService;
+use BoA\Core\Services\PluginsService;
+use BoA\Core\Utils\Utils;
 use BoA\Plugins\Core\Log\Logger;
 
 defined('BOA_EXEC') or die( 'Access not allowed');
@@ -35,6 +37,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 class SimpleUploadProcessor extends Plugin {
 	
 	public function getDropBg($action, $httpVars, $fileVars){
+    die('getDropBg');
 		$lang = ConfService::getLanguage();
 		$img = BOA_PLUGINS_FOLDER."/uploader.html/i18n/$lang-dropzone.png";
 		if(!is_file($img)) $img = BOA_PLUGINS_FOLDER."uploader.html/i18n/en-dropzone.png";
@@ -122,15 +125,15 @@ class SimpleUploadProcessor extends Plugin {
 		if(!$repository->detectStreamWrapper(false)){
 			return false;
 		}
-		$plugin = AJXP_PluginsService::findPlugin("access", $repository->getAccessType());
+		$plugin = PluginsService::findPlugin("access", $repository->getAccessType());
 		$streamData = $plugin->detectStreamWrapper(true);		
-		$dir = AJXP_Utils::decodeSecureMagic($httpVars["dir"]);
+		$dir = Utils::decodeSecureMagic($httpVars["dir"]);
     	$destStreamURL = $streamData["protocol"]."://".$repository->getId().$dir."/";    	
-		$filename = AJXP_Utils::decodeSecureMagic($httpVars["file_name"]);
+		$filename = Utils::decodeSecureMagic($httpVars["file_name"]);
 		$chunks = array();
 		$index = 0;
 		while(isSet($httpVars["chunk_".$index])){
-			$chunks[] = AJXP_Utils::decodeSecureMagic($httpVars["chunk_".$index]);
+			$chunks[] = Utils::decodeSecureMagic($httpVars["chunk_".$index]);
 			$index++;
 		}
 		

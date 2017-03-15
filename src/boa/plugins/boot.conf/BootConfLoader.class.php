@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Boot\Conf;
 
@@ -98,13 +98,13 @@ class BootConfLoader extends AbstractConfDriver {
                 }catch (Exception $e){
                     $checkErrorMessage = " (Warning : ".$e->getMessage().")";
                 }
-                $tParams = XMLWriter::replaceAjxpXmlKeywords($typePlug->getManifestRawContent("server_settings/param"));
+                $tParams = XMLWriter::replaceXmlKeywords($typePlug->getManifestRawContent("server_settings/param"));
                 $addParams .= '<global_param group_switch_name="'.$fieldName.'" name="instance_name" group_switch_label="'.$typePlug->getManifestLabel().$checkErrorMessage.'" group_switch_value="'.$typePlug->getId().'" default="'.$typePlug->getId().'" type="hidden"/>';
                 $addParams .= str_replace("<param", "<global_param group_switch_name=\"${fieldName}\" group_switch_label=\"".$typePlug->getManifestLabel().$checkErrorMessage."\" group_switch_value=\"".$typePlug->getId()."\" ", $tParams);
-                $addParams .= XMLWriter::replaceAjxpXmlKeywords($typePlug->getManifestRawContent("server_settings/global_param"));
+                $addParams .= XMLWriter::replaceXmlKeywords($typePlug->getManifestRawContent("server_settings/global_param"));
             }
         }
-        $allParams = XMLWriter::replaceAjxpXmlKeywords($fullManifest->ownerDocument->saveXML($fullManifest));
+        $allParams = XMLWriter::replaceXmlKeywords($fullManifest->ownerDocument->saveXML($fullManifest));
         $allParams = str_replace('type="plugin_instance:', 'type="group_switch:', $allParams);
         $allParams = str_replace("</server_settings>", $addParams."</server_settings>", $allParams);
 
@@ -345,7 +345,7 @@ class BootConfLoader extends AbstractConfDriver {
 
     protected function authLegacyToBootConf($legacy){
         $data = array();
-        $kOpts = array("LOGIN_REDIRECT","TRANSMIT_CLEAR_PASS", "AUTOCREATE_AJXPUSER");
+        $kOpts = array("LOGIN_REDIRECT","TRANSMIT_CLEAR_PASS", "AUTOCREATE_USER");
         foreach($kOpts as $k){
             if(isSet($legacy["OPTIONS"][$k])) $data[$k] = $legacy["OPTIONS"][$k];
         }
@@ -398,7 +398,7 @@ class BootConfLoader extends AbstractConfDriver {
 
     /**
      * Returns a list of available repositories (dynamic ones only, not the ones defined in the config file).
-     * @param AbstractAjxpUser $user
+     * @param AbstractUser $user
      * @return Array
      */
     function listRepositories($user = null)
@@ -451,10 +451,10 @@ class BootConfLoader extends AbstractConfDriver {
     }
 
     /**
-     * Must return an associative array of roleId => AjxpRole objects.
+     * Must return an associative array of roleId => Role objects.
      * @param array $roleIds
      * @param boolean $excludeReserved,
-     * @return array AjxpRole[]
+     * @return array Role[]
      */
     function listRoles($roleIds = array(), $excludeReserved = false)
     {
@@ -539,7 +539,7 @@ class BootConfLoader extends AbstractConfDriver {
      * Instantiate the right class
      *
      * @param string $userId
-     * @return AbstractAjxpUser
+     * @return AbstractUser
      */
     function instantiateAbstractUserImpl($userId)
     {
@@ -553,7 +553,7 @@ class BootConfLoader extends AbstractConfDriver {
 
     /**
      * @param $userId
-     * @return AbstractAjxpUser[]
+     * @return AbstractUser[]
      */
     function getUserChildren($userId)
     {
@@ -570,7 +570,7 @@ class BootConfLoader extends AbstractConfDriver {
     }
 
     /**
-     * @param AbstractAjxpUser[] $flatUsersList
+     * @param AbstractUser[] $flatUsersList
      * @param string $baseGroup
      * @param bool $fullTree
      * @return void

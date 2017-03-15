@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -77,9 +77,9 @@ Class.create("Connexion", {
      */
     showLoader : function(){
         if(this.discrete) return;
-        if(!$('AjxpConnexion-loader') && window._bootstrap.parameters.get("theme")){
+        if(!$('Connexion-loader') && window._bootstrap.parameters.get("theme")){
             var span = new Element("span", {
-                id:'AjxpConnexion-loader',
+                id:'Connexion-loader',
                 style:'position:absolute;top:2px;right:2px;z-index:40000;display:none;'});
             var img = new Element("img", {
                 src:resourcesFolder+"/images/loadingImage.gif"
@@ -87,7 +87,7 @@ Class.create("Connexion", {
             span.insert(img);
             $$('body')[0].insert(span);
         }
-        if($('AjxpConnexion-loader')) $('AjxpConnexion-loader').show();
+        if($('Connexion-loader')) $('Connexion-loader').show();
     },
 
     /**
@@ -95,7 +95,7 @@ Class.create("Connexion", {
      */
     hideLoader : function(){
         if(this.discrete) return;
-        if($('AjxpConnexion-loader'))$('AjxpConnexion-loader').hide();
+        if($('Connexion-loader'))$('Connexion-loader').hide();
     },
 
 	/**

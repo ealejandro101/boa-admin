@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 Class.create("RoleEditor", AbstractEditor, {
 
@@ -51,7 +51,7 @@ Class.create("RoleEditor", AbstractEditor, {
         $("pane-acls").resizeOnShow = function(tab){
             fitHeightToBottom($("acls-selected"), $("pane-acls"), 20);
         }
-        this.tab = new AjxpSimpleTabs(oFormObject.down("#roleTabulator"));
+        this.tab = new SimpleTabs(oFormObject.down("#roleTabulator"));
         this.pluginsData = {};
         this.actions.get("saveButton").observe("click", this.save.bind(this) );
         modal.setCloseValidation(function(){
@@ -711,7 +711,7 @@ Class.create("RoleEditor", AbstractEditor, {
                 }
             }
             pane.select("div.accordion_content").invoke("setStyle", {display:"block"});
-            new AjxpSimpleTabs(parametersPane);
+            new SimpleTabs(parametersPane);
             parametersPane.addClassName("non_empty");
 
             // UPDATE FORMS ELEMENTS

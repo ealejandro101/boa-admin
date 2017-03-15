@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  *
  */
 namespace BoA\Plugins\Access\Fs;
@@ -96,7 +96,7 @@ class FsAccessWrapper implements FileWrapper {
             //print($streamType.$path);
             if($streamType == "file"){
                 if(self::$crtZip == null ||  !is_array(self::$currentListingKeys)){
-                    $tmpDir = Utils::getAjxpTmpDir() . DIRECTORY_SEPARATOR . md5(time()-rand());
+                    $tmpDir = Utils::getAppTmpDir() . DIRECTORY_SEPARATOR . md5(time()-rand());
                     mkdir($tmpDir);
                     $tmpFileName = $tmpDir.DIRECTORY_SEPARATOR.basename($localPath);
                     Logger::debug("Tmp file $tmpFileName");

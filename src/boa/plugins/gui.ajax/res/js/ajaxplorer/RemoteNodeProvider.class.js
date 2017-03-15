@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
- * Implementation of the IAjxpNodeProvider interface based on a remote server access.
+ * Implementation of the IManifestNodeProvider interface based on a remote server access.
  * Default for all repositories.
  */
 Class.create("RemoteNodeProvider", {
-	__implements : "IAjxpNodeProvider",
+	__implements : "IManifestNodeProvider",
     discrete : false,
 	/**
 	 * Constructor
@@ -44,7 +44,7 @@ Class.create("RemoteNodeProvider", {
 	},
 	/**
 	 * Load a node
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 * @param nodeCallback Function On node loaded
 	 * @param childCallback Function On child added
 	 */
@@ -77,7 +77,7 @@ Class.create("RemoteNodeProvider", {
 
     /**
    	 * Load a node
-   	 * @param node AjxpNode
+   	 * @param node ManifestNode
    	 * @param nodeCallback Function On node loaded
    	 */
    	loadLeafNodeSync : function(node, nodeCallback){
@@ -132,8 +132,8 @@ Class.create("RemoteNodeProvider", {
     },
 
 	/**
-	 * Parse the answer and create AjxpNodes
-	 * @param origNode AjxpNode
+	 * Parse the answer and create ManifestNodes
+	 * @param origNode ManifestNode
 	 * @param transport Ajax.Response
 	 * @param nodeCallback Function
 	 * @param childCallback Function
@@ -150,7 +150,7 @@ Class.create("RemoteNodeProvider", {
 		var rootNode = transport.responseXML.documentElement;
 		var children = rootNode.childNodes;
         if(!childrenOnly){
-            var contextNode = this.parseAjxpNode(rootNode);
+            var contextNode = this.parseManifestNode(rootNode);
             origNode.replaceBy(contextNode, "merge");
         }
 
@@ -184,7 +184,7 @@ Class.create("RemoteNodeProvider", {
 		// NOW PARSE CHILDREN
 		var children = XPathSelectNodes(rootNode, "tree");
 		children.each(function(childNode){
-			var child = this.parseAjxpNode(childNode);
+			var child = this.parseManifestNode(childNode);
 			if(!childrenOnly) origNode.addChild(child);
 			if(childCallback){
 				childCallback(child);
@@ -196,12 +196,12 @@ Class.create("RemoteNodeProvider", {
 		}
 	},
 	/**
-	 * Parses XML Node and create AjxpNode
+	 * Parses XML Node and create ManifestNode
 	 * @param xmlNode XMLNode
-	 * @returns AjxpNode
+	 * @returns ManifestNode
 	 */
-	parseAjxpNode : function(xmlNode){
-		var node = new AjxpNode(
+	parseManifestNode : function(xmlNode){
+		var node = new ManifestNode(
 			xmlNode.getAttribute('filename'), 
 			(xmlNode.getAttribute('is_file') == "1" || xmlNode.getAttribute('is_file') == "true"), 
 			xmlNode.getAttribute('text'),
@@ -212,7 +212,7 @@ Class.create("RemoteNodeProvider", {
 		{
 			metadata.set(xmlNode.attributes[i].nodeName, xmlNode.attributes[i].nodeValue);
 			if(Prototype.Browser.IE && xmlNode.attributes[i].nodeName == "ID"){
-				metadata.set("ajxp_sql_"+xmlNode.attributes[i].nodeName, xmlNode.attributes[i].nodeValue);
+				metadata.set("sql_"+xmlNode.attributes[i].nodeName, xmlNode.attributes[i].nodeValue);
 			}
 		}
 		// BACKWARD COMPATIBILIY

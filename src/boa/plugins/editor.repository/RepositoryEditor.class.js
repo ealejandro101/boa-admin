@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 Class.create("RepositoryEditor", AbstractEditor, {
 
@@ -41,7 +41,7 @@ Class.create("RepositoryEditor", AbstractEditor, {
         metaPane.resizeOnShow = function(tab){
             fitHeightToBottom(metaPane, $("repository_edit_box"));
         }
-        this.tab = new AjxpSimpleTabs(oFormObject.down("#repositoryTabulator"));
+        this.tab = new SimpleTabs(oFormObject.down("#repositoryTabulator"));
         this.actions.get("saveButton").observe("click", this.save.bind(this) );
         modal.setCloseValidation(function(){
             if(this.isDirty()){

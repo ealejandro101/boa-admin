@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -52,14 +52,14 @@ Class.create("PreviewFactory", {
 			this._crtImageIndex ++;
 			var imgIndex = this._crtImageIndex;
 			mainObject.IMAGE_ELEMENT.writeAttribute("data-is_loaded", "false");
-			mainObject.IMAGE_ELEMENT.writeAttribute("id", "ajxp_image_"+imgIndex);
+			mainObject.IMAGE_ELEMENT.writeAttribute("id", "image_"+imgIndex);
 			var crtIndex = this._crtImageIndex;
 
 			ajaxplorer.loadEditorResources(editors[0].resourcesManager);
 			var editorClass = Class.getByName(editors[0].editorClass);
 			if(editorClass){
 				var oImageToLoad = {
-					index:"ajxp_image_"+crtIndex,
+					index:"image_"+crtIndex,
 					node:node,
 					editorClass:editorClass,
 					mainObject:mainObject

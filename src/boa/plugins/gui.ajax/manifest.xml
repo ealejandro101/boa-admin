@@ -7,15 +7,15 @@
         </resources>
     </client_settings>
 	<server_settings>
-        <global_param name="GUI_THEME" group="CONF_MESSAGE[Main Options]" type="select" choices="vision|Vision,umbra|Umbra,oxygen|Oxygen (Legacy)" label="CONF_MESSAGE[Theme]" description="CONF_MESSAGE[Theme used for display]" mandatory="true" default="vision"/>
+        <global_param name="GUI_THEME" group="CONF_MESSAGE[Main Options]" type="select" choices="vision|Vision,umbra|Umbra,oxygen|Oxygen (Legacy)" label="CONF_MESSAGE[Theme]" description="CONF_MESSAGE[Theme used for display]" mandatory="true" default="umbra"/>
         <global_param name="CUSTOM_ICON_ONLY" group="CONF_MESSAGE[Start Up Screen]" type="boolean" label="CONF_MESSAGE[Icon Only]" description="CONF_MESSAGE[Skip the title, only display an image]" mandatory="false" default="true"/>
         <global_param name="CUSTOM_ICON_BINARY" group="CONF_MESSAGE[Start Up Screen]" type="image" label="CONF_MESSAGE[Custom Icon]" description="CONF_MESSAGE[URI to a custom image to be used as start up logo]"
         editable="true"
         uploadAction="store_binary_temp"
         loadAction="get_global_binary_param"
-        defaultImage="gui.ajax/AjxpLogo250.png"
+        defaultImage="gui.ajax/AppLogo250.png"
         mandatory="false"/>
-        <global_param name="CUSTOM_ICON" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Icon Path (Legacy)]" description="CONF_MESSAGE[URI to a custom image to be used as start up logo]" default="plugins/gui.ajax/AjxpLogo250.png" mandatory="false"/>
+        <global_param name="CUSTOM_ICON" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Icon Path (Legacy)]" description="CONF_MESSAGE[URI to a custom image to be used as start up logo]" default="plugins/gui.ajax/AppLogo250.png" mandatory="false"/>
         <global_param name="CUSTOM_ICON_WIDTH" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Icon Width]" description="CONF_MESSAGE[Width of the custom image (by default 35px)]" mandatory="false" default="250px"/>
         <global_param name="CUSTOM_ICON_HEIGHT" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Icon Height]" description="CONF_MESSAGE[Height of the custom icon (with the px mention)]" mandatory="false" default="50px"/>
         <global_param name="CUSTOM_FONT_SIZE" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Title Font Size]" description="CONF_MESSAGE[Font sized used for the title in the start up screen]" mandatory="false" default=""/>
@@ -70,11 +70,11 @@
 						</div>
 					</div>
 				</div>
-				<div id="browser" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
 					<div id="vertical_splitter" style="background-color: #fff;" appClass="Splitter" appOptions='{"direction": "vertical", "initA": 200, "maxA":600, "minA":50,"fit":"height","fitParent":"browser"}'>
 						<div id="sidebar_splitter" style="float:left; overflow:hidden;" appClass="Splitter" appOptions='{"direction":"horizontal","initB":200,"minB":24,"maxB":500}'>
 							<div id="topPane" appClass="FoldersTree" appOptions='{"display":"dz"}' appPaneHeader="130" style="border: 1px solid #676965;"></div>
-					    	<div id="bottomSplitPane" appClass="AjxpTabulator" style="border: 1px solid #676965;" appOptions='{"defaultTabId": "info","tabInfos" : [{"id":"info","label":"131","icon":"file_info.png","element":"info_panel"},{"id":"search","label":"87","icon":"search.png","element":"search_container"}]}'>
+					    	<div id="bottomSplitPane" appClass="Tabulator" style="border: 1px solid #676965;" appOptions='{"defaultTabId": "info","tabInfos" : [{"id":"info","label":"131","icon":"file_info.png","element":"info_panel"},{"id":"search","label":"87","icon":"search.png","element":"search_container"}]}'>
 						    	<div id="search_container" appClass="SearchEngine"></div>
 						    	<div id="info_panel" appClass="InfoPanel"></div>
 					    	</div>
@@ -97,7 +97,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="browser" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
 					<div id="vertical_splitter" appClass="Splitter" appOptions='{"direction": "vertical", "initA": 350, "maxA":600, "minA":0,"fit":"height","fitParent":"browser", "minSize":0, "foldingButton":true}'>
 						<div id="sidebar_splitter" style="float:left; overflow:hidden;" appClass="Splitter" appOptions='{"direction":"horizontal","initB":300,"minB":57}'>
 							<div id="topPane" appClass="FoldersTree" appOptions='{"display":"dz","replaceScroller":true}' appPaneHeader="130" appPaneIcon="view_tree.png" style="margin:20px;margin-bottom:10px;padding-right: 10px;"></div>
@@ -119,24 +119,24 @@
 					</div>
 					<div id="workspace_toolbar">
                         <div id="simple_repository_label" appClass="RepositorySimpleLabel" appOptions='{"bindSizeTo":{"width":{"id":"topPane", "events":["resize-FoldersTree-folder_pane","actions_refreshed"], "min":150,"offset":-5}}}'></div>
-					    <div style="float:left;" appClass="AjxpPane"  id="buttons_bar_cont">
+					    <div style="float:left;" appClass="AppPane"  id="buttons_bar_cont">
 						    <div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"toolbarsList":["put", "get"],"groupOtherToolbars":["more", "change", "remote"], "groupOtherLabel":"More","skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
 						</div>
-						<div style="float:right;" appClass="AjxpPane" appOptions='{"bindSizeTo":{"width":{"id":"info_panel", "events":["resize-InfoPanel-info_panel", "resize-FoldersTree-folder_pane","actions_refreshed"], "min":120, "offset":-20, "checkSiblings":true}}}' id="search_engine_cont">
+						<div style="float:right;" appClass="AppPane" appOptions='{"bindSizeTo":{"width":{"id":"info_panel", "events":["resize-InfoPanel-info_panel", "resize-FoldersTree-folder_pane","actions_refreshed"], "min":120, "offset":-20, "checkSiblings":true}}}' id="search_engine_cont">
 						    <div id="search_container" appClass="SearchEngine" appOptions='{"toggleResultsVisibility":"search_results_cont", "fitMarginBottom":20}'></div>
 						</div>
 						<div style="clear:both;" class="skipSibling"/>
 					</div>
 				</div>
-				<div id="browser" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
 					<div id="vertical_splitter" appClass="Splitter" appOptions='{"direction": "vertical", "initA":"70%", "minB":26,"fit":"height","fitParent":"browser", "minSize":0, "foldingButton":"B"}'>
     					<div id="vertical_splitter2" appClass="Splitter" appOptions='{"direction": "vertical", "initA": "50%", "minA":26, "maxA":450, "fit":"height","fitParent":"browser", "minSize":0, "foldingButton":"A"}'>
-    					    <div id="topPane" appClass="AjxpTabulator" appOptions='{"defaultTabId": "folders","tabInfos" : [{"id":"folders","label":"130","iconClass":"icon-folder-open","element":"folder_pane"},{"id":"shared","label":"363","iconClass":"icon-share","element":"shared_elements"},{"id":"flagged","label":"147","iconClass":"icon-star","element":"flagged_elements"}],"headerToolbarOptions":{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["filter","vertical_splitter2-actions"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}}'>
+    					    <div id="topPane" appClass="Tabulator" appOptions='{"defaultTabId": "folders","tabInfos" : [{"id":"folders","label":"130","iconClass":"icon-folder-open","element":"folder_pane"},{"id":"shared","label":"363","iconClass":"icon-share","element":"shared_elements"},{"id":"flagged","label":"147","iconClass":"icon-star","element":"flagged_elements"}],"headerToolbarOptions":{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["filter","vertical_splitter2-actions"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}}'>
     							<div id="folder_pane" appClass="FoldersTree" appOptions='{"display":"dz","replaceScroller":true}' ></div>
     							<div id="shared_elements" appClass="FetchedResultPane" appOptions='{"nodeProviderProperties":{"get_action":"search", "query":"keyword:app_shared"},"reloadOnServerMessage":"tree/reload_shared_elements"}'></div>
     							<div id="flagged_elements" appClass="FetchedResultPane" appOptions='{"nodeProviderProperties":{"get_action":"search", "query":"keyword:bookmarked"},"reloadOnServerMessage":"tree/reload_bookmarks"}'></div>
     					    </div>
-							<div id="cpane_container" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"browser"}'>
+							<div id="cpane_container" appClass="AppPane" appOptions='{"fit":"height","fitParent":"browser"}'>
 							    <div id="cpane_header" class="panelHeader">
 							        <div id="display_toolbar" appClass="ActionsToolbar" appOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["default"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
 							        <div id="breadcrumb" appClass="Breadcrumb" style="width:50%;" appOptions='{"flexTo":"cpane_header"}'></div>
@@ -160,7 +160,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="browser" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"widget"}'>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"widget"}'>
 					<div id="content_pane" appClass="FilesList"  appOptions='{"fit":"height","fitParent":"browser"}'  style="margin:0px;"></div>
 				</div>				
 			]]></template>
@@ -168,8 +168,8 @@
 				<div id="toolbars">
     			    <div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"toolbarsList":["put", "get"],"groupOtherToolbars":["more", "change", "remote"], "groupOtherLabel":"More","skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
 				</div>
-				<div id="browser" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
-                    <div id="cpane_container" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"browser"}'>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
+                    <div id="cpane_container" appClass="AppPane" appOptions='{"fit":"height","fitParent":"browser"}'>
                         <div id="cpane_header" class="panelHeader">
                             <div id="display_toolbar" appClass="ActionsToolbar" appOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["default"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
                             <div id="breadcrumb" appClass="Breadcrumb" style="width:50%;" appOptions='{"flexTo":"cpane_header"}'></div>
@@ -179,9 +179,9 @@
 				</div>
 			]]></template>
             <template name="minisite_vision" element="shared_folder" position="top" theme="vision"><![CDATA[
-				<div id="browser" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"shared_folder"}'>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"shared_folder"}'>
       			    <div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"toolbarsList":["minisite"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
-                    <div id="cpane_container" appClass="AjxpPane" appOptions='{"fit":"height","fitParent":"browser"}'>
+                    <div id="cpane_container" appClass="AppPane" appOptions='{"fit":"height","fitParent":"browser"}'>
                         <div id="cpane_header" class="panelHeader">
                             <div id="display_toolbar" appClass="ActionsToolbar" appOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["default"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
                             <div id="breadcrumb" appClass="Breadcrumb" style="width:50%;" appOptions='{"flexTo":"cpane_header"}'></div>

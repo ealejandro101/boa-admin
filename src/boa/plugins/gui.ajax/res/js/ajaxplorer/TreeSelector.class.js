@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -41,7 +41,7 @@ Class.create("TreeSelector", {
 	},
 	/**
 	 * Load the tree data
-	 * @param rootNode AjxpNode
+	 * @param rootNode ManifestNode
 	 */
 	load : function(rootNode){
 		if(webFXTreeHandler && webFXTreeHandler.selected){
@@ -59,16 +59,16 @@ Class.create("TreeSelector", {
  			this.select();			
 		};
 		if(!rootNode){
-			rootNode = new AjxpNode("/", false, MessageHash[373], "folder.png");
+			rootNode = new ManifestNode("/", false, MessageHash[373], "folder.png");
 		}
-		this.treeCopy = new AJXPTree(rootNode, this._nodeActionCallback, this.options.nodeFilter);
+		this.treeCopy = new CustomXTree(rootNode, this._nodeActionCallback, this.options.nodeFilter);
 		this.treeContainer.update(this.treeCopy.toString());
 		$(this.treeCopy.id).observe("click", function(e){
 			this.action();
 			Event.stop(e);
 		}.bind(this.treeCopy));
 		this.treeCopy.focus();
-		this.treeCopy.setAjxpRootNode(rootNode);
+		this.treeCopy.setRootNode(rootNode);
 		
 	},
 	/**
@@ -144,11 +144,11 @@ Class.create("TreeSelector", {
 	},
 	/**
 	 * Reload the root node of the tree
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 */
-	resetAjxpRootNode : function(node){
+	resetRootNode : function(node){
 		this.treeCopy.node.clear();
-		this.treeCopy.setAjxpRootNode(node);		
+		this.treeCopy.setRootNode(node);		
 		this.treeCopy.node.load();
 	}
 });

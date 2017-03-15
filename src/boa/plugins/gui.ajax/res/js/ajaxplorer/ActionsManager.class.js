@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -173,7 +173,7 @@ Class.create("ActionsManager", {
 	},
 	
 	/**
-	 * DEPRECATED, use getActionsForAjxpWidget instead!
+	 * DEPRECATED, use getActionsForAppWidget instead!
 	 * @returns $A()
 	 */
 	getInfoPanelActions:function(){
@@ -191,7 +191,7 @@ Class.create("ActionsManager", {
 	 * @param widgetId String
 	 * @returns $A()
 	 */
-	getActionsForAjxpWidget:function(appClassName, widgetId){
+	getActionsForAppWidget:function(appClassName, widgetId){
 		var actions = $A([]);
 		this.actions.each(function(pair){
 			var action = pair.value;
@@ -443,17 +443,17 @@ Class.create("ActionsManager", {
                 if(removes && removes.length){
                     removes.each(function(r){
                         var p = r.getAttribute("filename");
-                        var fake = new AjxpNode(p);
+                        var fake = new ManifestNode(p);
                         var n = fake.findInArbo(dm.getRootNode(), undefined);
                         if(n){
                             n.getParent().removeChild(n);
                         }
                     });
                 }
-                if(adds && adds.length && dm.getAjxpNodeProvider().parseAjxpNode){
+                if(adds && adds.length && dm.getManifestNodeProvider().parseManifestNode){
                     adds.each(function(tree){
-                        var newNode = dm.getAjxpNodeProvider().parseAjxpNode(tree);
-                        var parentFake = new AjxpNode(getRepName(newNode.getPath()));
+                        var newNode = dm.getManifestNodeProvider().parseManifestNode(tree);
+                        var parentFake = new ManifestNode(getRepName(newNode.getPath()));
                         var parent = parentFake.findInArbo(dm.getRootNode(), undefined);
                         if(!parent && getRepName(newNode.getPath()) == "") parent = dm.getRootNode();
                         if(parent){
@@ -462,19 +462,19 @@ Class.create("ActionsManager", {
                         }
                     });
                 }
-                if(updates && updates.length && dm.getAjxpNodeProvider().parseAjxpNode){
+                if(updates && updates.length && dm.getManifestNodeProvider().parseManifestNode){
                     updates.each(function(tree){
-                        var newNode = dm.getAjxpNodeProvider().parseAjxpNode(tree);
+                        var newNode = dm.getManifestNodeProvider().parseManifestNode(tree);
                         var original = newNode.getMetadata().get("original_path");
                         if(original && original != newNode.getPath()
                             && getRepName(original) != getRepName(newNode.getPath())){
                             // Node was really moved to another folder
-                            var fake = new AjxpNode(original);
+                            var fake = new ManifestNode(original);
                             var n = fake.findInArbo(dm.getRootNode(), undefined);
                             if(n){
                                 n.getParent().removeChild(n);
                             }
-                            var parentFake = new AjxpNode(getRepName(newNode.getPath()));
+                            var parentFake = new ManifestNode(getRepName(newNode.getPath()));
                             var parent = parentFake.findInArbo(dm.getRootNode(), undefined);
                             if(!parent && getRepName(newNode.getPath()) == "") parent = dm.getRootNode();
                             if(parent){
@@ -482,7 +482,7 @@ Class.create("ActionsManager", {
                                 parent.addChild(newNode);
                             }
                         }else{
-                            var fake = new AjxpNode(original);
+                            var fake = new ManifestNode(original);
                             var n = fake.findInArbo(dm.getRootNode(), undefined);
                             if(n){
                                 newNode._isLoaded = n._isLoaded;

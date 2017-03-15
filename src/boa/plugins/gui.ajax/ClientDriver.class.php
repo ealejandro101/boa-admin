@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Gui\Ajax;
 
@@ -140,13 +140,13 @@ class ClientDriver extends Plugin
 					$nodes = $clonePath->query($_GET["xPath"]);
 					XMLWriter::header("registry_part", array("xPath"=>$_GET["xPath"]));
 					if($nodes->length){
-						print(XMLWriter::replaceAjxpXmlKeywords($clone->saveXML($nodes->item(0))));
+						print(XMLWriter::replaceXmlKeywords($clone->saveXML($nodes->item(0))));
 					}
 					XMLWriter::close("registry_part");
 				}else{
                     Utils::safeIniSet("zlib.output_compression", "4096");
 					header('Content-Type: application/xml; charset=UTF-8');
-                    print(XMLWriter::replaceAjxpXmlKeywords($clone->saveXML()));
+                    print(XMLWriter::replaceXmlKeywords($clone->saveXML()));
 				}
 				
 			break;
@@ -219,7 +219,7 @@ class ClientDriver extends Plugin
                 $regDoc = PluginsService::getXmlRegistry();
                 $changes = Controller::filterActionsRegistry($regDoc);
                 if($changes) PluginsService::updateXmlRegistry($regDoc);
-                $START_PARAMETERS["PRELOADED_REGISTRY"] = XMLWriter::replaceAjxpXmlKeywords($regDoc->saveXML());
+                $START_PARAMETERS["PRELOADED_REGISTRY"] = XMLWriter::replaceXmlKeywords($regDoc->saveXML());
 				$JSON_START_PARAMETERS = json_encode($START_PARAMETERS);
                 $crtTheme = $this->pluginConf["GUI_THEME"];
 				if(ConfService::getConf("JS_DEBUG")){
@@ -238,9 +238,9 @@ class ClientDriver extends Plugin
                         $content = file_get_contents(BOA_PLUGINS_FOLDER."/gui.ajax/res/html/gui.html");
                     }
                     if(preg_match('/MSIE 7/',$_SERVER['HTTP_USER_AGENT']) || preg_match('/MSIE 8/',$_SERVER['HTTP_USER_AGENT'])){
-                        $content = str_replace("ajaxplorer_boot.js", "ajaxplorer_boot_protolegacy.js", $content);
+                        $content = str_replace("app_boot.js", "app_boot_protolegacy.js", $content);
                     }
-					$content = XMLWriter::replaceAjxpXmlKeywords($content, false);
+					$content = XMLWriter::replaceXmlKeywords($content, false);
 					if($JSON_START_PARAMETERS){
 						$content = str_replace("//BOA_JSON_START_PARAMETERS", "startParameters = ".$JSON_START_PARAMETERS.";", $content);
 					}
@@ -363,10 +363,11 @@ class ClientDriver extends Plugin
             define("BOA_THEME_FOLDER", CLIENT_RESOURCES_FOLDER."/themes/".$theme);
         }
         $value = str_replace(array("BOA_CLIENT_RESOURCES_FOLDER", "BOA_CURRENT_VERSION"), array(CLIENT_RESOURCES_FOLDER, BOA_VERSION), $value);
+        
         if(isSet($_SESSION["BOA_SERVER_PREFIX_URI"])){
-            $value = str_replace("BOA_THEME_FOLDER", $_SESSION["BOA_SERVER_PREFIX_URI"]."plugins/gui.ajax/res/themes/".$theme, $value);
+            $value = str_replace("BOA_THEME_FOLDER", $_SESSION["BOA_SERVER_PREFIX_URI"].BOA_THEME_FOLDER, $value);
         }else{
-            $value = str_replace("BOA_THEME_FOLDER", "plugins/gui.ajax/res/themes/".$theme, $value);
+            $value = str_replace("BOA_THEME_FOLDER", BOA_THEME_FOLDER, $value);
         }
         return $value;
     }

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Core\Auth;
 
@@ -319,12 +319,12 @@ class AbstractAuthDriver extends Plugin {
 		return (isSet($this->options[$optionName])?$this->options[$optionName]:"");	
 	}
 	
-	function isAjxpAdmin($login){
+	function isAppAdmin($login){
 		return ($this->getOption("BOA_ADMIN_LOGIN") === $login);
 	}
 	
 	function autoCreateUser(){
-		$opt = $this->getOption("AUTOCREATE_AJXPUSER");
+		$opt = $this->getOption("AUTOCREATE_USER");
 		if($opt === true) return true;
 		return false;
 	}
@@ -355,7 +355,7 @@ class AbstractAuthDriver extends Plugin {
     }
 
     /**
-     * @param AbstractAjxpUser $userObject
+     * @param AbstractUser $userObject
      */
     function updateUserObject(&$userObject){
     }

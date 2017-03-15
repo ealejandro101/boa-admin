@@ -15,15 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * Abstract container any type of pane that can resize
  */
-Class.create("AjxpPane", {	
+Class.create("AppPane", {	
 	
-	__implements : "IAjxpWidget",
+	__implements : "IAppWidget",
     childrenPanes : null,
 	
 	/**
@@ -34,7 +34,7 @@ Class.create("AjxpPane", {
 	initialize : function(htmlElement, options){
 		this.htmlElement = $(htmlElement);
 		if(!this.htmlElement){
-			throw new Error('Cannot find element for AjxpPane : ' + this.__className);
+			throw new Error('Cannot find element for AppPane : ' + this.__className);
 		}
 		this.options = options || {};
 		this.htmlElement.paneObject = this;
@@ -118,14 +118,14 @@ Class.create("AjxpPane", {
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */	
 	getDomNode : function(){
 		return this.htmlElement;
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */	
 	destroy : function(){
         this.childrenPanes.each(function(child){
@@ -140,7 +140,7 @@ Class.create("AjxpPane", {
 	},
 	
 	/**
-	 * Find and reference direct children IAjxpWidget
+	 * Find and reference direct children IAppWidget
 	 * @param element HTMLElement
 	 */
 	scanChildrenPanes : function(element){

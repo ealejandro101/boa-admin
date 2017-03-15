@@ -59,8 +59,8 @@
                 <processing>
                     <clientCallback dialogOpenForm="installer_form" dialogSkipButtons="true" prepareModal="true">
                         <dialogOnOpen><![CDATA[
-                            ResourcesManager.prototype.loadJSResource('plugins/boot.conf/class.AjxpInstaller.js', 'AjxpInstaller');
-                            var installer = new AjxpInstaller(modal.getForm().down('#installer_form'), {});
+                            ResourcesManager.prototype.loadJSResource('plugins/boot.conf/AppInstaller.class.js', 'AppInstaller');
+                            var installer = new AppInstaller(modal.getForm().down('#installer_form'), {});
                         ]]></dialogOnOpen>
                         <dialogOnComplete><![CDATA[
 
@@ -68,7 +68,7 @@
                     </clientCallback>
                     <clientForm id="installer_form"><![CDATA[
                         <div id="installer_form" box_padding="0" box_resize="true" box_width="560" overlayStyle='{"backgroundColor":"white","opacity":10,"backgroundImage":"url(\"BOA_THEME_FOLDER/images/grid_t.png\")"}' style="padding: 10px; overflow:auto; background-color: white;">
-                            <img src="plugins/gui.ajax/AjxpLogo250.png" style="display:block;">
+                            <img src="plugins/gui.ajax/AppLogo250.png" style="display:block;">
                             <div class="dialogLegend installerWelcome"> Thank you for installing AjaXplorer!<br> This tool will make sure your new sharing platform is up and running in no time: browse through the various sections to set up the general behaviour of the application. You can fly over the fields labels with your mouse to get more information. <br>Are you ready ? <span id="start_button">Start wizard!</span></div>
                             <div id="the_form" style="display:none; margin:0 5px;"></div>
                             <div id="configuration_progress" class="dialogLegend installerWelcome" style="display:none; margin:0 5px;">

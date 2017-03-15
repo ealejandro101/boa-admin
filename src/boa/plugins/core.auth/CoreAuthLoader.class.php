@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Core\Auth;
 
@@ -89,7 +89,7 @@ class CoreAuthLoader extends Plugin{
                 );
                 // MERGE BASIC AUTH OPTIONS FROM MASTER
                 $masterMainAuthOptions = array();
-                $keys = array("TRANSMIT_CLEAR_PASS", "AUTOCREATE_AJXPUSER", "LOGIN_REDIRECT", "BOA_ADMIN_LOGIN");
+                $keys = array("TRANSMIT_CLEAR_PASS", "AUTOCREATE_USER", "LOGIN_REDIRECT", "BOA_ADMIN_LOGIN");
                 if(is_array($this->pluginConf["MASTER_INSTANCE_CONFIG"])){
                     foreach($keys as $key){
                         if(isSet($this->pluginConf["MASTER_INSTANCE_CONFIG"][$key])){

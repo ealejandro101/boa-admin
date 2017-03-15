@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -35,11 +35,11 @@ Class.create("FetchedResultPane", FilesList, {
 	initialize: function($super, mainElementName, appOptions)
 	{
 
-        var dataModel = new AjxpDataModel(true);
+        var dataModel = new DataModel(true);
         var rNodeProvider = new RemoteNodeProvider();
-        dataModel.setAjxpNodeProvider(rNodeProvider);
+        dataModel.setManifestNodeProvider(rNodeProvider);
         rNodeProvider.initProvider(appOptions.nodeProviderProperties);
-        this._rootNode = new AjxpNode("/", false, "Results", "folder.png", rNodeProvider);
+        this._rootNode = new ManifestNode("/", false, "Results", "folder.png", rNodeProvider);
         dataModel.setRootNode(this._rootNode);
         $super($(mainElementName), {
             dataModel:dataModel,

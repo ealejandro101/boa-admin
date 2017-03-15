@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
-Class.create("LogoWidget", AjxpPane, {
+Class.create("LogoWidget", AppPane, {
 
     initialize : function($super, element, options){
         $super(element, options);
@@ -34,7 +34,7 @@ Class.create("LogoWidget", AjxpPane, {
             }else{
                 this.titleDiv.update(configs.get("CUSTOM_TOP_TITLE"));
             }
-            if(!configs.get("CUSTOM_TOP_LOGO") || configs.get("CUSTOM_TOP_LOGO") == 'ajxp-remove-original'){
+            if(!configs.get("CUSTOM_TOP_LOGO") || configs.get("CUSTOM_TOP_LOGO") == 'remove-original'){
                 if(this.image){
                     this.image.remove();
                     this.image = null;
@@ -46,7 +46,7 @@ Class.create("LogoWidget", AjxpPane, {
             this.titleDiv = null;
         }
 
-        if(configs.get("CUSTOM_TOP_LOGO") && configs.get("CUSTOM_TOP_LOGO") != 'ajxp-remove-original'){
+        if(configs.get("CUSTOM_TOP_LOGO") && configs.get("CUSTOM_TOP_LOGO") != 'remove-original'){
             var parameter = 'binary_id';
             if(configs.get("CUSTOM_TOP_LOGO_ISTMP")){
                 parameter = 'tmp_file';
@@ -68,7 +68,7 @@ Class.create("LogoWidget", AjxpPane, {
                     this.resizeImage(configs, false);
                 }.bind(this);
             }
-        }else if(configs.get("CUSTOM_TOP_LOGO") == 'ajxp-remove-original' && this.image){
+        }else if(configs.get("CUSTOM_TOP_LOGO") == 'remove-original' && this.image){
             this.image.remove();
             this.image = null;
             this.htmlElement.setAttribute('style', '');

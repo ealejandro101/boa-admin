@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
-Class.create("AjxpTabulator", AjxpPane, {
+Class.create("Tabulator", AppPane, {
 	/**
 	 * Constructor
 	 * @param $super klass Superclass reference
@@ -69,7 +69,7 @@ Class.create("AjxpTabulator", AjxpPane, {
 	switchTabulator:function(tabId){
 		var toShow ;
 		this.tabulatorData.each(function(tabInfo){
-			var appObject = this.getAndSetAjxpObject(tabInfo);
+			var appObject = this.getAndSetAppObject(tabInfo);
 			if(tabInfo.id == tabId){				
 				tabInfo.headerElement.removeClassName("toggleInactive");
 				if(tabInfo.headerElement.down('img')) tabInfo.headerElement.down('img').show();
@@ -104,7 +104,7 @@ Class.create("AjxpTabulator", AjxpPane, {
 	 */
 	resize : function(){
 		if(!this.selectedTabInfo) return;
-		var appObject = this.getAndSetAjxpObject(this.selectedTabInfo);
+		var appObject = this.getAndSetAppObject(this.selectedTabInfo);
 		if(appObject){
 			appObject.resize();
             var left ;
@@ -144,18 +144,18 @@ Class.create("AjxpTabulator", AjxpPane, {
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */
 	getDomNode : function(){
 		return this.htmlElement;
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */
 	destroy : function(){
 		this.tabulatorData.each(function(tabInfo){
-			var appObject = this.getAndSetAjxpObject(tabInfo);
+			var appObject = this.getAndSetAppObject(tabInfo);
 			tabInfo.headerElement.stopObserving("click");
 			appObject.destroy();
 		}.bind(this));
@@ -170,9 +170,9 @@ Class.create("AjxpTabulator", AjxpPane, {
 	/**
 	 * Getter/Setter of the Widget that will be attached to each tabInfo
 	 * @param tabInfo Object
-	 * @returns IAjxpWidget
+	 * @returns IAppWidget
 	 */
-	getAndSetAjxpObject : function(tabInfo){
+	getAndSetAppObject : function(tabInfo){
 		var appObject = tabInfo.appObject || null;
 		if($(tabInfo.element) && $(tabInfo.element).paneObject && (!appObject || appObject != $(tabInfo.element).paneObject) ){
 			appObject = tabInfo.appObject = $(tabInfo.element).paneObject;

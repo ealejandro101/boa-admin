@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Core\Utils;
 
@@ -36,7 +36,6 @@ class JSPacker{
      * Auto detect /js/*_list.txt files and /css/*_list.txt files and pack them.
 	 */
 	function pack(){
-
         // Make sure that the gui.* plugin is loaded
         $plug = PluginsService::getInstance()->getPluginsByType("gui");
 
@@ -47,6 +46,7 @@ class JSPacker{
                                              $scriptName,
                                             "Normal");
         }
+
         $sList = glob(BOA_THEME_FOLDER."/css/*_list.txt");
         foreach ($sList as $list){
             $scriptName = str_replace("_list.txt", ".css", $list);
@@ -64,7 +64,6 @@ class JSPacker{
      * @return bool
      */
 	function concatListAndPack($src, $out, $mode){
-		
 		if(!is_file($src) || !is_readable($src)){
 			return false;
 		}
@@ -85,11 +84,12 @@ class JSPacker{
 		
 		// Pack and write to file
 		require_once(BOA_VENDOR_FOLDER."/packer/class.JavaScriptPacker.php");
-		$packer = new JavaScriptPacker($jscode, $mode , true, false);
+		$packer = new \JavaScriptPacker($jscode, $mode , true, false);
 		$packed = $packer->pack();
 		if($mode == "None"){ // css case, hack for I.E.
 			$packed = str_replace("solid#", "solid #", $packed);
 		}
+
 		@file_put_contents($out, $packed);
 		
 		return true;

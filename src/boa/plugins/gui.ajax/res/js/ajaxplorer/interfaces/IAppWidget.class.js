@@ -15,11 +15,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
- *
- * Description : base for nodes provider
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
+ * Description : AppPane interface
  */
-Interface.create("IAjxpNodeProvider", {
-	initProvider : function(properties){},
-	loadNode : function(nodePath, nodeCallback, childCallback){}
+Interface.create("IAppWidget", {		
+	resize : function(){},
+	showElement : function(show){},
+	getDomNode : function(){},
+	destroy : function(){}
 });

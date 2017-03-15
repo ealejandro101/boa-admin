@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Plugins\Core\Conf;
 
@@ -28,7 +28,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * @package AjaXplorer_Plugins
  * @subpackage Core
- * @class AbstractAjxpUser
+ * @class AbstractUser
  * @abstract
  * User abstraction, the "conf" driver must provides its own implementation
  */

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 namespace BoA\Core\Utils;
 
@@ -175,7 +175,7 @@ class Utils
      * @static
      * @return mixed|null|string
      */
-    public static function getAjxpTmpDir()
+    public static function getAppTmpDir()
     {
         if (ConfService::getCoreConf("BOA_TMP_DIR") != null) {
             return ConfService::getCoreConf("BOA_TMP_DIR");
@@ -305,6 +305,7 @@ class Utils
         if (isSet($parameters["skipDebug"])) {
             ConfService::setConf("JS_DEBUG", false);
         }
+
         if (ConfService::getConf("JS_DEBUG") && isSet($parameters["compile"])) {
             JSPacker::pack();
         }
@@ -1236,38 +1237,9 @@ class Utils
         }
         if (is_file($filePath)) {
             $fileLines = file($filePath);
-            //if (preg_match('/roles\.ser$/', $filePath)) {
-                //echo '<br/> Loading file '.$filePath . '<br/>';
-                ////var_dump($fileLines);
-                ////$flog = fopen(BOA_DATA_PATH."/plugins/auth.serial/log.txt", "w") or die("Unable to open file!");
-                ////$content = $fileLines[0];
-                ////$search = array("9:\"AJXP_Role\"", "23:\"AJXP_USR_", "19:\"AJXP_REPO", "22:\"AJXP_REPO");
-                ////$replace = array("22:\"BoA\\Core\\Security\\Role\"", "22:\"BOA_USR_", "18:\"BOA_REPO", "21:\"BOA_REPO");
-                ////$content = str_replace($search, $replace, $fileLines[0]);
-                ////fwrite($flog, $fileLines[0]);
-                ////fwrite($flog, $content);
-                ////fclose($flog);
-                //////$sample = array( "BOA_USR_/Administrator" => new SerialUser("BOA_USR_/Administrator"));
-                //////echo '<br/>sample serialize<br/>';
-                //////var_dump($sample);
-                //////echo '<br/>unserialized file<br/>';
-                //////var_dump(unserialize(implode("", $fileLines)));
-                ////echo '<br/>serialized content<br/>';
-                ////$content = array($content);
-                ////var_dump($content);
-                ////set_error_handler("BoA\Core\Utils\Utils::my_err_handler", E_NOTICE);
-                ////$content = unserialize(implode("", $content));
-                ////echo '<br/>unserialized content<br/>';
-                ////var_dump($content);
-                ////Utils::saveSerialFile($filePath, $content);
-                ////$fileLines = file($filePath);
-                //var_dump($fileLines);
-                //var_dump(unserialize(implode("", $fileLines)));
-            //}
             if($format == "ser") $result = unserialize(implode("", $fileLines));
             else if($format == "json") $result = json_decode(implode("", $fileLines), true);
         }
-        return $result;
     }
 
     /**
@@ -1475,7 +1447,7 @@ class Utils
         {
             $value = SystemTextEncoding::magicDequote($value);
             if( ( ( !empty($prefix) &&  strpos($key, $prefix)!== false && strpos($key, $prefix)==0 ) || empty($prefix) )
-                && strpos($key, "ajxptype") === false
+                && strpos($key, "apptype") === false
                 && strpos($key, "_original_binary") === false
                 && strpos($key, "_replication") === false
                 && strpos($key, "_checkbox") === false){
@@ -1497,13 +1469,13 @@ class Utils
                         }
                     }else if($type == "binary" && $binariesContext !== null){
                         if(!empty($value)){
-                            if($value == "ajxp-remove-original"){
+                            if($value == "remove-original"){
                                 if(!empty($repDef[$key."_original_binary"])){
                                     ConfService::getConfStorageImpl()->deleteBinary($binariesContext, $repDef[$key."_original_binary"]);
                                 }
                                 $value = "";
                             }else{
-                                $file = Utils::getAjxpTmpDir()."/".$value;
+                                $file = Utils::getAppTmpDir()."/".$value;
                                 if(file_exists($file)){
                                     $id= !empty($repDef[$key."_original_binary"]) ? $repDef[$key."_original_binary"] : null;
                                     $id=ConfService::getConfStorageImpl()->saveBinary($binariesContext, $file, $id);

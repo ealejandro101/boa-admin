@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -366,8 +366,8 @@ Class.create("Modal", {
 
     createTopCaret:function(element){
         "use strict";
-        element.insert({top:'<span class="icon-caret-up ajxp-caret-up"></span>'});
-        var caret = element.down('span.ajxp-caret-up');
+        element.insert({top:'<span class="icon-caret-up caret-up"></span>'});
+        var caret = element.down('span.caret-up');
         caret.setStyle({
             left: (element.getWidth() -  caret.getWidth()) / 2 + 'px'
         });

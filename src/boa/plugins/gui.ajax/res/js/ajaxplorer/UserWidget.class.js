@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * Widget for users action, displayed on the right of the toolbar
  */
 Class.create("UserWidget", {
-	__implements : ["IAjxpWidget"],
+	__implements : ["IAppWidget"],
     options : {},
 	/**
 	 * Constructor
@@ -75,7 +75,7 @@ Class.create("UserWidget", {
                     }
                     label = '<i message_title_id="189" title="'+MessageHash[189]+'">' + img + oUser.getPreference('USER_DISPLAY_NAME') + '</i>';
                 }
-				logging_string = '<div class="user_widget_label '+(img?'withImage':'')+'">'+label+'</div><div class="inlineBarButtonLeft" style="-moz-border-radius: 0pt 5px 5px 0pt;border-radius: 0pt 5px 5px 0pt;border-left-style:none; border-width:1px;"><img width="16" height="16" style="height: 6px; width: 10px; margin-top: 9px; margin-left: 3px; margin-right: 3px;" ajxp_message_title="189" title="'+MessageHash[189]+'" src="'+resourcesFolder+'/images/arrow_down.png"></div>';
+				logging_string = '<div class="user_widget_label '+(img?'withImage':'')+'">'+label+'</div><div class="inlineBarButtonLeft" style="-moz-border-radius: 0pt 5px 5px 0pt;border-radius: 0pt 5px 5px 0pt;border-left-style:none; border-width:1px;"><img width="16" height="16" style="height: 6px; width: 10px; margin-top: 9px; margin-left: 3px; margin-right: 3px;" message_title="189" title="'+MessageHash[189]+'" src="'+resourcesFolder+'/images/arrow_down.png"></div>';
 				this.element.removeClassName('disabled');
 				if(!oUser.lock && oUser.getPreference('lang') != null && oUser.getPreference('lang') != "" && oUser.getPreference('lang') != ajaxplorer.currentLanguage)
 				{
@@ -101,7 +101,7 @@ Class.create("UserWidget", {
 	 */
 	updateActions : function(){
 		var menuItems = $A();
-		var actions = ajaxplorer.actionBar.getActionsForAjxpWidget("UserWidget", this.element.id);
+		var actions = ajaxplorer.actionBar.getActionsForAppWidget("UserWidget", this.element.id);
         var groups = {};
 
         actions.each(function(action){
@@ -172,14 +172,14 @@ Class.create("UserWidget", {
 		this.element.select(".user_widget_label").invoke((show?'show':'hide'));
 	},
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */	
 	getDomNode : function(){
 		return this.element;
 	},
 	
 	/**
-	 * Implementation of the IAjxpWidget methods
+	 * Implementation of the IAppWidget methods
 	 */	
 	destroy : function(){
 		this.element.stopObserving("mouseover", this.mObs1 );

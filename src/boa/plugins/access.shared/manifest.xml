@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <coredriver name="shared" label="CONF_MESSAGE[Shared Elements]" description="CONF_MESSAGE[Browse user shared elements.]"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
     <class_definition classname="BoA\Plugins\Access\Shared\SharedAccessDriver" filename="access.shared/SharedAccessDriver.class.php"/>
-    <client_settings icon="access.shared/share.png">
+    <client_settings icon="plugins/access.shared/share.png">
         <resources>
             <i18n namespace="shared" path="access.shared/i18n" />       
         </resources>
     </client_settings>
     <registry_contributions>
         <client_configs>
-            <template_part theme="umbra" appId="sidebar_splitter" appClass="AjxpPane" appOptions='{"fit":"height","fake":"option"}'><![CDATA[
+            <template_part theme="umbra" appId="sidebar_splitter" appClass="AppPane" appOptions='{"fit":"height","fake":"option"}'><![CDATA[
                 <div id="folderPane" appClass="FoldersTree" appOptions='{"display":"dz","replaceScroller":true}' appPaneHeader="363" appPaneIcon="view_tree.png" style="margin:20px;"></div>
                 <style>#sidebar_splitter{padding-bottom:20px;background-color:#A0C0A4;}</style>
             ]]></template_part>
-            <template_part appClass="AjxpTabulator" appId="topPane" appOptions='{"defaultTabId": "folders","tabInfos" : [{"id":"folders","label":"130","iconClass":"icon-folder-open","element":"folder_pane"},{"id":"flagged","label":"147","iconClass":"icon-star","element":"flagged_elements"}],"headerToolbarOptions":{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["filter"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}}'><![CDATA[
+            <template_part appClass="Tabulator" appId="topPane" appOptions='{"defaultTabId": "folders","tabInfos" : [{"id":"folders","label":"130","iconClass":"icon-folder-open","element":"folder_pane"},{"id":"flagged","label":"147","iconClass":"icon-star","element":"flagged_elements"}],"headerToolbarOptions":{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["filter"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}}'><![CDATA[
                 <div id="folder_pane" appClass="FoldersTree" appOptions='{"display":"dz","replaceScroller":true}' ></div>
                 <div id="flagged_elements" appClass="FetchedResultPane" appOptions='{"nodeProviderProperties":{"get_action":"get_bookmarks", "format":"node_list"}}'></div>
             ]]></template_part>
@@ -36,7 +36,7 @@
                         var path;                   
                         if(window.actionArguments && window.actionArguments.length>0){
                             path = window.actionArguments[0];
-                            if(Object.isString(path)){path = new AjxpNode(path,false,getBaseName(path));}
+                            if(Object.isString(path)){path = new ManifestNode(path,false,getBaseName(path));}
                         }else{
                             userSelection = ajaxplorer.getUserSelection();
                             if(userSelection && userSelection.isUnique() && (userSelection.hasDir() || userSelection.hasMime(["zip"]))){

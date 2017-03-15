@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -44,7 +44,7 @@ Class.create("AbstractEditor" , {
 	 */
 	editorOptions:null,
     /**
-     * @var An AjxpNode or an array of nodes
+     * @var An ManifestNode or an array of nodes
      */
     inputNode : null,
 	
@@ -211,7 +211,7 @@ Class.create("AbstractEditor" , {
 	
 	/**
 	 * Opens the editor with the current model
-	 * @param userSelection AjxpDataModel the data model
+	 * @param userSelection DataModel the data model
 	 */
 	open : function(nodeOrNodes){
 		this.inputNode = nodeOrNodes;
@@ -359,7 +359,7 @@ Class.create("AbstractEditor" , {
 
 	/**
 	 * Called by the other components to create a preview (thumbnail) of a given node
-	 * @param node AjxpNode The node to display
+	 * @param node ManifestNode The node to display
 	 * @param rich Boolean whether to display a rich content (flash, video, etc...) or not (image)
 	 * @returns Element
 	 */
@@ -384,7 +384,7 @@ Class.create("AbstractEditor" , {
 	
 	/**
 	 * Gets the standard thumbnail source for previewing the node
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 * @returns String
 	 */
 	getThumbnailSource : function(node){

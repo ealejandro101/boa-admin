@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * Full container of the data tree. Contains the SelectionModel as well.
  */
-Class.create("AjxpDataModel", {
+Class.create("DataModel", {
 
 	_currentRep: undefined, 
 	_bEmpty: undefined,
@@ -50,23 +50,23 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Sets the data source that will feed the nodes with children.
-	 * @param iAjxpNodeProvider IAjxpNodeProvider 
+	 * @param iManifestNodeProvider IManifestNodeProvider 
 	 */
-	setAjxpNodeProvider : function(iAjxpNodeProvider){
-		this._iAjxpNodeProvider = iAjxpNodeProvider;
+	setManifestNodeProvider : function(iManifestNodeProvider){
+		this._iManifestNodeProvider = iManifestNodeProvider;
 	},
 
     /**
      * Return the current data source provider
-     * @return IAjxpNodeProvider
+     * @return IManifestNodeProvider
      */
-	getAjxpNodeProvider : function(){
-		return this._iAjxpNodeProvider;
+	getManifestNodeProvider : function(){
+		return this._iManifestNodeProvider;
 	},
 
 	/**
 	 * Changes the current context node.
-	 * @param node AjxpNode Target node, either an existing one or a fake one containing the target part.
+	 * @param node ManifestNode Target node, either an existing one or a fake one containing the target part.
 	 * @param forceReload Boolean If set to true, the node will be reloaded even if already loaded.
 	 */
 	requireContextChange : function(node, forceReload){
@@ -98,7 +98,7 @@ Class.create("AjxpDataModel", {
 					this.requireContextChange(parent);
 				}.bind(this) );
 				this.publish("context_loading");
-				firstFake.load(this._iAjxpNodeProvider);
+				firstFake.load(this._iManifestNodeProvider);
 				return;
 			}
 		}		
@@ -137,9 +137,9 @@ Class.create("AjxpDataModel", {
 				if(paginationPage){
 					node.getMetadata().get('paginationData').set('current', paginationPage);
 				}
-				node.reload(this._iAjxpNodeProvider);
+				node.reload(this._iManifestNodeProvider);
 			}else{
-				node.load(this._iAjxpNodeProvider);
+				node.load(this._iManifestNodeProvider);
 			}
 		}catch(e){
 			this.publish("context_loaded");
@@ -148,7 +148,7 @@ Class.create("AjxpDataModel", {
 
     requireNodeReload: function(nodeOrPath){
         if(Object.isString(nodeOrPath)){
-            nodeOrPath = new AjxpNode(nodeOrPath);
+            nodeOrPath = new ManifestNode(nodeOrPath);
         }
         var onComplete = null;
         if(this._selectedNodes.length) {
@@ -167,19 +167,19 @@ Class.create("AjxpDataModel", {
                 }.bind(this);
             }
         }
-        this._iAjxpNodeProvider.refreshNodeAndReplace(nodeOrPath, onComplete);
+        this._iManifestNodeProvider.refreshNodeAndReplace(nodeOrPath, onComplete);
     },
 
     loadPathInfoSync: function (path, callback){
-        this._iAjxpNodeProvider.loadLeafNodeSync(new AjxpNode(path), callback);
+        this._iManifestNodeProvider.loadLeafNodeSync(new ManifestNode(path), callback);
     },
 
 	/**
 	 * Sets the root of the data store
-	 * @param ajxpRootNode AjxpNode The parent node
+	 * @param rootNode ManifestNode The parent node
 	 */
-	setRootNode : function(ajxpRootNode){
-		this._rootNode = ajxpRootNode;
+	setRootNode : function(rootNode){
+		this._rootNode = rootNode;
 		this._rootNode.setRoot();
 		this._rootNode.observe("child_added", function(c){
 				//console.log(c);
@@ -190,7 +190,7 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Gets the current root node
-	 * @returns AjxpNode
+	 * @returns ManifestNode
 	 */
 	getRootNode : function(){
 		return this._rootNode;
@@ -198,7 +198,7 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Sets the current context node
-	 * @param dataNode AjxpNode
+	 * @param dataNode ManifestNode
 	 * @param forceEvent Boolean If set to true, event will be triggered even if the current node is already the same.
 	 */
 	setContextNode : function(dataNode, forceEvent){
@@ -232,7 +232,7 @@ Class.create("AjxpDataModel", {
 
 	/**
 	 * Get the current context node
-	 * @returns AjxpNode
+	 * @returns ManifestNode
 	 */
 	getContextNode : function(){
 		return this._contextNode;
@@ -241,7 +241,7 @@ Class.create("AjxpDataModel", {
 	/**
 	 * After a copy or move operation, many nodes may have to be reloaded
 	 * This function tries to reload them in the right order and if necessary.
-	 * @param nodes AjxpNodes[] An array of nodes
+	 * @param nodes ManifestNodes[] An array of nodes
 	 */
 	multipleNodesReload : function(nodes){
 		nodes = $A(nodes);
@@ -249,7 +249,7 @@ Class.create("AjxpDataModel", {
 			var nodePathOrNode = nodes[i];
 			var node;
 			if(Object.isString(nodePathOrNode)){
-				node = new AjxpNode(nodePathOrNode);	
+				node = new ManifestNode(nodePathOrNode);	
 				if(node.getPath() == this._rootNode.getPath()) node = this._rootNode;
 				else node = node.findInArbo(this._rootNode, []);
 			}else{
@@ -278,7 +278,7 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Add a node to the queue of nodes to reload.
-	 * @param node AjxpNode
+	 * @param node ManifestNode
 	 */
 	queueNodeReload : function(node){
 		if(!this.queue) this.queue = [];
@@ -304,13 +304,13 @@ Class.create("AjxpDataModel", {
 		if(next == this._contextNode || next.isParentOf(this._contextNode)){
 			this.requireContextChange(next, true);
 		}else{
-			next.reload(this._iAjxpNodeProvider);
+			next.reload(this._iManifestNodeProvider);
 		}
 	},
 	
 	/**
 	 * Sets an array of nodes to be selected after the context is (re)loaded
-	 * @param selection AjxpNode[]
+	 * @param selection ManifestNode[]
 	 */
 	setPendingSelection : function(selection){
 		this._pendingSelection = selection;
@@ -318,7 +318,7 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Gets the array of nodes to be selected after the context is (re)loaded
-	 * @returns AjxpNode[]
+	 * @returns ManifestNode[]
 	 */
 	getPendingSelection : function(){
 		return this._pendingSelection;
@@ -333,7 +333,7 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Set an array of nodes as the current selection
-	 * @param dataNodes AjxpNode[] The nodes to select
+	 * @param dataNodes ManifestNode[] The nodes to select
 	 * @param source String The source of this selection action
 	 */
 	setSelectedNodes : function(dataNodes, source){
@@ -362,7 +362,7 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Gets the currently selected nodes
-	 * @returns AjxpNode[]
+	 * @returns ManifestNode[]
 	 */
 	getSelectedNodes : function(){
 		return this._selectedNodes;
@@ -582,7 +582,7 @@ Class.create("AjxpDataModel", {
 	
 	/**
 	 * Gets the first node of the selection, or Null
-	 * @returns AjxpNode
+	 * @returns ManifestNode
 	 */
 	getUniqueNode : function(){
 		if(this._selectedNodes.length){
@@ -608,7 +608,7 @@ Class.create("AjxpDataModel", {
     /**
      * Gets a node from the current selection
      * @param i Integer the node index
-     * @returns AjxpNode
+     * @returns ManifestNode
      */
     getNode : function(i) {
         return this._selectedNodes[i];

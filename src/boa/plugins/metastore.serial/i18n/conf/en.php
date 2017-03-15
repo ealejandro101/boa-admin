@@ -16,13 +16,13 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
 *
-* The latest code can be found at <http://www.ajaxplorer.info/>.
+* The latest code can be found at <http://https://github.com/boa-project/boa/>.
 */
 $mess=array(
 "Files MetaStore" => "Files MetaStore",
 "Stores metadata inside local hidden files." => "Stores metadata inside local hidden files.",
 "File location" => "File location",
-"Where to store the metadata file : LOCAL means a hidden file will be created in each folder, GLOBAL means that one file will be created in AJXP_DATA_PATH/plugins/action.share folder." => "Where to store the metadata file : LOCAL means a hidden file will be created in each folder, GLOBAL means that one file will be created in AJXP_DATA_PATH/plugins/action.share folder.",
+"Where to store the metadata file : LOCAL means a hidden file will be created in each folder, GLOBAL means that one file will be created in BOA_DATA_PATH/plugins/action.share folder." => "Where to store the metadata file : LOCAL means a hidden file will be created in each folder, GLOBAL means that one file will be created in BOA_DATA_PATH/plugins/action.share folder.",
 "Meta File" => "Meta File",
 "Hidden file used inside folders to save meta data" => "Hidden file used inside folders to save meta data",
 );

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  *
  * Description : main access point of the application, this script is called by any Ajax query.
  * Will dispatch the actions on the plugins.
@@ -86,7 +86,7 @@ class Router {
 
         $confStorageDriver = ConfService::getConfStorageImpl();
         require_once($confStorageDriver->getUserClassFileName());
-        //new AjxpSessionHandler();
+
         if(!isSet($OVERRIDE_SESSION)){
             session_name(self::APP_SESSION_COOKIE);
         }
@@ -173,6 +173,12 @@ class Router {
         }
         PluginsService::getInstance()->initActivePlugins();
         $xmlResult = Controller::findActionAndApply($action, array_merge($_GET, $_POST), $_FILES);
+
+        if ($action == 'get_drop_bg') {
+            var_dump($xmlResult);
+            die('action end');
+        }
+
         if($xmlResult !== false && $xmlResult != ""){
             XMLWriter::header();
             print($xmlResult);

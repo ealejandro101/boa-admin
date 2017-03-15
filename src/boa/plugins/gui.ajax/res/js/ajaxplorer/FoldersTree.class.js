@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * The tree object. Encapsulate the webfx tree.
  */
-Class.create("FoldersTree", AjxpPane, {
+Class.create("FoldersTree", AppPane, {
 	
 	__implements : ["IFocusable", "IContextMenuable"],
 
@@ -69,9 +69,9 @@ Class.create("FoldersTree", AjxpPane, {
 		};
 		
 		var filter = this.createFilter();
-		var fakeRootNode = new AjxpNode("/", true, MessageHash[391], "folder.png");
+		var fakeRootNode = new ManifestNode("/", true, MessageHash[391], "folder.png");
 		fakeRootNode._isLoaded = true;
-		this.tree = new AJXPTree(fakeRootNode,  action, filter);		
+		this.tree = new CustomXTree(fakeRootNode,  action, filter);		
 				
 		this.treeContainer.update(this.tree.toString());
 		$(this.tree.id).node = this.tree.node;	
@@ -80,7 +80,7 @@ Class.create("FoldersTree", AjxpPane, {
 			Event.stop(e);
 		}.bind(this.tree));
 
-		AjxpDroppables.add(this.tree.id, this.tree.node);
+		AppDroppables.add(this.tree.id, this.tree.node);
 		if(!this.tree.open && !this.tree.loading) {
 			this.tree.toggle();		
 		}
@@ -101,9 +101,9 @@ Class.create("FoldersTree", AjxpPane, {
         this.registeredObservers.set("boa:context_changed", ctxChangedObs);
 
         var rootNodeObs = function(event){
-			var ajxpRootNode = event.memo;
-			this.tree.setAjxpRootNode(ajxpRootNode);
-			this.changeRootLabel(ajxpRootNode.getLabel(), ajxpRootNode.getIcon());
+			var rootNode = event.memo;
+			this.tree.setRootNode(rootNode);
+			this.changeRootLabel(rootNode.getLabel(), rootNode.getIcon());
 		}.bind(this);
 		document.observe("boa:root_node_changed", rootNodeObs);
         this.registeredObservers.set("boa:root_node_changed", rootNodeObs);
@@ -156,7 +156,7 @@ Class.create("FoldersTree", AjxpPane, {
 	},
 	
 	/**
-	 * Focus implementation of IAjxpWidget
+	 * Focus implementation of IAppWidget
 	 */
 	focus: function(){
 		if(webFXTreeHandler.selected)
@@ -171,7 +171,7 @@ Class.create("FoldersTree", AjxpPane, {
 	},
 	
 	/**
-	 * Blur implementation of IAjxpWidget
+	 * Blur implementation of IAppWidget
 	 */
 	blur: function(){
 		if(webFXTreeHandler.selected)
@@ -183,7 +183,7 @@ Class.create("FoldersTree", AjxpPane, {
 	},
 		
 	/**
-	 * Resize implementation of IAjxpWidget
+	 * Resize implementation of IAppWidget
 	 */
 	resize : function(){
 		fitHeightToBottom(this.treeContainer, null);
@@ -195,7 +195,7 @@ Class.create("FoldersTree", AjxpPane, {
 	},
 	
 	/**
-	 * ShowElement implementation of IAjxpWidget
+	 * ShowElement implementation of IAppWidget
 	 */
 	showElement : function(show){
 		if (show) this.treeContainer.show();

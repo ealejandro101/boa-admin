@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
  * Encapsulation of the Prototype Autocompleter for AjaXplorer purposes.
  * Should be ported for local provides
  */
-Class.create("AjxpAutocompleter", Autocompleter.Base, {
+Class.create("AutoCompleter", Autocompleter.Base, {
   /**
    * Constructor
    * @param element HTMLElement

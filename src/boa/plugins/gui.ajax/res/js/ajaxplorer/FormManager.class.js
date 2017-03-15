@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  */
 
 /**
@@ -573,7 +573,7 @@ Class.create("FormManager", {
 
     confirmExistingImageDelete : function(modalParent, imgSrc, hiddenInput, param){
         if(window.confirm('Do you want to remove the current image?')){
-            hiddenInput.setValue("ajxp-remove-original");
+            hiddenInput.setValue("remove-original");
             imgSrc.src = param.get('defaultImage');
             this.triggerEvent(imgSrc.next("input[type='hidden']"), 'change');
         }
@@ -688,7 +688,7 @@ Class.create("FormManager", {
 	 */
 	replicateRow : function(templateRow, number, form, values){
         if(form.paneObject) form.paneObject.notify('before_replicate_row', templateRow);
-        var repIndex = templateRow.getAttribute('data-ajxp-replication-index');
+        var repIndex = templateRow.getAttribute('data-replication-index');
         if(repIndex === null){
             repIndex = 0;
         }else{
@@ -696,7 +696,7 @@ Class.create("FormManager", {
         }
 		for(var index=0;index < number ;index++){
             repIndex ++;
-            templateRow.setAttribute('data-ajxp-replication-index', repIndex);
+            templateRow.setAttribute('data-replication-index', repIndex);
 			var tr = $(templateRow.cloneNode(true));
 			if(tr.id) tr.id = tr.id+'_'+repIndex;
 			var inputs = tr.select('input', 'select', 'textarea');

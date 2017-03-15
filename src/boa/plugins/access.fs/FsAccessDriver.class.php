@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
  *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
+ * The latest code can be found at <http://https://github.com/boa-project/boa/>.
  *
  */
 namespace BoA\Plugins\Access\Fs;
@@ -216,7 +216,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                 if($zip){
                     // Make a temp zip and send it as download
                     $loggedUser = AuthService::getLoggedUser();
-                    $file = Utils::getAjxpTmpDir()."/".($loggedUser?$loggedUser->getId():"shared")."_".time()."tmpDownload.zip";
+                    $file = Utils::getAppTmpDir()."/".($loggedUser?$loggedUser->getId():"shared")."_".time()."tmpDownload.zip";
                     $zipFile = $this->makeZip($selection->getFiles(), $file, $dir);
                     if(!$zipFile) throw new ApplicationException("Error while compressing");
                     register_shutdown_function("unlink", $file);
@@ -284,7 +284,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                     }else{
                         $localName = (basename($dir)==""?"Files":basename($dir)).".zip";
                     }
-                    $file = Utils::getAjxpTmpDir()."/".($loggedUser?$loggedUser->getId():"shared")."_".time()."tmpCompression.zip";
+                    $file = Utils::getAppTmpDir()."/".($loggedUser?$loggedUser->getId():"shared")."_".time()."tmpCompression.zip";
                     $zipFile = $this->makeZip($selection->getFiles(), $file, $dir);
                     if(!$zipFile) throw new ApplicationException("Error while compressing file $localName");
                     register_shutdown_function("unlink", $file);
@@ -746,13 +746,13 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                 if(RecycleBinManager::recycleEnabled() && $dir == ""){
                     $metaData["repo_has_recycle"] = "true";
                 }
-                $parentAjxpNode = new ManifestNode($nonPatchedPath, $metaData);
-                $parentAjxpNode->loadNodeInfo(false, true, ($lsOptions["l"]?"all":"minimal"));
-                Controller::applyHook("node.read", array(&$parentAjxpNode));
+                $parentManifestNode = new ManifestNode($nonPatchedPath, $metaData);
+                $parentManifestNode->loadNodeInfo(false, true, ($lsOptions["l"]?"all":"minimal"));
+                Controller::applyHook("node.read", array(&$parentManifestNode));
                 if(XMLWriter::$headerSent == "tree"){
-                    XMLWriter::renderAjxpNode($parentAjxpNode, false);
+                    XMLWriter::renderManifestNode($parentManifestNode, false);
                 }else{
-                    XMLWriter::renderAjxpHeaderNode($parentAjxpNode);
+                    XMLWriter::renderManifestHeaderNode($parentManifestNode);
                 }
                 if(isSet($totalPages) && isSet($crtPage)){
                     XMLWriter::renderPaginationData(
@@ -847,10 +847,10 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                         ), array());
                     }
                 }else{
-                    array_map(array("BoA\Core\Http\XMLWriter", "renderAjxpNode"), $fullList["d"]);
+                    array_map(array("BoA\Core\Http\XMLWriter", "renderManifestNode"), $fullList["d"]);
                 }
-                array_map(array("BoA\Core\Http\XMLWriter", "renderAjxpNode"), $fullList["z"]);
-                array_map(array("BoA\Core\Http\XMLWriter", "renderAjxpNode"), $fullList["f"]);
+                array_map(array("BoA\Core\Http\XMLWriter", "renderManifestNode"), $fullList["z"]);
+                array_map(array("BoA\Core\Http\XMLWriter", "renderManifestNode"), $fullList["f"]);
 
                 // ADD RECYCLE BIN TO THE LIST
                 if($dir == ""  && !$uniqueFile && RecycleBinManager::recycleEnabled() && $this->driverConf["HIDE_RECYCLE"] !== true)
@@ -859,7 +859,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                     if(file_exists($this->urlBase.$recycleBinOption)){
                         $recycleNode = new ManifestNode($this->urlBase.$recycleBinOption);
                         $recycleNode->loadNodeInfo();
-                        XMLWriter::renderAjxpNode($recycleNode);
+                        XMLWriter::renderManifestNode($recycleNode);
                     }
                 }
 
