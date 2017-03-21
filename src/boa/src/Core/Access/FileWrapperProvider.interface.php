@@ -33,7 +33,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Interface must be implemented for access drivers that can be accessed via a wrapper protocol.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  * @interface FileWrapperProvider
  */
@@ -45,7 +45,7 @@ interface FileWrapperProvider {
 	function getWrapperClassName();
 	/**
 	 * Convert a path (from the repository root) to a fully 
-	 * qualified ajaxplorer url like app.protocol://repoId/path/to/node
+	 * qualified app url like app.protocol://repoId/path/to/node
 	 * @param String $path
 	 * @return String
 	 */

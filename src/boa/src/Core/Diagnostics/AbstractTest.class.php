@@ -37,7 +37,7 @@ global $MAIN_testsArray;
  * Abstract class for diagnostic tests. These tests are run at the first application start up, and their
  * results are displayed in the Diagnostic page. It's possible to re-run the full diagnostic by calling
  * the runTests.php script (first line needs to be commented first).
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class AbstractTest

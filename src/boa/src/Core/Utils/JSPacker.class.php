@@ -35,7 +35,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Encapsulation of the javascript/css packing library
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class JSPacker{

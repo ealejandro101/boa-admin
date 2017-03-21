@@ -43,7 +43,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * User Interface main implementation
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Gui
  */
 class ClientDriver extends Plugin 
@@ -282,7 +282,7 @@ class ClientDriver extends Plugin
         }
         $config = array();
         $config["resourcesFolder"] = "plugins/gui.ajax/res";
-        if(session_name() == "AjaXplorer_Shared"){
+        if(session_name() == "App_Shared"){
             $config["appServerAccess"] = "index_shared.php";
         }else{
             $config["appServerAccess"] = BOA_SERVER_ACCESS;

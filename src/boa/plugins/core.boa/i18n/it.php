@@ -28,7 +28,7 @@
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
 */
 //
-//      Updated for Ajaxplorer 4.0.2
+//      Updated for [Application] 4.0.2
 //      Italian transalation version: 4.0.2-001
 //
 //      Maintained by Michele Beltrame
@@ -37,7 +37,7 @@
 //
 //      Previous maintainers:
 //
-//          Updates for AjaXplorer 2.5.5 by
+//          Updates for [Application] 2.5.5 by
 //          Davide Cavalca <davide at cavalca dot name>
 //
 //          Original translation by Luca Zorzi
@@ -217,9 +217,9 @@ $mess=array(
 "164"=> "Log out",
 "165"=> "Impostazioni",
 "166"=> "Informazioni",
-"167"=> "Informazioni su AjaXplorer",
-"168" => "Accedi a AjaXplorer",
-"169" => "Esci da AjaXplorer",
+"167"=> "Informazioni su [Application]",
+"168" => "Accedi a [Application]",
+"169" => "Esci da [Application]",
 "170" => "Cartella corrente",
 "parent_access_key" => "u",
 "refresh_access_key" => "A",
@@ -442,8 +442,8 @@ $mess=array(
 "366" => "Questo utente non ha nessun repository attivo.",
 "367" => "Non sei autorizzato a caricare questo tipo di file. Sei pregato di scegliere tra le seguenti estensioni : ",
 "368" => "Selezione estratta con successo dall'archivio %s alla cartella %s",
-"369" => "Link AjaXplorer",
-"370" => "AjaXplorer download pubblico",
+"369" => "Link [Application]",
+"370" => "[Application] download pubblico",
 "371" => "&Egrave; richiesta una password per questo download",
 "372" => "Repository corrente",
 "373" => "Destinazione",
@@ -462,7 +462,7 @@ $mess=array(
 "389" => "Per favore leggi il codice qui sotto :",
 "390" => "Codice",
 "391" => "Nessun Repository",
-"392" => "Attenzione, la versione di AjaXplorer &egrave; cambiata (ora %s), per favore pulisci la cache del tuo browser e aggiorna la pagina per essere sicuro che tutto funzioni correttamente!",
+"392" => "Attenzione, la versione di [Application] &egrave; cambiata (ora %s), per favore pulisci la cache del tuo browser e aggiorna la pagina per essere sicuro che tutto funzioni correttamente!",
 "393" => "Attenzione, la lunghezza dei nomi deve essere inferiore a %s, il nome del file verrà troncato!",
 "394" => "Purtroppo la condivisione della cartella non è momentaneamente possibile con il driver di autorizzazione attuale (utenti non modificabili). La condivisione file è comunque ancora possibile.",
 "395" => "L'elemento rilasciato sembra essere una cartella e le cartelle non possono essere caricate sul server! Si conferma il caricamento?",
@@ -474,7 +474,7 @@ $mess=array(
 "401" => "È possibile scaricare e installare il software che segue per assemblare i pezzi copiati sul computer: ",
 "402" => "http://www.hjsplit.org/",
 "403" => "Preferenze WebDAV",
-"404" => "Puoi utilizzare il protocollo WebDAV per montare i tuoi repository AjaXplorer come 'dischi di rete' su vari client, inclusi Windows, Mac, iPhone, etc.",
+"404" => "Puoi utilizzare il protocollo WebDAV per montare i tuoi repository [Application] come 'dischi di rete' su vari client, inclusi Windows, Mac, iPhone, etc.",
 "405" => "Utilizza le seguenti URLs per accedere ai tuoi repository, con lo username e password che hai inserito. Attenzione: ciò non funzionerà finché non imposti questa caratteristicha come 'attiva' ed inserisci la tuo password.",
 "406" => "Attiva le condivisioni WebDAV",
 "407" => "Inserisci la tua password se è la prima volta che attivi le condivisioni WebDAV, oppure se vuoi re-inserire una nuova password :",

@@ -40,7 +40,7 @@ use BoA\Core\Utils\Utils;
 defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Core
  * @class AbstractAuthDriver
  * Abstract representation of an authentication driver. Must be implemented by the auth plugin

@@ -43,7 +43,7 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
 			<processing>
 				<clientCallback prepareModal="false"><![CDATA[
-					ajaxplorer.fireContextUp();
+					app.fireContextUp();
 					]]></clientCallback>
 			</processing>
 		</action>		
@@ -57,7 +57,7 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
 			<processing>
 				<clientCallback prepareModal="false"><![CDATA[
-					ajaxplorer.fireContextRefresh();
+					app.fireContextRefresh();
 					]]></clientCallback>
 			</processing>
 		</action>
@@ -71,11 +71,11 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
 			<processing>
 				<clientCallback prepareModal="false"><![CDATA[
-					var userSelection = ajaxplorer.getUserSelection();
+					var userSelection = app.getUserSelection();
 					if((userSelection.isUnique() && !userSelection.hasDir()))
 					{
 						var fileName = userSelection.getUniqueFileName();
-						var selectorData = ajaxplorer.actionBar.selectorData;
+						var selectorData = app.actionBar.selectorData;
 						if(selectorData.get('type') == "ckeditor"){
 							var ckData = selectorData.get('data');
 							if (ckData['CKEditorFuncNum']) {

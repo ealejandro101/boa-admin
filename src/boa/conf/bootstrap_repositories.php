@@ -29,7 +29,7 @@
  *
  * Description : configuration file
  * BASIC REPOSITORY CONFIGURATION.
- * The standard repository will point to the data path (ajaxplorer/data by default), folder "files"
+ * The standard repository will point to the data path (application/data by default), folder "files"
  * Use the GUI to add new repositories.
  *   + Log in as "admin" and open the "Settings" Repository
  */

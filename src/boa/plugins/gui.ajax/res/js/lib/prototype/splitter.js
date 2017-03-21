@@ -202,7 +202,7 @@ Class.create("Splitter", AppPane, {
     },
 
     getFoldingAction : function(){
-        return ajaxplorer.actionBar.getActionByName(this.htmlElement.id + "_folding_action");
+        return app.actionBar.getActionByName(this.htmlElement.id + "_folding_action");
     },
 
     /**

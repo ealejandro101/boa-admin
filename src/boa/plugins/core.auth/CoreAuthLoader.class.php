@@ -37,7 +37,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Config loader overrider
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Core
  */
 class CoreAuthLoader extends Plugin{

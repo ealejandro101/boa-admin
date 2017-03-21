@@ -52,7 +52,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * Plugin to access a filesystem. Most "FS" like driver (even remote ones)
  * extend this one.
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Access
  */
 class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
@@ -1479,7 +1479,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
     function createEmptyFile($crtDir, $newFileName, $content = "")
     {
         if(($content == "") && preg_match("/\.html$/",$newFileName)||preg_match("/\.htm$/",$newFileName)){
-            $content = "<html>\n<head>\n<title>New Document - Created By AjaXplorer</title>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">\n</head>\n<body bgcolor=\"#FFFFFF\" text=\"#000000\">\n\n</body>\n</html>\n";
+            $content = "<html>\n<head>\n<title>New Document - Created By BoA</title>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">\n</head>\n<body bgcolor=\"#FFFFFF\" text=\"#000000\">\n\n</body>\n</html>\n";
             Controller::applyHook("node.before_create", array(new ManifestNode($this->urlBase.$crtDir."/".$newFileName), strlen($content)));
         }
         Controller::applyHook("node.before_change", array(new ManifestNode($this->urlBase.$crtDir)));

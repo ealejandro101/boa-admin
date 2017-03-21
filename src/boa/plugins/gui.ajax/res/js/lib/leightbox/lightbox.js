@@ -201,7 +201,7 @@ function initialize(){
 		if(e==null)e=window.event;		
 		if(e.keyCode == 27)
 		{
-			ajaxplorer.cancelCopyOrMove();
+			app.cancelCopyOrMove();
 			//modal.close();
             if(modal.currentLightBoxElement){
                 removeLightboxFromElement(modal.currentLightBoxElement);
@@ -247,9 +247,9 @@ function hideLightBox(onFormSubmit)
 		{
 			currentLightBox = null;
 		}
-		ajaxplorer.enableNavigation();
-		ajaxplorer.focusLast();
-		ajaxplorer.enableShortcuts();
+		app.enableNavigation();
+		app.focusLast();
+		app.enableShortcuts();
 		document.fire("boa:selection_changed");
 	}
 	if(currentDraggable) currentDraggable.destroy();

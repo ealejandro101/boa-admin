@@ -41,7 +41,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Configuration holder. Singleton class accessed statically, encapsulates the confDriver implementation.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class ConfService
@@ -218,7 +218,10 @@ class ConfService
      * @return AbstractAuthDriver
      */
     public static function getAuthDriverImpl(){
-        if(isSet(self::$tmpAuthStorageImpl)) return self::$tmpAuthStorageImpl;
+        if(isSet(self::$tmpAuthStorageImpl)) {
+            var_dump(self::$tmpAuthStorageImpl);
+            return self::$tmpAuthStorageImpl;
+        }
         return PluginsService::getInstance()->getPluginById("core.auth")->getAuthImpl();
     }
 

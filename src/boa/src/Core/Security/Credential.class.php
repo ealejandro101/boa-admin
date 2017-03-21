@@ -33,7 +33,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Credential keeper that can be stored in the session, the credentials are kept crypted.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class Credential{

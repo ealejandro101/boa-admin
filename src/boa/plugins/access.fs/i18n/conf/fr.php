@@ -29,7 +29,7 @@
 */
 $mess=array(
 "File System (Standard)" => "Fichiers locaux (Standard)",
-"The most standard access to a filesystem located on the server." => "Driver le plus courant : accès à un répertoire local situé sur le serveur où est installé AjaXplorer",
+"The most standard access to a filesystem located on the server." => "Driver le plus courant : accès à un répertoire local situé sur le serveur où est installé [Application]",
 "Path" => "Chemin",
 "Real path to the root folder on the server" => "Chemin absolu sur le serveur du répertoire de base. Utilisez BOA_USER pour remplacer automatiquement avec le login du user actuel.",
 "Create" => "Création",

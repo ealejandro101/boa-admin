@@ -74,7 +74,7 @@ define("ADMIN_PASSWORD", "admin");
 // log files will be stored. This should be detected by log.* plugins
 // and used if defined. See bootstrap_plugins.php default configs for
 // example in log.serial. Do not forget the trailing slash
-// define("BOA_FORCE_LOGPATH", "/var/log/ajaxplorer/");
+// define("BOA_FORCE_LOGPATH", "/var/log/application/");
 // DEBUG OPTIONS
 define("BOA_CLIENT_DEBUG"  ,   true);
 define("BOA_SERVER_DEBUG"  ,   false);

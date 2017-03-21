@@ -36,7 +36,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Core parser for loading / serving plugins
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class PluginsService{

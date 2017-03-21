@@ -73,13 +73,13 @@ Class.create("RepositoryEditor", AbstractEditor, {
         toSubmit.set("repository_id", this.repositoryId);
         var missing = this.formManager.serializeParametersInputs(this.infoPane, toSubmit, 'DRIVER_OPTION_', this.currentRepoIsTemplate);
         if(missing && ! this.currentRepoIsTemplate){
-            ajaxplorer.displayMessage("ERROR", MessageHash['boaconf.36']);
+            app.displayMessage("ERROR", MessageHash['boaconf.36']);
         }else{
             var conn = new Connexion();
             conn.setParameters(toSubmit);
             conn.setMethod("post");
             conn.onComplete = function(transport){
-                ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+                app.actionBar.parseXmlMessage(transport.responseXML);
                 this.loadRepository(this.repositoryId);
                 this.setClean();
             }.bind(this);
@@ -121,7 +121,7 @@ Class.create("RepositoryEditor", AbstractEditor, {
             this.feedRepositoryForm(transport.responseXML, metaTab);
             modal.refreshDialogPosition();
             modal.refreshDialogAppearance();
-            ajaxplorer.blurAll();
+            app.blurAll();
         }.bind(this);
         connexion.sendAsync();
     },
@@ -354,7 +354,7 @@ Class.create("RepositoryEditor", AbstractEditor, {
         var conn = new Connexion();
         conn.setParameters(params);
         conn.onComplete = function(transport){
-            ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+            app.actionBar.parseXmlMessage(transport.responseXML);
             this.loadRepository(this.repositoryId, true);
             if(button && action == "meta_source_edit"){
                 button.addClassName("SF_disabled");

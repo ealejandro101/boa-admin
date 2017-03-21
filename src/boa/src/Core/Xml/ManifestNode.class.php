@@ -38,7 +38,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * Atomic representation of a data. This the basic node of the hierarchical data.
  * Encapsulates the path and url, the nature (leaf or not) and the metadata of the node.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class ManifestNode{

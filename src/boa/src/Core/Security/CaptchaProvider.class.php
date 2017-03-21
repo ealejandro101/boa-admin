@@ -35,7 +35,7 @@ include_once(BOA_VENDOR_FOLDER."/securimage/securimage.php");
 
 /**
  * Encapsulation of the securimage external library, to generate a Captcha Image on brute force login attempt.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class CaptchaProvider{

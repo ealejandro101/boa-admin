@@ -106,7 +106,7 @@
                             var conn = new Connexion();
                             conn.setParameters(params);
                             conn.onComplete = function(transport){
-                                ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+                                app.actionBar.parseXmlMessage(transport.responseXML);
                             }
                             conn.sendAsync();
 					]]></dialogOnComplete>
@@ -155,7 +155,7 @@
                 <clientListener name="init"><![CDATA[
                 window.setTimeout(function(){
                     if(!$('get_bookmarks_button')) {
-                        ajaxplorer.bookmarkBar = new BookmarksBar(null, {});
+                        app.bookmarkBar = new BookmarksBar(null, {});
                         return;
                     }
                     var bmBar = new BookmarksBar($('get_bookmarks_button'), {bookmarksMenuOptions:{
@@ -165,14 +165,14 @@
                         leftOffset:0,
                         position:'bottom right'
                     }});
-                    var bmAction = ajaxplorer.actionBar.actions.get('bookmark');
+                    var bmAction = app.actionBar.actions.get('bookmark');
                     bmBar.addBookmarkObject = {
                         name:bmAction.getKeyedText(),
                         alt:bmAction.options.title,
                         image:resourcesFolder+'/images/actions/16/bookmark_add.png',
                         icon_class:'icon-plus-sign',
                         callback:function(e){
-                            var node = ajaxplorer.getContextNode();
+                            var node = app.getContextNode();
                             node.getMetadata().set('bookmarked', 'true');
                             node.getMetadata().set('overlay_icon', 'bookmark.png');
                             bmBar.addBookmark(node.getPath(), node.getLabel());
@@ -218,8 +218,8 @@
       				<clientCallback prepareModal="true" dialogOpenForm="custom_data_edit" dialogOkButtonOnly="false" dialogSkipButtons="false">
       					<dialogOnOpen><![CDATA[
       					    var f = new FormManager();
-                              var definitions = f.parseParameters(ajaxplorer.getXmlRegistry(), "user/preferences/pref[@exposed]|//param[contains(@scope,'user')]");
-                              f.createParametersInputs(oForm.down('#custom_data_edit'), definitions, true, ajaxplorer.user.preferences, false, true);
+                              var definitions = f.parseParameters(app.getXmlRegistry(), "user/preferences/pref[@exposed]|//param[contains(@scope,'user')]");
+                              f.createParametersInputs(oForm.down('#custom_data_edit'), definitions, true, app.user.preferences, false, true);
       					]]></dialogOnOpen>
       					<dialogOnComplete hideDialog="true"><![CDATA[
       					    var params = $H();
@@ -230,12 +230,12 @@
                               conn.setParameters(params);
                               conn.setMethod("POST");
                               conn.onComplete = function(transport){
-                                  ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+                                  app.actionBar.parseXmlMessage(transport.responseXML);
                                   document.observeOnce("boa:registry_part_loaded", function(event){
                                       if(event.memo != "user/preferences") return;
-                                      ajaxplorer.logXmlUser(ajaxplorer.getXmlRegistry());
+                                      app.logXmlUser(app.getXmlRegistry());
                                   });
-                                  ajaxplorer.loadXmlRegistry(false, "user/preferences");
+                                  app.loadXmlRegistry(false, "user/preferences");
                               };
                               conn.sendAsync();
       					]]></dialogOnComplete>
@@ -255,7 +255,7 @@
 			<processing>
 				<clientCallback prepareModal="true" dialogOpenForm="switch_language_form" dialogOkButtonOnly="false" dialogSkipButtons="false">
 					<dialogOnOpen><![CDATA[
-					    if(ajaxplorer.user) var userLang = ajaxplorer.user.getPreference("lang");
+					    if(app.user) var userLang = app.user.getPreference("lang");
 						if(!userLang) userLang = window._bootstrap.parameters.get("currentLanguage");
 						var selector = $(oForm).select('select[id="language_selector"]')[0];
 						var languages = $H(window._bootstrap.parameters.get("availableLanguages"));
@@ -267,26 +267,26 @@
 						selector.setValue(userLang);		
 						selector.observe("change", function(){
 							var value = selector.getValue();
-							if(ajaxplorer.user){
-    							ajaxplorer.user.setPreference("lang", selector.getValue());
-	    						ajaxplorer.user.savePreference("lang");
+							if(app.user){
+    							app.user.setPreference("lang", selector.getValue());
+	    						app.user.savePreference("lang");
 	    					}
 						});
 					]]></dialogOnOpen>
 					<dialogOnComplete hideDialog="true"><![CDATA[
-                        if(ajaxplorer.user){
-                            var oUser = ajaxplorer.user;
+                        if(app.user){
+                            var oUser = app.user;
                             if(oUser.getPreference('lang') != null
                                 && oUser.getPreference('lang') != ""
-                                && oUser.getPreference('lang') != ajaxplorer.currentLanguage)
+                                && oUser.getPreference('lang') != app.currentLanguage)
                             {
-                                ajaxplorer.loadI18NMessages(oUser.getPreference('lang'));
-                                ajaxplorer.displayMessage('SUCCESS', MessageHash[241]);
+                                app.loadI18NMessages(oUser.getPreference('lang'));
+                                app.displayMessage('SUCCESS', MessageHash[241]);
                             }
                         }else{
                             var selector = $(oForm).select('select[id="language_selector"]')[0];
                             var value = selector.getValue();
-                            ajaxplorer.loadI18NMessages(value);
+                            app.loadI18NMessages(value);
                             window._bootstrap.parameters.set("currentLanguage", value);
                         }
 					]]></dialogOnComplete>
@@ -308,29 +308,29 @@
 			<processing>				
 				<clientCallback prepareModal="true" dialogOpenForm="webdav_pref_form" dialogOkButtonOnly="true" dialogSkipButtons="false">
 					<dialogOnOpen><![CDATA[
-					if(!ajaxplorer.user) return;					
+					if(!app.user) return;					
 					var cont = $('webdav_repo_list');
 					cont.update('');
 					var even = false;
 					var conn = new Connexion();
 					conn.setParameters(new Hash({get_action:'webdav_preferences'}));
 					conn.onComplete = function(transport){
-						ajaxplorer.webdavCurrentPreferences = transport.responseJSON;
-						$('webdav_activator').checked = ajaxplorer.webdavCurrentPreferences.webdav_active;
-						if($('webdav_activator').checked && !ajaxplorer.webdavCurrentPreferences.digest_set
-						    && !ajaxplorer.webdavCurrentPreferences.webdav_force_basic) {
+						app.webdavCurrentPreferences = transport.responseJSON;
+						$('webdav_activator').checked = app.webdavCurrentPreferences.webdav_active;
+						if($('webdav_activator').checked && !app.webdavCurrentPreferences.digest_set
+						    && !app.webdavCurrentPreferences.webdav_force_basic) {
 						    $('webdav_password_form').show();
 						}
                         alert(45);
-                        ajaxplorer.user.getRepositoriesList().each(function(pair){
-                            if(ajaxplorer.webdavCurrentPreferences.webdav_repositories[pair.key]){
+                        app.user.getRepositoriesList().each(function(pair){
+                            if(app.webdavCurrentPreferences.webdav_repositories[pair.key]){
                                 var div = new Element('div', {className:(even?'even':'')});
-                                div.update('<span>'+pair.value.label+'</span><input readonly type="text" value="'+ ajaxplorer.webdavCurrentPreferences.webdav_repositories[pair.key] +'">' );
+                                div.update('<span>'+pair.value.label+'</span><input readonly type="text" value="'+ app.webdavCurrentPreferences.webdav_repositories[pair.key] +'">' );
                                 cont.insert(div);
                                 even = !even;
                             }
                         });
-                        modal.getForm().down('#webdav_main_access').setValue(ajaxplorer.webdavCurrentPreferences.webdav_base_url);
+                        modal.getForm().down('#webdav_main_access').setValue(app.webdavCurrentPreferences.webdav_base_url);
                         modal.getForm().down('#webdav_main_access').observe("click", function(){
                             modal.getForm().down('#webdav_main_access').select();
                         });
@@ -353,21 +353,21 @@
                                     activate:(checked?'true':'false')
                                 }));
                                 conn.onComplete = function(transport){
-                                    ajaxplorer.webdavCurrentPreferences = transport.responseJSON;
-                                    if(ajaxplorer.webdavCurrentPreferences.webdav_active){
-                                        if(!ajaxplorer.webdavCurrentPreferences.digest_set
-                                        || ajaxplorer.webdavCurrentPreferences.webdav_force_basic) {
+                                    app.webdavCurrentPreferences = transport.responseJSON;
+                                    if(app.webdavCurrentPreferences.webdav_active){
+                                        if(!app.webdavCurrentPreferences.digest_set
+                                        || app.webdavCurrentPreferences.webdav_force_basic) {
                                             $('webdav_password_form').show();
                                         }
-                                        ajaxplorer.displayMessage("SUCCESS", MessageHash[408]);
+                                        app.displayMessage("SUCCESS", MessageHash[408]);
                                     }else {
                                         $('webdav_password_form').hide();
-                                        ajaxplorer.displayMessage("SUCCESS", MessageHash[409]);
+                                        app.displayMessage("SUCCESS", MessageHash[409]);
                                     }
                                 };
                                 conn.sendAsync();
                             });
-                            if(!ajaxplorer.webdavCurrentPreferences.digest_set){
+                            if(!app.webdavCurrentPreferences.digest_set){
                                 $('webdav_pass_saver').observe("click", function(){
                                     var conn = new Connexion();
                                     conn.setMethod('POST');
@@ -376,7 +376,7 @@
                                         webdav_pass: $('webdav_password').value
                                     }));
                                     conn.onComplete = function(transport){
-                                        ajaxplorer.displayMessage("SUCCESS", MessageHash[410]);
+                                        app.displayMessage("SUCCESS", MessageHash[410]);
                                     };
                                     conn.sendAsync();
                                 });
@@ -417,8 +417,8 @@
             <rightsContext adminOnly="true" noUser="true" read="false" userLogged="only" write="false"/>
             <processing>
                 <clientCallback><![CDATA[
-                    if(!ajaxplorer.repositoryId || ajaxplorer.repositoryId != "boaconf"){
-                        ajaxplorer.triggerRepositoryChange('boaconf');
+                    if(!app.repositoryId || app.repositoryId != "boaconf"){
+                        app.triggerRepositoryChange('boaconf');
                     }
                 ]]></clientCallback>
             </processing>
@@ -430,8 +430,8 @@
             <rightsContext adminOnly="false" noUser="false" read="false" userLogged="only" write="false"/>
             <processing>
                 <clientCallback><![CDATA[
-                    if(!ajaxplorer.repositoryId || ajaxplorer.repositoryId != "shared"){
-                        ajaxplorer.triggerRepositoryChange('shared');
+                    if(!app.repositoryId || app.repositoryId != "shared"){
+                        app.triggerRepositoryChange('shared');
                     }
                 ]]></clientCallback>
             </processing>

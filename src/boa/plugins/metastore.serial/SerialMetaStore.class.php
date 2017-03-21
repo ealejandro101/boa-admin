@@ -40,7 +40,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * Simple metadata implementation, stored in hidden files inside the
  * folders
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Metastore
  */
 class SerialMetaStore extends Plugin implements MetaStoreProvider {

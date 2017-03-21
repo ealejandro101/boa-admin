@@ -32,7 +32,7 @@ namespace BoA\Core\Security;
 defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 interface GroupPathProvider {

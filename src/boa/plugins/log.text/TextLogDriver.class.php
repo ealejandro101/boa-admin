@@ -40,7 +40,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Standard logger. Writes logs into text files
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Log
  */
 class TextLogDriver extends AbstractLogDriver {
@@ -101,7 +101,7 @@ class TextLogDriver extends AbstractLogDriver {
 			}
 			$this->fileHandle = @fopen($this->storageDir . $this->logFileName, "at+");
             if($this->fileHandle === false){
-                error_log("[AjaXplorer] Cannot open log file ".$this->storageDir . $this->logFileName);
+                error_log("[System] Cannot open log file ".$this->storageDir . $this->logFileName);
             }
 			if($this->fileHandle !== false && count($this->stack)){
 				$this->stackFlush();
@@ -165,7 +165,7 @@ class TextLogDriver extends AbstractLogDriver {
 		if ($this->fileHandle !== false) {
 			if(count($this->stack)) $this->stackFlush();						
 			if (@fwrite($this->fileHandle, $textMessage) === false) {
-				error_log("[AjaXplorer] There was an error writing to log file ($textMessage)");
+				error_log("[System] There was an error writing to log file ($textMessage)");
 			}
 		}else{			
 			$this->stack[] = $textMessage;
@@ -194,7 +194,6 @@ class TextLogDriver extends AbstractLogDriver {
 		$success = @fclose($this->fileHandle);
 		if ($success === false) {
 			// Failure to close the log file
-			// error_log("[AjaXplorer] Logger failed to close the handle to the log file");
 		}
 		
 	}

@@ -40,7 +40,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * XML output Generator
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class XMLWriter

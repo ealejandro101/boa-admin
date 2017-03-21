@@ -41,14 +41,14 @@
 /*
  * Additionnal php.ini settings
  * > Problems with tmp dir : set your own session tmp dir (create it and make it writeable!)
- * > Concurrent versions of AjaXplorer : use session.cookie_path to differentiate them.
+ * > Concurrent versions of the app: use session.cookie_path to differentiate them.
  */
 $BOA_INISET = array();
 //$BOA_INISET["session.save_path"] = BOA_DATA_PATH."/tmp/sessions";
-//$BOA_INISET["session.cookie_path"] = "/ajaxplorer";
+//$BOA_INISET["session.cookie_path"] = "/BoA";
 
 /*
  * If you want to force the https, uncomment the line below. This will automatically
- * redirect all calls to ajaxplorer via http to the same URL with https
+ * redirect all calls via http to the same URL with https
  */
 //define("BOA_FORCE_SSL_REDIRECT", true);

@@ -29,6 +29,6 @@
  */
 
 $mess = array(
-   "1" => "AjaXplorer Setup Wizard",
-   "2" => "Welcome in the AjaXplorer Setup Wizard"
+   "1" => "Setup Wizard",
+   "2" => "Welcome to System Setup Wizard"
 );

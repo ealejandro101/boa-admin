@@ -36,7 +36,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * The basic concept of plugin. Only needs a manifest.xml file.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class Plugin implements \Serializable{

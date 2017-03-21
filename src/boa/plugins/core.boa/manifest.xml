@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<core id="core.boa" label="CONF_MESSAGE[AjaXplorer Main Options]"
-          description="CONF_MESSAGE[Main container for core AjaXplorer settings (application title, sharing, webdav server config, etc...)]"
+<core id="core.boa" label="CONF_MESSAGE[Application Main Options]"
+          description="CONF_MESSAGE[Main container for core System settings (application title, sharing, webdav server config, etc...)]"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd"
         >
     <plugin_info>
         <plugin_author>Charles du Jeu</plugin_author>
         <plugin_version>follow</plugin_version>
-        <plugin_uri>http://ajaxplorer.info/plugins/core/ajaxplorer</plugin_uri>
+        <plugin_uri>https://github.com/boa-project/boa/plugins/core/app</plugin_uri>
         <core_relation packaged="true" tested_version="follow_core"/>
     </plugin_info>
     <client_settings>
@@ -16,18 +16,18 @@
         </resources>
     </client_settings>
 	<server_settings>
-		<global_param name="APPLICATION_TITLE" group="CONF_MESSAGE[Main]" type="string" label="CONF_MESSAGE[App Title]" description="CONF_MESSAGE[Your application title]" mandatory="true" default="AjaXplorer" expose="true"/>
+		<global_param name="APPLICATION_TITLE" group="CONF_MESSAGE[Main]" type="string" label="CONF_MESSAGE[App Title]" description="CONF_MESSAGE[Your application title]" mandatory="true" default="BoA" expose="true"/>
 		<global_param name="DEFAULT_LANGUAGE" group="CONF_MESSAGE[Main]" type="select" choices="BOA_AVAILABLE_LANGUAGES" label="CONF_MESSAGE[Default Language]" description="CONF_MESSAGE[Default language when a user does not have set his/her own.]" mandatory="true" default="en"/>
 		<global_param name="SERVER_URL" group="CONF_MESSAGE[Main]" type="string" label="CONF_MESSAGE[Server URL]" description="CONF_MESSAGE[Server URL used to build share links and notifications. It will be detected if empty.]" mandatory="false"/>
 		<global_param name="PUBLIC_DOWNLOAD_FOLDER" group="CONF_MESSAGE[Sharing]" type="string" label="CONF_MESSAGE[Download Folder]" description="CONF_MESSAGE[Absolute path to the public folder where temporary download links will be created. Setting this empty will disable the sharing feature.]" mandatory="false" default="BOA_INSTALL_PATH/data/public"/>
-		<global_param name="PUBLIC_DOWNLOAD_URL" group="CONF_MESSAGE[Sharing]" type="string" label="CONF_MESSAGE[Download URL]" description="CONF_MESSAGE[If not inferred directly from the current ajaxplorer URI plus the public download folder name, replace the public access URL here.]" mandatory="false" default=""/>
+		<global_param name="PUBLIC_DOWNLOAD_URL" group="CONF_MESSAGE[Sharing]" type="string" label="CONF_MESSAGE[Download URL]" description="CONF_MESSAGE[If not inferred directly from the current URI plus the public download folder name, replace the public access URL here.]" mandatory="false" default=""/>
 		<global_param name="WEBDAV_ENABLE" group="CONF_MESSAGE[WebDAV Server]" type="boolean" label="CONF_MESSAGE[Enable WebDAV]" description="CONF_MESSAGE[Enable the webDAV support. Please READ THE DOC to safely use this feature.]" mandatory="false" default="false"/>
-		<global_param name="WEBDAV_BASEURI" group="CONF_MESSAGE[WebDAV Server]" type="string" label="CONF_MESSAGE[Shares URI]" description="CONF_MESSAGE[Common URI to access the shares. Please READ THE DOC to safely use this feature.]" mandatory="false" default="/ajaxplorer/shares"/>
+		<global_param name="WEBDAV_BASEURI" group="CONF_MESSAGE[WebDAV Server]" type="string" label="CONF_MESSAGE[Shares URI]" description="CONF_MESSAGE[Common URI to access the shares. Please READ THE DOC to safely use this feature.]" mandatory="false" default="/application/shares"/>
 		<global_param name="WEBDAV_BASEHOST" group="CONF_MESSAGE[WebDAV Server]" type="string" label="CONF_MESSAGE[Shares Host]" description="CONF_MESSAGE[Host used in webDAV protocol. Should be detected by default. Please READ THE DOC to safely use this feature.]" mandatory="false" default=""/>
 		<global_param name="WEBDAV_DIGESTREALM" group="CONF_MESSAGE[WebDAV Server]" type="string" label="CONF_MESSAGE[Digest Realm]" description="CONF_MESSAGE[Default realm for authentication. Please READ THE DOC to safely use this feature.]" mandatory="false" default="webdav_realm"/>
 		<global_param name="WEBDAV_FORCE_BASIC" group="CONF_MESSAGE[WebDAV Server]" type="boolean" label="CONF_MESSAGE[Force Basic Auth]" description="CONF_MESSAGE[This authentication mechanism is less secure, but will avoid the users having to re-enter a password in some case.]" mandatory="false" default="false"/>
 		<global_param name="WEBDAV_BROWSER_LISTING" group="CONF_MESSAGE[WebDAV Server]" type="boolean" label="CONF_MESSAGE[Browser Access]" description="CONF_MESSAGE[Display the list of files and folder when accessing through the browser]" mandatory="false" default="false"/>
-		<global_param name="CMDLINE_ACTIVE" group="CONF_MESSAGE[Command Line]" type="boolean" label="CONF_MESSAGE[Command-line Active]" description="CONF_MESSAGE[Use AjaXplorer framework via the command line, allowing CRONTAB jobs or background actions.]" mandatory="false" default="false"/>
+		<global_param name="CMDLINE_ACTIVE" group="CONF_MESSAGE[Command Line]" type="boolean" label="CONF_MESSAGE[Command-line Active]" description="CONF_MESSAGE[Use framework via the command line, allowing CRONTAB jobs or background actions.]" mandatory="false" default="false"/>
 		<global_param name="CLI_PHP" group="CONF_MESSAGE[Command Line]" type="string" label="CONF_MESSAGE[Command-line PHP]" description="CONF_MESSAGE[On specific hosts, you may have to use a specific path to access the php command line]" mandatory="false" default="php"/>
 		<global_param name="CLI_USE_COM" group="CONF_MESSAGE[Command Line]" type="boolean" label="CONF_MESSAGE[Use COM class]" description="CONF_MESSAGE[On Windows running IIS, set this option to true if the COM extension is loaded, this may enable the use of the php command line.]" mandatory="false" default="false"/>
         <global_param name="DISABLE_ZIP_BROWSING" group="CONF_MESSAGE[Compression Features]" type="boolean" label="CONF_MESSAGE[Disable Zip browsing]" description="CONF_MESSAGE[Disable Zip files inline browsing. This can be necessary if you always store huge zip archives: it can have some impact on performance.]" mandatory="false" default="false"/>

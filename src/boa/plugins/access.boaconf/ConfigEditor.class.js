@@ -28,7 +28,7 @@
  */
 
 /**
- * @package info.ajaxplorer.plugins
+ * @package info.app.plugins
  * @class ConfigEditor
  * Configurations editor
  */
@@ -121,7 +121,7 @@ Class.create("ConfigEditor",{
 				conn.onComplete = function(transport){
 					this.parseXmlMessage(transport.responseXML);
 					this.loadUser(this.userId, true);
-					ajaxplorer.fireContextRefresh();
+					app.fireContextRefresh();
 				}.bind(this);
 				conn.sendAsync();
 			}else if(this.selectionUrl){
@@ -131,7 +131,7 @@ Class.create("ConfigEditor",{
 				connexion.onComplete = function(transport){
 					this.clearRolesForm();
 					this.populateRoles(transport.responseXML);
-					ajaxplorer.fireContextRefresh();
+					app.fireContextRefresh();
 				}.bind(this);
 				connexion.sendAsync();
 			}
@@ -156,7 +156,7 @@ Class.create("ConfigEditor",{
 		connexion.onComplete = function(transport){
 			modal.refreshDialogPosition();
 			modal.refreshDialogAppearance();
-			ajaxplorer.blurAll();
+			app.blurAll();
 		}.bind(this);
 		connexion.sendAsync();
 	},
@@ -168,25 +168,25 @@ Class.create("ConfigEditor",{
 		var extraParams = this.form.select('div#custom_pane input');
 		
 		if(login.value == ''){
-			ajaxplorer.displayMessage("ERROR", MessageHash['boaconf.38']);
+			app.displayMessage("ERROR", MessageHash['boaconf.38']);
 			return false;
 		}
 		if(pass.value == '' || passConf.value == '' ){
-			ajaxplorer.displayMessage("ERROR", MessageHash['boaconf.39']);
+			app.displayMessage("ERROR", MessageHash['boaconf.39']);
 			return false;
 		}
 		if(pass.value.length < window._bootstrap.parameters.get("password_min_length")){
-			ajaxplorer.displayMessage("ERROR", MessageHash[378]);
+			app.displayMessage("ERROR", MessageHash[378]);
 			return false;
 		}
 		if(pass.value != passConf.value){
-			ajaxplorer.displayMessage("ERROR", MessageHash['boaconf.37']);
+			app.displayMessage("ERROR", MessageHash['boaconf.37']);
 			return false;
 		}
 		var parameters = new Hash();
 		parameters.set('new_user_login', login.value);
 		parameters.set('new_user_pwd', this.encodePassword(pass.value));
-        var currentPath = ajaxplorer.getContextNode().getPath();
+        var currentPath = app.getContextNode().getPath();
         if(currentPath.startsWith("/data/users")){
             var groupPath = currentPath.substr("/data/users".length);
             parameters.set('group_path', groupPath);
@@ -198,8 +198,8 @@ Class.create("ConfigEditor",{
 		this.submitForm("create_user", 'create_user', parameters, null, function(responseXML){
             // success callback
             hideLightBox();
-            var editorData = ajaxplorer.findEditorById("editor.role");
-            ajaxplorer.loadEditorResources(editorData.resourcesManager);
+            var editorData = app.findEditorById("editor.role");
+            app.loadEditorResources(editorData.resourcesManager);
             var node = new ManifestNode(currentPath + "/"+newUserName, true);
             node.getMetadata().set("boa_mime", "user");
             modal.openEditorDialog(editorData, node);
@@ -451,10 +451,10 @@ Class.create("ConfigEditor",{
             var reloadNode = XPathSelectSingleNode(responseXML.documentElement, "//reload_instruction/@file");
             if(reloadNode && reloadNode.nodeValue){
                 var newRepoId = reloadNode.nodeValue;
-                var editors = ajaxplorer.findEditorsForMime("repository");
+                var editors = app.findEditorsForMime("repository");
                 if(editors.length && editors[0].openable){
                     var editorData = editors[0];
-                    ajaxplorer.loadEditorResources(editorData.resourcesManager);
+                    app.loadEditorResources(editorData.resourcesManager);
                     modal.openEditorDialog(editorData, newRepoId);
                 }
             }
@@ -566,7 +566,7 @@ Class.create("ConfigEditor",{
 				this.repositories.set(childs[i].getAttribute('index'), childs[i]);
 			}
 		}
-        ajaxplorer.actionBar.parseXmlMessage(xmlResponse);
+        app.actionBar.parseXmlMessage(xmlResponse);
         if(xmlResponse.documentElement){
             if(XPathSelectSingleNode(xmlResponse.documentElement, 'message[@type="ERROR"]') != null){
                 return false;
@@ -577,6 +577,6 @@ Class.create("ConfigEditor",{
 
 	
 	displayMessage: function(messageType, message){
-        ajaxplorer.displayMessage(messageType, message);
+        app.displayMessage(messageType, message);
 	}
 });

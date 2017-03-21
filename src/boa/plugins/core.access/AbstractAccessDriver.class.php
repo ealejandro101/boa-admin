@@ -43,7 +43,7 @@ use BoA\Plugins\Core\Log\Logger;
 defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Core
  * @class AbstractAccessDriver
  * Abstract representation of an action driver. Must be implemented.

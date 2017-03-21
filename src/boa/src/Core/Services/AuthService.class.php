@@ -43,13 +43,14 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Static access to the authentication mechanism. Encapsulates the authDriver implementation
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class AuthService
 {
     static $roles;
     static $logName = "/failed.log";
+    const REMEMBER_COOKIE_NAME = "App-Remember-Cookie";
     public static $useSession = true;
     private static $currentUser;
     /**
@@ -229,12 +230,12 @@ class AuthService
      * @param AbstractUser $user
      */
     static function refreshRememberCookie($user){
-        $current = $_COOKIE["AjaXplorer-remember"];
+        $current = $_COOKIE[self::REMEMBER_COOKIE_NAME];
         if(!empty($current)){
             $user->invalidateCookieString(substr($current, strpos($current, ":")+1));
         }
         $rememberPass = $user->getCookieString();
-        setcookie("AjaXplorer-remember", $user->id.":".$rememberPass, time()+3600*24*10);
+        setcookie(self::REMEMBER_COOKIE_NAME, $user->id.":".$rememberPass, time()+3600*24*10);
     }
 
     /**
@@ -242,7 +243,7 @@ class AuthService
      * @return bool
      */
     static function hasRememberCookie(){
-        return (isSet($_COOKIE["AjaXplorer-remember"]) && !empty($_COOKIE["AjaXplorer-remember"]));
+        return (isSet($_COOKIE[self::REMEMBER_COOKIE_NAME]) && !empty($_COOKIE[self::REMEMBER_COOKIE_NAME]));
     }
 
     /**
@@ -250,12 +251,12 @@ class AuthService
      * Warning, must be called before sending other headers!
      */
     static function clearRememberCookie(){
-        $current = $_COOKIE["AjaXplorer-remember"];
+        $current = $_COOKIE[self::REMEMBER_COOKIE_NAME];
         $user = AuthService::getLoggedUser();
         if(!empty($current) && $user != null){
             $user->invalidateCookieString(substr($current, strpos($current, ":")+1));
         }
-        setcookie("AjaXplorer-remember", "", time()-3600);
+        setcookie(self::REMEMBER_COOKIE_NAME, "", time()-3600);
     }
 
     static function logTemporaryUser($parentUserId, $temporaryUserId){
@@ -298,11 +299,11 @@ class AuthService
     static function logUser($user_id, $pwd, $bypass_pwd = false, $cookieLogin = false, $returnSeed="")
     {
         $user_id = self::filterUserSensitivity($user_id);
-        if($cookieLogin && !isSet($_COOKIE["AjaXplorer-remember"])){
+        if($cookieLogin && !isSet($_COOKIE[self::REMEMBER_COOKIE_NAME])){
             return -5; // SILENT IGNORE
         }
         if($cookieLogin){
-            list($user_id, $pwd) = explode(":", $_COOKIE["AjaXplorer-remember"]);
+            list($user_id, $pwd) = explode(":", $_COOKIE[self::REMEMBER_COOKIE_NAME]);
         }
         $confDriver = ConfService::getConfStorageImpl();
         if($user_id == null)

@@ -39,7 +39,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Standard auth implementation, stores the data in serialized files
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Auth
  */
 class SerialAuthDriver extends AbstractAuthDriver {

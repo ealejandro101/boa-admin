@@ -53,6 +53,6 @@ $mess=array(
 "Analytics Domain" => "Domaine GA",
 "Set the domain for yuor analytics reports (not mandatory!)" => "Domaine pour le rapport Google Analytics",
 "Analytics Events" => "Evenements GA",
-"Use Events Logging, experimental only implemented on download action in AjaXplorer" => "Utiliser les Events google analytics, implémenté seulement pour l'action download actuellement",
+"Use Events Logging, experimental only implemented on download action" => "Utiliser les Events google analytics, implémenté seulement pour l'action download actuellement",
 );
 ?>

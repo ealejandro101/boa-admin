@@ -37,7 +37,7 @@ use BoA\Plugins\Core\Access\AbstractAccessDriver;
 defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * Abstraction of a user selection passed via http parameters.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class UserSelection

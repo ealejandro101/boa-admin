@@ -197,19 +197,19 @@ Proto.Menu = Class.create({
 			}
 			if(item.subMenu){
 				var arrowContainer = new Element('div', {
-                    className:'menuActions' + (window.ajaxplorer.currentThemeUsesIconFonts?' icon-caret-right':''),
+                    className:'menuActions' + (window.app.currentThemeUsesIconFonts?' icon-caret-right':''),
                     style:'padding-right:7px;'
                 });
 				arrowContainer.insert(new Element('img', {src:this.options.submenuArrow, width:6,height:10}));
 				newItem.insert(arrowContainer);
                 newItem.setStyle({position:"relative"});
 			}
-			if(item.action_id && ajaxplorer && ajaxplorer.getActionBar() && ajaxplorer.getActionBar().getActionByName(item.action_id)){
-                item.name = ajaxplorer.getActionBar().getActionByName(item.action_id).getKeyedText();
-                item.title = ajaxplorer.getActionBar().getActionByName(item.action_id).options.title;
+			if(item.action_id && app && app.getActionBar() && app.getActionBar().getActionByName(item.action_id)){
+                item.name = app.getActionBar().getActionByName(item.action_id).getKeyedText();
+                item.title = app.getActionBar().getActionByName(item.action_id).options.title;
             }
             var img = '';
-            if(item.icon_class && window.ajaxplorer.currentThemeUsesIconFonts){
+            if(item.icon_class && window.app.currentThemeUsesIconFonts){
                 img = new Element('span', {
                     className:item.icon_class + ' icon_span',
                     title:item.alt

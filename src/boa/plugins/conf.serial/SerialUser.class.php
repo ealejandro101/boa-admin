@@ -39,7 +39,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Implementation of the AbstractUser for serial
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Conf
  */
 class SerialUser extends AbstractUser

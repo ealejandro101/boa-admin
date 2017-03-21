@@ -37,7 +37,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * Standard values filtering used in the core.
  * @static
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class VarsFilter {

@@ -40,7 +40,7 @@ use BoA\Plugins\Core\Access\AbstractAccessDriver;
 
 defined('BOA_EXEC') or die( 'Access not allowed');
 /**
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Access
  * @class SharedAccessDriver
  * Plugin to access the shared elements of the current user

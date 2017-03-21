@@ -43,7 +43,7 @@
 				<rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
 				<processing>
 					<clientCallback prepareModal="true"><![CDATA[
-						var userSelection = ajaxplorer.getUserSelection();
+						var userSelection = app.getUserSelection();
 						var loadFunc = function(oForm){
 							var form = $(oForm).select('div[id="user_meta_form"]')[0];
 							var nodeMeta = userSelection.getUniqueNode().getMetadata();
@@ -69,7 +69,7 @@
 						var closeFunc = function(){
 							var oForm = $(modal.getForm());
 							userSelection.updateFormOrUrl(modal.getForm());	
-							ajaxplorer.actionBar.submitForm(oForm);				
+							app.actionBar.submitForm(oForm);				
 							hideLightBox(true);
 							return false;
 						};

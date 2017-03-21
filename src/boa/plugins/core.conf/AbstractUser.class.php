@@ -35,7 +35,7 @@ use BoA\Core\Services\ConfService;
 defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Core
  * @class AbstractUser
  * @abstract

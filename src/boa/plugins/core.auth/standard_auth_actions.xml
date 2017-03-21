@@ -23,9 +23,9 @@
 						function(oForm){
 						    if(window._bootstrap.parameters.get("customWording")){
                                 var ttSt = $("generic_dialog_box").down("span.titleString");
-                                ttSt.innerHTML = ttSt.innerHTML.replace("AjaXplorer", window._bootstrap.parameters.get("customWording").title );
+                                ttSt.innerHTML = ttSt.innerHTML.replace("[ApplicationTitle]", window._bootstrap.parameters.get("customWording").title );
 						    }
-							ajaxplorer.loadSeedOrCaptcha(oForm.down('#login_seed'), oForm.down('img#captcha_image'), oForm.down('div.dialogLegend'), 'before');
+							app.loadSeedOrCaptcha(oForm.down('#login_seed'), oForm.down('img#captcha_image'), oForm.down('div.dialogLegend'), 'before');
 							if(Prototype.Browser.IE && !Modernizr.borderradius && !oForm.down('input[type="text"]').key_enter_attached){
 								oForm.select('input').invoke("observe", "keydown", function(event){
 									if(event.keyCode == Event.KEY_RETURN){
@@ -56,9 +56,9 @@
 								connexion.addParameter('captcha_code', oForm.captcha_code.value);
 							}
 							connexion.onComplete = function(transport){
-								ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+								app.actionBar.parseXmlMessage(transport.responseXML);
 								if(transport.responseXML && XPathGetSingleNodeText(transport.responseXML.documentElement, "logging_result/@value") == "-4"){
-									ajaxplorer.loadSeedOrCaptcha(oForm.down('#login_seed'), oForm.down('img#captcha_image'), oForm.down('div.dialogLegend'), 'before');
+									app.loadSeedOrCaptcha(oForm.down('#login_seed'), oForm.down('img#captcha_image'), oForm.down('div.dialogLegend'), 'before');
 								}
 							};
 							connexion.setMethod('put');
@@ -73,7 +73,7 @@
 						<div id="login_form_dynamic" action="login" box_width="230" overlayStyle='{"backgroundColor":"white","opacity":10}'>
 						<input type="hidden" name="get_action" value="login">
 						<input type="hidden" name="login_seed" id="login_seed" value="">
-						<a style="float:right;" href="javascript:ajaxplorer.actionBar.fireAction('switch_language');" title="BOA_MESSAGE[190]" alt="BOA_MESSAGE[190]" class="icon-flag"/>&nbsp;</a>
+						<a style="float:right;" href="javascript:app.actionBar.fireAction('switch_language');" title="BOA_MESSAGE[190]" alt="BOA_MESSAGE[190]" class="icon-flag"/>&nbsp;</a>
 						<div class="dialogLegend" style="margin-bottom: 3px;margin-top:4px;" message_id="180">BOA_MESSAGE[180]</div>
 						<div style="width:100%;">
 							<div class="SF_element">
@@ -101,7 +101,7 @@
             <processing>
 				<clientCallback prepareModal="true" dialogOpenForm="pass_change_form" dialogOkButtonOnly="false" dialogSkipButtons="false">
 					<dialogOnOpen><![CDATA[
-					    if(ajaxplorer.user.lock){
+					    if(app.user.lock){
 					        modal.getForm().insert({top:new Element("div", {className:"dialogLegend"}).update(MessageHash[444])});
 					    }
 						$('user_change_ownpass_old').value = $('user_change_ownpass1').value = $('user_change_ownpass2').value = '';
@@ -146,24 +146,24 @@
 							var onComplete = function(transport){
 								var addition = '';
 								var logout = false;
-								if(ajaxplorer.user.lock){
+								if(app.user.lock){
 								    addition = '\n ' + MessageHash[445];
 								}
 								if(userPass != null){
 									if(transport.responseText == 'PASS_ERROR'){
 										alert(MessageHash[240]);
 									}else if(transport.responseText == 'SUCCESS'){
-										ajaxplorer.displayMessage('SUCCESS', MessageHash[197] + addition);
+										app.displayMessage('SUCCESS', MessageHash[197] + addition);
 										if(addition) logout = true;
 										hideLightBox(true);
 									}
 								}else{
-									ajaxplorer.displayMessage('SUCCESS', MessageHash[241] + addition);
+									app.displayMessage('SUCCESS', MessageHash[241] + addition);
 									if(addition) logout = true;
 									hideLightBox(true);
 								}
 								if(logout){
-								    ajaxplorer.actionBar.fireAction("logout");
+								    app.actionBar.fireAction("logout");
 								}
 							};
 							var conn = new Connexion();
@@ -209,7 +209,7 @@
 					var connexion = new Connexion();
 					connexion.addParameter('get_action', 'logout');
 					connexion.onComplete = function(transport){
-						ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+						app.actionBar.parseXmlMessage(transport.responseXML);
 						};
 					connexion.sendAsync();
 					]]></clientCallback>

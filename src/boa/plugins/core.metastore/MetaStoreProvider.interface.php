@@ -38,7 +38,7 @@ define('BOA_METADATA_SCOPE_REPOSITORY', 2);
 /**
  * Simple metadata implementation, stored in hidden files inside the
  * folders
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Core
  */
 interface MetaStoreProvider {

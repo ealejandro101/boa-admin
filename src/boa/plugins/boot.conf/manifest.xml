@@ -14,7 +14,7 @@
         <global_param group="&lt;span class='icon-key'&gt;&lt;/span&gt; Admin access" name="ADMIN_USER_PASS" type="password" label="Admin Password" description="Password" mandatory="true"/>
         <global_param group="&lt;span class='icon-key'&gt;&lt;/span&gt; Admin access" name="ADMIN_USER_PASS2" type="password" label="Confirm" description="Confirm password" mandatory="true"/>
         <global_param group="&lt;span class='icon-cogs'&gt;&lt;/span&gt; Global options" name="sysLegend" type="legend" label="" description="Set up some application parameters. If you enable Emails, please use the Test button to check if your php is correctly configured."/>
-        <global_param group="&lt;span class='icon-cogs'&gt;&lt;/span&gt; Global options" name="APPLICATION_TITLE" type="string" label="Application Title" description="Your system title" default="AjaXplorer" mandatory="false"/>
+        <global_param group="&lt;span class='icon-cogs'&gt;&lt;/span&gt; Global options" name="APPLICATION_TITLE" type="string" label="Application Title" description="Your system title" default="[ApplicationTitle]" mandatory="false"/>
         <global_param group="&lt;span class='icon-cogs'&gt;&lt;/span&gt; Global options" name="APPLICATION_WELCOME" type="textarea" label="Welcome Message" description="An additional message displayed at startup, on the splash screen and the login screen." default="" mandatory="false"/>
         <global_param group="&lt;span class='icon-cogs'&gt;&lt;/span&gt; Global options" name="APPLICATION_LANGUAGE" type="select" choices="BOA_AVAILABLE_LANGUAGES" label="Default Language" description="Select a language activated by default( users will still be able to switch)" default="en" mandatory="true"/>
         <global_param group="&lt;span class='icon-cogs'&gt;&lt;/span&gt; Global options" name="MAILER_ENABLE" type="group_switch:mailer" label="Enable emails" description="Set up system to send emails" default="no" mandatory="true"/>
@@ -68,17 +68,17 @@
                     </clientCallback>
                     <clientForm id="installer_form"><![CDATA[
                         <div id="installer_form" box_padding="0" box_resize="true" box_width="560" overlayStyle='{"backgroundColor":"white","opacity":10,"backgroundImage":"url(\"BOA_THEME_FOLDER/images/grid_t.png\")"}' style="padding: 10px; overflow:auto; background-color: white;">
-                            <img src="plugins/gui.ajax/AppLogo250.png" style="display:block;">
-                            <div class="dialogLegend installerWelcome"> Thank you for installing AjaXplorer!<br> This tool will make sure your new sharing platform is up and running in no time: browse through the various sections to set up the general behaviour of the application. You can fly over the fields labels with your mouse to get more information. <br>Are you ready ? <span id="start_button">Start wizard!</span></div>
+                            <img src="boa/plugins/gui.ajax/AppLogo250.png" style="display:block;">
+                            <div class="dialogLegend installerWelcome">Welcome to installation wizard!<br> This tool will make sure your new sharing platform is up and running in no time: browse through the various sections to set up the general behaviour of the application. You can fly over the fields labels with your mouse to get more information. <br>Are you ready ? <span id="start_button">Start wizard!</span></div>
                             <div id="the_form" style="display:none; margin:0 5px;"></div>
                             <div id="configuration_progress" class="dialogLegend installerWelcome" style="display:none; margin:0 5px;">
-                                Please wait while AjaXplorer 5 is being configured! It will be up and running in a couple of seconds...
+                                Please wait while System is being configured! It will be up and running in a couple of seconds...
                                 <div style="margin: 20px auto; width: 40px;">
                                     <span class="icon-spinner rotating spinner_large"></span>
                                 </div>
                             </div>
                             <div style="margin-top:20px;">
-                                <div id="save_button" class="SF_input SF_inlineButton disabled"><span class="icon-play-circle"></span>Install AjaXplorer Now!</div>
+                                <div id="save_button" class="SF_input SF_inlineButton disabled"><span class="icon-play-circle"></span>Install Now!</div>
                             </div>
                         </div>
                         <style type="text/css">
@@ -124,7 +124,7 @@
                         </style>
                     ]]></clientForm>
                     <clientListener name="init"><![CDATA[
-                        ajaxplorer.actionBar.fireAction("installer");
+                        app.actionBar.fireAction("installer");
                     ]]></clientListener>
                 </processing>
             </action>

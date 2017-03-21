@@ -21,13 +21,13 @@
 						path = window.actionArguments[0];
 						if(Object.isString(path)){path = new ManifestNode(path,false,getBaseName(path));}
 					}else{
-						userSelection = ajaxplorer.getUserSelection();
+						userSelection = app.getUserSelection();
 						if(userSelection && userSelection.isUnique() && (userSelection.hasDir() || userSelection.hasMime("BOA_MIMES_ZIP".split(",")))){
 							path = userSelection.getUniqueNode();
 						}
 					}
 					if(path){
-						ajaxplorer.updateContextData(path);
+						app.updateContextData(path);
 					}						
 					]]></clientCallback>
 				<serverCallback methodName="switchAction" restParams="/dir+" checkParams="true" developerComment="Standard listing action to retrieve a list of children for a given directory.">
@@ -60,14 +60,14 @@
 			<rightsContext noUser="true" userLogged="only" read="false" write="true" adminOnly=""></rightsContext>
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
-					var uploaders = ajaxplorer.getActiveExtensionByType("uploader");
+					var uploaders = app.getActiveExtensionByType("uploader");
 					console.log(uploaders);
 					if(uploaders.length){
 						var uploader = uploaders[0];
-						if(ajaxplorer.actionBar.getActionByName("trigger_remote_copy")){
+						if(app.actionBar.getActionByName("trigger_remote_copy")){
                             modal.setCloseAction(function(){
-                                ajaxplorer.fireContextRefresh();
-                                var bgManager = ajaxplorer.actionBar.bgManager;
+                                app.fireContextRefresh();
+                                var bgManager = app.actionBar.bgManager;
                                 bgManager.queueAction("trigger_remote_copy", new Hash(), "Copying files to server");
                                 bgManager.next();
                             });
@@ -94,9 +94,9 @@
 			<rightsContext noUser="true" userLogged="" read="true" write="true" adminOnly=""/>
 			<processing>
 				<clientCallback prepareModal="false"><![CDATA[
-				    ajaxplorer.getContextHolder().selectAll();				    
+				    app.getContextHolder().selectAll();				    
 					window.setTimeout(function(){
-						ajaxplorer.actionBar.fireAction('delete');
+						app.actionBar.fireAction('delete');
 					}, 200);
 					]]></clientCallback>
 				<serverCallback methodName="switchAction"/>
@@ -112,7 +112,7 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
-					var userSelection = ajaxplorer.getUserSelection();
+					var userSelection = app.getUserSelection();
 					if((userSelection.isUnique() && !userSelection.hasDir()) || (zipEnabled && multipleFilesDownloadEnabled))
 					{
 						if(gaTrackEvent){
@@ -171,9 +171,9 @@
 					</div>]]>
 					</clientForm>
 					<clientListener name="selectionChange"><![CDATA[
-					if(ajaxplorer){
-						var userSelection = ajaxplorer.getUserSelection();
-						var action = ajaxplorer.getActionBar().getActionByName("download");
+					if(app){
+						var userSelection = app.getUserSelection();
+						var action = app.getActionBar().getActionByName("download");
 						if(zipEnabled && multipleFilesDownloadEnabled){
 							if(action){
 								if((userSelection.isUnique() && !userSelection.hasDir()) || userSelection.isEmpty()){
@@ -201,12 +201,12 @@
             <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
             <processing>
                 <clientCallback prepareModal="true"><![CDATA[
-                        var dm = ajaxplorer.getContextHolder();
+                        var dm = app.getContextHolder();
                         dm._selectedNodes = $A([dm.getRootNode()]);
                         dm._bEmpty = dm._bDir = true; dm._bFile = false;
                         dm.publish("selection_changed", dm);
                         window.setTimeout(function(){
-                            ajaxplorer.actionBar.fireAction("download");
+                            app.actionBar.fireAction("download");
                         }, 200);
                 ]]></clientCallback>
             </processing>
@@ -221,7 +221,7 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""/>
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
-					var userSelection = ajaxplorer.getUserSelection();					
+					var userSelection = app.getUserSelection();					
 					if((zipEnabled && multipleFilesDownloadEnabled))
 					{
 						var loadFunc = function(oForm){
@@ -242,7 +242,7 @@
 						};
 						var closeFunc = function(){
 							userSelection.updateFormOrUrl(modal.getForm());
-							ajaxplorer.actionBar.submitForm(modal.getForm());			
+							app.actionBar.submitForm(modal.getForm());			
 							hideLightBox();
 						};
 						modal.showDialogForm('Compress selection to ...', 'compress_form', loadFunc, closeFunc);
@@ -255,9 +255,9 @@
 				</div>
 				]]></clientForm>					
 				<clientListener name="selectionChange"><![CDATA[
-				if(ajaxplorer){
-					var userSelection = ajaxplorer.getUserSelection();
-					var action = ajaxplorer.getActionBar().getActionByName("compress");
+				if(app){
+					var userSelection = app.getUserSelection();
+					var action = app.getActionBar().getActionByName("compress");
 					if(!zipEnabled || !multipleFilesDownloadEnabled){
 						if(action){
 							if(userSelection.isUnique()) action.selectionContext.multipleOnly = true;
@@ -287,8 +287,8 @@
                 <dynamicBuilder><![CDATA[
                     var context = window.builderContext;
                     context.builderMenuItems = $A([]);
-                    var selectedMime = getMimeType(ajaxplorer.getUserSelection().getUniqueNode());
-                    var editors = ajaxplorer.findEditorsForMime(selectedMime);
+                    var selectedMime = getMimeType(app.getUserSelection().getUniqueNode());
+                    var editors = app.findEditorsForMime(selectedMime);
                     if(editors.length){
                         var index = 0;
                         var sepAdded = false;
@@ -325,18 +325,18 @@
                 <clientCallback prepareModal="false"><![CDATA[
                     var editorData = window.actionArguments[0];
                     if(!editorData){
-                        var selectedMime = getMimeType(ajaxplorer.getUserSelection().getUniqueNode());
-                        var editors = ajaxplorer.findEditorsForMime(selectedMime);
+                        var selectedMime = getMimeType(app.getUserSelection().getUniqueNode());
+                        var editors = app.findEditorsForMime(selectedMime);
                         if(editors.length && editors[0].openable){
                             editorData = editors[0];
                         }
                     }
                     if(editorData){
-                        ajaxplorer.loadEditorResources(editorData.resourcesManager);
+                        app.loadEditorResources(editorData.resourcesManager);
                         modal.openEditorDialog(editorData);
                     }else{
-                        if(ajaxplorer.actionBar.getActionByName("download")){
-                            ajaxplorer.actionBar.getActionByName("download").apply();
+                        if(app.actionBar.getActionByName("download")){
+                            app.actionBar.getActionByName("download").apply();
                         }
                     }
                 ]]></clientCallback>
@@ -355,14 +355,14 @@
                 <clientCallback prepareModal="false"><![CDATA[
                     var editorData = window.actionArguments[0];
                     if(!editorData){
-                        var selectedMime = getMimeType(ajaxplorer.getUserSelection().getUniqueNode());
-                        var editors = ajaxplorer.findEditorsForMime(selectedMime);
+                        var selectedMime = getMimeType(app.getUserSelection().getUniqueNode());
+                        var editors = app.findEditorsForMime(selectedMime);
                         if(editors.length && editors[0].openable){
                             editorData = editors[0];
                         }
                     }
                     if(editorData){
-                        ajaxplorer.loadEditorResources(editorData.resourcesManager);
+                        app.loadEditorResources(editorData.resourcesManager);
                         modal.openEditorDialog(editorData);
                     }
                 ]]></clientCallback>
@@ -388,12 +388,12 @@
 						if(url.indexOf('?') > 0){
 							url = url.substring(0, url.indexOf('?'));
 						}
-						var repoId = ajaxplorer.repositoryId || (ajaxplorer.user ? ajaxplorer.user.activeRepository : null);
-						if(ajaxplorer.user){
-							var slug = ajaxplorer.user.repositories.get(repoId).getSlug();
+						var repoId = app.repositoryId || (app.user ? app.user.activeRepository : null);
+						if(app.user){
+							var slug = app.user.repositories.get(repoId).getSlug();
 							if(slug) repoId = slug;
 						}
-						link = url + '?goto=' + repoId + encodeURIComponent(ajaxplorer.getUserSelection().getUniqueNode().getPath());
+						link = url + '?goto=' + repoId + encodeURIComponent(app.getUserSelection().getUniqueNode().getPath());
 						input.value = link;
                         var email = oForm.down('a[id="email"]');
                         if (email){ 
@@ -458,13 +458,13 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
-				   var userSelection = ajaxplorer.getUserSelection();
+				   var userSelection = app.getUserSelection();
 				   var fileNames = $A(userSelection.getFileNames());
 				   var connexion = new Connexion();
 				   connexion.addParameter('get_action', 'restore');
 				   connexion.addParameter('dir', userSelection.getCurrentRep());
 				   connexion.onComplete = function(transport){
-				   		ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+				   		app.actionBar.parseXmlMessage(transport.responseXML);
 				   };
 				   fileNames.each(function(filename){
 				   		connexion.addParameter('file', filename);
@@ -485,12 +485,12 @@
                     modal.showDialogForm('Create', 'mkdir_form', null, function(){
                         var oForm = $(modal.getForm());
                         var elementToCheck=(oForm['dirname']);
-                        if(ajaxplorer.getContextHolder().fileNameExists($(elementToCheck).getValue()))
+                        if(app.getContextHolder().fileNameExists($(elementToCheck).getValue()))
                         {
                             alert(MessageHash[125]);
                             return false;
                         }
-                        ajaxplorer.actionBar.submitForm(oForm);
+                        app.actionBar.submitForm(oForm);
                         hideLightBox(true);
                         return false;
                     });
@@ -515,12 +515,12 @@
                     modal.showDialogForm('Create', 'mkfile_form', null, function(){
                         var oForm = $(modal.getForm());
                         var elementToCheck=(oForm['filename']);
-                        if(ajaxplorer.getContextHolder().fileNameExists($(elementToCheck).getValue()))
+                        if(app.getContextHolder().fileNameExists($(elementToCheck).getValue()))
                         {
                             alert(MessageHash[125]);
                             return false;
                         }
-                        ajaxplorer.actionBar.submitForm(oForm);
+                        app.actionBar.submitForm(oForm);
                         hideLightBox(true);
                         return false;
                     });
@@ -544,8 +544,8 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
-				    if(ajaxplorer.getUserSelection()){
-				        var orig = ajaxplorer.getUserSelection().getSelectionSource();
+				    if(app.getUserSelection()){
+				        var orig = app.getUserSelection().getSelectionSource();
 				    }
 					var callback = function(node, newValue){
 						var filename = node.getPath();
@@ -554,14 +554,14 @@
 						conn.addParameter('file', filename);
 						conn.addParameter('filename_new', newValue);
 						conn.onComplete = function(transport){
-							ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+							app.actionBar.parseXmlMessage(transport.responseXML);
 						};
 						conn.sendSync();
-						if(orig && ajaxplorer.getUserSelection()){
-						    ajaxplorer.getUserSelection().setSelectionSource(orig);
+						if(orig && app.getUserSelection()){
+						    app.getUserSelection().setSelectionSource(orig);
 						}
 					};
-					if(ajaxplorer.getUserSelection() && ajaxplorer.getUserSelection().getSelectionSource() && ajaxplorer.getUserSelection().getSelectionSource().switchCurrentLabelToEdition) {ajaxplorer.getUserSelection().getSelectionSource().switchCurrentLabelToEdition(callback);}
+					if(app.getUserSelection() && app.getUserSelection().getSelectionSource() && app.getUserSelection().getSelectionSource().switchCurrentLabelToEdition) {app.getUserSelection().getSelectionSource().switchCurrentLabelToEdition(callback);}
 				]]></clientCallback>
 				<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
@@ -576,14 +576,14 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
-					if(ajaxplorer.user){
-						var user = ajaxplorer.user;
+					if(app.user){
+						var user = app.user;
 						var activeRepository = user.getActiveRepository();
-						if(ajaxplorer.getUserSelection().hasDir() && !user.canWrite()){
+						if(app.getUserSelection().hasDir() && !user.canWrite()){
 							throw new Error(MessageHash[374]);
 						}
 					}
-					var context = ajaxplorer.actionBar;
+					var context = app.actionBar;
 					var onLoad = function(oForm){
 						var getAction = oForm.select('input[name="get_action"]')[0];
 						getAction.value = 'copy';					
@@ -592,7 +592,7 @@
                                 return (!node.isLeaf() && !node.hasMetadataInBranch("readonly", "true"));
                             }
                         });
-						if(!ajaxplorer.getUserSelection().hasDir() && user && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
+						if(!app.getUserSelection().hasDir() && user && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
 							var firstKey ;
 							var reposList = new Hash();
 							user.getCrossRepositories().each(function(pair){
@@ -634,7 +634,7 @@
 						if(activeRepository && this.treeSelector.getFilterActive(activeRepository)){
 							getAction.value = "cross_copy" ;
 						}
-						ajaxplorer.getUserSelection().updateFormOrUrl(oForm);
+						app.getUserSelection().updateFormOrUrl(oForm);
 						this.submitForm(oForm);
 						this.treeSelector.unload();
 						hideLightBox();
@@ -653,21 +653,21 @@
 					</div>
 				]]></clientForm>
 				<clientListener name="contextChange"><![CDATA[
-				if(ajaxplorer){
-					var action = ajaxplorer.getActionBar().getActionByName("copy");
+				if(app){
+					var action = app.getActionBar().getActionByName("copy");
 					if(action){
 						action.rightsContext.write = true;
-						var user = ajaxplorer.user;
+						var user = app.user;
 						if(user && !user.canWrite() && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
 							action.rightsContext.write = false;
 							action.selectionContext.dir = false;
-							ajaxplorer.actionBar.defaultActions.unset('ctrldragndrop');
-							ajaxplorer.actionBar.defaultActions.unset('dragndrop');
+							app.actionBar.defaultActions.unset('ctrldragndrop');
+							app.actionBar.defaultActions.unset('dragndrop');
 						}
-						if(user && user.canWrite() && ajaxplorer.getContextNode().hasMimeInBranch("browsable_archive")){
+						if(user && user.canWrite() && app.getContextNode().hasMimeInBranch("browsable_archive")){
 						    action.rightsContext.write = false;
 						}
-						if(ajaxplorer.getContextNode().hasMimeInBranch("browsable_archive")){
+						if(app.getContextNode().hasMimeInBranch("browsable_archive")){
 							action.setLabel(247, 248);
 							action.setIconSrc('ark_extract.png');
 						}else{
@@ -690,12 +690,12 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
-					var context = ajaxplorer.actionBar;
-					if(ajaxplorer.user){
-						var user = ajaxplorer.user;
+					var context = app.actionBar;
+					if(app.user){
+						var user = app.user;
 						var activeRepository = user.getActiveRepository();
 					}
-					var context = ajaxplorer.actionBar;
+					var context = app.actionBar;
 					var onLoad = function(oForm){
 						var getAction = oForm.select('input[name="get_action"]')[0];
 						getAction.value = 'move';
@@ -705,7 +705,7 @@
                             }
 						});
 						this.treeSelector.load();
-						if(!ajaxplorer.getUserSelection().hasDir() && user && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
+						if(!app.getUserSelection().hasDir() && user && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
 							this.treeSelector.setFilterShow(true);
 							user.getCrossRepositories().each(function(pair){
 								this.treeSelector.appendFilterValue(pair.key, pair.value.getLabel());
@@ -728,11 +728,11 @@
 						var oForm = modal.getForm();
 						var getAction = oForm.down('input[name="get_action"]');
 						var selectedNode = this.treeSelector.getSelectedNode();
-						if(selectedNode == ajaxplorer.getContextNode().getPath()){
+						if(selectedNode == app.getContextNode().getPath()){
 							alert(MessageHash[183]);
 							return false;
 						}
-						ajaxplorer.getUserSelection().updateFormOrUrl(oForm);						
+						app.getUserSelection().updateFormOrUrl(oForm);						
 						if(activeRepository && this.treeSelector.getFilterActive(activeRepository)){
 							getAction.value = "cross_copy" ;
 							var subAction = new Element('input', {type:'hidden',name:'moving_files',value:'true'});
@@ -769,18 +769,18 @@
 				<clientCallback prepareModal="true"><![CDATA[
 					var onLoad = function(oForm){
 				    	var message = MessageHash[177];
-				    	var repoHasRecycle = ajaxplorer.getContextHolder().getRootNode().getMetadata().get("repo_has_recycle");
-				    	if(repoHasRecycle && repoHasRecycle == "true" && ajaxplorer.getContextNode().getMime() != "recycle"){
+				    	var repoHasRecycle = app.getContextHolder().getRootNode().getMetadata().get("repo_has_recycle");
+				    	if(repoHasRecycle && repoHasRecycle == "true" && app.getContextNode().getMime() != "recycle"){
 				    		message = MessageHash[176];
 				    	}
 		   		    	$(oForm).getElementsBySelector('span[id="delete_message"]')[0].innerHTML = message;
 					};
 					modal.showDialogForm('Delete', 'delete_form', onLoad, function(){
 						var oForm = modal.getForm();
-						ajaxplorer.getUserSelection().updateFormOrUrl(oForm);
-						ajaxplorer.actionBar.submitForm(oForm, true, function(transport){
+						app.getUserSelection().updateFormOrUrl(oForm);
+						app.actionBar.submitForm(oForm, true, function(transport){
 						    var result = this.parseXmlMessage(transport.responseXML);
-						}.bind(ajaxplorer.actionBar));
+						}.bind(app.actionBar));
 						hideLightBox(true);
 						return false;
 					});
@@ -803,17 +803,17 @@
             <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""/>
             <processing>
                 <clientCallback prepareModal="true"><![CDATA[
-                    var userSelection =  ajaxplorer.getUserSelection();
+                    var userSelection =  app.getUserSelection();
                     var loadFunc = function(oForm){
-                        ajaxplorer.actionBar.propertyPane = new PropertyPanel(userSelection, oForm);
+                        app.actionBar.propertyPane = new PropertyPanel(userSelection, oForm);
                     };
                     var completeFunc = function(){
-                        if(!ajaxplorer.actionBar.propertyPane.valueChanged()){
+                        if(!app.actionBar.propertyPane.valueChanged()){
                             hideLightBox();
                             return false;
                         }
                         userSelection.updateFormOrUrl(modal.getForm());
-                        ajaxplorer.actionBar.submitForm(modal.getForm());
+                        app.actionBar.submitForm(modal.getForm());
                         hideLightBox();
                         return false;
                     };
@@ -835,7 +835,7 @@
             <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
             <processing>
                 <clientCallback prepareModal="true"><![CDATA[
-					var userSelection = ajaxplorer.getUserSelection();
+					var userSelection = app.getUserSelection();
 
 					var loadFunc = function(oForm){
 						var dObject = oForm.down('div[id="multiple_download_container"]');

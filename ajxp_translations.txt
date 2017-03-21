@@ -69,5 +69,10 @@ renderAjxpHeaderNode -> renderManifestHeaderNode
 IAjxpFocusable -> IFocusable
 AjxpImageLibraries -> ImageLibraries
 AUTOCREATE_AJXPUSER -> AUTOCREATE_USER
+AjaXplorer_Shared -> App_Shared
+AjaXplorer -> [ApplicationTitle] (Only for application title purposes)
+AjaXplorer Main Options -> Application Main Options
+http://ajaxplorer.info/plugins/ -> https://github.com/boa-project/boa
+/ajaxplorer/shares -> /application/shares
 
 BOA_REPO_SCOPE_ALL

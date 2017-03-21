@@ -156,15 +156,15 @@ Class.create("RoleEditor", AbstractEditor, {
 
             var response = transport.responseJSON;
             if(response.SUCCESS){
-                ajaxplorer.displayMessage("SUCCESS", MessageHash["role_editor.20"]);
+                app.displayMessage("SUCCESS", MessageHash["role_editor.20"]);
                 response.ALL = this.roleData.ALL;
                 if(this.roleData.USER)response.USER = this.roleData.USER;
                 if(this.roleData.GROUP)response.GROUP = this.roleData.GROUP;
                 this.initJSONResponse(response);
-                ajaxplorer.fireContextRefresh();
+                app.fireContextRefresh();
                 this.setClean();
             }else{
-                ajaxplorer.displayMessage("ERROR", response.ERROR);
+                app.displayMessage("ERROR", response.ERROR);
             }
 
         }.bind(this);
@@ -309,7 +309,7 @@ Class.create("RoleEditor", AbstractEditor, {
                     pref_value_0:defaultRepoSelect.getValue()
                 }));
                 conn.onComplete = function(transport){
-                    ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+                    app.actionBar.parseXmlMessage(transport.responseXML);
                     this.setClean();
                 }.bind(this);
                 conn.sendAsync();

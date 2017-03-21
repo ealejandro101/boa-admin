@@ -50,7 +50,7 @@ define('BOA_SANITIZE_ALPHANUM', 3);
 define('BOA_SANITIZE_EMAILCHARS', 4);
 /**
  * Various functions used everywhere, static library
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class Utils

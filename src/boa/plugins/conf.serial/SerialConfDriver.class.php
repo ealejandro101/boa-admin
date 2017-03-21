@@ -41,7 +41,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Implementation of the configuration driver on serial files
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Conf
  */
 class SerialConfDriver extends AbstractConfDriver {

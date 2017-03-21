@@ -29,6 +29,9 @@
  */
 namespace BoA\Plugins\Boot\Conf;
 
+use BoA\Core\Http\XMLWriter;
+use BoA\Core\Services\AuthService;
+use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Filters\VarsFilter;
@@ -38,7 +41,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Implementation of the configuration driver on serial files
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Boot
  */
 class BootConfLoader extends AbstractConfDriver {
@@ -195,8 +198,8 @@ class BootConfLoader extends AbstractConfDriver {
             $coreConf["UNIQUE_INSTANCE_CONFIG"]["SQL_DRIVER"] = $coreConf["DIBI_PRECONFIGURATION"];
             $coreAuth["MASTER_INSTANCE_CONFIG"]["SQL_DRIVER"] = $coreConf["DIBI_PRECONFIGURATION"];
         }
-        $newConfigPlugin = ConfService::instanciatePluginFromGlobalParams($coreConf["UNIQUE_INSTANCE_CONFIG"], "AbstractConfDriver");
-        $newAuthPlugin = ConfService::instanciatePluginFromGlobalParams($coreAuth["MASTER_INSTANCE_CONFIG"], "AbstractAuthDriver");
+        $newConfigPlugin = ConfService::instanciatePluginFromGlobalParams($coreConf["UNIQUE_INSTANCE_CONFIG"], "BoA\Plugins\Core\Conf\AbstractConfDriver");
+        $newAuthPlugin = ConfService::instanciatePluginFromGlobalParams($coreAuth["MASTER_INSTANCE_CONFIG"], "BoA\Plugins\Core\Auth\AbstractAuthDriver");
 
 
         if($storageType == "db"){
@@ -317,7 +320,7 @@ class BootConfLoader extends AbstractConfDriver {
             $mailerPlug->loadConfigs(array("MAILER" => $data["MAILER_ENABLE"]["MAILER_SYSTEM"]));
             $mailerPlug->sendMail(
                 array($data["MAILER_ENABLE"]["MAILER_ADMIN"]),
-                "AjaXplorer Test Mail",
+                ConfService::getCoreConf("APPLICATION_TITLE")." Test Mail",
                 "Body of the test",
                 array($data["MAILER_ENABLE"]["MAILER_ADMIN"])
             );

@@ -44,7 +44,7 @@ use BoA\Plugins\Core\Log\Logger;
 defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Core
  * @class AbstractConfDriver
  * Abstract representation of a conf driver. Must be implemented by the "conf" plugin

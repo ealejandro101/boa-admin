@@ -34,7 +34,7 @@ use BoA\Plugins\Core\Log\Logger;
 defined('BOA_EXEC') or die('Access not allowed');
 /**
  *
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  *
  */

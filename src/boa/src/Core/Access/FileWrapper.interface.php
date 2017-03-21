@@ -33,7 +33,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Defines the methods that an access driver must implement to be considered as a file wrapper.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  * @interface FileWrapper
  */

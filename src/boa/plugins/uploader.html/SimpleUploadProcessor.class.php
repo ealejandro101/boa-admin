@@ -40,7 +40,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Processor for standard POST upload
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Uploader
  */
 class SimpleUploadProcessor extends Plugin {
@@ -101,15 +101,15 @@ class SimpleUploadProcessor extends Plugin {
 			print("<html><script language=\"javascript\">\n");
 			if(isSet($result["ERROR"])){
 				$message = $result["ERROR"]["MESSAGE"]." (".$result["ERROR"]["CODE"].")";
-				print("\n if(parent.ajaxplorer.actionBar.multi_selector) parent.ajaxplorer.actionBar.multi_selector.submitNext('".str_replace("'", "\'", $message)."');");		
+				print("\n if(parent.app.actionBar.multi_selector) parent.app.actionBar.multi_selector.submitNext('".str_replace("'", "\'", $message)."');");		
 			}else{
-				print("\n if(parent.ajaxplorer.actionBar.multi_selector) parent.ajaxplorer.actionBar.multi_selector.submitNext();");
+				print("\n if(parent.app.actionBar.multi_selector) parent.app.actionBar.multi_selector.submitNext();");
                 if($result["CREATED_NODE"]){
                     $s = '<tree>';
                     $s .= XMLWriter::writeNodesDiff(array("ADD"=> array($result["CREATED_NODE"])), false);
                     $s.= '</tree>';
                     print("\n var resultString = '".$s."'; var resultXML = parent.parseXml(resultString);");
-                    print("\n parent.ajaxplorer.actionBar.parseXmlMessage(resultXML);");
+                    print("\n parent.app.actionBar.parseXmlMessage(resultXML);");
                 }
 			}
 			print("</script></html>");

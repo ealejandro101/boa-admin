@@ -76,13 +76,13 @@ Class.create("PluginEditor", AbstractEditor, {
         toSubmit.set("plugin_id", this.pluginId);
         var missing = this.formManager.serializeParametersInputs(this.infoPane.down("div.driver_form"), toSubmit, 'DRIVER_OPTION_');
         if(missing){
-            ajaxplorer.displayMessage("ERROR", MessageHash['conf.36']);
+            app.displayMessage("ERROR", MessageHash['conf.36']);
         }else{
             var conn = new Connexion();
             conn.setParameters(toSubmit);
             conn.setMethod("post");
             conn.onComplete = function(transport){
-                ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
+                app.actionBar.parseXmlMessage(transport.responseXML);
                 this.loadPluginConfig();
                 this.setClean();
             }.bind(this);
@@ -187,7 +187,7 @@ Class.create("PluginEditor", AbstractEditor, {
             this.formManager.observeFormChanges(form, this.setDirty.bind(this));
 
 
-            ajaxplorer.blurAll();
+            app.blurAll();
         }.bind(this);
         connexion.sendAsync();
     },

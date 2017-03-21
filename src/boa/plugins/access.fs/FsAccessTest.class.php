@@ -34,7 +34,7 @@ use BoA\Core\Diagnostics\AbstractTest;
 defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Access
  */
 class fsAccessTest extends AbstractTest

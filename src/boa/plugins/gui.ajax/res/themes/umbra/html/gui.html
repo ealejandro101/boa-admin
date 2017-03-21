@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:boa>
 	<head>
-		<title>AjaXplorer</title>
+		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 		<link rel="icon" type="image/x-png" href="BOA_THEME_FOLDER/images/html-folder.png">
@@ -13,7 +13,7 @@
 		<script type="text/javascript">
 		// Initialize booter. Do not remove the commented line BOA_JSON_START_PARAMETERS, as it is 
 		// dynamically replaced by the application!
-		var ajaxplorer, startParameters = {}, MessageHash={};
+		var app, startParameters = {}, MessageHash={};
 		//BOA_JSON_START_PARAMETERS
 		window._bootstrap = new AppBootstrap(startParameters);
 		</script>
@@ -27,7 +27,7 @@
 			<form id="login_form" action="login" style="display:none;" box_width="230">
 				<input type="hidden" name="get_action" value="login">
 				<input type="hidden" name="login_seed" id="login_seed" value="">
-		 	   	<a style="float:right;" href="javascript:ajaxplorer.actionBar.fireAction('switch_language');" title="BOA_MESSAGE[190]" alt="BOA_MESSAGE[190]"><img src="BOA_THEME_FOLDER/images/actions/16/flag.png" border="0" height="16" width="16"></a>
+		 	   	<a style="float:right;" href="javascript:app.actionBar.fireAction('switch_language');" title="BOA_MESSAGE[190]" alt="BOA_MESSAGE[190]"><img src="BOA_THEME_FOLDER/images/actions/16/flag.png" border="0" height="16" width="16"></a>
 				<div class="dialogLegend" style="margin-bottom: 3px;margin-top: 4px;" message_id="180">BOA_MESSAGE[180]</div>
 				<div style="width:100%;">
 					<div class="SF_element">

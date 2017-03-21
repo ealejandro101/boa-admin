@@ -34,7 +34,7 @@ use BoA\Core\Services\ConfService;
 defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * Custom exception (legacy from php4 when there were no exceptions)
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class ApplicationException extends \Exception {

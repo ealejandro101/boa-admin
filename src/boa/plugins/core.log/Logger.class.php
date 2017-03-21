@@ -41,7 +41,7 @@ define("LOG_LEVEL_NOTICE", "Notice");
 define("LOG_LEVEL_WARNING", "Warning");
 define("LOG_LEVEL_ERROR", "Error");
 /**
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Core
  * @static
  * Provides static access to the logging mechanism

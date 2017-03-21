@@ -53,17 +53,17 @@ Class.create("MultiUploader", {
 		// Current index
 		this.id = 0;
         this.mask = false;
-        mask = ajaxplorer.getPluginConfigs("uploader").get("ALLOWED_EXTENSIONS");
+        mask = app.getPluginConfigs("uploader").get("ALLOWED_EXTENSIONS");
 		if(mask && mask.trim() != ""){
 			this.mask = $A(mask.split(","));
-            this.maskLabel = ajaxplorer.getPluginConfigs("uploader").get("ALLOWED_EXTENSIONS_READABLE");
+            this.maskLabel = app.getPluginConfigs("uploader").get("ALLOWED_EXTENSIONS_READABLE");
 		}
 
-        this.max  = parseInt(ajaxplorer.getPluginConfigs("uploader").get("UPLOAD_MAX_NUMBER"));
-        this.maxUploadSize  = parseInt(ajaxplorer.getPluginConfigs("uploader").get("UPLOAD_MAX_SIZE"));
-		this.namesMaxLength = ajaxplorer.getPluginConfigs("ajaxplorer").get("NODENAME_MAX_LENGTH");
+        this.max  = parseInt(app.getPluginConfigs("uploader").get("UPLOAD_MAX_NUMBER"));
+        this.maxUploadSize  = parseInt(app.getPluginConfigs("uploader").get("UPLOAD_MAX_SIZE"));
+		this.namesMaxLength = app.getPluginConfigs("app").get("NODENAME_MAX_LENGTH");
 		
-		this.crtContext = ajaxplorer.getUserSelection();
+		this.crtContext = app.getUserSelection();
 		this.addElement(formObject.select('.dialogFocus')[0]);
 		var rep = new Element('input', {
 			type:'hidden', 
@@ -130,7 +130,7 @@ Class.create("MultiUploader", {
         }
 		sendButton.observerSet = true;
 		sendButton.observe("click", function(){
-			ajaxplorer.actionBar.multi_selector.submitMainForm();
+			app.actionBar.multi_selector.submitMainForm();
 		});
 		optionsButton.observe("click", function(){
             var message = MessageHash[281] + '\n';
@@ -376,13 +376,12 @@ Class.create("MultiUploader", {
 					return;
 				}
 			}
-            document.fire("boa:longtask_starting");
-            $(nextToSubmit).submit();
+      document.fire("boa:longtask_starting");
+      $(nextToSubmit).submit();
 		}
 		else
 		{
-            document.fire("boa:longtask_finished");
-			//ajaxplorer.fireContextRefresh();
+      document.fire("boa:longtask_finished");
 		}
 		
 	}

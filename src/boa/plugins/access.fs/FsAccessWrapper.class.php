@@ -41,7 +41,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Wrapper for a local filesystem
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Access
  */
 class FsAccessWrapper implements FileWrapper {

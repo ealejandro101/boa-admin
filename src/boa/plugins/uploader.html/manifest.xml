@@ -90,9 +90,9 @@
 		]]></clientForm>
 		<dialogOnOpen><![CDATA[ 
 			if(typeof File != "undefined" && typeof (new XMLHttpRequest()).upload != "undefined"  && 'draggable' in new Element('span')){
-				ajaxplorer.actionBar.multi_selector = new XHRUploader(oForm);
+				app.actionBar.multi_selector = new XHRUploader(oForm);
 			}else{
-				ajaxplorer.actionBar.multi_selector = new MultiUploader(oForm);
+				app.actionBar.multi_selector = new MultiUploader(oForm);
 			}
 		]]></dialogOnOpen>
 		<extensionOnInit><![CDATA[		
@@ -108,7 +108,7 @@
   				dropzone.removeClassName("dropareaHover");
   				if(event.dataTransfer.files.length){
 	  				window.UploaderDroppedFiles = event.dataTransfer.files;
-	  				ajaxplorer.actionBar.fireAction('upload');
+	  				app.actionBar.fireAction('upload');
 	  			}
 			};
 			var enterFunc = function(){

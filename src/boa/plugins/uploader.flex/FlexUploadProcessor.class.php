@@ -36,7 +36,7 @@ use BoA\Plugins\Core\Log\Logger;
 
 /**
  * Legacy Flash plugin for upload
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Uploader
  */
 class FlexUploadProcessor extends Plugin {

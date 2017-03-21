@@ -41,7 +41,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * The basic abstraction of a data store. Can map a FileSystem, but can also map data from a totally
  * different source, like the application configurations, a mailbox, etc.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class Repository implements GroupPathProvider {

@@ -51,20 +51,20 @@ Class.create("XHRUploader", {
 		// Current index
 		this.id = 0;
 
-        var confs = ajaxplorer.getPluginConfigs("uploader");
+        var confs = app.getPluginConfigs("uploader");
         if(confs) this._globalConfigs = confs;
         else this._globalConfigs = $H();
 
         this.max = parseInt(this._globalConfigs.get("UPLOAD_MAX_NUMBER")) || 0;
         this.maxUploadSize = this._globalConfigs.get("UPLOAD_MAX_SIZE") || 0;
-		this.namesMaxLength = ajaxplorer.getPluginConfigs("ajaxplorer").get("NODENAME_MAX_LENGTH");
+		this.namesMaxLength = app.getPluginConfigs("app").get("NODENAME_MAX_LENGTH");
         this.mask = false;
         mask = this._globalConfigs.get("ALLOWED_EXTENSIONS");
 		if(mask && mask.trim() != ""){
 			this.mask = $A(mask.split(","));
             this.maskLabel = this._globalConfigs.get("ALLOWED_EXTENSIONS_READABLE");
 		}
-		this.crtContext = ajaxplorer.getUserSelection();
+		this.crtContext = app.getUserSelection();
 
 		this.clearList();
 		
@@ -97,7 +97,7 @@ Class.create("XHRUploader", {
 		var closeButton = formObject.down('#uploadCloseButton');
 		this.sendButton.observe("click", function(){
             if(!this.hasClassName("disabled")){
-			    ajaxplorer.actionBar.multi_selector.submit();
+			    app.actionBar.multi_selector.submit();
             }
 		}.bind(this.sendButton) );
         this.sendButton.observerSet = true;
@@ -189,8 +189,8 @@ Class.create("XHRUploader", {
 			height		: 4										// Height of the progressbar - don't forget to adjust your image too!!!
 		};
 		this.mainForm.down('#clear_list_button').observe("click", function(e){
-			ajaxplorer.actionBar.multi_selector.clearList();
-			ajaxplorer.actionBar.multi_selector.updateTotalData();			
+			app.actionBar.multi_selector.clearList();
+			app.actionBar.multi_selector.updateTotalData();			
 		});
 		this.optionPane = this.createOptionsPane();
 		this.optionPane.loadData();
@@ -278,18 +278,18 @@ Class.create("XHRUploader", {
 		}
 		optionPane.autoSendCheck.observe("click", function(e){				
 			var autoSendOpt = optionPane.autoSendCheck.checked;
-			if(ajaxplorer.user){
-				ajaxplorer.user.setPreference('upload_auto_send', (autoSendOpt?'true':'false'));
-				ajaxplorer.user.savePreference('upload_auto_send');
+			if(app.user){
+				app.user.setPreference('upload_auto_send', (autoSendOpt?'true':'false'));
+				app.user.savePreference('upload_auto_send');
 			}else{
 				 setAppCookie('upload_auto_send', (autoSendOpt?'true':'false'));
 			}			
 		});
 		optionPane.autoCloseCheck.observe("click", function(e){				
 			var autoCloseOpt = optionPane.autoCloseCheck.checked;
-			if(ajaxplorer.user){
-				ajaxplorer.user.setPreference('upload_auto_close', (autoCloseOpt?'true':'false'));
-				ajaxplorer.user.savePreference('upload_auto_close');
+			if(app.user){
+				app.user.setPreference('upload_auto_close', (autoCloseOpt?'true':'false'));
+				app.user.savePreference('upload_auto_close');
 			}else{
 				 setAppCookie('upload_auto_close', (autoCloseOpt?'true':'false'));
 			}			
@@ -297,9 +297,9 @@ Class.create("XHRUploader", {
 		optionPane.existingRadio.each(function(el){
 			el.observe("click", function(e){
 				var value = el.value;
-				if(ajaxplorer.user){
-					ajaxplorer.user.setPreference('upload_existing', value);
-					ajaxplorer.user.savePreference('upload_existing');
+				if(app.user){
+					app.user.setPreference('upload_existing', value);
+					app.user.savePreference('upload_existing');
 				}else{
 					 setAppCookie('upload_existing', value);
 				}							
@@ -318,8 +318,8 @@ Class.create("XHRUploader", {
             message += '&nbsp;&nbsp;'+ MessageHash[284] + ':' + this.max;
             optionPane.optionsStrings.update(message);
 			var autoSendValue = false;
-			if(ajaxplorer.user && ajaxplorer.user.getPreference('upload_auto_send')){
-				autoSendValue = ajaxplorer.user.getPreference('upload_auto_send');
+			if(app.user && app.user.getPreference('upload_auto_send')){
+				autoSendValue = app.user.getPreference('upload_auto_send');
 				autoSendValue = (autoSendValue =="true" ? true:false);
             }else if(this._globalConfigs.get('DEFAULT_AUTO_START')){
                 autoSendValue = this._globalConfigs.get('DEFAULT_AUTO_START');
@@ -330,8 +330,8 @@ Class.create("XHRUploader", {
 			optionPane.autoSendCheck.checked = autoSendValue;
 			
 			var autoCloseValue = false;			
-			if(ajaxplorer.user && ajaxplorer.user.getPreference('upload_auto_close')){
-				autoCloseValue = ajaxplorer.user.getPreference('upload_auto_close');
+			if(app.user && app.user.getPreference('upload_auto_close')){
+				autoCloseValue = app.user.getPreference('upload_auto_close');
 				autoCloseValue = (autoCloseValue =="true" ? true:false);
             }else if(this._globalConfigs.get('DEFAULT_AUTO_CLOSE')){
                 autoCloseValue = this._globalConfigs.get('DEFAULT_AUTO_CLOSE');
@@ -342,8 +342,8 @@ Class.create("XHRUploader", {
 			optionPane.autoCloseCheck.checked = autoCloseValue;
 			
 			var existingValue = 'overwrite';
-			if(ajaxplorer.user && ajaxplorer.user.getPreference('upload_existing')){
-				existingValue = ajaxplorer.user.getPreference('upload_existing');
+			if(app.user && app.user.getPreference('upload_existing')){
+				existingValue = app.user.getPreference('upload_existing');
             }else if(this._globalConfigs.get('DEFAULT_EXISTING')){
                 existingValue = this._globalConfigs.get('DEFAULT_EXISTING');
 			}else if(getAppCookie('upload_existing')){
@@ -611,12 +611,11 @@ Class.create("XHRUploader", {
             document.fire("boa:longtask_starting");
 			this.sendFileMultipart(item);
 		}else{
-            if(this.hasLoadingItem()) return;
-			//ajaxplorer.fireContextRefresh();
+      if(this.hasLoadingItem()) return;
 			if(this.optionPane.autoCloseCheck.checked){
 				hideLightBox(true);
 			}
-            document.fire("boa:longtask_finished");
+      document.fire("boa:longtask_finished");
 		}
 
 	},
@@ -659,7 +658,7 @@ Class.create("XHRUploader", {
 				item.updateStatus('loaded');
 
                 if (xhr.responseXML){
-                    var result = ajaxplorer.actionBar.parseXmlMessage(xhr.responseXML);
+                    var result = app.actionBar.parseXmlMessage(xhr.responseXML);
                     if(!result) item.updateStatus("error");
                 }else if (xhr.responseText && xhr.responseText != 'OK') {
 					alert(xhr.responseText); // display response.
@@ -939,7 +938,7 @@ Class.create("XHRUploader", {
 			conn.addParameter("chunk_"+i, fileName+"_part_"+i);
 		}
 		conn.onComplete = function(transport){
-			ajaxplorer.fireContextRefresh();
+			app.fireContextRefresh();
 		};
 		conn.sendAsync();
 	}

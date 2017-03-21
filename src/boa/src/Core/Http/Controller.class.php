@@ -42,7 +42,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 /**
  * Core controller for dispatching the actions.
  * It uses the XML Registry (simple version, not extended) to search all the <action> tags and find the action.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class Controller{

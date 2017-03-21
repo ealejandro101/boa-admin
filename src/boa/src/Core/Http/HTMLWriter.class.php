@@ -37,7 +37,7 @@ defined('BOA_EXEC') or die( 'Access not allowed');
 
 /**
  * Static functions for generating HTML.
- * @package AjaXplorer
+ * @package BoA
  * @subpackage Core
  */
 class HTMLWriter
@@ -158,7 +158,7 @@ class HTMLWriter
     	// Handle "@" case!
     	if(error_reporting() == 0) return ;
     	restore_error_handler();    	
-    	die("<script language='javascript'>parent.ajaxplorer.displayMessage('ERROR', '".str_replace("'", "\'", $errorMessage)."');</script>");
+    	die("<script language='javascript'>parent.app.displayMessage('ERROR', '".str_replace("'", "\'", $errorMessage)."');</script>");
     }
 
     /**
