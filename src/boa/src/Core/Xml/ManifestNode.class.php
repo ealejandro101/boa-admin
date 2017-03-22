@@ -33,7 +33,7 @@ use BoA\Core\Http\Controller;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Atomic representation of a data. This the basic node of the hierarchical data.
@@ -162,7 +162,7 @@ class ManifestNode{
      * @param int $scope
      * @param bool $indexable
      */
-    public function setMetadata($nameSpace, $metaData, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY, $indexable = false){
+    public function setMetadata($nameSpace, $metaData, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY, $indexable = false){
         $metaStore = $this->getMetaStore();
         if($metaStore !== false){
             $metaStore->setMetadata($this, $nameSpace, $metaData, $private, $scope);
@@ -182,7 +182,7 @@ class ManifestNode{
      * @param int $scope
      * @param bool $indexable
      */
-    public function removeMetadata($nameSpace, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY, $indexable = false){
+    public function removeMetadata($nameSpace, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY, $indexable = false){
         $metaStore = $this->getMetaStore();
         if($metaStore !== false){
             $metaStore->removeMetadata($this, $nameSpace, $private, $scope);
@@ -199,7 +199,7 @@ class ManifestNode{
      * @param bool $private
      * @param int $scope
      */
-    public function retrieveMetadata($nameSpace, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY, $indexable = false){
+    public function retrieveMetadata($nameSpace, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY, $indexable = false){
         $metaStore = $this->getMetaStore();
         if($metaStore !== false){
             $data = $metaStore->retrieveMetadata($this, $nameSpace, $private, $scope);

@@ -1,24 +1,31 @@
 <?php
-/*
- * Copyright 2007-2011 Charles du Jeu <contact (at) cdujeu.me>
- * This file is part of AjaXplorer.
+// This file is part of BoA - https://github.com/boa-project
+//
+// BoA is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// BoA is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with BoA.  If not, see <http://www.gnu.org/licenses/>.
+//
+// The latest code can be found at <https://github.com/boa-project/>.
+ 
+/**
+ * This is a one-line short description of the file/class.
  *
- * AjaXplorer is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * You can have a rather longer description of the file/class as well,
+ * if you like, and it can span multiple lines.
  *
- * AjaXplorer is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
- *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
- *
- * Re-run the diagnostic tests
+ * @package    [PACKAGE]
+ * @category   [CATEGORY]
+ * @copyright  2017 BoA Project
+ * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
 
 /**
@@ -28,10 +35,11 @@
 die("You are not allowed to see this page (comment first line of the file to access it!)");
 require_once("base.conf.php");
 
+use BoA\Core\Utils\Utils;
+
 $outputArray = array();
 $testedParams = array();
 $passed = true;
-$passed = AJXP_Utils::runTests($outputArray, $testedParams);
-print(AJXP_Utils::testResultsToTable($outputArray, $testedParams, true));
-AJXP_Utils::testResultsToFile($outputArray, $testedParams);
-?>
+$passed = Utils::runTests($outputArray, $testedParams);
+print(Utils::testResultsToTable($outputArray, $testedParams, true));
+Utils::testResultsToFile($outputArray, $testedParams);

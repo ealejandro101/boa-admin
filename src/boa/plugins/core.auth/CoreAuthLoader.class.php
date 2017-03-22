@@ -33,11 +33,11 @@ use BoA\Core\Plugins\Plugin;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Config loader overrider
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  */
 class CoreAuthLoader extends Plugin{
@@ -49,7 +49,7 @@ class CoreAuthLoader extends Plugin{
 
 	public function getConfigs(){
 		$configs = parent::getConfigs();
-		$configs["ALLOW_GUEST_BROWSING"] = !isSet($_SERVER["HTTP_BOA_FORCE_LOGIN"]) && ($configs["ALLOW_GUEST_BROWSING"] === "true" || $configs["ALLOW_GUEST_BROWSING"] === true || intval($configs["ALLOW_GUEST_BROWSING"]) == 1);
+		$configs["ALLOW_GUEST_BROWSING"] = !isSet($_SERVER["HTTP_APP_FORCE_LOGIN"]) && ($configs["ALLOW_GUEST_BROWSING"] === "true" || $configs["ALLOW_GUEST_BROWSING"] === true || intval($configs["ALLOW_GUEST_BROWSING"]) == 1);
 		return $configs;
 	}
 
@@ -98,7 +98,7 @@ class CoreAuthLoader extends Plugin{
                 );
                 // MERGE BASIC AUTH OPTIONS FROM MASTER
                 $masterMainAuthOptions = array();
-                $keys = array("TRANSMIT_CLEAR_PASS", "AUTOCREATE_USER", "LOGIN_REDIRECT", "BOA_ADMIN_LOGIN");
+                $keys = array("TRANSMIT_CLEAR_PASS", "AUTOCREATE_USER", "LOGIN_REDIRECT", "APP_ADMIN_LOGIN");
                 if(is_array($this->pluginConf["MASTER_INSTANCE_CONFIG"])){
                     foreach($keys as $key){
                         if(isSet($this->pluginConf["MASTER_INSTANCE_CONFIG"][$key])){

@@ -183,7 +183,7 @@ Class.create("FilesList", SelectableElements, {
             }
         }else{
             this.columnsDef = $A([]);
-            this.columnsDef.push({messageId:1,attributeName:'boa_label'});
+            this.columnsDef.push({messageId:1,attributeName:'APP_label'});
             this.columnsDef.push({messageId:2,attributeName:'filesize'});
             this.columnsDef.push({messageId:3,attributeName:'mimestring'});
             this.columnsDef.push({messageId:4,attributeName:'modiftime'});
@@ -645,7 +645,7 @@ Class.create("FilesList", SelectableElements, {
 				}
 				var label = (column.messageId?MessageHash[column.messageId]:column.messageString);
 				var leftPadding = this.options.cellPaddingCorrection || 0 ;
-				if(column.attributeName == "boa_label"){// Will contain an icon
+				if(column.attributeName == "APP_label"){// Will contain an icon
 					leftPadding = 24;
 				}
 				headerData.push({label:label, size:userWidth, leftPadding:leftPadding});				
@@ -1492,10 +1492,10 @@ Class.create("FilesList", SelectableElements, {
 			if(this._fullview){
 				fullview = ' full';
 			}
-			if(s == "boa_label")
+			if(s == "APP_label")
 			{
                 var textLabel = new Element("span", {
-                    id          :'boa_label',
+                    id          :'APP_label',
                     className   :'text_label'+fullview
                 }).update(metaData.get('text'));
 
@@ -1806,7 +1806,7 @@ Class.create("FilesList", SelectableElements, {
         for(var i = 0; i<attKeys.length;i++ ){
             var s = attKeys[i];
             var cell = new Element("span", {className:'metadata_chunk'});
-            if(s == "boa_label")
+            if(s == "APP_label")
             {
                 continue;
             }else if(s=="modiftime"){

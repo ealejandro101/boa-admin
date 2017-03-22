@@ -32,10 +32,10 @@ namespace BoA\Plugins\Core\Conf;
 use BoA\Core\Security\Role;
 use BoA\Core\Services\ConfService;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  * @class AbstractUser
  * @abstract
@@ -253,7 +253,7 @@ abstract class AbstractUser
         if($prefName == "lang"){
             // Migration path
             if(isSet($this->mergedRole)){
-                $l = $this->mergedRole->filterParameterValue("core.conf", "lang", BOA_REPO_SCOPE_ALL, "");
+                $l = $this->mergedRole->filterParameterValue("core.conf", "lang", APP_REPO_SCOPE_ALL, "");
                 if($l != "") return $l;
             }
         }
@@ -389,8 +389,8 @@ abstract class AbstractUser
     }
 
     protected function migrateRightsToPersonalRole(){
-        $this->personalRole = new Role("BOA_USR_"."/".$this->id);
-        $this->roles["BOA_USR_"."/".$this->id] = $this->personalRole;
+        $this->personalRole = new Role("APP_USR_"."/".$this->id);
+        $this->roles["APP_USR_"."/".$this->id] = $this->personalRole;
         foreach($this->rights as $rightKey => $rightValue){
             if($rightKey == "app.actions" && is_array($rightValue)){
                 foreach($rightValue as $repoId => $repoData){
@@ -416,7 +416,7 @@ abstract class AbstractUser
         }
 
         // Move old WALLET values to personal role parameter
-        $wallet = $this->getPref("BOA_WALLET");
+        $wallet = $this->getPref("APP_WALLET");
         if(is_array($wallet) && count($wallet)){
             foreach($wallet as $repositoryId => $walletData){
                 $repoObject = ConfService::getRepositoryById($repositoryId);
@@ -431,8 +431,8 @@ abstract class AbstractUser
     }
 
     protected function orderRoles($r1, $r2){
-        if(strpos($r1, "BOA_USR_") === 0) return 1;
-        if(strpos($r2, "BOA_USR_") === 0) return -1;
+        if(strpos($r1, "APP_USR_") === 0) return 1;
+        if(strpos($r2, "APP_USR_") === 0) return -1;
         return strcmp($r1,$r2);
     }
 
@@ -454,7 +454,7 @@ abstract class AbstractUser
         $res = array();
         foreach($roles as $rName => $status){
             if(!$status) continue;
-            if(strpos($rName, "BOA_GRP_/") === 0) continue;
+            if(strpos($rName, "APP_GRP_/") === 0) continue;
             $res[$rName] = true;
         }
         return $res;

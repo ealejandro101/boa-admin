@@ -29,7 +29,7 @@
  */
 namespace BoA\Core\Access;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Defines the methods that an access driver must implement to be considered as a file wrapper.

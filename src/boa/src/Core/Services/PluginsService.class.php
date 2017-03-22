@@ -32,7 +32,7 @@ namespace BoA\Core\Services;
 use BoA\Core\Plugins\Plugin; 
 use BoA\Core\Utils\Utils;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Core parser for loading / serving plugins
@@ -64,8 +64,8 @@ class PluginsService{
      * @param bool $rewriteCache Force a cache rewriting
      */
     public function loadPluginsRegistry($pluginFolder, $confStorage, $rewriteCache = false){
-        if(!$rewriteCache && (!defined("BOA_SKIP_CACHE") || BOA_SKIP_CACHE === false)){
-            $reqs = Utils::loadSerialFile(BOA_PLUGINS_REQUIRES_FILE);
+        if(!$rewriteCache && (!defined("APP_SKIP_CACHE") || APP_SKIP_CACHE === false)){
+            $reqs = Utils::loadSerialFile(APP_PLUGINS_REQUIRES_FILE);
             if(count($reqs)){
                 foreach ($reqs as $filename){
                     if(!is_file($filename)){
@@ -75,7 +75,7 @@ class PluginsService{
                     }
                     require_once($filename);
                 }
-                $res = Utils::loadSerialFile(BOA_PLUGINS_CACHE_FILE);
+                $res = Utils::loadSerialFile(APP_PLUGINS_CACHE_FILE);
                 $this->registry = $res;
                 // Refresh streamWrapperPlugins
                 foreach ($this->registry as $pType => $plugs){
@@ -116,11 +116,11 @@ class PluginsService{
                 $this->recursiveLoadPlugin($plugin, $pluginsPool);
             }
         }
-        if(!defined("BOA_SKIP_CACHE") || BOA_SKIP_CACHE === false){
-            Utils::saveSerialFile(BOA_PLUGINS_REQUIRES_FILE, $this->required_files, false, false);
-            Utils::saveSerialFile(BOA_PLUGINS_CACHE_FILE, $this->registry, false, false);
-            if(is_file(BOA_PLUGINS_QUERIES_CACHE)){
-                @unlink(BOA_PLUGINS_QUERIES_CACHE);
+        if(!defined("APP_SKIP_CACHE") || APP_SKIP_CACHE === false){
+            Utils::saveSerialFile(APP_PLUGINS_REQUIRES_FILE, $this->required_files, false, false);
+            Utils::saveSerialFile(APP_PLUGINS_CACHE_FILE, $this->registry, false, false);
+            if(is_file(APP_PLUGINS_QUERIES_CACHE)){
+                @unlink(APP_PLUGINS_QUERIES_CACHE);
             }
         }
     }
@@ -166,14 +166,14 @@ class PluginsService{
      * @return bool|void
      */
     private function cachePlugSort($sortedPlugins){
-        if(!BOA_PLUGINS_CACHE_FILE) return false;
+        if(!APP_PLUGINS_CACHE_FILE) return false;
         $indexes = array();
         $i = 0;
         foreach ($sortedPlugins as $plugin){
             $indexes[$i] = $plugin->getId();
             $i++;
         }
-        Utils::saveSerialFile(BOA_PLUGINS_CACHE_FILE, $indexes, false, true);
+        Utils::saveSerialFile(APP_PLUGINS_CACHE_FILE, $indexes, false, true);
     }
 
     /**
@@ -184,8 +184,8 @@ class PluginsService{
      * @return mixed
      */
     private function loadPlugCache($sortedPlugins){
-        if(!BOA_PLUGINS_CACHE_FILE) return false;
-        $cache = Utils::loadSerialFile(BOA_PLUGINS_CACHE_FILE);
+        if(!APP_PLUGINS_CACHE_FILE) return false;
+        $cache = Utils::loadSerialFile(APP_PLUGINS_CACHE_FILE);
         if(!count($cache)) return false;
         // Break if one plugin is not present in cache
         foreach ($sortedPlugins as $index => $plugin){
@@ -202,8 +202,8 @@ class PluginsService{
     }
 
     public function loadFromPluginQueriesCache($key){
-        if(BOA_SKIP_CACHE) return null;
-        $test = Utils::loadSerialFile(BOA_PLUGINS_QUERIES_CACHE);
+        if(APP_SKIP_CACHE) return null;
+        $test = Utils::loadSerialFile(APP_PLUGINS_QUERIES_CACHE);
         if(!empty($test) && is_array($test) && isset($test[$key])){
             return $test[$key];
         }
@@ -211,11 +211,11 @@ class PluginsService{
     }
 
     public function storeToPluginQueriesCache($key, $value){
-        if(BOA_SKIP_CACHE) return;
-        $test = Utils::loadSerialFile(BOA_PLUGINS_QUERIES_CACHE);
+        if(APP_SKIP_CACHE) return;
+        $test = Utils::loadSerialFile(APP_PLUGINS_QUERIES_CACHE);
         if(!is_array($test)) $test = array();
         $test[$key] = $value;
-        Utils::saveSerialFile(BOA_PLUGINS_QUERIES_CACHE, $test);
+        Utils::saveSerialFile(APP_PLUGINS_QUERIES_CACHE, $test);
     }
 
     /**
@@ -225,7 +225,7 @@ class PluginsService{
      * @return Plugin
      */
     public function softLoad($pluginId, $pluginOptions){
-        $plugin = new Plugin($pluginId, BOA_PLUGINS_FOLDER."/".$pluginId);
+        $plugin = new Plugin($pluginId, APP_PLUGINS_FOLDER."/".$pluginId);
         $plugin->loadManifest();
         $plugin = $this->instanciatePluginClass($plugin);
         $plugin->loadConfigs(array()); // Load default
@@ -242,7 +242,7 @@ class PluginsService{
     private function instanciatePluginClass($plugin){
         $definition = $plugin->getClassFile();
         if(!$definition) return $plugin;
-        $filename = BOA_PLUGINS_FOLDER."/".$definition["filename"];
+        $filename = APP_PLUGINS_FOLDER."/".$definition["filename"];
         $className = $definition["classname"];
         if(is_file($filename)){
             require_once($filename);
@@ -614,7 +614,7 @@ class PluginsService{
         // Load behaviours if not already
         if(!isSet($this->mixinsDoc)){
             $this->mixinsDoc = new \DOMDocument();
-            $this->mixinsDoc->load(BOA_PLUGINS_FOLDER."/core.boa/mixins.xml");
+            $this->mixinsDoc->load(APP_PLUGINS_FOLDER."/core.boa/mixins.xml");
             $this->mixinsXPath = new \DOMXPath($this->mixinsDoc);
         }
         // Merge into manifestDoc

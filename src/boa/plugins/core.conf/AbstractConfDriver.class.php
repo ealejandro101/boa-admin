@@ -41,10 +41,10 @@ use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Core\Xml\ManifestNode;
 use BoA\Plugins\Core\Log\Logger;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  * @class AbstractConfDriver
  * Abstract representation of a conf driver. Must be implemented by the "conf" plugin
@@ -145,8 +145,8 @@ abstract class AbstractConfDriver extends Plugin {
 	 */
 	function loadPluginConfig($pluginType, $pluginName){
 		$options = array();
-		if(is_file(BOA_CONF_PATH."/conf.$pluginType.inc")){
-			include BOA_CONF_PATH."/conf.$pluginType.inc";
+		if(is_file(APP_CONF_PATH."/conf.$pluginType.inc")){
+			include APP_CONF_PATH."/conf.$pluginType.inc";
 			if(!empty($DRIVER_CONF)){
 				foreach($DRIVER_CONF as $key=>$value){
 					$options[$key] = $value;
@@ -154,8 +154,8 @@ abstract class AbstractConfDriver extends Plugin {
 				unset($DRIVER_CONF);
 			}
 		}
-		if(is_file(BOA_CONF_PATH."/conf.$pluginType.$pluginName.inc")){
-			include BOA_CONF_PATH."/conf.$pluginType.$pluginName.inc";
+		if(is_file(APP_CONF_PATH."/conf.$pluginType.$pluginName.inc")){
+			include APP_CONF_PATH."/conf.$pluginType.$pluginName.inc";
 			if(!empty($DRIVER_CONF)){
 				foreach($DRIVER_CONF as $key=>$value){
 					$options[$key] = $value;
@@ -425,7 +425,7 @@ abstract class AbstractConfDriver extends Plugin {
                         $pluginId = $parentNode->nodeName.".".$parentNode->getAttribute("name");
                     }
                     $name = $xmlNode->getAttribute("name");
-                    $value = $userObject->mergedRole->filterParameterValue($pluginId, $name, BOA_REPO_SCOPE_ALL, "");
+                    $value = $userObject->mergedRole->filterParameterValue($pluginId, $name, APP_REPO_SCOPE_ALL, "");
                     $prefs[$name] = array("value" => $value, "type" => "string", "pluginId" => $pluginId);
                 }
             }
@@ -507,7 +507,7 @@ abstract class AbstractConfDriver extends Plugin {
 						$bmUser->addBookMark(SystemTextEncoding::magicDequote($httpVars["bm_path"]), SystemTextEncoding::magicDequote($title));
                         if($driver){
                             $node = new ManifestNode($driver->getResourceUrl(SystemTextEncoding::magicDequote($httpVars["bm_path"])));
-                            $node->setMetadata("bookmarked", array("bookmarked" => "true"), true, BOA_METADATA_SCOPE_REPOSITORY, true);
+                            $node->setMetadata("bookmarked", array("bookmarked" => "true"), true, APP_METADATA_SCOPE_REPOSITORY, true);
                         }
 					}
 					else if($httpVars["bm_action"] == "delete_bookmark")
@@ -515,7 +515,7 @@ abstract class AbstractConfDriver extends Plugin {
 						$bmUser->removeBookmark($httpVars["bm_path"]);
                         if($driver){
                             $node = new ManifestNode($driver->getResourceUrl(SystemTextEncoding::magicDequote($httpVars["bm_path"])));
-                            $node->removeMetadata("bookmarked", true, BOA_METADATA_SCOPE_REPOSITORY, true);
+                            $node->removeMetadata("bookmarked", true, APP_METADATA_SCOPE_REPOSITORY, true);
                         }
                     }
 					else if($httpVars["bm_action"] == "rename_bookmark" && isset($httpVars["bm_title"]))
@@ -549,7 +549,7 @@ abstract class AbstractConfDriver extends Plugin {
 				$i = 0;
 				while(isSet($httpVars["pref_name_".$i]) && isSet($httpVars["pref_value_".$i]))
 				{
-					$prefName = Utils::sanitize($httpVars["pref_name_".$i], BOA_SANITIZE_ALPHANUM);
+					$prefName = Utils::sanitize($httpVars["pref_name_".$i], APP_SANITIZE_ALPHANUM);
 					$prefValue = Utils::sanitize(SystemTextEncoding::magicDequote(($httpVars["pref_value_".$i])));
 					if($prefName == "password") continue;
 					if($prefName != "pending_folder" && $userObject == null){
@@ -588,7 +588,7 @@ abstract class AbstractConfDriver extends Plugin {
                             }
                             $name = $xmlNode->getAttribute("name");
                             if(isSet($data[$name]) || $data[$name] == ""){
-                                if($data[$name] == "" || $userObject->parentRole == null || $userObject->parentRole->filterParameterValue($pluginId, $name, BOA_REPO_SCOPE_ALL, "") != $data[$name]){
+                                if($data[$name] == "" || $userObject->parentRole == null || $userObject->parentRole->filterParameterValue($pluginId, $name, APP_REPO_SCOPE_ALL, "") != $data[$name]){
                                     $userObject->personalRole->setParameterValue($pluginId, $name, $data[$name]);
                                     $rChanges = true;
                                 }
@@ -625,7 +625,7 @@ abstract class AbstractConfDriver extends Plugin {
 					$baseURL = Utils::detectServerURL();
 				}
 				$webdavBaseUrl = $baseURL.ConfService::getCoreConf("WEBDAV_BASEURI")."/";
-                $davData = $userObject->getPref("BOA_WEBDAV_DATA");
+                $davData = $userObject->getPref("APP_WEBDAV_DATA");
                 $digestSet = isSet($davData["HA1"]);
                 if(isSet($httpVars["activate"]) || isSet($httpVars["webdav_pass"])){
 					if(!empty($httpVars["activate"])){
@@ -640,13 +640,13 @@ abstract class AbstractConfDriver extends Plugin {
 						if (function_exists('mcrypt_encrypt'))
 				        {
 				        	$user = $userObject->getId();
-				        	$secret = (defined("BOA_SECRET_KEY")? BOA_SAFE_SECRET_KEY:"\1CDAFx¨op#");
+				        	$secret = (defined("APP_SECRET_KEY")? APP_SAFE_SECRET_KEY:"\1CDAFx¨op#");
 					        $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
 					        $password = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256,  md5($user.$secret), $password, MCRYPT_MODE_ECB, $iv));
 				        }						
 						$davData["PASS"] = $password;
 					}
-					$userObject->setPref("BOA_WEBDAV_DATA", $davData);
+					$userObject->setPref("APP_WEBDAV_DATA", $davData);
 					$userObject->save("user");
 				}
 				if(!empty($davData)){
@@ -682,23 +682,23 @@ abstract class AbstractConfDriver extends Plugin {
                 $iconFormat = $httpVars["icon_format"];
                 $repo = ConfService::getRepositoryById($tplId);
                 $logo = $repo->getOption("TPL_ICON_".strtoupper($iconFormat));
-                if(isSet($logo) && is_file(BOA_DATA_PATH."/plugins/core.conf/tpl_logos/".$logo)){
+                if(isSet($logo) && is_file(APP_DATA_PATH."/plugins/core.conf/tpl_logos/".$logo)){
                     header("Content-Type: ".Utils::getImageMimeType($logo)."; name=\"".$logo."\"");
-                    header("Content-Length: ".filesize(BOA_DATA_PATH."/plugins/core.conf/tpl_logos/".$logo));
+                    header("Content-Length: ".filesize(APP_DATA_PATH."/plugins/core.conf/tpl_logos/".$logo));
                     header('Pragma:');
                     header('Cache-Control: public');
                     header("Last-Modified: " . gmdate("D, d M Y H:i:s", time()-10000) . " GMT");
                     header("Expires: " . gmdate("D, d M Y H:i:s", time()+5*24*3600) . " GMT");
-                    readfile(BOA_DATA_PATH."/plugins/core.conf/tpl_logos/".$logo);
+                    readfile(APP_DATA_PATH."/plugins/core.conf/tpl_logos/".$logo);
                 }else{
                     $logo = "default_template_logo-".($iconFormat == "small"?16:22).".png";
                     header("Content-Type: ".Utils::getImageMimeType($logo)."; name=\"".$logo."\"");
-                    header("Content-Length: ".filesize(BOA_PLUGINS_FOLDER."/core.conf/".$logo));
+                    header("Content-Length: ".filesize(APP_PLUGINS_FOLDER."/core.conf/".$logo));
                     header('Pragma:');
                     header('Cache-Control: public');
                     header("Last-Modified: " . gmdate("D, d M Y H:i:s", time()-10000) . " GMT");
                     header("Expires: " . gmdate("D, d M Y H:i:s", time()+5*24*3600) . " GMT");
-                    readfile(BOA_PLUGINS_FOLDER."/core.conf/".$logo);
+                    readfile(APP_PLUGINS_FOLDER."/core.conf/".$logo);
                 }
 
 			break;
@@ -723,7 +723,7 @@ abstract class AbstractConfDriver extends Plugin {
                         $name = $paramNode->getAttribute("name");
                         if( strpos($name, "TPL_") === 0 ) {
                             if($name == "TPL_DEFAULT_LABEL"){
-                                $defaultLabel = str_replace("BOA_USER", AuthService::getLoggedUser()->getId(), $repo->getOption($name));
+                                $defaultLabel = str_replace("APP_USER", AuthService::getLoggedUser()->getId(), $repo->getOption($name));
                             }
                             continue;
                         }
@@ -831,7 +831,7 @@ abstract class AbstractConfDriver extends Plugin {
                     if($userObject->getId() == $loggedUser->getId()) continue;
                     if( ( !$userObject->hasParent() &&  ConfService::getCoreConf("ALLOW_CROSSUSERS_SHARING", "conf")) || $userObject->getParent() == $loggedUser->getId() ){
                         if($regexp != null && !preg_match("/$regexp/i", $userId)) continue;
-                        $userLabel = $userObject->personalRole->filterParameterValue("core.conf", "USER_DISPLAY_NAME", BOA_REPO_SCOPE_ALL, $userId);
+                        $userLabel = $userObject->personalRole->filterParameterValue("core.conf", "USER_DISPLAY_NAME", APP_REPO_SCOPE_ALL, $userId);
                         if(empty($userLabel)) $userLabel = $userId;
                         $userDisplay = ($userLabel == $userId ? $userId : $userLabel . " ($userId)");
                         if(ConfService::getCoreConf("USERS_LIST_HIDE_LOGIN", "conf") == true && $userLabel != $userId){

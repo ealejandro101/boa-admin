@@ -40,10 +40,10 @@ use BoA\Core\Utils\Filters\VarsFilter;
 use BoA\Core\Xml\ManifestNode;
 use BoA\Plugins\Core\Log\Logger;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  * @class AbstractAccessDriver
  * Abstract representation of an action driver. Must be implemented.
@@ -98,7 +98,7 @@ class AbstractAccessDriver extends Plugin {
      * @return void
      */
     function loadPubliclet($data){
-        require_once(BOA_PLUGINS_FOLDER."/action.share/class.ShareCenter.php");
+        require_once(APP_PLUGINS_FOLDER."/action.share/class.ShareCenter.php");
         ShareCenter::loadPubliclet($data);
     }
 

@@ -10,6 +10,8 @@ ajxpPaneHeader -> appPaneHeader
 ajxpPaneIcon -> appPaneIcon
 ajxpPaneObject -> paneObject
 $ajxpNode -> $node
+window.ajxpBootstrap -> window._bootstrap
+ajxpBootstrap -> appBootstrap
 ajxp.fs -> app.fs
 ajxp. -> app.
 ajxpUser -> user
@@ -74,5 +76,7 @@ AjaXplorer -> [ApplicationTitle] (Only for application title purposes)
 AjaXplorer Main Options -> Application Main Options
 http://ajaxplorer.info/plugins/ -> https://github.com/boa-project/boa
 /ajaxplorer/shares -> /application/shares
+/js/ajaxplorer -> /js/core
+AjxpMailer -> AppMailer
 
 BOA_REPO_SCOPE_ALL

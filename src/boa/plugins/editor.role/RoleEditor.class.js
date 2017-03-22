@@ -179,9 +179,9 @@ Class.create("RoleEditor", AbstractEditor, {
         if(mime == "role"){
             this.roleId = getBaseName(node.getPath());
         }else if(mime == "group"){
-            this.roleId = "BOA_GRP_" + node.getPath().replace("/data/users", "");
+            this.roleId = "APP_GRP_" + node.getPath().replace("/data/users", "");
         }else if(mime == "user" || mime == "user_editable"){
-            this.roleId = "BOA_USR_/" + getBaseName(node.getPath());
+            this.roleId = "APP_USR_/" + getBaseName(node.getPath());
             scope = "user";
         }
         this.element.down("span.header_label").update(getBaseName(node.getPath()));
@@ -240,7 +240,7 @@ Class.create("RoleEditor", AbstractEditor, {
     updateRoles : function(selection){
         // DIFF
         var orig = this.roleData.USER.ROLES || $A();
-        var currentUserId = this.roleId.replace("BOA_USR_/", "");
+        var currentUserId = this.roleId.replace("APP_USR_/", "");
         orig.each(function(el){
             if(!selection[el]) {
                 var conn = new Connexion();
@@ -304,7 +304,7 @@ Class.create("RoleEditor", AbstractEditor, {
                 var conn = new Connexion();
                 conn.setParameters(new Hash({
                     get_action:'save_user_preference',
-                    user_id:this.roleId.replace("BOA_USR_/", ""),
+                    user_id:this.roleId.replace("APP_USR_/", ""),
                     pref_name_0:'force_default_repository',
                     pref_value_0:defaultRepoSelect.getValue()
                 }));
@@ -319,7 +319,7 @@ Class.create("RoleEditor", AbstractEditor, {
             var buttonPane = this.element.down("#pane-infos").down("#account_actions");
             var b0 = new Element("span", {className:'m-2'}).update(MessageHash["role_editor.25"]);
             buttonPane.insert(b0);
-            var userId = this.roleId.replace("BOA_USR_/", "");
+            var userId = this.roleId.replace("APP_USR_/", "");
             b0.observe("click", function(){
                 var pane = new Element("div", {style:"width:200px;"});
                 pane.insert(new Element("div", {className:"dialogLegend"}).update(MessageHash["role_editor.29"]));
@@ -358,7 +358,7 @@ Class.create("RoleEditor", AbstractEditor, {
             var locked = this.roleData.USER.LOCK ? true : false;
             var b1 = new Element("span", {className:'m-2'}).update((locked?MessageHash["role_editor.27"]:MessageHash["role_editor.26"]));
             buttonPane.insert(b1);
-            var userId = this.roleId.replace("BOA_USR_/", "");
+            var userId = this.roleId.replace("APP_USR_/", "");
             b1.observe("click", function(){
                 var conn = new Connexion();
                 conn.setParameters({
@@ -376,7 +376,7 @@ Class.create("RoleEditor", AbstractEditor, {
             }.bind(this) );
             var b2 = new Element("span", {className:'m-2'}).update(MessageHash["role_editor.28"]);
             buttonPane.insert(b2);
-            var userId = this.roleId.replace("BOA_USR_/", "");
+            var userId = this.roleId.replace("APP_USR_/", "");
             b2.observe("click", function(){
                 var conn = new Connexion();
                 conn.setParameters({
@@ -559,8 +559,8 @@ Class.create("RoleEditor", AbstractEditor, {
         this.element.select("select.repository_selector").each(function(select){
             select.select("option").invoke("remove");
             select.insert(new Element("option", {value:-1}).update(""));
-            select.insert(new Element("option", {value:"BOA_REPO_SCOPE_ALL"}).update(MessageHash["role_editor.12d"]));
-            select.insert(new Element("option", {value:"BOA_REPO_SCOPE_SHARED"}).update(MessageHash["role_editor.12e"]));
+            select.insert(new Element("option", {value:"APP_REPO_SCOPE_ALL"}).update(MessageHash["role_editor.12d"]));
+            select.insert(new Element("option", {value:"APP_REPO_SCOPE_SHARED"}).update(MessageHash["role_editor.12e"]));
             for(var key in repositories){
                 select.insert(new Element("option", {value:key}).update(repositories[key]));
             }
@@ -603,7 +603,7 @@ Class.create("RoleEditor", AbstractEditor, {
    			tr.insert(rightsCell);
    			rightsTable.insert({bottom:tr});
 
-   			blockBox.checked = (this.roleRead.ACL[repoId] && this.roleRead.ACL[repoId].indexOf("BOA_VALUE_CLEAR") !== -1);
+   			blockBox.checked = (this.roleRead.ACL[repoId] && this.roleRead.ACL[repoId].indexOf("APP_VALUE_CLEAR") !== -1);
             if(!blockBox.checked){
                 // FOR IE, set checkboxes state AFTER dom insertion.
                 readBox.checked = (this.roleRead.ACL[repoId] && this.roleRead.ACL[repoId].indexOf("r") !== -1);
@@ -623,7 +623,7 @@ Class.create("RoleEditor", AbstractEditor, {
         for(var repoScope in actionsData){
             for(var pluginId in actionsData[repoScope]){
                 for(var actionName in actionsData[repoScope][pluginId]){
-                    if(repoScope != "BOA_REPO_SCOPE_ALL" && repoScope != "BOA_REPO_SCOPE_SHARED"
+                    if(repoScope != "APP_REPO_SCOPE_ALL" && repoScope != "APP_REPO_SCOPE_SHARED"
                         && ! this.roleData.ALL.REPOSITORIES[repoScope]){
                         continue;
                     }
@@ -634,8 +634,8 @@ Class.create("RoleEditor", AbstractEditor, {
                     var remove = new Element("span", {className:"list_remove_item"}).update(MessageHash["role_editor.41"]);
                     el.insert(remove);
                     var repoLab;
-                    if(repoScope == "BOA_REPO_SCOPE_ALL") repoLab = MessageHash["role_editor.12d"];
-                    else if(repoScope == "BOA_REPO_SCOPE_SHARED") repoLab = MessageHash["role_editor.12e"];
+                    if(repoScope == "APP_REPO_SCOPE_ALL") repoLab = MessageHash["role_editor.12d"];
+                    else if(repoScope == "APP_REPO_SCOPE_SHARED") repoLab = MessageHash["role_editor.12e"];
                     else repoLab = this.roleData.ALL.REPOSITORIES[repoScope];
                     var pluginLab = (pluginId == "all_plugins" ? "All Plugins" : pluginId);
                     var state = actionsData[repoScope][pluginId][actionName] === false ? "disabled":"enabled";
@@ -687,10 +687,10 @@ Class.create("RoleEditor", AbstractEditor, {
                 var id = scopes[i].getAttribute("id");
                 var scopeLabel;
                 var setTop = false;
-                if(id == "BOA_REPO_SCOPE_ALL") {
+                if(id == "APP_REPO_SCOPE_ALL") {
                     scopeLabel = MessageHash["role_editor.12d"];
                     setTop = true;
-                }else if(id == "BOA_REPO_SCOPE_SHARED"){
+                }else if(id == "APP_REPO_SCOPE_SHARED"){
                     scopeLabel = MessageHash["role_editor.12e"];
                     setTop = true;
                 }
@@ -744,9 +744,9 @@ Class.create("RoleEditor", AbstractEditor, {
 
     updateBinaryContext : function(parameter){
         if(this.roleData.USER){
-            parameter.set("binary_context", "user_id="+this.roleId.replace("BOA_USR_/", ""));
+            parameter.set("binary_context", "user_id="+this.roleId.replace("APP_USR_/", ""));
         }else if(this.roleData.GROUP){
-            parameter.set("binary_context", "group_id="+this.roleId.replace("BOA_GRP_/", ""));
+            parameter.set("binary_context", "group_id="+this.roleId.replace("APP_GRP_/", ""));
         }else{
             parameter.set("binary_context", "role_id="+this.roleId);
         }
@@ -830,7 +830,7 @@ Class.create("RoleEditor", AbstractEditor, {
             if(d.checked){
                 r.checked = w.checked = false;
                 r.disabled = w.disabled = true;
-                right = "BOA_VALUE_CLEAR";
+                right = "APP_VALUE_CLEAR";
             }else{
                 r.disabled = w.disabled = false;
             }

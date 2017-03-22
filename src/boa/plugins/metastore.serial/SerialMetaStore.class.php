@@ -36,11 +36,11 @@ use BoA\Core\Services\ConfService;
 use BoA\Plugins\Core\Metastore\MetaStoreProvider;
 
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 /**
  * Simple metadata implementation, stored in hidden files inside the
  * folders
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Metastore
  */
 class SerialMetaStore extends Plugin implements MetaStoreProvider {
@@ -56,7 +56,7 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
 	public function init($options){
 		$this->options = $options;
         $this->loadRegistryContributions();
-        $this->globalMetaFile = BOA_DATA_PATH."/plugins/metastore.serial/metadata";
+        $this->globalMetaFile = APP_DATA_PATH."/plugins/metastore.serial/metadata";
 	}
 
     public function initMeta($accessDriver){
@@ -77,11 +77,11 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
         return "shared";
     }
 
-    public function setMetadata($node, $nameSpace, $metaData, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY){
+    public function setMetadata($node, $nameSpace, $metaData, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY){
         $this->loadMetaFileData(
             $node,
             $scope,
-            ($private?$this->getUserId():BOA_METADATA_SHAREDUSER)
+            ($private?$this->getUserId():APP_METADATA_SHAREDUSER)
         );
         if(!isSet(self::$metaCache[$nameSpace])){
             self::$metaCache[$nameSpace] = array();
@@ -90,30 +90,30 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
         $this->saveMetaFileData(
             $node,
             $scope,
-            ($private?$this->getUserId():BOA_METADATA_SHAREDUSER)
+            ($private?$this->getUserId():APP_METADATA_SHAREDUSER)
         );
     }
 
-    public function removeMetadata($node, $nameSpace, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY){
+    public function removeMetadata($node, $nameSpace, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY){
         $this->loadMetaFileData(
             $node,
             $scope,
-            ($private?$this->getUserId():BOA_METADATA_SHAREDUSER)
+            ($private?$this->getUserId():APP_METADATA_SHAREDUSER)
         );
         if(!isSet(self::$metaCache[$nameSpace])) return;
         unset(self::$metaCache[$nameSpace]);
         $this->saveMetaFileData(
             $node,
             $scope,
-            ($private?$this->getUserId():BOA_METADATA_SHAREDUSER)
+            ($private?$this->getUserId():APP_METADATA_SHAREDUSER)
         );
     }
 
-    public function retrieveMetadata($node, $nameSpace, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY){
+    public function retrieveMetadata($node, $nameSpace, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY){
         $this->loadMetaFileData(
             $node,
             $scope,
-            ($private?$this->getUserId():BOA_METADATA_SHAREDUSER)
+            ($private?$this->getUserId():APP_METADATA_SHAREDUSER)
         );
         if(!isSet(self::$metaCache[$nameSpace])) return array();
         else return self::$metaCache[$nameSpace];
@@ -128,13 +128,13 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
 	public function enrichNode(&$node){
         // Try both
         $all = array();
-        $this->loadMetaFileData($node, BOA_METADATA_SCOPE_GLOBAL, BOA_METADATA_SHAREDUSER);
+        $this->loadMetaFileData($node, APP_METADATA_SCOPE_GLOBAL, APP_METADATA_SHAREDUSER);
         $all[] = self::$metaCache;
-        $this->loadMetaFileData($node, BOA_METADATA_SCOPE_GLOBAL, $this->getUserId());
+        $this->loadMetaFileData($node, APP_METADATA_SCOPE_GLOBAL, $this->getUserId());
         $all[] = self::$metaCache;
-        $this->loadMetaFileData($node, BOA_METADATA_SCOPE_REPOSITORY, BOA_METADATA_SHAREDUSER);
+        $this->loadMetaFileData($node, APP_METADATA_SCOPE_REPOSITORY, APP_METADATA_SHAREDUSER);
         $all[] = self::$metaCache;
-        $this->loadMetaFileData($node, BOA_METADATA_SCOPE_REPOSITORY, $this->getUserId());
+        $this->loadMetaFileData($node, APP_METADATA_SCOPE_REPOSITORY, $this->getUserId());
         $all[] = self::$metaCache;
         $allMeta = array();
         foreach($all as $metadata){
@@ -183,9 +183,9 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
         if($fileKey == null) $fileKey = "/";
         if(isSet($this->options["METADATA_FILE_LOCATION"]) && $this->options["METADATA_FILE_LOCATION"] == "outside"){
             // Force scope
-            $scope = BOA_METADATA_SCOPE_REPOSITORY;
+            $scope = APP_METADATA_SCOPE_REPOSITORY;
         }
-        if($scope == BOA_METADATA_SCOPE_GLOBAL){
+        if($scope == APP_METADATA_SCOPE_GLOBAL){
             $metaFile = dirname($currentFile)."/".$this->options["METADATA_FILE"];
             if(preg_match("/\.zip\//",$currentFile)){
                 self::$fullMetaCache[$metaFile] = array();
@@ -209,7 +209,7 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
             if(isSet(self::$fullMetaCache[$metaFile][$fileKey][$userId])){
                 self::$metaCache = self::$fullMetaCache[$metaFile][$fileKey][$userId];
             }else{
-                if($this->options["UPGRADE_FROM_METASERIAL"] == true && count(self::$fullMetaCache[$metaFile]) && !isSet(self::$fullMetaCache[$metaFile]["BOA_METASTORE_UPGRADED"])){
+                if($this->options["UPGRADE_FROM_METASERIAL"] == true && count(self::$fullMetaCache[$metaFile]) && !isSet(self::$fullMetaCache[$metaFile]["APP_METASTORE_UPGRADED"])){
                     self::$fullMetaCache[$metaFile] = $this->upgradeDataFromMetaSerial(self::$fullMetaCache[$metaFile]);
                     if(isSet(self::$fullMetaCache[$metaFile][$fileKey][$userId])){
                         self::$metaCache = self::$fullMetaCache[$metaFile][$fileKey][$userId];
@@ -235,9 +235,9 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
         $fileKey = $node->getPath();
         if(isSet($this->options["METADATA_FILE_LOCATION"]) && $this->options["METADATA_FILE_LOCATION"] == "outside"){
             // Force scope
-            $scope = BOA_METADATA_SCOPE_REPOSITORY;
+            $scope = APP_METADATA_SCOPE_REPOSITORY;
         }
-        if($scope == BOA_METADATA_SCOPE_GLOBAL){
+        if($scope == APP_METADATA_SCOPE_GLOBAL){
             $metaFile = dirname($currentFile)."/".$this->options["METADATA_FILE"];
             $fileKey = basename($fileKey);
         }else{
@@ -247,7 +247,7 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
             $metaFile = $this->globalMetaFile."_".$repositoryId;
             $metaFile = $this->updateSecurityScope($metaFile, $node->getRepositoryId());
         }
-		if($scope==BOA_METADATA_SCOPE_REPOSITORY
+		if($scope==APP_METADATA_SCOPE_REPOSITORY
             || (@is_file($metaFile) && call_user_func(array($this->accessDriver, "isWriteable"), $metaFile))
             || call_user_func(array($this->accessDriver, "isWriteable"), dirname($metaFile)) ){
             if(is_array(self::$metaCache) && count(self::$metaCache)){
@@ -276,7 +276,7 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
                 @fwrite($fp, serialize(self::$fullMetaCache[$metaFile]), strlen(serialize(self::$fullMetaCache[$metaFile])));
                 @fclose($fp);
             }
-			if($scope == BOA_METADATA_SCOPE_GLOBAL){
+			if($scope == APP_METADATA_SCOPE_GLOBAL){
                  Controller::applyHook("version.commit_file", array($metaFile, $node));
             }
 		}
@@ -285,8 +285,8 @@ class SerialMetaStore extends Plugin implements MetaStoreProvider {
     protected function upgradeDataFromMetaSerial($data){
         $new = array();
         foreach ($data as $fileKey => $fileData){
-            $new[$fileKey] = array(BOA_METADATA_SHAREDUSER => array( "users_meta" => $fileData ));
-            $new["BOA_METASTORE_UPGRADED"] = true;
+            $new[$fileKey] = array(APP_METADATA_SHAREDUSER => array( "users_meta" => $fileData ));
+            $new["APP_METASTORE_UPGRADED"] = true;
         }
         return $new;
     }

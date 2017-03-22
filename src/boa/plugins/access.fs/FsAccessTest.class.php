@@ -31,10 +31,10 @@ namespace BoA\Plugins\Access\Fs;
 
 use BoA\Core\Diagnostics\AbstractTest;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Access
  */
 class fsAccessTest extends AbstractTest
@@ -54,7 +54,7 @@ class fsAccessTest extends AbstractTest
         $path = $repo->getOption("PATH", false);
         $createOpt = $repo->getOption("CREATE");
         $create = (($createOpt=="true"||$createOpt===true)?true:false);
-        if(strstr($path, "BOA_USER")!==false) return TRUE; // CANNOT TEST THIS CASE!        
+        if(strstr($path, "APP_USER")!==false) return TRUE; // CANNOT TEST THIS CASE!        
         if (!$create && !@is_dir($path))
         { 
         	$this->failedInfo .= "Selected repository path ".$path." doesn't exist, and the CREATE option is false"; return FALSE; 

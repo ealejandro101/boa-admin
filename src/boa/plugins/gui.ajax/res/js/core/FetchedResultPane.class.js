@@ -52,7 +52,7 @@ Class.create("FetchedResultPane", FilesList, {
         dataModel.setRootNode(this._rootNode);
         $super($(mainElementName), {
             dataModel:dataModel,
-            columnsDef:[{attributeName:"boa_label", messageId:1, sortType:'String'},
+            columnsDef:[{attributeName:"APP_label", messageId:1, sortType:'String'},
                 {attributeName:"filename", messageString:'Path', sortType:'String'},
                 {attributeName:"is_file", messageString:'Type', sortType:'String', defaultVisibility:'hidden'}
             ],

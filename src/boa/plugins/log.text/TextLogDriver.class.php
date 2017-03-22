@@ -36,11 +36,11 @@ use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Plugins\Core\Log\AbstractLogDriver;
 use BoA\Plugins\Core\Log\Logger;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Standard logger. Writes logs into text files
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Log
  */
 class TextLogDriver extends AbstractLogDriver {
@@ -309,7 +309,7 @@ class TextLogDriver extends AbstractLogDriver {
                 $date = $matches[1];
                 list($m,$d,$Y,$h,$i,$s) = sscanf($date, "%i-%i-%i %i:%i:%i");
                 $tStamp = mktime($h,$i,$s,$m,$d,$Y);
-				print(SystemTextEncoding::toUTF8("<$nodeName is_file=\"1\" modiftime=\"$tStamp\" filename=\"$fileName\" boa_mime=\"log\" date=\"$matches[1]\" ip=\"$matches[2]\" level=\"$matches[3]\" user=\"$matches[4]\" action=\"$matches[5]\" params=\"$matches[6]\" icon=\"toggle_log.png\" />", false));
+				print(SystemTextEncoding::toUTF8("<$nodeName is_file=\"1\" modiftime=\"$tStamp\" filename=\"$fileName\" APP_mime=\"log\" date=\"$matches[1]\" ip=\"$matches[2]\" level=\"$matches[3]\" user=\"$matches[4]\" action=\"$matches[5]\" params=\"$matches[6]\" icon=\"toggle_log.png\" />", false));
 			}
 		}
 		return ;

@@ -33,7 +33,7 @@ use BoA\Core\Plugins\Plugin;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 define("LOG_LEVEL_DEBUG", "Debug");
 define("LOG_LEVEL_INFO", "Info");
@@ -41,7 +41,7 @@ define("LOG_LEVEL_NOTICE", "Notice");
 define("LOG_LEVEL_WARNING", "Warning");
 define("LOG_LEVEL_ERROR", "Error");
 /**
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  * @static
  * Provides static access to the logging mechanism

@@ -35,11 +35,11 @@ use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Filters\VarsFilter;
 use BoA\Plugins\Core\Conf\AbstractUser;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Implementation of the AbstractUser for serial
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Conf
  */
 class SerialUser extends AbstractUser
@@ -82,7 +82,7 @@ class SerialUser extends AbstractUser
                     $r = $u->getRoles();
                     // REMOVE OLD GROUP ROLES
                     foreach(array_keys($r) as $role){
-                        if(strpos($role, "BOA_GRP_/") === 0) $u->removeRole($role);
+                        if(strpos($role, "APP_GRP_/") === 0) $u->removeRole($role);
                     }
                     $u->recomputeMergedRole();
                     $u->save("superuser");
@@ -145,7 +145,7 @@ class SerialUser extends AbstractUser
             foreach($exp as $pathPart){
                 if(empty($pathPart)) continue;
                 $base = $base . "/" . $pathPart;
-                $rolesToLoad[] = "BOA_GRP_".$base;
+                $rolesToLoad[] = "APP_GRP_".$base;
             }
         }
 		// Load roles
@@ -165,7 +165,7 @@ class SerialUser extends AbstractUser
         $personalRole = Utils::loadSerialFile($this->getStoragePath()."/role.ser");
         if(is_a($personalRole, "BoA\Core\Security\Role")){
             $this->personalRole = $personalRole;
-            $this->roles["BOA_USR_"."/".$this->id] = $personalRole;
+            $this->roles["APP_USR_"."/".$this->id] = $personalRole;
         }else{
             // MIGRATE NOW !
             $this->migrateRightsToPersonalRole();

@@ -37,7 +37,7 @@ use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Filters\VarsFilter;
 use BoA\Plugins\Core\Log\Logger;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Configuration holder. Singleton class accessed statically, encapsulates the confDriver implementation.
@@ -97,12 +97,12 @@ class ConfService
         if(isSet($this->configs["USE_HTTPS"])){
             Utils::safeIniSet("session.cookie_secure", true);
         }
-        $this->configs["JS_DEBUG"] = BOA_CLIENT_DEBUG;
-        $this->configs["SERVER_DEBUG"] = BOA_SERVER_DEBUG;
+        $this->configs["JS_DEBUG"] = APP_CLIENT_DEBUG;
+        $this->configs["SERVER_DEBUG"] = APP_SERVER_DEBUG;
 
 
-        if(is_file(BOA_CONF_PATH."/bootstrap_repositories.php")){
-            include(BOA_CONF_PATH."/bootstrap_repositories.php");
+        if(is_file(APP_CONF_PATH."/bootstrap_repositories.php")){
+            include(APP_CONF_PATH."/bootstrap_repositories.php");
             $this->configs["DEFAULT_REPOSITORIES"] = $REPOSITORIES;
         }else{
             $this->configs["DEFAULT_REPOSITORIES"] = array();
@@ -302,10 +302,10 @@ class ConfService
         }
         
         if(isSet($this->configs["REPOSITORY"]) && $this->configs["REPOSITORY"]->getOption("CHARSET")!=""){
-            $_SESSION["BOA_CHARSET"] = $this->configs["REPOSITORY"]->getOption("CHARSET");
+            $_SESSION["APP_CHARSET"] = $this->configs["REPOSITORY"]->getOption("CHARSET");
         }else{
-            if(isSet($_SESSION["BOA_CHARSET"])){
-                unset($_SESSION["BOA_CHARSET"]);
+            if(isSet($_SESSION["APP_CHARSET"])){
+                unset($_SESSION["APP_CHARSET"]);
             }
         }
         
@@ -562,8 +562,8 @@ class ConfService
         if(isSet($repository["DESCRIPTION_ID"])){
             $repo->setDescription($repository["DESCRIPTION_ID"]);
         }
-        if(isSet($repository["BOA_SLUG"])){
-            $repo->setSlug($repository["BOA_SLUG"]);
+        if(isSet($repository["APP_SLUG"])){
+            $repo->setSlug($repository["APP_SLUG"]);
         }
         if(isSet($repository["IS_TEMPLATE"]) && $repository["IS_TEMPLATE"]){
             $repo->isTemplate = true;
@@ -656,7 +656,7 @@ class ConfService
     public function getRepositoryByAliasInstDefaults($repoAlias){
         $conf = $this->configs["DEFAULT_REPOSITORIES"];
         foreach($conf as $repoId => $repoDef){
-            if($repoDef["BOA_SLUG"] == $repoAlias){
+            if($repoDef["APP_SLUG"] == $repoAlias){
                 return $this->getRepositoryByIdInst($repoId);
             }
         }
@@ -773,8 +773,8 @@ class ConfService
     public function getMessagesInst($forceRefresh = false)
     {
         $crtLang = self::getLanguage();
-        $messageCacheDir = dirname(BOA_PLUGINS_MESSAGES_FILE)."/i18n";
-        $messageFile = $messageCacheDir."/".$crtLang."_".basename(BOA_PLUGINS_MESSAGES_FILE);
+        $messageCacheDir = dirname(APP_PLUGINS_MESSAGES_FILE)."/i18n";
+        $messageFile = $messageCacheDir."/".$crtLang."_".basename(APP_PLUGINS_MESSAGES_FILE);
         if(isSet($this->configs["MESSAGES"]) && !$forceRefresh){
             return $this->configs["MESSAGES"];
         }
@@ -792,7 +792,7 @@ class ConfService
             $nodes = PluginsService::getInstance()->searchAllManifests("//i18n", "nodes");
             foreach ($nodes as $node){
                 $nameSpace = $node->getAttribute("namespace");
-                $path = BOA_PLUGINS_FOLDER_REL."/".$node->getAttribute("path");
+                $path = APP_PLUGINS_FOLDER_REL."/".$node->getAttribute("path");
                 $lang = $crtLang;
                 if(!is_file($path."/".$crtLang.".php")){
                     $lang = "en"; // Default language, minimum required.
@@ -837,7 +837,7 @@ class ConfService
         if(!isSet($this->configs["EXTENSIONS"])){
             $EXTENSIONS = array();
             $RESERVED_EXTENSIONS = array();
-            include_once(BOA_CONF_PATH."/extensions.conf.php");
+            include_once(APP_CONF_PATH."/extensions.conf.php");
             $EXTENSIONS = array_merge($RESERVED_EXTENSIONS, $EXTENSIONS);
             foreach($EXTENSIONS as $key => $value){
                 unset($EXTENSIONS[$key]);
@@ -882,10 +882,10 @@ class ConfService
      */
     public static function listAvailableLanguages(){
         // Cache in session!
-        if(isSet($_SESSION["BOA_LANGUAGES"]) && !isSet($_GET["refresh_langs"])){
-            return $_SESSION["BOA_LANGUAGES"];
+        if(isSet($_SESSION["APP_LANGUAGES"]) && !isSet($_GET["refresh_langs"])){
+            return $_SESSION["APP_LANGUAGES"];
         }
-        $langDir = BOA_COREI18N_FOLDER;
+        $langDir = APP_COREI18N_FOLDER;
         $languages = array();
         if(($dh = opendir($langDir))!==FALSE){
             while (($file = readdir($dh)) !== false) {
@@ -900,7 +900,7 @@ class ConfService
             closedir($dh);
         }
         if(count($languages)){
-            $_SESSION["BOA_LANGUAGES"] = $languages;
+            $_SESSION["APP_LANGUAGES"] = $languages;
         }
         return $languages;
     }
@@ -934,8 +934,8 @@ class ConfService
         if(isSet($this->configs[$varName])){
             return $this->configs[$varName];
         }
-        if(defined("BOA_".$varName)){
-            return eval("return BOA_".$varName.";");
+        if(defined("APP_".$varName)){
+            return eval("return APP_".$varName.";");
         }
         return null;
     }

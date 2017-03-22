@@ -36,11 +36,11 @@ use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Plugins\Core\Log\Logger;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Processor for standard POST upload
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Uploader
  */
 class SimpleUploadProcessor extends Plugin {
@@ -48,8 +48,8 @@ class SimpleUploadProcessor extends Plugin {
 	public function getDropBg($action, $httpVars, $fileVars){
     die('getDropBg');
 		$lang = ConfService::getLanguage();
-		$img = BOA_PLUGINS_FOLDER."/uploader.html/i18n/$lang-dropzone.png";
-		if(!is_file($img)) $img = BOA_PLUGINS_FOLDER."uploader.html/i18n/en-dropzone.png";
+		$img = APP_PLUGINS_FOLDER."/uploader.html/i18n/$lang-dropzone.png";
+		if(!is_file($img)) $img = APP_PLUGINS_FOLDER."uploader.html/i18n/en-dropzone.png";
 		header("Content-Type: image/png; name=\"dropzone.png\"");
 		header("Content-Length: ".filesize($img));
 		header('Cache-Control: public');

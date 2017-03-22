@@ -38,9 +38,9 @@ use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Plugins\Core\Access\AbstractAccessDriver;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 /**
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Access
  * @class SharedAccessDriver
  * Plugin to access the shared elements of the current user
@@ -49,7 +49,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 {	
 
     function initRepository(){
-      //ToDo: Review how to include this file. require_once BOA_PLUGINS_FOLDER."/action.share/class.ShareCenter.php";        
+      //ToDo: Review how to include this file. require_once APP_PLUGINS_FOLDER."/action.share/class.ShareCenter.php";        
     }
 
 	function switchAction($action, $httpVars, $fileVars){
@@ -96,7 +96,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 					exit(1);
 				}else{
 					XMLWriter::header();
-					XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="shared.8" attributeName="boa_label" sortType="String"/><column messageId="shared.31" attributeName="description" sortType="String"/></columns>');
+					XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="shared.8" attributeName="APP_label" sortType="String"/><column messageId="shared.31" attributeName="description" sortType="String"/></columns>');
 					foreach ($rootNodes as $key => $data){
 						print '<tree text="'.$data["LABEL"].'" icon="'.$data["ICON"].'" filename="/'.$key.'" parentname="/" description="'.$data["DESCRIPTION"].'" />';
 					}
@@ -112,7 +112,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 			break;			
 						
 			case "delete" : 
-				$mime = $httpVars["boa_mime"];
+				$mime = $httpVars["APP_mime"];
 				$selection = new UserSelection();
 				$selection->initFromHttpVars();
 				$files = $selection->getFiles();
@@ -168,7 +168,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 	
 	function listSharedFiles(){
 		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist">
-				<column messageId="shared.4" attributeName="boa_label" sortType="String" width="20%"/>
+				<column messageId="shared.4" attributeName="APP_label" sortType="String" width="20%"/>
 				<column messageId="shared.17" attributeName="download_url" sortType="String" width="20%"/>
 				<column messageId="shared.20" attributeName="download_count" sortType="String" width="2%"/>
                 <column messageId="share_center.22" attributeName="download_limit" sortType="String" width="2%"/>
@@ -187,7 +187,7 @@ class SharedAccessDriver extends AbstractAccessDriver
         	$downloadBase = rtrim($dlURL, "/");
         }else{
 	        $fullUrl = Utils::detectServerURL() . dirname($_SERVER['REQUEST_URI']);
-	        $downloadBase = str_replace("\\", "/", $fullUrl.rtrim(str_replace(BOA_INSTALL_PATH, "", $dlFolder), "/"));
+	        $downloadBase = str_replace("\\", "/", $fullUrl.rtrim(str_replace(APP_INSTALL_PATH, "", $dlFolder), "/"));
         }
 		
 		foreach ($files as $file){
@@ -209,7 +209,7 @@ class SharedAccessDriver extends AbstractAccessDriver
                 "download_limit" => ($publicletData["DOWNLOAD_LIMIT"] == 0 ? "-" : $publicletData["DOWNLOAD_LIMIT"] ),
 				"integrity"  => (!$publicletData["SECURITY_MODIFIED"]?$mess["shared.15"]:$mess["shared.16"]),
 				"download_url" => $downloadBase . "/".basename($file),
-				"boa_mime" => "shared_file")
+				"APP_mime" => "shared_file")
 			);			
 		}
 	}
@@ -238,7 +238,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 	}
 
 	function listUsers(){
-		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.6" attributeName="boa_label" sortType="String"/><column messageId="shared.10" attributeName="repo_accesses" sortType="String"/></columns>');		
+		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.6" attributeName="APP_label" sortType="String"/><column messageId="shared.10" attributeName="repo_accesses" sortType="String"/></columns>');		
 		if(!AuthService::usersEnabled()) return ;
 		$users = AuthService::listUsers();
 		$mess = ConfService::getMessages();
@@ -273,14 +273,14 @@ class SharedAccessDriver extends AbstractAccessDriver
 				repo_accesses="'.implode(", ", $repoAccesses).'"
 				parentname="/users" 
 				is_file="1" 
-				boa_mime="shared_user"
+				APP_mime="shared_user"
 				/>';
 		}
 	}
 	
 	function listRepositories(){
 		$repos = ConfService::getRepositoriesList("all");
-		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.8" attributeName="boa_label" sortType="String"/><column messageId="boaconf.9" attributeName="accessType" sortType="String"/><column messageId="shared.9" attributeName="repo_accesses" sortType="String"/></columns>');		
+		XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist"><column messageId="boaconf.8" attributeName="APP_label" sortType="String"/><column messageId="boaconf.9" attributeName="accessType" sortType="String"/><column messageId="shared.9" attributeName="repo_accesses" sortType="String"/></columns>');		
         $repoArray = array();
         $childRepos = array();
         $loggedUser = AuthService::getLoggedUser();        
@@ -312,7 +312,7 @@ class SharedAccessDriver extends AbstractAccessDriver
 			foreach ($users as $userId => $userObject) {
 				//if(!$userObject->hasParent()) continue;
                 if($userObject->getId() == $loggedUser->getId()) continue;
-                $label = $userObject->personalRole->filterParameterValue("core.conf", "USER_DISPLAY_NAME", BOA_REPO_SCOPE_ALL, $userId);
+                $label = $userObject->personalRole->filterParameterValue("core.conf", "USER_DISPLAY_NAME", APP_REPO_SCOPE_ALL, $userId);
                 $acl = $userObject->mergedRole->getAcl($repoObject->getId());
                 if(!empty($acl)) $repoAccesses[] = $label. " (".$acl.")";
             }
@@ -324,7 +324,7 @@ class SharedAccessDriver extends AbstractAccessDriver
             	"openicon"		=> "document_open_remote.png",
             	"parentname"	=> "/repositories",
             	"repo_accesses" => implode(", ", $repoAccesses),
-				"boa_mime" 	=> "shared_repository"
+				"APP_mime" 	=> "shared_repository"
             );
             XMLWriter::renderNode("/repositories/$repoIndex", $name, true, $metaData);
 		}

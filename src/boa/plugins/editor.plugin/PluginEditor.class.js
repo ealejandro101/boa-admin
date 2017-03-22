@@ -138,7 +138,7 @@ Class.create("PluginEditor", AbstractEditor, {
             var driverParamsHash = $A([]);
             if(this.pluginId.split("\.")[0] != "core"){
                 driverParamsHash.push($H({
-                    name:'BOA_PLUGIN_ENABLED',
+                    name:'APP_PLUGIN_ENABLED',
                     type:'boolean',
                     label:MessageHash['boaconf.104'],
                     description:""
@@ -226,9 +226,9 @@ Class.create("PluginEditor", AbstractEditor, {
 
     updateBinaryContext : function(parameter){
         if(this.roleData.USER){
-            parameter.set("binary_context", "user_id="+this.roleId.replace("BOA_USR_/", ""));
+            parameter.set("binary_context", "user_id="+this.roleId.replace("APP_USR_/", ""));
         }else if(this.roleData.GROUP){
-            parameter.set("binary_context", "group_id="+this.roleId.replace("BOA_GRP_/", ""));
+            parameter.set("binary_context", "group_id="+this.roleId.replace("APP_GRP_/", ""));
         }else{
             parameter.set("binary_context", "role_id="+this.roleId);
         }

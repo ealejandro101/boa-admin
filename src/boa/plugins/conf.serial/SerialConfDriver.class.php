@@ -36,12 +36,12 @@ use BoA\Core\Utils\Filters\VarsFilter;
 use BoA\Plugins\Core\Conf\AbstractConfDriver;
 use BoA\Plugins\Conf\Serial\SerialUser;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 
 /**
  * Implementation of the configuration driver on serial files
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Conf
  */
 class SerialConfDriver extends AbstractConfDriver {
@@ -138,13 +138,13 @@ class SerialConfDriver extends AbstractConfDriver {
         $result = array();
         if(count($roleIds)){
             foreach($roleIds as $id){
-                if(isSet($all[$id]) && !($excludeReserved && strpos($id,"BOA_") === 0)) {
+                if(isSet($all[$id]) && !($excludeReserved && strpos($id,"APP_") === 0)) {
                     $result[$id] = $all[$id];
                 }
             }
         }else{
             foreach($all as $id => $role){
-                if($excludeReserved && strpos($id,"BOA_") === 0) continue;
+                if($excludeReserved && strpos($id,"APP_") === 0) continue;
                 $result[$id] = $role;
             }
         }
@@ -380,7 +380,7 @@ class SerialConfDriver extends AbstractConfDriver {
                 $parts = explode("/", ltrim(substr($path, strlen($baseGroup)), "/"));
                 $sub = "/".array_shift($parts);
                 if(!isset($levelGroups[$sub])) $levelGroups[$sub] = $path;
-                if(substr($id, 0, strlen("BOA_GROUP:")) == "BOA_GROUP:"){
+                if(substr($id, 0, strlen("APP_GROUP:")) == "APP_GROUP:"){
                     $labels[$path] = array_pop(explode(":", $id, 2));
                 }
             }
@@ -394,7 +394,7 @@ class SerialConfDriver extends AbstractConfDriver {
 
     function createGroup($groupPath, $groupLabel){
         $groups = Utils::loadSerialFile(VarsFilter::filter($this->getOption("USERS_DIRPATH"))."/groups.ser");
-        $groups["BOA_GROUP:$groupLabel"] = $groupPath;
+        $groups["APP_GROUP:$groupLabel"] = $groupPath;
         Utils::saveSerialFile(VarsFilter::filter($this->getOption("USERS_DIRPATH"))."/groups.ser", $groups);
     }
 
@@ -404,7 +404,7 @@ class SerialConfDriver extends AbstractConfDriver {
         if(isSet($reverse[$groupPath])){
             $oldLabel = $reverse[$groupPath];
             unset($groups[$oldLabel]);
-            $groups["BOA_GROUP:$groupLabel"] = $groupPath;
+            $groups["APP_GROUP:$groupLabel"] = $groupPath;
             Utils::saveSerialFile(VarsFilter::filter($this->getOption("USERS_DIRPATH"))."/groups.ser", $groups);
         }
     }
@@ -433,7 +433,7 @@ class SerialConfDriver extends AbstractConfDriver {
 	}
 
 	function getUserClassFileName(){
-		return BOA_PLUGINS_FOLDER."/conf.serial/SerialUser.class.php";
+		return APP_PLUGINS_FOLDER."/conf.serial/SerialUser.class.php";
 	}
 
     /**

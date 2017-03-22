@@ -1,24 +1,31 @@
 <?php
-/*
- * Copyright 2007-2011 Charles du Jeu <contact (at) cdujeu.me>
- * This file is part of AjaXplorer.
+// This file is part of BoA - https://github.com/boa-project
+//
+// BoA is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// BoA is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with BoA.  If not, see <http://www.gnu.org/licenses/>.
+//
+// The latest code can be found at <https://github.com/boa-project/>.
+ 
+/**
+ * This is a one-line short description of the file/class.
  *
- * AjaXplorer is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * You can have a rather longer description of the file/class as well,
+ * if you like, and it can span multiple lines.
  *
- * AjaXplorer is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with AjaXplorer.  If not, see <http://www.gnu.org/licenses/>.
- *
- * The latest code can be found at <http://www.ajaxplorer.info/>.
- *
- * Description : Command line access of the framework.
+ * @package    [PACKAGE]
+ * @category   [CATEGORY]
+ * @copyright  2017 BoA Project
+ * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
 if(php_sapi_name() !== "cli"){
 	die("This is the command line version of the framework, you are not allowed to access this page");
@@ -30,19 +37,26 @@ header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
-//set_error_handler(array("AJXP_XMLWriter", "catchError"), E_ALL & ~E_NOTICE );
-//set_exception_handler(array("AJXP_XMLWriter", "catchException"));
+//set_error_handler(array("XMLWriter", "catchError"), E_ALL & ~E_NOTICE );
+//set_exception_handler(array("XMLWriter", "catchException"));
 
-$pServ = AJXP_PluginsService::getInstance();
+use BoA\Core\Http\Controller;
+use BoA\Core\Http\XMLWriter;
+use BoA\Core\Services\AuthService;
+use BoA\Core\Services\ConfService;
+use BoA\Core\Services\PluginsService;
+use BoA\Plugins\Core\Log\Logger;
+
+
+$pServ = PluginsService::getInstance();
 ConfService::init();
 $confPlugin = ConfService::getInstance()->confPluginSoftLoad($pServ);
-$pServ->loadPluginsRegistry(AJXP_INSTALL_PATH."/plugins", $confPlugin);
+$pServ->loadPluginsRegistry(APP_PLUGINS_FOLDER, $confPlugin);
 ConfService::start();
 
 
 $confStorageDriver = ConfService::getConfStorageImpl();
 require_once($confStorageDriver->getUserClassFileName());
-//session_name("AjaXplorer");
 //session_start();
 
 
@@ -120,13 +134,13 @@ if($optRepoId !== false){
 	}
     if($optDetectUser != false){
         $path = $repository->getOption("PATH", true);
-        if(strpos($path, "AJXP_USER") !== false){
+        if(strpos($path, "APP_USER") !== false){
             $path = str_replace(
-                array("AJXP_INSTALL_PATH", "AJXP_DATA_PATH", "/"),
-                array(AJXP_INSTALL_PATH, AJXP_DATA_PATH, DIRECTORY_SEPARATOR),
+                array("APP_INSTALL_PATH", "APP_DATA_PATH", "/"),
+                array(APP_INSTALL_PATH, APP_DATA_PATH, DIRECTORY_SEPARATOR),
                 $path
             );
-            $parts = explode("AJXP_USER", $path);
+            $parts = explode("APP_USER", $path);
             if(count($parts) == 1) $parts[1] = "";
             $first = str_replace("\\", "\\\\", $parts[0]);
             $last = str_replace("\\", "\\\\", $parts[1]);
@@ -184,42 +198,40 @@ if(AuthService::usersEnabled())
 	}
 	if(isset($loggingResult) && $loggingResult != 1)
 	{
-		AJXP_XMLWriter::header();
-		AJXP_XMLWriter::loggingResult($loggingResult, false, false, "");
-		AJXP_XMLWriter::close();
+		XMLWriter::header();
+		XMLWriter::loggingResult($loggingResult, false, false, "");
+		XMLWriter::close();
         if($optStatusFile){
             file_put_contents($optStatusFile, "ERROR:No user logged");
         }
 	}
 }else{
-	AJXP_Logger::debug(ConfService::getCurrentRepositoryId());
+	Logger::debug(ConfService::getCurrentRepositoryId());
 }
 
 //Set language
 $loggedUser = AuthService::getLoggedUser();
 if($loggedUser != null && $loggedUser->getPref("lang") != "") ConfService::setLanguage($loggedUser->getPref("lang"));
-else if(isSet($_COOKIE["AJXP_lang"])) ConfService::setLanguage($_COOKIE["AJXP_lang"]);
+else if(isSet($_COOKIE["APP_lang"])) ConfService::setLanguage($_COOKIE["APP_lang"]);
 $mess = ConfService::getMessages();
 
 // THIS FIRST DRIVERS DO NOT NEED ID CHECK
-//$ajxpDriver = AJXP_PluginsService::findPlugin("gui", "ajax");
 $authDriver = ConfService::getAuthDriverImpl();
 // DRIVERS BELOW NEED IDENTIFICATION CHECK
 if(!AuthService::usersEnabled() || ConfService::getCoreConf("ALLOW_GUEST_BROWSING", "auth") || AuthService::getLoggedUser()!=null){
 	$confDriver = ConfService::getConfStorageImpl();
 	$Driver = ConfService::loadRepositoryDriver();
 }
-AJXP_PluginsService::getInstance()->initActivePlugins();
-require_once(AJXP_BIN_FOLDER."/class.AJXP_Controller.php");
-$xmlResult = AJXP_Controller::findActionAndApply($optAction, $optArgs, array());
+PluginsService::getInstance()->initActivePlugins();
+$xmlResult = Controller::findActionAndApply($optAction, $optArgs, array());
 if($xmlResult !== false && $xmlResult != ""){
-	AJXP_XMLWriter::header();
+	XMLWriter::header();
 	print($xmlResult);
-	AJXP_XMLWriter::close();
-}else if(isset($requireAuth) && AJXP_Controller::$lastActionNeedsAuth){
-	AJXP_XMLWriter::header();
-	AJXP_XMLWriter::requireAuth();
-	AJXP_XMLWriter::close();
+	XMLWriter::close();
+}else if(isset($requireAuth) && Controller::$lastActionNeedsAuth){
+	XMLWriter::header();
+	XMLWriter::requireAuth();
+	XMLWriter::close();
 }
 //echo("NEXT REPO ".$nextRepositories." (".$options["r"].")\n");
 //echo("NEXT USERS ".$nextUsers." ( ".$originalOptUser." )\n");
@@ -227,7 +239,7 @@ if(!empty($nextUsers) || !empty($nextRepositories) || !empty($optUserQueue) ){
 
     if(!empty($nextUsers)){
         sleep(1);
-        $process = AJXP_Controller::applyActionInBackground($options["r"], $optAction, $optArgs, $nextUsers, $optStatusFile);
+        $process = Controller::applyActionInBackground($options["r"], $optAction, $optArgs, $nextUsers, $optStatusFile);
         if($process != null && is_a($process, "UnixProcess") && isSet($optStatusFile)){
             file_put_contents($optStatusFile, "RUNNING:".$process->getPid());
         }
@@ -235,14 +247,14 @@ if(!empty($nextUsers) || !empty($nextRepositories) || !empty($optUserQueue) ){
     if(!empty($optUserQueue)){
         sleep(1);
         //echo("Should go to next with $optUserQueue");
-        $process = AJXP_Controller::applyActionInBackground($options["r"], $optAction, $optArgs, "queue:".$optUserQueue, $optStatusFile);
+        $process = Controller::applyActionInBackground($options["r"], $optAction, $optArgs, "queue:".$optUserQueue, $optStatusFile);
         if($process != null && is_a($process, "UnixProcess") && isSet($optStatusFile)){
             file_put_contents($optStatusFile, "RUNNING:".$process->getPid());
         }
     }
     if(!empty($nextRepositories)){
         sleep(1);
-        $process = AJXP_Controller::applyActionInBackground($nextRepositories, $optAction, $optArgs, $originalOptUser, $optStatusFile);
+        $process = Controller::applyActionInBackground($nextRepositories, $optAction, $optArgs, $originalOptUser, $optStatusFile);
         if($process != null && is_a($process, "UnixProcess") && isSet($optStatusFile)){
             file_put_contents($optStatusFile, "RUNNING:".$process->getPid());
         }

@@ -114,11 +114,11 @@
 				<clientForm id="user_create_repository_form"><![CDATA[
 					<div id="user_create_repository_form" action="user_create_repository" box_width="270">
 					    <div id="user_tpl_container" style="position:relative;width:248px;overflow:hidden;height:130px;border:1px solid #ddd; background-color: #f4f4f4;">
-						<div id="user_templates_selector" style="position:absolute;width:250px;"><div class="panelHeader">BOA_MESSAGE[419]</div></div>
+						<div id="user_templates_selector" style="position:absolute;width:250px;"><div class="panelHeader">APP_MESSAGE[419]</div></div>
 						<div id="user_template_parameters" style="position:absolute;left:250px;width:250px;">
 						    <div id="user_tpl_params_title" class="panelHeader panelHeaderWithIcon"></div>
 						    <div style="padding:5px;">
-						        <div class="dialogLegend" style="clear:left;">BOA_MESSAGE[422]</div>
+						        <div class="dialogLegend" style="clear:left;">APP_MESSAGE[422]</div>
 						        <div id="user_tpl_params_parameters"></div>
 						    </div>
 						</div>
@@ -394,15 +394,15 @@
 				<clientForm id="webdav_pref_form"><![CDATA[
 					<div id="webdav_pref_form" action="webdav_pref_form" box_width="450">
 					    <div class="dialogContentMainTitle">WebDAV Access</div>
-						<div class="dialogLegend" style="margin-bottom: 2px;padding: 0 5px;" message_id="404">BOA_MESSAGE[404]</div>
-						<div style="padding:10px;"><input type="checkbox" id="webdav_activator" style="width:16px;" name="webdav_activator"> <label for="webdav_activator">BOA_MESSAGE[406]</label></div>
+						<div class="dialogLegend" style="margin-bottom: 2px;padding: 0 5px;" message_id="404">APP_MESSAGE[404]</div>
+						<div style="padding:10px;"><input type="checkbox" id="webdav_activator" style="width:16px;" name="webdav_activator"> <label for="webdav_activator">APP_MESSAGE[406]</label></div>
 						<div class="dialogButtons" id="webdav_password_form" style="display:none;text-align: left;padding-left: 15px;height: 42px;font-size: 0.9em;padding-top: 5px;">
-							<div style="width: 70%; float: left; padding-right: 5px; text-align: right;">BOA_MESSAGE[407]</div><input type="password" id="webdav_password" style="float:left;height: 24px;width: 80px;"> <input type="image" src="BOA_THEME_FOLDER/images/actions/22/dialog_ok_apply.png" height="22" width="22" title="OK" id="webdav_pass_saver">
+							<div style="width: 70%; float: left; padding-right: 5px; text-align: right;">APP_MESSAGE[407]</div><input type="password" id="webdav_password" style="float:left;height: 24px;width: 80px;"> <input type="image" src="APP_THEME_FOLDER/images/actions/22/dialog_ok_apply.png" height="22" width="22" title="OK" id="webdav_pass_saver">
 						</div>
-						<div class="dialogLegend" style="margin: 5px;" message_id="405">BOA_MESSAGE[405]</div>
-						<input type="text" id="webdav_main_access" value="BOA_MESSAGE[466]" readonly/>
+						<div class="dialogLegend" style="margin: 5px;" message_id="405">APP_MESSAGE[405]</div>
+						<input type="text" id="webdav_main_access" value="APP_MESSAGE[466]" readonly/>
 						<div class="dialogLegend" id="perworkspace-urls-toggle" style="margin-bottom: 2px; padding:5px;" message_id="405">
-						<span class="icon-caret-right"></span>BOA_MESSAGE[465]</div>
+						<span class="icon-caret-right"></span>APP_MESSAGE[465]</div>
 						<div id="webdav_repo_list" style="display:none; height: 200px; overflow:auto;"></div>
 						<input type="hidden" name="get_action" value="webdav_preferences">									
 					</div>					

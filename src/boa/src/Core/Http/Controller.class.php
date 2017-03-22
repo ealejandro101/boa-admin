@@ -38,7 +38,7 @@ use BoA\Core\Utils\ShutdownScheduler;
 use BoA\Core\Utils\Utils;
 use BoA\Plugins\Core\Log;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 /**
  * Core controller for dispatching the actions.
  * It uses the XML Registry (simple version, not extended) to search all the <action> tags and find the action.
@@ -87,7 +87,7 @@ class Controller{
 		$loggedUser = AuthService::getLoggedUser();
 		if($loggedUser == null) return false;
 		$crtRepo = ConfService::getRepository();
-		$crtRepoId = BOA_REPO_SCOPE_ALL; // "app.all";
+		$crtRepoId = APP_REPO_SCOPE_ALL; // "app.all";
 		if($crtRepo != null && is_a($crtRepo, "Repository")){
 			$crtRepoId = $crtRepo->getId();
 		}
@@ -182,7 +182,7 @@ class Controller{
      * @return bool
      */
 	public static function findActionAndApply($actionName, $httpVars, $fileVars, &$action = null){
-        $actionName = Utils::sanitize($actionName, BOA_SANITIZE_EMAILCHARS);
+        $actionName = Utils::sanitize($actionName, APP_SANITIZE_EMAILCHARS);
         if($actionName == "cross_copy"){
             $pService = PluginsService::getInstance();
             $actives = $pService->getActivePlugins();
@@ -307,7 +307,7 @@ class Controller{
      */
 	public static function applyActionInBackground($currentRepositoryId, $actionName, $parameters, $user ="", $statusFile = ""){
 		$token = md5(time());
-        $logDir = BOA_CACHE_DIR."/cmd_outputs";
+        $logDir = APP_CACHE_DIR."/cmd_outputs";
         if(!is_dir($logDir)) mkdir($logDir, 0755);
         $logFile = $logDir."/".$token.".out";
 		$iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
@@ -318,7 +318,7 @@ class Controller{
         if(AuthService::usersEnabled()){
             $user = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256,  md5($token."\1CDAFx¨op#"), $user, MCRYPT_MODE_ECB, $iv));
         }
-        $robustInstallPath = str_replace("/", DIRECTORY_SEPARATOR, BOA_INSTALL_PATH);
+        $robustInstallPath = str_replace("/", DIRECTORY_SEPARATOR, APP_INSTALL_PATH);
 		$cmd = ConfService::getCoreConf("CLI_PHP")." ".$robustInstallPath.DIRECTORY_SEPARATOR."cmd.php -u=$user -t=$token -a=$actionName -r=$currentRepositoryId";
 		/* Inserted next 3 lines to quote the command if in windows - rmeske*/
 		if (PHP_OS == "WIN32" || PHP_OS == "WINNT" || PHP_OS == "Windows"){
@@ -335,7 +335,7 @@ class Controller{
         return self::runCommandInBackground($cmd, $logFile);
         /*
 		if (PHP_OS == "WIN32" || PHP_OS == "WINNT" || PHP_OS == "Windows"){
-            if(BOA_SERVER_DEBUG) $cmd .= " > ".$logFile;
+            if(APP_SERVER_DEBUG) $cmd .= " > ".$logFile;
             if(class_exists("COM") && ConfService::getCoreConf("CLI_USE_COM")){
                 $WshShell   = new COM("WScript.Shell");
                 $oExec      = $WshShell->Run("cmd /C $cmd", 0, false);
@@ -347,7 +347,7 @@ class Controller{
                 pclose(popen('start /b "CLI" "'.$tmpBat.'"', 'r'));
             }
 		}else{
-			$process = new UnixProcess($cmd, (BOA_SERVER_DEBUG?$logFile:null));
+			$process = new UnixProcess($cmd, (APP_SERVER_DEBUG?$logFile:null));
 			Logger::debug("Starting process and sending output dev null");
             return $process;
 		}
@@ -361,12 +361,12 @@ class Controller{
      */
     public static function runCommandInBackground($cmd, $logFile){
         if (PHP_OS == "WIN32" || PHP_OS == "WINNT" || PHP_OS == "Windows"){
-              if(BOA_SERVER_DEBUG) $cmd .= " > ".$logFile;
+              if(APP_SERVER_DEBUG) $cmd .= " > ".$logFile;
               if(class_exists("COM") && ConfService::getCoreConf("CLI_USE_COM")){
                   $WshShell   = new COM("WScript.Shell");
                   $oExec      = $WshShell->Run("cmd /C $cmd", 0, false);
               }else{
-                  $basePath = str_replace("/", DIRECTORY_SEPARATOR, BOA_INSTALL_PATH);
+                  $basePath = str_replace("/", DIRECTORY_SEPARATOR, APP_INSTALL_PATH);
                   $tmpBat = implode(DIRECTORY_SEPARATOR, array( $basePath, "data","tmp", md5(time()).".bat"));
                   $cmd .= "\n DEL ".chr(34).$tmpBat.chr(34);
                   Logger::debug("Writing file $cmd to $tmpBat");
@@ -374,7 +374,7 @@ class Controller{
                   pclose(popen('start /b "CLI" "'.$tmpBat.'"', 'r'));
               }
         }else{
-            $process = new UnixProcess($cmd, (BOA_SERVER_DEBUG?$logFile:null));
+            $process = new UnixProcess($cmd, (APP_SERVER_DEBUG?$logFile:null));
             Logger::debug("Starting process and sending output dev null");
             return $process;
         }
@@ -448,7 +448,7 @@ class Controller{
 		$methodName = $xPath->query("@methodName", $callback)->item(0)->value;		
 		$plugInstance = PluginsService::findPluginById($plugId);
 		//return call_user_func(array($plugInstance, $methodName), $actionName, $httpVars, $fileVars);	
-		// Do not use call_user_func, it cannot pass parameters by reference.	
+		// Do not use call_user_func, it cannot pass parameters by reference.
 		if(method_exists($plugInstance, $methodName)){
 			if($variableArgs == null){
 				return $plugInstance->$methodName($actionName, $httpVars, $fileVars);
@@ -460,6 +460,9 @@ class Controller{
                 }
 			}
 		}else{
+        //var_dump($plugInstance);
+        //echo '<br/>*****************************************<br/>';
+        //var_dump($methodName);          
 			throw new ApplicationException("Cannot find method $methodName for plugin $plugId!");
 		}
 	}

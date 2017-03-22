@@ -37,10 +37,10 @@ use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Utils\Utils;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  * @class AbstractAuthDriver
  * Abstract representation of an authentication driver. Must be implemented by the auth plugin
@@ -329,7 +329,7 @@ class AbstractAuthDriver extends Plugin {
 	}
 	
 	function isAppAdmin($login){
-		return ($this->getOption("BOA_ADMIN_LOGIN") === $login);
+		return ($this->getOption("APP_ADMIN_LOGIN") === $login);
 	}
 	
 	function autoCreateUser(){
@@ -342,10 +342,10 @@ class AbstractAuthDriver extends Plugin {
 		if($this->getOption("TRANSMIT_CLEAR_PASS") === true) return -1;
 		if($new){
 			$seed = md5(time());
-			$_SESSION["BOA_CURRENT_SEED"] = $seed;	
+			$_SESSION["APP_CURRENT_SEED"] = $seed;	
 			return $seed;		
 		}else{
-			return (isSet($_SESSION["BOA_CURRENT_SEED"])?$_SESSION["BOA_CURRENT_SEED"]:0);
+			return (isSet($_SESSION["APP_CURRENT_SEED"])?$_SESSION["APP_CURRENT_SEED"]:0);
 		}
 	}	
 	

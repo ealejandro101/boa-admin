@@ -30,15 +30,15 @@
 
 namespace BoA\Plugins\Core\Metastore;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
-define('BOA_METADATA_SHAREDUSER', 'BOA_METADATA_SHAREDUSER');
+defined('APP_EXEC') or die( 'Access not allowed');
+define('APP_METADATA_SHAREDUSER', 'APP_METADATA_SHAREDUSER');
 
-define('BOA_METADATA_SCOPE_GLOBAL', 1);
-define('BOA_METADATA_SCOPE_REPOSITORY', 2);
+define('APP_METADATA_SCOPE_GLOBAL', 1);
+define('APP_METADATA_SCOPE_REPOSITORY', 2);
 /**
  * Simple metadata implementation, stored in hidden files inside the
  * folders
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  */
 interface MetaStoreProvider {
@@ -61,7 +61,7 @@ interface MetaStoreProvider {
      * @param int $scope
      */
 
-    public function setMetadata($node, $nameSpace, $metaData, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY);
+    public function setMetadata($node, $nameSpace, $metaData, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY);
     /**
      * @abstract
      * @param Node $node
@@ -69,7 +69,7 @@ interface MetaStoreProvider {
      * @param bool $private
      * @param int $scope
      */
-    public function removeMetadata($node, $nameSpace, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY);
+    public function removeMetadata($node, $nameSpace, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY);
 
     /**
      * @abstract
@@ -78,7 +78,7 @@ interface MetaStoreProvider {
      * @param bool $private
      * @param int $scope
      */
-    public function retrieveMetadata($node, $nameSpace, $private = false, $scope=BOA_METADATA_SCOPE_REPOSITORY);
+    public function retrieveMetadata($node, $nameSpace, $private = false, $scope=APP_METADATA_SCOPE_REPOSITORY);
 
     /**
      * @param Node $node

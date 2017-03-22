@@ -29,7 +29,7 @@
  */
 namespace BoA\Core\Access;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Interface must be implemented for access drivers that can be accessed via a wrapper protocol.

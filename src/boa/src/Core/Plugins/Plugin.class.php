@@ -32,7 +32,7 @@ namespace BoA\Core\Plugins;
 use BoA\Core\Http\XMLWriter;
 use BoA\Core\Services\PluginsService;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * The basic concept of plugin. Only needs a manifest.xml file.
@@ -110,7 +110,7 @@ class Plugin implements \Serializable{
     }
 
     protected function getPluginWorkDir($check = false){
-        $d = BOA_DATA_PATH.DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR.$this->getId();
+        $d = APP_DATA_PATH.DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR.$this->getId();
         if(!$check) return $d;
         if(!is_dir($d)){
             $res = @mkdir($d, 0755, true);
@@ -120,7 +120,7 @@ class Plugin implements \Serializable{
     }
 
     protected function getPluginCacheDir($shared = false, $check = false){
-        $d = ($shared ? BOA_SHARED_CACHE_DIR : BOA_CACHE_DIR).DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR.$this->getId();
+        $d = ($shared ? APP_SHARED_CACHE_DIR : APP_CACHE_DIR).DIRECTORY_SEPARATOR."plugins".DIRECTORY_SEPARATOR.$this->getId();
         if(!$check) return $d;
         if(!is_dir($d)){
             $res = @mkdir($d, 0755, true);
@@ -137,7 +137,7 @@ class Plugin implements \Serializable{
         $this->options = array_merge($this->loadOptionsDefaults(), $options);
     }
 
-    protected function getFilteredOption($optionName, $repositoryScope = BOA_REPO_SCOPE_ALL){
+    protected function getFilteredOption($optionName, $repositoryScope = APP_REPO_SCOPE_ALL){
         $repo = ConfService::getRepository();
         if($repo != null) $repositoryScope = $repo->getId();
         if(AuthService::getLoggedUser() != null){
@@ -187,7 +187,7 @@ class Plugin implements \Serializable{
                 $filename = $data["filename"] OR "";
                 $include = $data["include"] OR "*";
                 $exclude = $data["exclude"] OR "";
-                if(!is_file(BOA_PLUGINS_FOLDER."/".$filename)) continue;
+                if(!is_file(APP_PLUGINS_FOLDER."/".$filename)) continue;
                 if($include != "*") {
                     $include = explode(",", $include);
                 }else{
@@ -232,7 +232,7 @@ class Plugin implements \Serializable{
      */
     protected function initXmlContributionFile($xmlFile, $include=array("*"), $exclude=array(), $dry = false){
         $contribDoc = new \DOMDocument();
-        $contribDoc->load(BOA_PLUGINS_FOLDER."/".$xmlFile);
+        $contribDoc->load(APP_PLUGINS_FOLDER."/".$xmlFile);
         if(!is_array($include) && !is_array($exclude)){
             if(!$dry) {
                 $this->registryContributions[] = $contribDoc->documentElement;
@@ -484,7 +484,7 @@ class Plugin implements \Serializable{
     public function updateDependencies($pluginService){
         $append = false;
         foreach ($this->dependencies as $index => $dependency){
-            if($dependency == "access.BOA_STREAM_PROVIDER"){
+            if($dependency == "access.APP_STREAM_PROVIDER"){
                 unset($this->dependencies[$index]);
                 $append = true;
             }
@@ -514,7 +514,7 @@ class Plugin implements \Serializable{
         $nodes = $this->xPath->query("dependencies/activePlugin/@pluginName");
         foreach ($nodes as $attr) {
             $value = $attr->value;
-            if($value == "access.BOA_STREAM_PROVIDER"){
+            if($value == "access.APP_STREAM_PROVIDER"){
                 $deps = array_merge($deps, $pluginService->getStreamWrapperPlugins());
             }else if(strpos($value, "+") !== false){
                 $typed = $pluginService->getPluginsByType(substr($value, 0, strlen($value)-1));
@@ -594,8 +594,8 @@ class Plugin implements \Serializable{
         }
 
         // ASSIGN SPECIFIC OPTIONS TO PLUGIN KEY
-        if(isSet($this->pluginConf["BOA_PLUGIN_ENABLED"])){
-            $this->enabled = $this->pluginConf["BOA_PLUGIN_ENABLED"];
+        if(isSet($this->pluginConf["APP_PLUGIN_ENABLED"])){
+            $this->enabled = $this->pluginConf["APP_PLUGIN_ENABLED"];
         }
     }
     /**
@@ -669,7 +669,7 @@ class Plugin implements \Serializable{
             if($this->streamData === false) return false;
             $streamData = $this->streamData;
             // include wrapper, no other checks needed.
-            include_once(BOA_PLUGINS_FOLDER."/".$streamData["filename"]);
+            include_once(APP_PLUGINS_FOLDER."/".$streamData["filename"]);
         }else{
             $files = $this->xPath->query("class_stream_wrapper");
             if(!$files->length) {
@@ -677,12 +677,12 @@ class Plugin implements \Serializable{
                 return false;
             }
             $streamData = $this->nodeAttrToHash($files->item(0));
-            if(!is_file(BOA_PLUGINS_FOLDER."/".$streamData["filename"])){
+            if(!is_file(APP_PLUGINS_FOLDER."/".$streamData["filename"])){
                 $this->streamData = false;
                 return false;
             }
 
-            include_once(BOA_PLUGINS_FOLDER."/".$streamData["filename"]);
+            include_once(APP_PLUGINS_FOLDER."/".$streamData["filename"]);
             if(!class_exists($streamData["classname"])){
                 $this->streamData = false;
                 return false;
@@ -729,7 +729,7 @@ class Plugin implements \Serializable{
             "plugin_uri"   => "",
             "core_packaged" => true,
             "plugin_version"=> "follow",
-            "core_version" => BOA_VERSION,
+            "core_version" => APP_VERSION,
         );
         $infoBranch = $this->xPath->query("plugin_info");
         if($infoBranch->length){
@@ -740,7 +740,7 @@ class Plugin implements \Serializable{
                 }else{
                     if($child->getAttribute("packaged") == "false") $info["core_packaged"] = false;
                     $coreV = $child->getAttribute("tested_version");
-                    if($coreV == "follow") $coreV = BOA_VERSION;
+                    if($coreV == "follow") $coreV = APP_VERSION;
                     $info["core_version"] = $coreV;
                 }
             }

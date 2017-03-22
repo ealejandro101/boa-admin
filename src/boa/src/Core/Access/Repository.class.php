@@ -37,7 +37,7 @@ use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Filters\VarsFilter;
 use BoA\Core\Utils\Text\SystemTextEncoding;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 /**
  * The basic abstraction of a data store. Can map a FileSystem, but can also map data from a totally
  * different source, like the application configurations, a mailbox, etc.
@@ -291,8 +291,8 @@ class Repository implements GroupPathProvider {
             }
             if(isSet($this->parentTemplateObject)){
                 $value = $this->parentTemplateObject->getOption($oName, $safe);
-                if(is_string($value) && strstr($value, "BOA_ALLOW_SUB_PATH") !== false){
-                    $val = rtrim(str_replace("BOA_ALLOW_SUB_PATH", "", $value), "/")."/".$this->options[$oName];
+                if(is_string($value) && strstr($value, "APP_ALLOW_SUB_PATH") !== false){
+                    $val = rtrim(str_replace("APP_ALLOW_SUB_PATH", "", $value), "/")."/".$this->options[$oName];
                     return Utils::securePath($val);
                 }
             }
@@ -351,7 +351,7 @@ class Repository implements GroupPathProvider {
         //return array_keys($this->options);
 		$keys = array();
 		foreach($this->options as $key => $value){
-			if(is_string($value) && strstr($value, "BOA_ALLOW_SUB_PATH") !== false) continue;
+			if(is_string($value) && strstr($value, "APP_ALLOW_SUB_PATH") !== false) continue;
             $keys[] = $key;
 		}
 		return $keys;
@@ -549,9 +549,9 @@ class Repository implements GroupPathProvider {
         $path = $this->getOption("PATH", true);
         if($this->accessType == "boaconf") return "USER";
         if(empty($path)) return false;
-        if(strpos($path, "BOA_USER") !== false) return "USER";
-        if(strpos($path, "BOA_GROUP_PATH") !== false) return "GROUP";
-        if(strpos($path, "BOA_GROUP_PATH_FLAT") !== false) return "GROUP";
+        if(strpos($path, "APP_USER") !== false) return "USER";
+        if(strpos($path, "APP_GROUP_PATH") !== false) return "GROUP";
+        if(strpos($path, "APP_GROUP_PATH_FLAT") !== false) return "GROUP";
         return false;
     }
 

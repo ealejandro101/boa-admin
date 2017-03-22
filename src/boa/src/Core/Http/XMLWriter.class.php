@@ -36,7 +36,7 @@ use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Plugins\Core\Log\Logger;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * XML output Generator
@@ -239,7 +239,7 @@ class XMLWriter
 	}
 	/**
      * Dynamically replace XML keywords with their live values.
-     * BOA_SERVER_ACCESS, BOA_MIMES_*,BOA_ALL_MESSAGES, etc.
+     * APP_SERVER_ACCESS, APP_MIMES_*,APP_ALL_MESSAGES, etc.
      * @static
      * @param string $xml
      * @param bool $stripSpaces
@@ -249,28 +249,28 @@ class XMLWriter
 		$messages = ConfService::getMessages();
         $confMessages = ConfService::getMessagesConf();
 		$matches = array();
-		if(isSet($_SESSION["BOA_SERVER_PREFIX_URI"])){
-			$xml = str_replace("BOA_SERVER_ACCESS", $_SESSION["BOA_SERVER_PREFIX_URI"].BOA_SERVER_ACCESS, $xml);
+		if(isSet($_SESSION["APP_SERVER_PREFIX_URI"])){
+			$xml = str_replace("APP_SERVER_ACCESS", $_SESSION["APP_SERVER_PREFIX_URI"].APP_SERVER_ACCESS, $xml);
 		}else{
-			$xml = str_replace("BOA_SERVER_ACCESS", BOA_SERVER_ACCESS, $xml);
+			$xml = str_replace("APP_SERVER_ACCESS", APP_SERVER_ACCESS, $xml);
 		}
-		$xml = str_replace("BOA_MIMES_EDITABLE", Utils::getMimes("editable"), $xml);
-		$xml = str_replace("BOA_MIMES_IMAGE", Utils::getMimes("image"), $xml);
-		$xml = str_replace("BOA_MIMES_AUDIO", Utils::getMimes("audio"), $xml);
-		$xml = str_replace("BOA_MIMES_ZIP", Utils::getMimes("zip"), $xml);
+		$xml = str_replace("APP_MIMES_EDITABLE", Utils::getMimes("editable"), $xml);
+		$xml = str_replace("APP_MIMES_IMAGE", Utils::getMimes("image"), $xml);
+		$xml = str_replace("APP_MIMES_AUDIO", Utils::getMimes("audio"), $xml);
+		$xml = str_replace("APP_MIMES_ZIP", Utils::getMimes("zip"), $xml);
 		$authDriver = ConfService::getAuthDriverImpl();
 		if($authDriver != NULL){
 			$loginRedirect = $authDriver->getLoginRedirect();
-			$xml = str_replace("BOA_LOGIN_REDIRECT", ($loginRedirect!==false?"'".$loginRedirect."'":"false"), $xml);
+			$xml = str_replace("APP_LOGIN_REDIRECT", ($loginRedirect!==false?"'".$loginRedirect."'":"false"), $xml);
 		}
-        $xml = str_replace("BOA_REMOTE_AUTH", "false", $xml);
-        $xml = str_replace("BOA_NOT_REMOTE_AUTH", "true", $xml);
-        $xml = str_replace("BOA_ALL_MESSAGES", "MessageHash=".json_encode(ConfService::getMessages()).";", $xml);
+        $xml = str_replace("APP_REMOTE_AUTH", "false", $xml);
+        $xml = str_replace("APP_NOT_REMOTE_AUTH", "true", $xml);
+        $xml = str_replace("APP_ALL_MESSAGES", "MessageHash=".json_encode(ConfService::getMessages()).";", $xml);
 		
-		if(preg_match_all("/BOA_MESSAGE(\[.*?\])/", $xml, $matches, PREG_SET_ORDER)){
+		if(preg_match_all("/APP_MESSAGE(\[.*?\])/", $xml, $matches, PREG_SET_ORDER)){
 			foreach($matches as $match){
 				$messId = str_replace("]", "", str_replace("[", "", $match[1]));
-				$xml = str_replace("BOA_MESSAGE[$messId]", $messages[$messId], $xml);
+				$xml = str_replace("APP_MESSAGE[$messId]", $messages[$messId], $xml);
 			}
 		}
 		if(preg_match_all("/CONF_MESSAGE(\[.*?\])/", $xml, $matches, PREG_SET_ORDER)){
@@ -586,7 +586,7 @@ class XMLWriter
             if($repoObject->hasOwner()){
                 $uId = $repoObject->getOwner();
                 $uObject = ConfService::getConfStorageImpl()->createUserObject($uId);
-                $label = $uObject->personalRole->filterParameterValue("core.conf", "USER_DISPLAY_NAME", BOA_REPO_SCOPE_ALL, $uId);
+                $label = $uObject->personalRole->filterParameterValue("core.conf", "USER_DISPLAY_NAME", APP_REPO_SCOPE_ALL, $uId);
                 $isSharedString =  "owner='".$label."'";
             }
             $descTag = "";

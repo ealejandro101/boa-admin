@@ -31,7 +31,7 @@ namespace BoA\Plugins\Core\Log;
 
 use BoA\Core\Plugins\Plugin;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 if(!defined('LOG_LEVEL_DEBUG')){
 	define("LOG_LEVEL_DEBUG", "Debug");
@@ -42,7 +42,7 @@ if(!defined('LOG_LEVEL_DEBUG')){
 }
 
 /**
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  * @class AbstractLogDriver
  * @author mosen

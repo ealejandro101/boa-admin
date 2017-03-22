@@ -130,16 +130,16 @@
 				<clientForm id="create_user_box"><![CDATA[
 					<div id="create_user_box" action="create_user" box_width="210">
 						<div class="SF_element">
-							<div class="SF_label" message_id="94">BOA_MESSAGE[94] : </div><input name="new_user_login" type="text" class="dialogFocus SF_input"/>
+							<div class="SF_label" message_id="94">APP_MESSAGE[94] : </div><input name="new_user_login" type="text" class="dialogFocus SF_input"/>
 						</div>
 						<div class="SF_element">
-							<div class="SF_label" message_id="182">BOA_MESSAGE[182] : </div><input name="new_user_pwd" type="password" class="SF_input"/>
+							<div class="SF_label" message_id="182">APP_MESSAGE[182] : </div><input name="new_user_pwd" type="password" class="SF_input"/>
 						</div>
 						<div class="SF_element">						
-							<div class="SF_label" message_id="199">BOA_MESSAGE[199] : </div><input name="new_user_pwd_conf" type="password" class="SF_input"/>
+							<div class="SF_label" message_id="199">APP_MESSAGE[199] : </div><input name="new_user_pwd_conf" type="password" class="SF_input"/>
 						</div>
 						<div class="SF_element" id="pwd_strength_container"></div>
-						<div style="clear:both; display:none;" class="dialogLegend" message_id="89">BOA_MESSAGE[boaconf.89]</div>
+						<div style="clear:both; display:none;" class="dialogLegend" message_id="89">APP_MESSAGE[boaconf.89]</div>
 						<div id="custom_pane" class="config_subblock" style="display:none;">
 							
 						</div>
@@ -169,7 +169,7 @@
 				<clientForm id="create_role_box"><![CDATA[
 					<div id="create_role_box" action="create_role" box_width="210">
 						<div class="SF_element">
-							<div class="SF_label" message_id="boaconf.76">BOA_MESSAGE[boaconf.76] : </div><input name="role_id" type="text" class="dialogFocus SF_input"/>
+							<div class="SF_label" message_id="boaconf.76">APP_MESSAGE[boaconf.76] : </div><input name="role_id" type="text" class="dialogFocus SF_input"/>
 						</div>
 					</div>
 				]]></clientForm>
@@ -276,28 +276,28 @@
 				<clientForm id="create_repository_box"><![CDATA[
 					<div id="create_repository_box" action="create_repository" box_width="320">
 					    <div id="creation_form" style="padding:5px;padding-top:0px;">
-                            <div class="dialogLegend repoCreationString">BOA_MESSAGE[boaconf.95]</div>
-                            <div class="dialogLegend tplCreationString">BOA_MESSAGE[boaconf.96]</div>
+                            <div class="dialogLegend repoCreationString">APP_MESSAGE[boaconf.95]</div>
+                            <div class="dialogLegend tplCreationString">APP_MESSAGE[boaconf.96]</div>
                             <div class="SF_element">
-                                <div class="SF_label repoCreationString" message_id="boaconf.8">BOA_MESSAGE[boaconf.8]* : </div>
-                                <div class="SF_label tplCreationString" message_id="boaconf.116">BOA_MESSAGE[boaconf.116]* : </div>
+                                <div class="SF_label repoCreationString" message_id="boaconf.8">APP_MESSAGE[boaconf.8]* : </div>
+                                <div class="SF_label tplCreationString" message_id="boaconf.116">APP_MESSAGE[boaconf.116]* : </div>
                                 <input name="new_user_login" type="text" class="SF_input dialogFocus"/>
                             </div>
                             <div class="SF_element">
-                                <div class="SF_label repoCreationString" message_id="boaconf.32">BOA_MESSAGE[boaconf.32]* : </div>
-                                <div class="SF_label tplCreationString" message_id="boaconf.117">BOA_MESSAGE[boaconf.117]* : </div>
-                                <select class="SF_input"><option>BOA_MESSAGE[boaconf.33]</option></select>
+                                <div class="SF_label repoCreationString" message_id="boaconf.32">APP_MESSAGE[boaconf.32]* : </div>
+                                <div class="SF_label tplCreationString" message_id="boaconf.117">APP_MESSAGE[boaconf.117]* : </div>
+                                <select class="SF_input"><option>APP_MESSAGE[boaconf.33]</option></select>
                             </div>
 						</div>
 						<div id="driver_form" style="margin-top:32px;"></div>
 						<div class="dialogButtons" style="direction:rtl;">
-							<input type="image" src="BOA_THEME_FOLDER/images/actions/22/forward.png" height="22" width="22" class="dialogButton" id="submit_create_repo" value="Next" class="button" onclick="return false;">
-							<input type="image" src="BOA_THEME_FOLDER/images/actions/22/dialog_close.png" height="22" width="22" class="dialogButton" value="Cancel" class="button" onclick="hideLightBox();return false;">
+							<input type="image" src="APP_THEME_FOLDER/images/actions/22/forward.png" height="22" width="22" class="dialogButton" id="submit_create_repo" value="Next" class="button" onclick="return false;">
+							<input type="image" src="APP_THEME_FOLDER/images/actions/22/dialog_close.png" height="22" width="22" class="dialogButton" value="Cancel" class="button" onclick="hideLightBox();return false;">
 						</div>
 					</div>				
 				]]></clientForm>
 				<serverCallback methodName="switchAction" restParams="/json_data">
-                    <input_param description="A JSON object containing the following mandatory keys : DISPLAY (string), DRIVER (string), DRIVER_OPTIONS (array of options) and optional keys : DISPLAY_ID (string), DESCRIPTION_ID (string), BOA_SLUG (string), IS_TEMPLATE (boolean). &lt;br&gt;&lt;br&gt; The expected DRIVER value can be either an access type plugin name (fs, ftp, etc), or a template id by using the template_ prefix (template_TEMPLATE_ID). The DRIVER_OPTIONS array may depend on the used access type." name="json_data" type="JSON"/>
+                    <input_param description="A JSON object containing the following mandatory keys : DISPLAY (string), DRIVER (string), DRIVER_OPTIONS (array of options) and optional keys : DISPLAY_ID (string), DESCRIPTION_ID (string), APP_SLUG (string), IS_TEMPLATE (boolean). &lt;br&gt;&lt;br&gt; The expected DRIVER value can be either an access type plugin name (fs, ftp, etc), or a template id by using the template_ prefix (template_TEMPLATE_ID). The DRIVER_OPTIONS array may depend on the used access type." name="json_data" type="JSON"/>
 				</serverCallback>
 				</processing>
 		</action>	
@@ -356,11 +356,11 @@
                     <div id="batch_roles_edit_box" action="edit_user" box_width="420">
                         <div id="user_acl">
                             <div id="roles_pane">
-                                <div class="dialogLegend" message_id="boaconf.83">BOA_MESSAGE[boaconf.83]</div>
+                                <div class="dialogLegend" message_id="boaconf.83">APP_MESSAGE[boaconf.83]</div>
                                 <div>
-                                    <div style="width:44%;float:left;"><span message_id="boaconf.71">BOA_MESSAGE[boaconf.71]</span> : <br><div id="available_roles"></div></div>
+                                    <div style="width:44%;float:left;"><span message_id="boaconf.71">APP_MESSAGE[boaconf.71]</span> : <br><div id="available_roles"></div></div>
                                     <div style="width:10%;float:left;text-align:center;vertical-align:middle; margin-top: 20px;"><span class="icon-chevron-left"></span> <span  class="icon-chevron-right"></span></div>
-                                    <div style="width:44%;float:left;"><span message_id="boaconf.70">BOA_MESSAGE[boaconf.70]</span> : <br><div id="user_roles"></div></div>
+                                    <div style="width:44%;float:left;"><span message_id="boaconf.70">APP_MESSAGE[boaconf.70]</span> : <br><div id="user_roles"></div></div>
                                 </div>
                             </div>
                         </div>
@@ -465,19 +465,19 @@
 					var node = userSelection.getUniqueNode();
 					var meta = node.getMetadata();
 					var deleteMessage, fieldName, fieldValue;
-					if(meta.get("boa_mime") == "user_editable"){
+					if(meta.get("APP_mime") == "user_editable"){
 						deleteMessage = MessageHash['boaconf.34'];
 						fieldName = "user_id";
 						fieldValue = getBaseName(meta.get("filename"));
-					}else if(meta.get("boa_mime") == "role"){
+					}else if(meta.get("APP_mime") == "role"){
 						deleteMessage = MessageHash['shared.11'];
 						fieldName = "role_id";
 						fieldValue = getBaseName(meta.get("filename"));
-					}else if(meta.get("boa_mime") == "shared_file"){
+					}else if(meta.get("APP_mime") == "shared_file"){
 						deleteMessage = MessageHash['shared.11'];
 						fieldName = "shared_file";
 						fieldValue = meta.get("filename");
-					}else if(meta.get("boa_mime") == "group"){
+					}else if(meta.get("APP_mime") == "group"){
 						deleteMessage = MessageHash['shared.11'];
 						fieldName = "group";
 						fieldValue = meta.get("filename");
@@ -503,9 +503,9 @@
                                   var node = userSelection.getNode(i);
                                   var meta = node.getMetadata();
                                   var value;
-                                  if(meta.get("boa_mime") == "user_editable"){
+                                  if(meta.get("APP_mime") == "user_editable"){
                                   	value = meta.get("text");
-                                  }else if(meta.get("boa_mime") == "shared_file"){
+                                  }else if(meta.get("APP_mime") == "shared_file"){
                                   	value = meta.get("filename");
                                   }else{
                                   	value = meta.get("text");
@@ -557,7 +557,7 @@
 		   		    		var meta = node.getMetadata();	   		    		
 		   		    		for(var i=0;i<attributes.length;i++){
 		   		    			var attName = attributes[i];
-		   		    			if(attName == "boa_label") attName = "text";
+		   		    			if(attName == "APP_label") attName = "text";
 		   		    			message += meta.get(attName) + '\t';
 		   		    		}
 			   		    	message += '\n';
@@ -580,8 +580,8 @@
 	    <action name="user_update_right">
             <processing>
                 <serverCallback methodName="switchAction" restParams="/repository_id/user_id/right" checkParams="true">
-                    <input_param name="user_id" type="BOA_USER" mandatory="true" description="ID of the user"/>
-                    <input_param name="repository_id" type="BOA_REPOSITORY" mandatory="true" description="Repository ID"/>
+                    <input_param name="user_id" type="APP_USER" mandatory="true" description="ID of the user"/>
+                    <input_param name="repository_id" type="APP_REPOSITORY" mandatory="true" description="Repository ID"/>
                     <input_param name="right" type="string" mandatory="true" description="Must be r (read), w (write) or n (none)"/>
                 </serverCallback>
             </processing>
@@ -599,7 +599,7 @@
 				<html><![CDATA[
 				<div style="padding:10px;">
 					<div class="folderImage">
-						<img src="BOA_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
+						<img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
 					</div>
 					<b>#{name_string}</b> : #{text}
 				</div>
@@ -613,7 +613,7 @@
 				<html><![CDATA[
 					<div style="padding:10px;">
 						<div class="folderImage">
-							<img src="BOA_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
+							<img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
 						</div>
 						<b>#{name_string}</b> : #{text}
 					</div>
@@ -626,7 +626,7 @@
 				<html><![CDATA[
 					<div style="padding:10px;">
 						<div class="folderImage">
-							<img src="BOA_THEME_FOLDER/images/mimes/64/admin.png" height="64" width="64">
+							<img src="APP_THEME_FOLDER/images/mimes/64/admin.png" height="64" width="64">
 						</div>
 					</div>
 				]]></html>

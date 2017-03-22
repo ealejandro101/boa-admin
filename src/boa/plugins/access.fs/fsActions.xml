@@ -8,7 +8,7 @@
 					actionBar="true" actionBarGroup="inline,put" contextMenu="true" infoPanel="true">
 				</context>
 				<selectionContext dir="true" file="true" recycle="false"
-					unique="true" allowedMimes="boa_folder,BOA_MIMES_ZIP" behaviour="hidden">
+					unique="true" allowedMimes="APP_folder,APP_MIMES_ZIP" behaviour="hidden">
 				</selectionContext>
 			</gui>
 			<rightsContext noUser="true" userLogged="only" read="true"
@@ -22,7 +22,7 @@
 						if(Object.isString(path)){path = new ManifestNode(path,false,getBaseName(path));}
 					}else{
 						userSelection = app.getUserSelection();
-						if(userSelection && userSelection.isUnique() && (userSelection.hasDir() || userSelection.hasMime("BOA_MIMES_ZIP".split(",")))){
+						if(userSelection && userSelection.isUnique() && (userSelection.hasDir() || userSelection.hasMime("APP_MIMES_ZIP".split(",")))){
 							path = userSelection.getUniqueNode();
 						}
 					}
@@ -160,8 +160,8 @@
 					}
 					]]></clientCallback>
 					<clientForm id="multi_download_form"><![CDATA[
-					<div id="multi_download_form" title="BOA_MESSAGE[118]"  box_width="345">
-					<div class="dialogLegend">BOA_MESSAGE[119]</div><br/>
+					<div id="multi_download_form" title="APP_MESSAGE[118]"  box_width="345">
+					<div class="dialogLegend">APP_MESSAGE[119]</div><br/>
 					<div id="multiple_download_container"></div>
 					<form style="display:inline;" action="index.php" method="GET" id="download_form" target="download_iframe">
 						<input type="hidden" name="get_action" value="download">
@@ -250,7 +250,7 @@
 				]]></clientCallback>
 				<clientForm id="compress_form"><![CDATA[
 				<div id="compress_form" action="compress" box_width="200">
-					BOA_MESSAGE[315]<br/>
+					APP_MESSAGE[315]<br/>
 					<input type="text" name="archive_name" value="" id="archive_name" class="dialogFocus initFicName">
 				</div>
 				]]></clientForm>					
@@ -281,7 +281,7 @@
                     actionBar="true" contextMenu="true" infoPanel="false"
                     actionBarGroup="get" inZip="false">
                 </context>
-                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="BOA_MIMES_EDITABLE,^browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
+                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="APP_MIMES_EDITABLE,^browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
             <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
             <subMenu>
                 <dynamicBuilder><![CDATA[
@@ -349,7 +349,7 @@
                     actionBar="true" contextMenu="true" infoPanel="false"
                     actionBarGroup="inline" inZip="false">
                 </context>
-                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="BOA_MIMES_EDITABLE,^browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
+                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="APP_MIMES_EDITABLE,^browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
             <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
             <processing>
                 <clientCallback prepareModal="false"><![CDATA[
@@ -407,11 +407,11 @@
                     }, null, true);
 				]]></clientCallback>
 				<clientForm id="link_form"><![CDATA[
-				<div id="link_form" title="BOA_MESSAGE[369]"  box_width="280" action="link">
+				<div id="link_form" title="APP_MESSAGE[369]"  box_width="280" action="link">
 				<fieldset>
-					<legend message_id="296">BOA_MESSAGE[296]</legend>
+					<legend message_id="296">APP_MESSAGE[296]</legend>
 					<input type="text" style="width:195px;margin-right:5px;" id="link_container" class="dialogFocus"/>
-                    <a id="email" title="BOA_MESSAGE[323]"><span class="icon-envelope-alt"></span><img style="border:none;" align="absmiddle" src="BOA_THEME_FOLDER/images/actions/22/mail_generic.png" height="22" width="22"/></a>
+                    <a id="email" title="APP_MESSAGE[323]"><span class="icon-envelope-alt"></span><img style="border:none;" align="absmiddle" src="APP_THEME_FOLDER/images/actions/22/mail_generic.png" height="22" width="22"/></a>
                   </fieldset>
 				</div>
 				]]></clientForm>
@@ -497,7 +497,7 @@
                     ]]></clientCallback>
                 <clientForm id="mkdir_form"><![CDATA[
                 <div id="mkdir_form" action="mkdir" box_width="200">
-                BOA_MESSAGE[173]<br/>
+                APP_MESSAGE[173]<br/>
                 <input type="text" name="dirname" size="30" class="dialogFocus">
                 </div>
                 ]]></clientForm>
@@ -527,7 +527,7 @@
                     ]]></clientCallback>
                 <clientForm id="mkfile_form"><![CDATA[
                 <div id="mkfile_form" action="mkfile" box_width="200">
-                BOA_MESSAGE[174]<br/>
+                APP_MESSAGE[174]<br/>
                 <input type="text" name="filename" size="30" class="dialogFocus">
                 </div>
                 ]]></clientForm>
@@ -644,7 +644,7 @@
 				<clientForm id="copymove_form"><![CDATA[
 					<div id="copymove_form" action="copy" box_width="272">
 						<input type="hidden" name="dest_node" value=""/>
-						<div class="dialogLegend">BOA_MESSAGE[175]</div>					
+						<div class="dialogLegend">APP_MESSAGE[175]</div>					
 						<select id="external_repository" name="dest_repository_id" style="width: 248px; font-size: 12px; height: 21px; margin-top:5px; margin-bottom:7px; border: 1px solid #ccc;"></select>
 						<div style="height:200px; width:246px; padding: 0px 0px; border: 1px solid #ccc;">
 							<div id="treeCopy" style="height:194px; padding: 3px 2px; overflow:auto; text-align:left;" class="treeCopyContainer"></div>
@@ -845,7 +845,7 @@
 						dObject.insert({before:'\
 							<div class="dialogButtons" id="chunk_dl_form" style="height:36px;"> \
 								<span style="display:inline-block;float:left;margin-top: 11px;margin-left: 4px;margin-right: 4px;">'+MessageHash[400]+'</span> <input type="text" style="float:left;margin-top:5px; text-align:right; width:30px;height:24px;" name="chunk_count" id="chunk_count" value="4"> \
-								<input type="image" style="float:left;" id="dl_form_submit" src="BOA_THEME_FOLDER/images/actions/22/dialog_ok_apply.png" height="22" width="22" title="OK" class="dialogButton dialogFocus">\
+								<input type="image" style="float:left;" id="dl_form_submit" src="APP_THEME_FOLDER/images/actions/22/dialog_ok_apply.png" height="22" width="22" title="OK" class="dialogButton dialogFocus">\
 							</div> \
 						'});
 						$("dl_form_submit").observe("click", function(e){
@@ -876,8 +876,8 @@
 
 					]]></clientCallback>
                 <clientForm id="multi_download_form"><![CDATA[
-					<div id="multi_download_form" title="BOA_MESSAGE[118]"  box_width="345">
-					<div class="dialogLegend">BOA_MESSAGE[119]</div><br/>
+					<div id="multi_download_form" title="APP_MESSAGE[118]"  box_width="345">
+					<div class="dialogLegend">APP_MESSAGE[119]</div><br/>
 					<div id="multiple_download_container"></div>
 					<form style="display:inline;" action="index.php" method="GET" id="download_form" target="download_iframe">
 						<input type="hidden" name="get_action" value="download">
@@ -972,7 +972,7 @@
 				</messages>
 				<html><![CDATA[
                     <div class="folderImage infoPanelImagePreview">
-                        <img src="BOA_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
+                        <img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
                     </div>
 					<div class="infoPanelAllMetadata">
 					    <div>

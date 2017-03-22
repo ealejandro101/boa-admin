@@ -34,7 +34,7 @@ use BoA\Core\Services\AuthService;
 use BoA\Core\Xml\ManifestNode;
 use BoA\Plugins\Core\Access\AbstractAccessDriver;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 /**
  * Abstraction of a user selection passed via http parameters.
  * @package BoA

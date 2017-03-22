@@ -47,12 +47,12 @@ use BoA\Plugins\Core\Access\AbstractAccessDriver;
 use BoA\Plugins\Core\Log\Logger;
 use BoA\Plugins\Access\Fs\FsAccessWrapper;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Plugin to access a filesystem. Most "FS" like driver (even remote ones)
  * extend this one.
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Access
  */
 class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
@@ -496,7 +496,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
             case "mkdir";
 
                 $messtmp="";
-                $dirname=Utils::decodeSecureMagic($httpVars["dirname"], BOA_SANITIZE_HTML_STRICT);
+                $dirname=Utils::decodeSecureMagic($httpVars["dirname"], APP_SANITIZE_HTML_STRICT);
                 $dirname = substr($dirname, 0, ConfService::getCoreConf("NODENAME_MAX_LENGTH"));
                 $this->filterUserSelectionToHidden(array($dirname));
                 Controller::applyHook("node.before_create", array(new ManifestNode($dir."/".$dirname), -2));
@@ -522,7 +522,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
             case "mkfile";
 
                 $messtmp="";
-                $filename=Utils::decodeSecureMagic($httpVars["filename"], BOA_SANITIZE_HTML_STRICT);
+                $filename=Utils::decodeSecureMagic($httpVars["filename"], APP_SANITIZE_HTML_STRICT);
                 $filename = substr($filename, 0, ConfService::getCoreConf("NODENAME_MAX_LENGTH"));
                 $this->filterUserSelectionToHidden(array($filename));
                 $content = "";
@@ -601,9 +601,9 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                     }catch (\Exception $e){
                         return array("ERROR" => array("CODE" => 411, "MESSAGE" => "Forbidden"));
                     }
-                    $userfile_name=Utils::sanitize(SystemTextEncoding::fromPostedFileName($userfile_name), BOA_SANITIZE_HTML_STRICT);
+                    $userfile_name=Utils::sanitize(SystemTextEncoding::fromPostedFileName($userfile_name), APP_SANITIZE_HTML_STRICT);
                     if(isSet($httpVars["urlencoded_filename"])){
-                        $userfile_name = Utils::sanitize(SystemTextEncoding::fromUTF8(urldecode($httpVars["urlencoded_filename"])), BOA_SANITIZE_HTML_STRICT);
+                        $userfile_name = Utils::sanitize(SystemTextEncoding::fromUTF8(urldecode($httpVars["urlencoded_filename"])), APP_SANITIZE_HTML_STRICT);
                     }
                     Logger::debug("User filename ".$userfile_name);
                     $userfile_name = substr($userfile_name, 0, ConfService::getCoreConf("NODENAME_MAX_LENGTH"));
@@ -655,7 +655,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                         }
                     }
                     if(isSet($httpVars["appendto_urlencoded_part"])){
-                        $appendTo = Utils::sanitize(SystemTextEncoding::fromUTF8(urldecode($httpVars["appendto_urlencoded_part"])), BOA_SANITIZE_HTML_STRICT);
+                        $appendTo = Utils::sanitize(SystemTextEncoding::fromUTF8(urldecode($httpVars["appendto_urlencoded_part"])), APP_SANITIZE_HTML_STRICT);
                         if(file_exists($destination ."/" . $appendTo)){
                             Logger::debug("Should copy stream from $userfile_name to $appendTo");
                             $partO = fopen($destination."/".$userfile_name, "r");
@@ -945,7 +945,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
             $metaData["icon"] = $recycleIcon;
             $metaData["mimestring"] = $mess[122];
             $node->setLabel($mess[122]);
-            $metaData["boa_mime"] = "recycle";
+            $metaData["APP_mime"] = "recycle";
         }else{
             $mimeData = Utils::mimeData($node->getUrl(), !$isLeaf);
             $metaData["mimestring_id"] = $mimeData[0]; //Utils::mimetype($node->getUrl(), "type", !$isLeaf);
@@ -954,7 +954,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
                 $metaData["openicon"] = "folder_open.png";
             }
             if(!$isLeaf){
-                $metaData["boa_mime"] = "boa_folder";
+                $metaData["APP_mime"] = "APP_folder";
             }
         }
         //if($lsOptions["l"]){
@@ -990,7 +990,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         }
         $metaData["filesize"] = Utils::roundSize($metaData["bytesize"]);
         if(Utils::isBrowsableArchive($nodeName)){
-            $metaData["boa_mime"] = "browsable_archive";
+            $metaData["APP_mime"] = "browsable_archive";
         }
 
         if($details == "minimal"){
@@ -1327,7 +1327,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
      * @param array $success
      */
     function extractArchive($destDir, $selection, &$error, &$success){
-        require_once(BOA_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
+        require_once(APP_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
         $zipPath = $selection->getZipPath(true);
         $zipLocalPath = $selection->getZipLocalPath(true);
         if(strlen($zipLocalPath)>1 && $zipLocalPath[0] == "/") $zipLocalPath = substr($zipLocalPath, 1)."/";
@@ -1394,7 +1394,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
     {
         $nom_fic=basename($filePath);
         $mess = ConfService::getMessages();
-        $filename_new=Utils::sanitize(SystemTextEncoding::magicDequote($filename_new), BOA_SANITIZE_HTML_STRICT);
+        $filename_new=Utils::sanitize(SystemTextEncoding::magicDequote($filename_new), APP_SANITIZE_HTML_STRICT);
         $filename_new = substr($filename_new, 0, ConfService::getCoreConf("NODENAME_MAX_LENGTH"));
         $old=$this->urlBase."/$filePath";
         if(!$this->isWriteable($old))
@@ -1844,7 +1844,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
     function makeZip ($src, $dest, $basedir)
     {
         @set_time_limit(0);
-        require_once(BOA_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
+        require_once(APP_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
         $filePaths = array();
         foreach ($src as $item){
             $realFile = call_user_func(array($this->wrapperClassName, "getRealFSReference"), $this->urlBase."/".$item);

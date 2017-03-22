@@ -29,7 +29,7 @@
  */
 namespace BoA\Core\Security;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Credential keeper that can be stored in the session, the credentials are kept crypted.
@@ -49,8 +49,8 @@ class Credential{
      * Instance constructor
      */
 	public function __construct(){
-		if(defined('BOA_SAFE_SECRET_KEY')){
-			$this->secretKey = BOA_SAFE_SECRET_KEY;
+		if(defined('APP_SAFE_SECRET_KEY')){
+			$this->secretKey = APP_SAFE_SECRET_KEY;
 		}else{
 			$this->secretKey = "\1CDAFx¨op#";
 		}
@@ -119,15 +119,15 @@ class Credential{
      * @return void
      */
 	public function store(){
-		$_SESSION["BOA_SAFE_CREDENTIALS"] = base64_encode($this->user.$this->separator.$this->encodedPassword);
+		$_SESSION["APP_SAFE_CREDENTIALS"] = base64_encode($this->user.$this->separator.$this->encodedPassword);
 	}
 	/**
      * Load the credentials from session
      * @return
      */
 	public function load($encodedString = ""){
-        if($encodedString == "" && !empty($_SESSION["BOA_SAFE_CREDENTIALS"])){
-            $encodedString = $_SESSION["BOA_SAFE_CREDENTIALS"];
+        if($encodedString == "" && !empty($_SESSION["APP_SAFE_CREDENTIALS"])){
+            $encodedString = $_SESSION["APP_SAFE_CREDENTIALS"];
         }
 		if(empty($encodedString)) return;
 		$sessData = base64_decode($encodedString);
@@ -140,7 +140,7 @@ class Credential{
      * @return void
      */
 	public function clear(){
-		unset($_SESSION["BOA_SAFE_CREDENTIALS"]);
+		unset($_SESSION["APP_SAFE_CREDENTIALS"]);
 		$this->user = null;
 		$this->encodedPassword = null;
 	}
@@ -197,7 +197,7 @@ class Credential{
 	}
 
     public static function getEncodedCredentialString(){
-        return $_SESSION["BOA_SAFE_CREDENTIALS"];
+        return $_SESSION["APP_SAFE_CREDENTIALS"];
     }
 
     public static function getCredentialsFromEncodedString($encoded){
@@ -233,7 +233,7 @@ class Credential{
 		if($user==""){
 			$loggedUser = AuthService::getLoggedUser();
 			if($loggedUser != null){
-				$wallet = $loggedUser->getPref("BOA_WALLET");
+				$wallet = $loggedUser->getPref("APP_WALLET");
 				if(is_array($wallet) && isSet($wallet[$repository->getId()][$optionsPrefix."USER"])){
 					$user = $wallet[$repository->getId()][$optionsPrefix."USER"];
 					$password = $loggedUser->decodeUserPassword($wallet[$repository->getId()][$optionsPrefix."PASS"]);
@@ -274,5 +274,3 @@ class Credential{
 	}
 	
 }
-
-?>

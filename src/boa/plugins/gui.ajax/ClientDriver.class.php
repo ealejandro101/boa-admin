@@ -39,11 +39,11 @@ use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Text\SystemTextEncoding;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * User Interface main implementation
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Gui
  */
 class ClientDriver extends Plugin 
@@ -60,9 +60,9 @@ class ClientDriver extends Plugin
             // Force legacy theme for the moment
              $this->pluginConf["GUI_THEME"] = "oxygen";
         }
-        if(!defined("BOA_THEME_FOLDER")){
-            define("CLIENT_RESOURCES_FOLDER", BOA_PLUGINS_FOLDER_REL."/gui.ajax/res");
-            define("BOA_THEME_FOLDER", CLIENT_RESOURCES_FOLDER."/themes/".$this->pluginConf["GUI_THEME"]);
+        if(!defined("APP_THEME_FOLDER")){
+            define("CLIENT_RESOURCES_FOLDER", APP_PLUGINS_FOLDER_REL."/gui.ajax/res");
+            define("APP_THEME_FOLDER", CLIENT_RESOURCES_FOLDER."/themes/".$this->pluginConf["GUI_THEME"]);
         }
         if(!isSet($configData["CLIENT_TIMEOUT_TIME"])){
             $this->pluginConf["CLIENT_TIMEOUT_TIME"] = intval(ini_get("session.gc_maxlifetime"));
@@ -76,9 +76,9 @@ class ClientDriver extends Plugin
             // Force legacy theme for the moment
             $this->pluginConf["GUI_THEME"] = "oxygen";
         }
-        if(!defined("BOA_THEME_FOLDER")){
-            define("CLIENT_RESOURCES_FOLDER", BOA_PLUGINS_FOLDER_REL."/gui.ajax/res");
-            define("BOA_THEME_FOLDER", CLIENT_RESOURCES_FOLDER."/themes/".$this->pluginConf["GUI_THEME"]);
+        if(!defined("APP_THEME_FOLDER")){
+            define("CLIENT_RESOURCES_FOLDER", APP_PLUGINS_FOLDER_REL."/gui.ajax/res");
+            define("APP_THEME_FOLDER", CLIENT_RESOURCES_FOLDER."/themes/".$this->pluginConf["GUI_THEME"]);
         }		
 		foreach($httpVars as $getName=>$getValue){
 			$$getName = Utils::securePath($getValue);
@@ -95,13 +95,13 @@ class ClientDriver extends Plugin
 				HTMLWriter::charsetHeader();
 				$folder = CLIENT_RESOURCES_FOLDER."/html";
 				if(isSet($httpVars["pluginName"])){
-					$folder = BOA_PLUGINS_FOLDER."/".Utils::securePath($httpVars["pluginName"]);
+					$folder = APP_PLUGINS_FOLDER."/".Utils::securePath($httpVars["pluginName"]);
 					if(isSet($httpVars["pluginPath"])){
 						$folder.= "/".Utils::securePath($httpVars["pluginPath"]);
 					}
 				}
                 $crtTheme = $this->pluginConf["GUI_THEME"];
-                $thFolder = BOA_THEME_FOLDER."/html";
+                $thFolder = APP_THEME_FOLDER."/html";
 				if(isset($template_name))
 				{
                     if(is_file($thFolder."/".$template_name)){
@@ -235,23 +235,23 @@ class ClientDriver extends Plugin
 					if(!isSet($mess)){
 						$mess = ConfService::getMessages();
 					}
-                    if(is_file(BOA_PLUGINS_FOLDER."/gui.ajax/res/themes/$crtTheme/html/gui_debug.html")){
-                        include(BOA_PLUGINS_FOLDER."/gui.ajax/res/themes/$crtTheme/html/gui_debug.html");
+                    if(is_file(APP_PLUGINS_FOLDER."/gui.ajax/res/themes/$crtTheme/html/gui_debug.html")){
+                        include(APP_PLUGINS_FOLDER."/gui.ajax/res/themes/$crtTheme/html/gui_debug.html");
                     }else{
-                        include(BOA_PLUGINS_FOLDER."/gui.ajax/res/html/gui_debug.html");
+                        include(APP_PLUGINS_FOLDER."/gui.ajax/res/html/gui_debug.html");
                     }
 				}else{
-                    if(is_file(BOA_PLUGINS_FOLDER."/gui.ajax/res/themes/$crtTheme/html/gui.html")){
-                        $content = file_get_contents(BOA_PLUGINS_FOLDER."/gui.ajax/res/themes/$crtTheme/html/gui.html");
+                    if(is_file(APP_PLUGINS_FOLDER."/gui.ajax/res/themes/$crtTheme/html/gui.html")){
+                        $content = file_get_contents(APP_PLUGINS_FOLDER."/gui.ajax/res/themes/$crtTheme/html/gui.html");
                     }else{
-                        $content = file_get_contents(BOA_PLUGINS_FOLDER."/gui.ajax/res/html/gui.html");
+                        $content = file_get_contents(APP_PLUGINS_FOLDER."/gui.ajax/res/html/gui.html");
                     }
                     if(preg_match('/MSIE 7/',$_SERVER['HTTP_USER_AGENT']) || preg_match('/MSIE 8/',$_SERVER['HTTP_USER_AGENT'])){
                         $content = str_replace("app_boot.js", "app_boot_protolegacy.js", $content);
                     }
 					$content = XMLWriter::replaceXmlKeywords($content, false);
 					if($JSON_START_PARAMETERS){
-						$content = str_replace("//BOA_JSON_START_PARAMETERS", "startParameters = ".$JSON_START_PARAMETERS.";", $content);
+						$content = str_replace("//APP_JSON_START_PARAMETERS", "startParameters = ".$JSON_START_PARAMETERS.";", $content);
 					}
 					print($content);
 				}				
@@ -278,14 +278,14 @@ class ClientDriver extends Plugin
 
     function computeBootConf(){
         if(isSet($_GET["server_prefix_uri"])){
-            $_SESSION["BOA_SERVER_PREFIX_URI"] = str_replace("_UP_", "..", $_GET["server_prefix_uri"]);
+            $_SESSION["APP_SERVER_PREFIX_URI"] = str_replace("_UP_", "..", $_GET["server_prefix_uri"]);
         }
         $config = array();
         $config["resourcesFolder"] = "plugins/gui.ajax/res";
         if(session_name() == "App_Shared"){
             $config["appServerAccess"] = "index_shared.php";
         }else{
-            $config["appServerAccess"] = BOA_SERVER_ACCESS;
+            $config["appServerAccess"] = APP_SERVER_ACCESS;
         }
         $config["zipEnabled"] = ConfService::zipEnabled();
         $config["multipleFilesDownloadEnabled"] = ConfService::getCoreConf("ZIP_CREATION");
@@ -314,8 +314,8 @@ class ClientDriver extends Plugin
         $config["client_timeout_warning"] = $this->pluginConf["CLIENT_TIMEOUT_WARN"];
         $config["availableLanguages"] = ConfService::getConf("AVAILABLE_LANG");
         $config["usersEditable"] = ConfService::getAuthDriverImpl()->usersEditable();
-        $config["appVersion"] = BOA_VERSION;
-        $config["appVersionDate"] = BOA_VERSION_DATE;
+        $config["appVersion"] = APP_VERSION;
+        $config["appVersionDate"] = APP_VERSION_DATE;
         if(stristr($_SERVER["HTTP_USER_AGENT"], "msie 6")){
             $config["cssResources"] = array("css/pngHack/pngHack.css");
         }
@@ -340,7 +340,7 @@ class ClientDriver extends Plugin
     function nodeBookmarkMetadata(&$node){
         $user = AuthService::getLoggedUser();
         if($user == null) return;
-        $metadata = $node->retrieveMetadata("bookmarked", true, BOA_METADATA_SCOPE_REPOSITORY, true);
+        $metadata = $node->retrieveMetadata("bookmarked", true, APP_METADATA_SCOPE_REPOSITORY, true);
         if(is_array($metadata) && count($metadata)){
             $node->mergeMetadata(array(
                      "bookmarked" => "true",
@@ -357,7 +357,7 @@ class ClientDriver extends Plugin
                          "bookmarked" => "true",
                          "overlay_icon"  => "bookmark.png"
                     ), true);
-                $node->setMetadata("bookmarked", array("bookmarked"=> "true"), true, BOA_METADATA_SCOPE_REPOSITORY, true);
+                $node->setMetadata("bookmarked", array("bookmarked"=> "true"), true, APP_METADATA_SCOPE_REPOSITORY, true);
             }
         }
     }
@@ -367,16 +367,16 @@ class ClientDriver extends Plugin
         if($instance === false) return ;
         $confs = $instance->getConfigs();
         $theme = $confs["GUI_THEME"];
-        if(!defined("BOA_THEME_FOLDER")){
-            define("CLIENT_RESOURCES_FOLDER", BOA_PLUGINS_FOLDER_REL."/gui.ajax/res");
-            define("BOA_THEME_FOLDER", CLIENT_RESOURCES_FOLDER."/themes/".$theme);
+        if(!defined("APP_THEME_FOLDER")){
+            define("CLIENT_RESOURCES_FOLDER", APP_PLUGINS_FOLDER_REL."/gui.ajax/res");
+            define("APP_THEME_FOLDER", CLIENT_RESOURCES_FOLDER."/themes/".$theme);
         }
-        $value = str_replace(array("BOA_CLIENT_RESOURCES_FOLDER", "BOA_CURRENT_VERSION"), array(CLIENT_RESOURCES_FOLDER, BOA_VERSION), $value);
+        $value = str_replace(array("APP_CLIENT_RESOURCES_FOLDER", "APP_CURRENT_VERSION"), array(CLIENT_RESOURCES_FOLDER, APP_VERSION), $value);
         
-        if(isSet($_SESSION["BOA_SERVER_PREFIX_URI"])){
-            $value = str_replace("BOA_THEME_FOLDER", $_SESSION["BOA_SERVER_PREFIX_URI"].BOA_THEME_FOLDER, $value);
+        if(isSet($_SESSION["APP_SERVER_PREFIX_URI"])){
+            $value = str_replace("APP_THEME_FOLDER", $_SESSION["APP_SERVER_PREFIX_URI"].APP_THEME_FOLDER, $value);
         }else{
-            $value = str_replace("BOA_THEME_FOLDER", BOA_THEME_FOLDER, $value);
+            $value = str_replace("APP_THEME_FOLDER", APP_THEME_FOLDER, $value);
         }
         return $value;
     }

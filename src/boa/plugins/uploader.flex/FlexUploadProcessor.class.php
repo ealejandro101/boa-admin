@@ -29,14 +29,14 @@
  */
 namespace BoA\Plugins\Uploader\Flex;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 use BoA\Core\Plugins\Plugin;
 use BoA\Plugins\Core\Log\Logger;
 
 /**
  * Legacy Flash plugin for upload
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Uploader
  */
 class FlexUploadProcessor extends Plugin {

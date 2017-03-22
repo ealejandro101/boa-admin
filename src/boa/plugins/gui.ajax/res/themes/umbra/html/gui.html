@@ -4,17 +4,17 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-		<link rel="icon" type="image/x-png" href="BOA_THEME_FOLDER/images/html-folder.png">
-		<!--BOA_THEME_FOLDER-->
-		<link rel="stylesheet" type="text/css" href="BOA_THEME_FOLDER/css/allz.css?v=BOA_CURRENT_VERSION">
-		<script language="javascript" type="text/javascript" src="BOA_CLIENT_RESOURCES_FOLDER/js/app_boot.js?v=BOA_CURRENT_VERSION"></script>
+		<link rel="icon" type="image/x-png" href="APP_THEME_FOLDER/images/html-folder.png">
+		<!--APP_THEME_FOLDER-->
+		<link rel="stylesheet" type="text/css" href="APP_THEME_FOLDER/css/allz.css?v=APP_CURRENT_VERSION">
+		<script language="javascript" type="text/javascript" src="APP_CLIENT_RESOURCES_FOLDER/js/app_boot.js?v=APP_CURRENT_VERSION"></script>
 	</head>
 	<body bgcolor="#FFFFFF" text="#000000" marginheight="0" marginwidth="0" leftmargin="0" topmargin="0"  style="overflow:hidden;">		
 		<script type="text/javascript">
-		// Initialize booter. Do not remove the commented line BOA_JSON_START_PARAMETERS, as it is 
+		// Initialize booter. Do not remove the commented line APP_JSON_START_PARAMETERS, as it is 
 		// dynamically replaced by the application!
 		var app, startParameters = {}, MessageHash={};
-		//BOA_JSON_START_PARAMETERS
+		//APP_JSON_START_PARAMETERS
 		window._bootstrap = new AppBootstrap(startParameters);
 		</script>
 		<div id="desktop" appClass="AppPane" appOptions='{"fit":"height","fitParent":"window","fitMarginBottom":"$(\"optional_bottom_div\").getHeight()"}'></div>
@@ -27,19 +27,19 @@
 			<form id="login_form" action="login" style="display:none;" box_width="230">
 				<input type="hidden" name="get_action" value="login">
 				<input type="hidden" name="login_seed" id="login_seed" value="">
-		 	   	<a style="float:right;" href="javascript:app.actionBar.fireAction('switch_language');" title="BOA_MESSAGE[190]" alt="BOA_MESSAGE[190]"><img src="BOA_THEME_FOLDER/images/actions/16/flag.png" border="0" height="16" width="16"></a>
-				<div class="dialogLegend" style="margin-bottom: 3px;margin-top: 4px;" message_id="180">BOA_MESSAGE[180]</div>
+		 	   	<a style="float:right;" href="javascript:app.actionBar.fireAction('switch_language');" title="APP_MESSAGE[190]" alt="APP_MESSAGE[190]"><img src="APP_THEME_FOLDER/images/actions/16/flag.png" border="0" height="16" width="16"></a>
+				<div class="dialogLegend" style="margin-bottom: 3px;margin-top: 4px;" message_id="180">APP_MESSAGE[180]</div>
 				<div style="width:100%;">
 					<div class="SF_element">
-						<div class="SF_label"><gui:message message_id="181">BOA_MESSAGE[181]</gui:message></div>
+						<div class="SF_label"><gui:message message_id="181">APP_MESSAGE[181]</gui:message></div>
 						<div class="SF_input"><input type="text" name="userid" style="width: 100px; padding:0px;" class="dialogFocus"></div>
 					</div>
 					<div class="SF_element">
-						<div class="SF_label"><gui:message message_id="182">BOA_MESSAGE[182]</gui:message></div>
+						<div class="SF_label"><gui:message message_id="182">APP_MESSAGE[182]</gui:message></div>
 						<div class="SF_input"><input type="password" name="password"  style="width: 100px; padding:0px;"></div>
 					</div>
 					<div class="SF_element">
-						<input type="checkbox" class="radio" name="remember_me" style="border: none; width:20px !important;"/><gui:message message_id="261">BOA_MESSAGE[261]</gui:message>
+						<input type="checkbox" class="radio" name="remember_me" style="border: none; width:20px !important;"/><gui:message message_id="261">APP_MESSAGE[261]</gui:message>
 					</div>
 				</div>
 			</form>

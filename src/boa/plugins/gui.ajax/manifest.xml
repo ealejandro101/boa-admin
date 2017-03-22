@@ -3,7 +3,7 @@
 	<class_definition classname="BoA\Plugins\Gui\Ajax\ClientDriver" filename="gui.ajax/ClientDriver.class.php"/>
     <client_settings>
         <resources>
-            <i18n namespace="boa_gui" path="gui.ajax/res/i18n"/>
+            <i18n namespace="APP_gui" path="gui.ajax/res/i18n"/>
         </resources>
     </client_settings>
 	<server_settings>
@@ -115,7 +115,7 @@
 					<div id="global_toolbar" appClass="LogoWidget">
 					    <div id="logging_string" appClass="UserWidget" appOptions='{"menuEvent" : "over"}'></div>
 						<div id="top_toolbar" appClass="ActionsToolbar" appOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["user"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
-						<div id="repo_chooser" appClass="RepositorySelect" appOptions='{"menuPosition": "bottom middle", "menuOffsetTop":11, "menuOffsetLeft":0, "menuMaxHeight":350, "menuEvent":"over", "simpleLabel":"<span class=\"icon-sitemap\"></span><span class=\"ws-label\" message_id=\"455\">BOA_MESSAGE[455]</span><span class=\"icon-caret-down\"></span>"}'></div>
+						<div id="repo_chooser" appClass="RepositorySelect" appOptions='{"menuPosition": "bottom middle", "menuOffsetTop":11, "menuOffsetLeft":0, "menuMaxHeight":350, "menuEvent":"over", "simpleLabel":"<span class=\"icon-sitemap\"></span><span class=\"ws-label\" message_id=\"455\">APP_MESSAGE[455]</span><span class=\"icon-caret-down\"></span>"}'></div>
 					</div>
 					<div id="workspace_toolbar">
                         <div id="simple_repository_label" appClass="RepositorySimpleLabel" appOptions='{"bindSizeTo":{"width":{"id":"topPane", "events":["resize-FoldersTree-folder_pane","actions_refreshed"], "min":150,"offset":-5}}}'></div>

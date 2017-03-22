@@ -29,7 +29,7 @@
  */
 namespace BoA\Core\Utils\Text;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 /**
  * Static utilitaries to encode/decode charset to/from utf8
  * @package BoA
@@ -93,9 +93,9 @@ class SystemTextEncoding
 	static function getEncoding(){
            if(self::$currentCharsetValue == null){
                global $_SESSION;
-               if (isset($_SESSION["BOA_CHARSET"]) && strlen($_SESSION["BOA_CHARSET"])) {
+               if (isset($_SESSION["APP_CHARSET"]) && strlen($_SESSION["APP_CHARSET"])) {
     	       // Check if the session get an assigned charset encoding (it's the case for remote SSH for example)
-                   self::$currentCharsetValue = $_SESSION["BOA_CHARSET"];
+                   self::$currentCharsetValue = $_SESSION["APP_CHARSET"];
                }else{
 	       // Get the current locale (expecting the filesystem is in the same locale, as the standard says)
                    self::$currentCharsetValue = self::parseCharset(setlocale(LC_CTYPE, 0));

@@ -142,7 +142,7 @@
                     <clientCallback prepareModal="true"><![CDATA[
                         var onLoad = function(oForm){
                             $(oForm).down('span[id="delete_message"]').update(MessageHash['shared.11']);
-                            $(oForm).down('input[name="boa_mime"]').value = app.getUserSelection().getUniqueNode().getMime();
+                            $(oForm).down('input[name="APP_mime"]').value = app.getUserSelection().getUniqueNode().getMime();
                         };
                         modal.showDialogForm('Delete', 'delete_shared_form', onLoad, function(){
                             var oForm = modal.getForm();
@@ -155,7 +155,7 @@
                     <clientForm id="delete_shared_form"><![CDATA[
                     <div id="delete_shared_form" action="delete" box_width="200">
                     <span id="delete_message"></span>
-                    <input type="hidden" name="boa_mime" value="">
+                    <input type="hidden" name="APP_mime" value="">
                     </div>              ]]></clientForm>
                     <serverCallback methodName="switchAction"></serverCallback>
                     </processing>

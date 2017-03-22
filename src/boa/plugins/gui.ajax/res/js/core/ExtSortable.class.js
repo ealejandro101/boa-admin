@@ -201,7 +201,7 @@ Class.create("ExtSortable", SortableTable, {
 	 */
 	splitDirsAndFilesNodes: function(oNode, attName) {
 		var s;
-        if(attName == "boa_label") attName = "text";
+        if(attName == "APP_label") attName = "text";
         s = oNode.getMetadata().get(attName);
 		if(s[0] == ' ') s = s.substr(1, (s.length-1));
 		if(!oNode.isLeaf()){

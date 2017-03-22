@@ -29,9 +29,9 @@
  */
 namespace BoA\Core\Security;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
-include_once(BOA_VENDOR_FOLDER."/securimage/securimage.php");
+include_once(APP_VENDOR_FOLDER."/securimage/securimage.php");
 
 /**
  * Encapsulation of the securimage external library, to generate a Captcha Image on brute force login attempt.
@@ -46,7 +46,7 @@ class CaptchaProvider{
      */
 	public static function sendCaptcha(){
 		
-		$libPath = BOA_VENDOR_FOLDER."/securimage";
+		$libPath = APP_VENDOR_FOLDER."/securimage";
 		
 		$img = new \Securimage();
 		$img->wordlist_file = $libPath."/words/words.txt";

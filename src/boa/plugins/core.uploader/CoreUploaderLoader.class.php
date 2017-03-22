@@ -32,11 +32,11 @@ namespace BoA\Plugins\Core\Uploader;
 use BoA\Core\Plugins\Plugin;
 use BoA\Core\Utils\Utils;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Config loader overrider
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Core
  */
 class CoreUploaderLoader extends Plugin{

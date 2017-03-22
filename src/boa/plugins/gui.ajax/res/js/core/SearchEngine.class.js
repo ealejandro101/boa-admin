@@ -191,7 +191,7 @@ Class.create("SearchEngine", AppPane, {
 
         this._fileList = new FilesList($(this._resultsBoxId), {
             dataModel:this._dataModel,
-            columnsDef:[{attributeName:"boa_label", messageId:1, sortType:'String'},
+            columnsDef:[{attributeName:"APP_label", messageId:1, sortType:'String'},
                 {attributeName:"search_score", messageString:'Score', sortType:'Number'},
                 {attributeName:"filename", messageString:'Path', sortType:'String'}
             ],

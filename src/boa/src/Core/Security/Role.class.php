@@ -29,12 +29,12 @@
  */
 namespace BoA\Core\Security;
 
-defined('BOA_EXEC') or die('Access not allowed');
+defined('APP_EXEC') or die('Access not allowed');
 
-define('BOA_VALUE_CLEAR', "BOA_VALUE_CLEAR");
-define('BOA_REPO_SCOPE_ALL',"BOA_REPO_SCOPE_ALL");
-define('BOA_REPO_SCOPE_SHARED',"BOA_REPO_SCOPE_SHARED");
-define('BOA_PLUGINS_SCOPE_ALL',"plugin_all");
+define('APP_VALUE_CLEAR', "APP_VALUE_CLEAR");
+define('APP_REPO_SCOPE_ALL',"APP_REPO_SCOPE_ALL");
+define('APP_REPO_SCOPE_SHARED',"APP_REPO_SCOPE_SHARED");
+define('APP_PLUGINS_SCOPE_ALL',"plugin_all");
 
 /**
  * @package BoA
@@ -65,9 +65,9 @@ class Role implements GroupPathProvider
             if(count($actions)){
                 foreach($actions as $act => $status){
                     if($repoId == "app.all"){
-                        $this->setActionState(BOA_PLUGINS_SCOPE_ALL, $act, BOA_REPO_SCOPE_ALL, $status);
+                        $this->setActionState(APP_PLUGINS_SCOPE_ALL, $act, APP_REPO_SCOPE_ALL, $status);
                     }else{
-                        $this->setActionState(BOA_PLUGINS_SCOPE_ALL, $act, $repoId, $status);
+                        $this->setActionState(APP_PLUGINS_SCOPE_ALL, $act, $repoId, $status);
                     }
                 }
             }
@@ -79,10 +79,10 @@ class Role implements GroupPathProvider
     }
 
     public function isGroupRole(){
-        return strpos($this->roleId, "BOA_GRP_") === 0;
+        return strpos($this->roleId, "APP_GRP_") === 0;
     }
     public function isUserRole(){
-        return strpos($this->roleId, "BOA_USER_") === 0;
+        return strpos($this->roleId, "APP_USER_") === 0;
     }
 
 
@@ -133,7 +133,7 @@ class Role implements GroupPathProvider
         return "";
     }
     /**
-     * @return array Associative array[REPO_ID] => RIGHT_STRING (r / w / rw / BOA_VALUE_CLEAR)
+     * @return array Associative array[REPO_ID] => RIGHT_STRING (r / w / rw / APP_VALUE_CLEAR)
      */
     public function listAcls(){
         return $this->acls;
@@ -174,11 +174,11 @@ class Role implements GroupPathProvider
     /**
      * @param string $pluginId
      * @param string $parameterName
-     * @param mixed $parameterValue can be BOA_VALUE_CLEAR (force clear previous), or empty string for clearing value (apply previous).
+     * @param mixed $parameterValue can be APP_VALUE_CLEAR (force clear previous), or empty string for clearing value (apply previous).
      * @param string|null $repositoryId
      */
     public function setParameterValue($pluginId, $parameterName, $parameterValue, $repositoryId = null){
-        if($repositoryId === null) $repositoryId = BOA_REPO_SCOPE_ALL;
+        if($repositoryId === null) $repositoryId = APP_REPO_SCOPE_ALL;
         if(empty($parameterValue) && $parameterValue !== false){
             if(isSet($this->parameters[$repositoryId][$pluginId][$parameterName])){
                 unset($this->parameters[$repositoryId][$pluginId][$parameterName]);
@@ -199,14 +199,14 @@ class Role implements GroupPathProvider
      * @return mixed
      */
     public function filterParameterValue($pluginId, $parameterName, $repositoryId, $parameterValue){
-        if(isSet($this->parameters[BOA_REPO_SCOPE_ALL][$pluginId][$parameterName])){
-            $v = $this->parameters[BOA_REPO_SCOPE_ALL][$pluginId][$parameterName];
-            if($v == BOA_VALUE_CLEAR) return "";
+        if(isSet($this->parameters[APP_REPO_SCOPE_ALL][$pluginId][$parameterName])){
+            $v = $this->parameters[APP_REPO_SCOPE_ALL][$pluginId][$parameterName];
+            if($v == APP_VALUE_CLEAR) return "";
             else return $v;
         }
         if(isSet($this->parameters[$repositoryId][$pluginId][$parameterName])){
             $v = $this->parameters[$repositoryId][$pluginId][$parameterName];
-            if($v == BOA_VALUE_CLEAR) return "";
+            if($v == APP_VALUE_CLEAR) return "";
             else return $v;
         }
         return $parameterValue;
@@ -243,11 +243,11 @@ class Role implements GroupPathProvider
      */
     public function listActionsStatesFor($repository){
         $actions = array();
-        if(isSet($this->actions[BOA_REPO_SCOPE_ALL])){
-            $actions = $this->actions[BOA_REPO_SCOPE_ALL];
+        if(isSet($this->actions[APP_REPO_SCOPE_ALL])){
+            $actions = $this->actions[APP_REPO_SCOPE_ALL];
         }
-        if($repository != null && isSet($this->actions[BOA_REPO_SCOPE_SHARED]) && $repository->hasParent()){
-            $actions = array_merge($actions, $this->actions[BOA_REPO_SCOPE_SHARED]);
+        if($repository != null && isSet($this->actions[APP_REPO_SCOPE_SHARED]) && $repository->hasParent()){
+            $actions = array_merge($actions, $this->actions[APP_REPO_SCOPE_SHARED]);
         }
         if($repository != null && isSet($this->actions[$repository->getId()])){
             $actions = array_merge($actions, $this->actions[$repository->getId()]);
@@ -263,8 +263,8 @@ class Role implements GroupPathProvider
      * @return boolean
      */
     public function actionEnabled($pluginId, $actionName, $repositoryId, $inputState){
-        if(isSet($this->actions[BOA_REPO_SCOPE_ALL][$pluginId][$actionName])){
-            return $this->actions[BOA_REPO_SCOPE_ALL][$pluginId][$actionName] == "enabled" ? true : false ;
+        if(isSet($this->actions[APP_REPO_SCOPE_ALL][$pluginId][$actionName])){
+            return $this->actions[APP_REPO_SCOPE_ALL][$pluginId][$actionName] == "enabled" ? true : false ;
         }
         if(isSet($this->actions[$repositoryId][$pluginId][$actionName])){
             return $this->actions[$repositoryId][$pluginId][$actionName]  == "enabled" ? true : false ;
@@ -288,7 +288,7 @@ class Role implements GroupPathProvider
 
         $newAcls = $this->array_merge_recursive2($role->listAcls(), $this->listAcls());
         foreach($newAcls as $repoId => $rightString){
-            if($rightString == BOA_VALUE_CLEAR) continue;
+            if($rightString == APP_VALUE_CLEAR) continue;
             $newRole->setAcl($repoId, $rightString);
         }
 
@@ -296,7 +296,7 @@ class Role implements GroupPathProvider
         foreach($newParams as $repoId => $data){
             foreach ($data as $pluginId => $param) {
                 foreach($param as $parameterName => $parameterValue){
-                    if($parameterValue == BOA_VALUE_CLEAR) continue;
+                    if($parameterValue == APP_VALUE_CLEAR) continue;
                     $newRole->setParameterValue($pluginId, $parameterName, $parameterValue, $repoId);
                 }
             }

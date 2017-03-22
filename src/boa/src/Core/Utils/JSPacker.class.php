@@ -31,7 +31,7 @@ namespace BoA\Core\Utils;
 
 use BoA\Core\Services\PluginsService;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Encapsulation of the javascript/css packing library
@@ -56,7 +56,7 @@ class JSPacker{
                                             "Normal");
         }
 
-        $sList = glob(BOA_THEME_FOLDER."/css/*_list.txt");
+        $sList = glob(APP_THEME_FOLDER."/css/*_list.txt");
         foreach ($sList as $list){
             $scriptName = str_replace("_list.txt", ".css", $list);
             JSPacker::concatListAndPack($list,
@@ -84,7 +84,7 @@ class JSPacker{
 		    while (!feof($handle)) {
 		        $jsline = fgets($handle, 4096) ;
 		        if(rtrim($jsline,"\n") != ""){
-					$code = file_get_contents(BOA_INSTALL_PATH."/".CLIENT_RESOURCES_FOLDER."/".rtrim($jsline,"\n\r")) ;
+					$code = file_get_contents(APP_INSTALL_PATH."/".CLIENT_RESOURCES_FOLDER."/".rtrim($jsline,"\n\r")) ;
 					if ($code) $jscode .= $code ;
 		        }
 		    }
@@ -92,7 +92,7 @@ class JSPacker{
 		}
 		
 		// Pack and write to file
-		require_once(BOA_VENDOR_FOLDER."/packer/class.JavaScriptPacker.php");
+		require_once(APP_VENDOR_FOLDER."/packer/class.JavaScriptPacker.php");
 		$packer = new \JavaScriptPacker($jscode, $mode , true, false);
 		$packed = $packer->pack();
 		if($mode == "None"){ // css case, hack for I.E.

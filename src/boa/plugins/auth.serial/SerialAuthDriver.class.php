@@ -35,11 +35,11 @@ use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Filters\VarsFilter;
 use BoA\Plugins\Core\Auth\AbstractAuthDriver;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Standard auth implementation, stores the data in serialized files
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Auth
  */
 class SerialAuthDriver extends AbstractAuthDriver {

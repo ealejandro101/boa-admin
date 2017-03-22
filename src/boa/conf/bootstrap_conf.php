@@ -22,20 +22,20 @@
  * Example : fr_FR.UTF-8, fr_FR.ISO-8859-1, fr_FR.CP1252 (windows), en_EN.UTF-8, etc.
  *
  * Windows users may define an empty string
- * define("BOA_LOCALE", "");
+ * define("APP_LOCALE", "");
  */
-//define("BOA_LOCALE", "en_EN.UTF-8");
-//define("BOA_LOCALE", "");
+//define("APP_LOCALE", "en_EN.UTF-8");
+//define("APP_LOCALE", "");
 
 
 /*
  * If you encounter problems writing to the standard php tmp directory, you can
- * define your own tmp dir here. Suggested value is boa_path/data/tmp/
- * BOA_DATA_PATH, BOA_INSTALL_PATH are replaced automatically.
+ * define your own tmp dir here. Suggested value is APP_path/data/tmp/
+ * APP_DATA_PATH, APP_INSTALL_PATH are replaced automatically.
  *
  * See php.ini settings below for the session.save_path value as well.
  */
-//define("BOA_TMP_DIR", BOA_DATA_PATH."/tmp");
+//define("APP_TMP_DIR", APP_DATA_PATH."/tmp");
 
 
 /*
@@ -43,12 +43,12 @@
  * > Problems with tmp dir : set your own session tmp dir (create it and make it writeable!)
  * > Concurrent versions of the app: use session.cookie_path to differentiate them.
  */
-$BOA_INISET = array();
-//$BOA_INISET["session.save_path"] = BOA_DATA_PATH."/tmp/sessions";
-//$BOA_INISET["session.cookie_path"] = "/BoA";
+$APP_INISET = array();
+//$APP_INISET["session.save_path"] = APP_DATA_PATH."/tmp/sessions";
+//$APP_INISET["session.cookie_path"] = "/BoA";
 
 /*
  * If you want to force the https, uncomment the line below. This will automatically
  * redirect all calls via http to the same URL with https
  */
-//define("BOA_FORCE_SSL_REDIRECT", true);
+//define("APP_FORCE_SSL_REDIRECT", true);

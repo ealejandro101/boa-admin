@@ -39,7 +39,7 @@ use BoA\Core\Utils\Utils;
 use BoA\Plugins\Core\Log\Logger;
 
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Static access to the authentication mechanism. Encapsulates the authDriver implementation
@@ -118,12 +118,12 @@ class AuthService
      */
     static function getLoggedUser()
     {
-        if(self::$useSession && isSet($_SESSION["BOA_USER"])) {
-            if(is_a($_SESSION["BOA_USER"], "__PHP_Incomplete_Class")){
-                session_unset("BOA_USER");
+        if(self::$useSession && isSet($_SESSION["APP_USER"])) {
+            if(is_a($_SESSION["APP_USER"], "__PHP_Incomplete_Class")){
+                session_unset("APP_USER");
                 return null;
             }
-            return $_SESSION["BOA_USER"];
+            return $_SESSION["APP_USER"];
         }
         if(!self::$useSession && isSet(self::$currentUser)) return self::$currentUser;
         return null;
@@ -195,7 +195,7 @@ class AuthService
         } else $login = array("count"=>1, "time"=>time());
         $loginArray[$serverAddress] = $login;
         if ($login["count"] > 3) {
-            if(BOA_SERVER_DEBUG){
+            if(APP_SERVER_DEBUG){
                 Logger::debug("DEBUG : IGNORING BRUTE FORCE ATTEMPTS!");
                 return true;
             }
@@ -276,9 +276,9 @@ class AuthService
 
     static function clearTemporaryUser($temporaryUserId){
         Logger::logAction("Log out", array("temporary user"), $temporaryUserId);
-        if(isSet($_SESSION["BOA_USER"]) || isSet(self::$currentUser)){
+        if(isSet($_SESSION["APP_USER"]) || isSet(self::$currentUser)){
             Logger::logAction("Log Out");
-            unset($_SESSION["BOA_USER"]);
+            unset($_SESSION["APP_USER"]);
             if(isSet(self::$currentUser)) unset(self::$currentUser);
             if(ConfService::getCoreConf("SESSION_SET_CREDENTIALS", "auth")){
                 Credential::clearCredentials();
@@ -309,7 +309,7 @@ class AuthService
         if($user_id == null)
         {
             if(self::$useSession){
-                if(isSet($_SESSION["BOA_USER"]) && is_object($_SESSION["BOA_USER"])) return 1;
+                if(isSet($_SESSION["APP_USER"]) && is_object($_SESSION["APP_USER"])) return 1;
             }else{
                 if(isSet(self::$currentUser) && is_object(self::$currentUser)) return 1;
             }
@@ -376,7 +376,7 @@ class AuthService
                 //$user->setAcl("shared", "rw");
             }
         }
-        if(self::$useSession) $_SESSION["BOA_USER"] = $user;
+        if(self::$useSession) $_SESSION["APP_USER"] = $user;
         else self::$currentUser = $user;
 
         if($authDriver->autoCreateUser() && !$user->storageExists()){
@@ -393,7 +393,7 @@ class AuthService
      */
     static function updateUser($userObject)
     {
-        if(self::$useSession) $_SESSION["BOA_USER"] = $userObject;
+        if(self::$useSession) $_SESSION["APP_USER"] = $userObject;
         else self::$currentUser = $userObject;
     }
     /**
@@ -403,10 +403,10 @@ class AuthService
      */
     static function disconnect()
     {
-        if(isSet($_SESSION["BOA_USER"]) || isSet(self::$currentUser)){
+        if(isSet($_SESSION["APP_USER"]) || isSet(self::$currentUser)){
             AuthService::clearRememberCookie();
             Logger::logAction("Log Out");
-            unset($_SESSION["BOA_USER"]);
+            unset($_SESSION["APP_USER"]);
             if(isSet(self::$currentUser)) unset(self::$currentUser);
             if(ConfService::getCoreConf("SESSION_SET_CREDENTIALS", "auth")){
                 Credential::clearCredentials();
@@ -422,7 +422,7 @@ class AuthService
     public static function bootSequence(&$START_PARAMETERS){
 
         if(Utils::detectApplicationFirstRun()) return;
-        if(file_exists(BOA_CACHE_DIR."/admin_counted")) return;
+        if(file_exists(APP_CACHE_DIR."/admin_counted")) return;
         $rootRole = AuthService::getRole("ROOT_ROLE", false);
         if($rootRole === false){
             $rootRole = new Role("ROOT_ROLE");
@@ -458,7 +458,7 @@ class AuthService
             );
             foreach($actions as $pluginId => $acts){
                 foreach($acts as $act){
-                    $rootRole->setActionState($pluginId, $act, BOA_REPO_SCOPE_SHARED, false);
+                    $rootRole->setActionState($pluginId, $act, APP_REPO_SCOPE_SHARED, false);
                 }
             }
             AuthService::updateRole($rootRole);
@@ -472,7 +472,7 @@ class AuthService
             );
             foreach($actions as $pluginId => $acts){
                 foreach($acts as $act){
-                    $rootRole->setActionState($pluginId, $act, BOA_REPO_SCOPE_SHARED, false);
+                    $rootRole->setActionState($pluginId, $act, APP_REPO_SCOPE_SHARED, false);
                 }
             }
             AuthService::updateRole($rootRole);
@@ -489,7 +489,7 @@ class AuthService
             $rootRole->setAutoApplies(array("guest"));
             foreach($actions as $pluginId => $acts){
                 foreach($acts as $act){
-                    $rootRole->setActionState($pluginId, $act, BOA_REPO_SCOPE_ALL);
+                    $rootRole->setActionState($pluginId, $act, APP_REPO_SCOPE_ALL);
                 }
             }
             AuthService::updateRole($rootRole);
@@ -522,7 +522,7 @@ class AuthService
             $adminUser->save("superuser");
             $START_PARAMETERS["ALERT"] .= "There is an admin user, but without admin right. Now any user can have the administration rights, \\n your 'admin' user was set with the admin rights. Please check that this suits your security configuration.";
         }
-        file_put_contents(BOA_CACHE_DIR."/admin_counted", "true");
+        file_put_contents(APP_CACHE_DIR."/admin_counted", "true");
 
     }
     /**
@@ -720,10 +720,10 @@ class AuthService
             $realm = ConfService::getCoreConf("WEBDAV_DIGESTREALM");
             $ha1 = md5("{$userId}:{$realm}:{$userPass}");
             $zObj = ConfService::getConfStorageImpl()->createUserObject($userId);
-            $wData = $zObj->getPref("BOA_WEBDAV_DATA");
+            $wData = $zObj->getPref("APP_WEBDAV_DATA");
             if(!is_array($wData)) $wData = array();
             $wData["HA1"] = $ha1;
-            $zObj->setPref("BOA_WEBDAV_DATA", $wData);
+            $zObj->setPref("APP_WEBDAV_DATA", $wData);
             $zObj->save();
         }
         Logger::logAction("Update Password", array("user_id"=>$userId));
@@ -767,10 +767,10 @@ class AuthService
             if(!isSet($user)){
                 $user = $confDriver->createUserObject($userId);
             }
-            $wData = $user->getPref("BOA_WEBDAV_DATA");
+            $wData = $user->getPref("APP_WEBDAV_DATA");
             if(!is_array($wData)) $wData = array();
             $wData["HA1"] = $ha1;
-            $user->setPref("BOA_WEBDAV_DATA", $wData);
+            $user->setPref("APP_WEBDAV_DATA", $wData);
             $user->save();
         }
         Controller::applyHook("user.after_create", array($user));
@@ -962,8 +962,8 @@ class AuthService
         }
         if($logged == null || $logged->mergedRole == null) return $params;
         $roleParams = $logged->mergedRole->listParameters();
-        if(iSSet($roleParams[BOA_REPO_SCOPE_ALL][$pluginId])){
-            $params = array_merge($params, $roleParams[BOA_REPO_SCOPE_ALL][$pluginId]);
+        if(iSSet($roleParams[APP_REPO_SCOPE_ALL][$pluginId])){
+            $params = array_merge($params, $roleParams[APP_REPO_SCOPE_ALL][$pluginId]);
         }
         if($repoId != null && isSet($roleParams[$repoId][$pluginId])){
             $params = array_merge($params, $roleParams[$repoId][$pluginId]);

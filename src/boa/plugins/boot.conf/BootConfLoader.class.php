@@ -37,11 +37,11 @@ use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Filters\VarsFilter;
 use BoA\Plugins\Core\Conf\AbstractConfDriver;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Implementation of the configuration driver on serial files
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Boot
  */
 class BootConfLoader extends AbstractConfDriver {
@@ -52,8 +52,8 @@ class BootConfLoader extends AbstractConfDriver {
 
     private function getInternalConf(){
         if(!isSet(BootConfLoader::$internalConf)){
-            if(file_exists(BOA_CONF_PATH."/bootstrap_plugins.php")){
-                include(BOA_CONF_PATH."/bootstrap_plugins.php");
+            if(file_exists(APP_CONF_PATH."/bootstrap_plugins.php")){
+                include(APP_CONF_PATH."/bootstrap_plugins.php");
                 if(isSet($PLUGINS)){
                     BootConfLoader::$internalConf = $PLUGINS;
                 }
@@ -69,7 +69,7 @@ class BootConfLoader extends AbstractConfDriver {
         try{
             $this->getPluginWorkDir(true);
         }catch(Exception $e){
-            die("Impossible write into the BOA_DATA_PATH folder: Make sure to grant write access to this folder for your webserver!");
+            die("Impossible write into the APP_DATA_PATH folder: Make sure to grant write access to this folder for your webserver!");
         }
     }
 
@@ -284,9 +284,9 @@ class BootConfLoader extends AbstractConfDriver {
 
 
 
-        @unlink(BOA_PLUGINS_CACHE_FILE);
-        @unlink(BOA_PLUGINS_REQUIRES_FILE);
-        @unlink(BOA_PLUGINS_MESSAGES_FILE);
+        @unlink(APP_PLUGINS_CACHE_FILE);
+        @unlink(APP_PLUGINS_REQUIRES_FILE);
+        @unlink(APP_PLUGINS_MESSAGES_FILE);
         Utils::setApplicationFirstRunPassed();
         session_destroy();
 
@@ -308,7 +308,7 @@ class BootConfLoader extends AbstractConfDriver {
                 }
             }
 
-            require_once(BOA_VENDOR_FOLDER."/dibi/dibi.compact.php");
+            require_once(APP_VENDOR_FOLDER."/dibi/dibi.compact.php");
             // Should throw an exception if there was a problem.
             \dibi::connect($p);
             \dibi::disconnect();
@@ -403,7 +403,7 @@ class BootConfLoader extends AbstractConfDriver {
                 AuthService::disconnect();
             }else if($pluginId == "core.auth"){
                 // DELETE admin_counted file and DISCONNECT
-                @unlink(BOA_CACHE_DIR."/admin_counted");
+                @unlink(APP_CACHE_DIR."/admin_counted");
             }
         }
     }

@@ -65,7 +65,7 @@ function triggerFlashEvent(){
 		switch(eventType){
 			case "currentFiles":
                 parent.document.fire("boa:longtask_starting");
-				return parent.app.getUserSelection().getContextFileNames("__BOA_SEP__");
+				return parent.app.getUserSelection().getContextFileNames("__APP_SEP__");
 			break;
 			case "currentFolder":
 				var folder = parent.base64_encode(parent.app.getUserSelection().getContextNode().getPath());

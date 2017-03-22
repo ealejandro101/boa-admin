@@ -42,12 +42,12 @@ use BoA\Plugins\Core\Log\Logger;
 
 use BoA\Plugins\Conf\Serial\SerialUser;
 
-defined('BOA_EXEC') or die('Access not allowed');
+defined('APP_EXEC') or die('Access not allowed');
 
-define('BOA_SANITIZE_HTML', 1);
-define('BOA_SANITIZE_HTML_STRICT', 2);
-define('BOA_SANITIZE_ALPHANUM', 3);
-define('BOA_SANITIZE_EMAILCHARS', 4);
+define('APP_SANITIZE_HTML', 1);
+define('APP_SANITIZE_HTML_STRICT', 2);
+define('APP_SANITIZE_ALPHANUM', 3);
+define('APP_SANITIZE_EMAILCHARS', 4);
 /**
  * Various functions used everywhere, static library
  * @package BoA
@@ -120,17 +120,17 @@ class Utils
      *
      * @static
      * @param string $s
-     * @param int $level Can be BOA_SANITIZE_ALPHANUM, BOA_SANITIZE_EMAILCHARS, BOA_SANITIZE_HTML, BOA_SANITIZE_HTML_STRICT
+     * @param int $level Can be APP_SANITIZE_ALPHANUM, APP_SANITIZE_EMAILCHARS, APP_SANITIZE_HTML, APP_SANITIZE_HTML_STRICT
      * @param string $expand
      * @return mixed|string
      */
-    public static function sanitize($s, $level = BOA_SANITIZE_HTML, $expand = 'script|style|noframes|select|option')
+    public static function sanitize($s, $level = APP_SANITIZE_HTML, $expand = 'script|style|noframes|select|option')
     {
         /**/ //prep the string
         $s = ' ' . $s;
-        if ($level == BOA_SANITIZE_ALPHANUM) {
+        if ($level == APP_SANITIZE_ALPHANUM) {
             return preg_replace("/[^a-zA-Z0-9_\-\.]/", "", $s);
-        } else if ($level == BOA_SANITIZE_EMAILCHARS) {
+        } else if ($level == APP_SANITIZE_EMAILCHARS) {
             return preg_replace("/[^a-zA-Z0-9_\-\.@!%\+=|~\?]/", "", $s);
         }
 
@@ -160,7 +160,7 @@ class Utils
         }
 
         $s = strip_tags($s);
-        if ($level == BOA_SANITIZE_HTML_STRICT) {
+        if ($level == APP_SANITIZE_HTML_STRICT) {
             $s = preg_replace("/[\",;\/`<>:\*\|\?!\^\\\]/", "", $s);
         } else {
             $s = str_replace(array("<", ">"), array("&lt;", "&gt;"), $s);
@@ -175,33 +175,33 @@ class Utils
      * @param int $sanitizeLevel
      * @return string
      */
-    public static function decodeSecureMagic($data, $sanitizeLevel = BOA_SANITIZE_HTML)
+    public static function decodeSecureMagic($data, $sanitizeLevel = APP_SANITIZE_HTML)
     {
         return SystemTextEncoding::fromUTF8(Utils::sanitize(Utils::securePath(SystemTextEncoding::magicDequote($data)), $sanitizeLevel));
     }
     /**
-     * Try to load the tmp dir from the CoreConf BOA_TMP_DIR, or the constant BOA_TMP_DIR,
+     * Try to load the tmp dir from the CoreConf APP_TMP_DIR, or the constant APP_TMP_DIR,
      * or the sys_get_temp_dir
      * @static
      * @return mixed|null|string
      */
     public static function getAppTmpDir()
     {
-        if (ConfService::getCoreConf("BOA_TMP_DIR") != null) {
-            return ConfService::getCoreConf("BOA_TMP_DIR");
+        if (ConfService::getCoreConf("APP_TMP_DIR") != null) {
+            return ConfService::getCoreConf("APP_TMP_DIR");
         }
-        if (defined("BOA_TMP_DIR") && BOA_TMP_DIR != "") {
-            return BOA_TMP_DIR;
+        if (defined("APP_TMP_DIR") && APP_TMP_DIR != "") {
+            return APP_TMP_DIR;
         }
         return realpath(sys_get_temp_dir());
     }
 
     public static function detectApplicationFirstRun(){
-        return !file_exists(BOA_CACHE_DIR."/first_run_passed");
+        return !file_exists(APP_CACHE_DIR."/first_run_passed");
     }
 
     public static function setApplicationFirstRunPassed(){
-        @file_put_contents(BOA_CACHE_DIR."/first_run_passed", "true");
+        @file_put_contents(APP_CACHE_DIR."/first_run_passed", "true");
     }
 
     /**
@@ -326,10 +326,10 @@ class Utils
             self::updateAllI18nLibraries((isSet($parameters["create"]) ? $parameters["create"] : ""));
         }
         if (ConfService::getConf("JS_DEBUG") && isSet($parameters["clear_plugins_cache"])) {
-            @unlink(BOA_PLUGINS_CACHE_FILE);
-            @unlink(BOA_PLUGINS_REQUIRES_FILE);
+            @unlink(APP_PLUGINS_CACHE_FILE);
+            @unlink(APP_PLUGINS_REQUIRES_FILE);
         }
-        if (BOA_SERVER_DEBUG && isSet($parameters["extract_application_hooks"])){
+        if (APP_SERVER_DEBUG && isSet($parameters["extract_application_hooks"])){
             self::extractHooksToDoc();
         }
 
@@ -344,13 +344,13 @@ class Utils
             setcookie("SKIP_ANDROID", "true");
         }
         if (isSet($parameters["gui"])) {
-            setcookie("BOA_GUI", $parameters["gui"]);
+            setcookie("APP_GUI", $parameters["gui"]);
             if ($parameters["gui"] == "light") $session["USE_EXISTING_TOKEN_IF_EXISTS"] = true;
         } else {
             if (isSet($session["USE_EXISTING_TOKEN_IF_EXISTS"])) {
                 unset($session["USE_EXISTING_TOKEN_IF_EXISTS"]);
             }
-            setcookie("BOA_GUI", null);
+            setcookie("APP_GUI", null);
         }
     }
 
@@ -381,7 +381,7 @@ class Utils
         $fileName = strtolower($fileName);
         $EXTENSIONS = ConfService::getRegisteredExtensions();
         if ($isDir) {
-            $mime = $EXTENSIONS["boa_folder"];
+            $mime = $EXTENSIONS["APP_folder"];
         } else {
             foreach ($EXTENSIONS as $ext) {
                 if (preg_match("/\.$ext[0]$/", $fileName)) {
@@ -391,7 +391,7 @@ class Utils
             }
         }
         if (!isSet($mime)) {
-            $mime = $EXTENSIONS["boa_empty"];
+            $mime = $EXTENSIONS["APP_empty"];
         }
         if (is_numeric($mime[2]) || array_key_exists($mime[2], $mess)) {
             $mime[2] = $mess[$mime[2]];
@@ -406,18 +406,18 @@ class Utils
             self::$registeredExtensions = ConfService::getRegisteredExtensions();
         }
         if ($isDir) {
-            $mime = self::$registeredExtensions["boa_folder"];
+            $mime = self::$registeredExtensions["APP_folder"];
         } else {
             $pos = strrpos($fileName, ".");
             if($pos !== false){
                 $fileExt = substr($fileName, $pos + 1);
-                if(!empty($fileExt) && array_key_exists($fileExt, self::$registeredExtensions) && $fileExt != "boa_folder" && $fileExt != "boa_empty"){
+                if(!empty($fileExt) && array_key_exists($fileExt, self::$registeredExtensions) && $fileExt != "APP_folder" && $fileExt != "APP_empty"){
                     $mime = self::$registeredExtensions[$fileExt];
                 }
             }
         }
         if (!isSet($mime)) {
-            $mime = self::$registeredExtensions["boa_empty"];
+            $mime = self::$registeredExtensions["APP_empty"];
         }
         return array($mime[2], $mime[1]);
 
@@ -819,7 +819,7 @@ class Utils
     }
 
     static function getHooksFile(){
-        return BOA_INSTALL_PATH."/".BOA_DOCS_FOLDER."/hooks.json";
+        return APP_DOCS_FOLDER."/hooks.json";
     }
 
     static function extractHooksToDoc(){
@@ -831,7 +831,7 @@ class Utils
         }else{
             $existingHooks = array();
         }
-        $allPhpFiles = glob_recursive(BOA_INSTALL_PATH."/*.php");
+        $allPhpFiles = glob_recursive(APP_INSTALL_PATH."/*.php");
         $hooks = array();
         foreach($allPhpFiles as $phpFile){
             $fileContent = file($phpFile);
@@ -841,7 +841,7 @@ class Utils
                     $params = $matches[2];
                     foreach($names as $index => $hookName){
                         if(!isSet($hooks[$hookName])) $hooks[$hookName] = array("TRIGGERS" => array(), "LISTENERS" => array());
-                        $hooks[$hookName]["TRIGGERS"][] = array("FILE" => substr($phpFile, strlen(BOA_INSTALL_PATH)), "LINE" => $lineNumber);
+                        $hooks[$hookName]["TRIGGERS"][] = array("FILE" => substr($phpFile, strlen(APP_INSTALL_PATH)), "LINE" => $lineNumber);
                         $hooks[$hookName]["PARAMETER_SAMPLE"] = $params[$index];
                     }
                 }
@@ -952,7 +952,7 @@ class Utils
                 $path = $library->getAttribute("path");
                 $xml = $plug->getManifestRawContent();
                 // for core, also load mixins
-                $refFile = BOA_INSTALL_PATH . "/" . $path . "/conf/en.php";
+                $refFile = APP_INSTALL_PATH . "/" . $path . "/conf/en.php";
                 $reference = array();
                 if (preg_match_all("/CONF_MESSAGE(\[.*?\])/", $xml, $matches, PREG_SET_ORDER)) {
                     foreach ($matches as $match) {
@@ -961,7 +961,7 @@ class Utils
                     }
                 }
                 if ($namespace == "") {
-                    $mixXml = file_get_contents(BOA_PLUGINS_FOLDER."/core.boa/mixins.xml");
+                    $mixXml = file_get_contents(APP_PLUGINS_FOLDER."/core.boa/mixins.xml");
                     if (preg_match_all("/MIXIN_MESSAGE(\[.*?\])/", $mixXml, $matches, PREG_SET_ORDER)) {
                         foreach ($matches as $match) {
                             $match[1] = str_replace(array("[", "]"), "", $match[1]);
@@ -988,7 +988,7 @@ class Utils
         $nodes = PluginsService::getInstance()->searchAllManifests("//i18n", "nodes");
         foreach ($nodes as $node) {
             $nameSpace = $node->getAttribute("namespace");
-            $path = BOA_INSTALL_PATH . "/" . $node->getAttribute("path");
+            $path = APP_INSTALL_PATH . "/" . $node->getAttribute("path");
             if ($nameSpace == "") {
                 self::updateI18nFiles($path, false, $createLanguage);
                 self::updateI18nFiles($path . "/conf", true, $createLanguage);
@@ -1011,7 +1011,7 @@ class Utils
     {
         if (!is_dir($baseDir) || !is_file($baseDir . "/en.php")) return;
         if ($createLanguage != "" && !is_file($baseDir . "/$createLanguage.php")) {
-            @copy(BOA_INSTALL_PATH . "/plugins/core.boa/i18n-template.php", $baseDir . "/$createLanguage.php");
+            @copy(APP_INSTALL_PATH . "/plugins/core.boa/i18n-template.php", $baseDir . "/$createLanguage.php");
         }
         if (!$detectLanguages) {
             $languages = ConfService::listAvailableLanguages();
@@ -1111,7 +1111,7 @@ class Utils
             $ALL_ROWS[$result][$item["name"]] = $item["info"];
         }
 
-        include(BOA_INSTALL_PATH."/core/tests/startup.phtml");
+        include(APP_INSTALL_PATH."/core/tests/startup.phtml");
     }
 
     /**
@@ -1123,7 +1123,7 @@ class Utils
     static function runTests(&$outputArray, &$testedParams)
     {
         // At first, list folder in the tests subfolder
-        chdir(BOA_TESTS_FOLDER);
+        chdir(APP_TESTS_FOLDER);
         $files = glob('*.php');
 
         $outputArray = array();
@@ -1150,19 +1150,19 @@ class Utils
         }
         // PREPARE REPOSITORY LISTS
         $repoList = array();
-        include(BOA_CONF_PATH . "/bootstrap_repositories.php");
+        include(APP_CONF_PATH . "/bootstrap_repositories.php");
         foreach ($REPOSITORIES as $index => $repo) {
             $repoList[] = ConfService::createRepositoryFromArray($index, $repo);
         }
         // Try with the serialized repositories
-        if (is_file(BOA_DATA_PATH . "/plugins/conf.serial/repo.ser")) {
-            $fileLines = file(BOA_DATA_PATH . "/plugins/conf.serial/repo.ser");
+        if (is_file(APP_DATA_PATH . "/plugins/conf.serial/repo.ser")) {
+            $fileLines = file(APP_DATA_PATH . "/plugins/conf.serial/repo.ser");
             $repos = unserialize($fileLines[0]);
             $repoList = array_merge($repoList, $repos);
         }
 
         // NOW TRY THE PLUGIN TESTS
-        chdir(BOA_PLUGINS_FOLDER);
+        chdir(APP_PLUGINS_FOLDER);
         $files = glob('access.*/test.*.php');
         foreach ($files as $file)
         {
@@ -1502,7 +1502,7 @@ class Utils
                         $value = json_decode($value, true);
                     }
                     if(!in_array($type, array("textarea", "boolean", "text/json"))){
-                        $value = Utils::sanitize($value, BOA_SANITIZE_HTML);
+                        $value = Utils::sanitize($value, APP_SANITIZE_HTML);
                     }
                     unset($repDef[$key."_apptype"]);
                 }
@@ -1565,7 +1565,7 @@ class Utils
     }
 
     public static function runCreateTablesQuery($p, $file){
-        require_once(BOA_VENDOR_FOLDER."/dibi/dibi.compact.php");
+        require_once(APP_VENDOR_FOLDER."/dibi/dibi.compact.php");
         $result = array();
         if($p["driver"] == "sqlite" || $p["driver"] == "sqlite3"){
             if(!file_exists(dirname($p["database"]))){

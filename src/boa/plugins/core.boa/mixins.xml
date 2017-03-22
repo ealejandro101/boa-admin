@@ -4,7 +4,7 @@
 		<server_settings uuidAttr="name">
 			<param group="MIXIN_MESSAGE[User Credentials]" name="USER" type="string" label="MIXIN_MESSAGE[User]" description="MIXIN_MESSAGE[User name - Can be overriden on a per-user basis (see users 'Personal Data' tab)]" mandatory="false"/>
 			<param group="MIXIN_MESSAGE[User Credentials]" name="PASS" type="password" label="MIXIN_MESSAGE[Password]" description="MIXIN_MESSAGE[User password - Can be overriden on a per-user basis.]" mandatory="false"/>
-			<param group="MIXIN_MESSAGE[User Credentials]" name="USE_SESSION_CREDENTIALS" type="boolean" label="MIXIN_MESSAGE[Session credentials]" description="MIXIN_MESSAGE[Try to use the current System user credentials for connecting. Warning, the BOA_SESSION_SET_CREDENTIALS config must be set to true!]" mandatory="false" default="false"/>
+			<param group="MIXIN_MESSAGE[User Credentials]" name="USE_SESSION_CREDENTIALS" type="boolean" label="MIXIN_MESSAGE[Session credentials]" description="MIXIN_MESSAGE[Try to use the current System user credentials for connecting. Warning, the APP_SESSION_SET_CREDENTIALS config must be set to true!]" mandatory="false" default="false"/>
 			<user_param name="USER" type="string" label="MIXIN_MESSAGE[User]" description="MIXIN_MESSAGE[User name]" mandatory="false"/>
 			<user_param name="PASS" type="password" label="MIXIN_MESSAGE[Password]" description="MIXIN_MESSAGE[User password]" mandatory="false"/>
 		</server_settings>
@@ -13,15 +13,15 @@
 		<server_settings uuidAttr="name">
             <param group="MIXIN_MESSAGE[Repository Commons]" name="USER_DESCRIPTION" type="textarea" label="MIXIN_MESSAGE[Description]" description="MIXIN_MESSAGE[A user-defined description of the content of this workspace]" default=""/>
             <param group="MIXIN_MESSAGE[Repository Commons]" name="DEFAULT_RIGHTS" type="select" choices="r|Read Only,rw|Read and Write,w|Write Only (upload)" label="MIXIN_MESSAGE[Default Rights]" description="MIXIN_MESSAGE[This right pattern (empty, r, or rw) will be applied at user creation for this repository.]" default=""/>
-            <param group="MIXIN_MESSAGE[Repository Commons]" name="BOA_SLUG" type="string" label="MIXIN_MESSAGE[Alias]" description="MIXIN_MESSAGE[Alias for replacing the generated unique id of the repository]" mandatory="false" no_templates="true"/>
-            <param group="MIXIN_MESSAGE[Repository Commons]" name="BOA_GROUP_PATH_PARAMETER" type="string" label="MIXIN_MESSAGE[Group Path]" description="MIXIN_MESSAGE[Set this repository group owner : only users of this group will see it]" mandatory="false" no_templates="true"/>
+            <param group="MIXIN_MESSAGE[Repository Commons]" name="APP_SLUG" type="string" label="MIXIN_MESSAGE[Alias]" description="MIXIN_MESSAGE[Alias for replacing the generated unique id of the repository]" mandatory="false" no_templates="true"/>
+            <param group="MIXIN_MESSAGE[Repository Commons]" name="APP_GROUP_PATH_PARAMETER" type="string" label="MIXIN_MESSAGE[Group Path]" description="MIXIN_MESSAGE[Set this repository group owner : only users of this group will see it]" mandatory="false" no_templates="true"/>
 		</server_settings>
 	</slug_provider>
 	<template_provider>
 		<server_settings uuidAttr="name">
 			<param group="MIXIN_MESSAGE[Template Options]" name="TPL_USER_CAN_CREATE" type="boolean" label="MIXIN_MESSAGE[Allow to user]" description="MIXIN_MESSAGE[Allow non-admin users to create a repository from this template.]" mandatory="true" default="false" templates_only="true"/>
 			<param group="MIXIN_MESSAGE[Template Options]" name="TPL_GRP_ADMINS_CAN_CREATE" type="boolean" label="MIXIN_MESSAGE[Allow to group admins]" description="MIXIN_MESSAGE[Allow group administrators to create a repository from this template.]" mandatory="true" default="false" templates_only="true"/>
-			<param group="MIXIN_MESSAGE[Template Options]" name="TPL_DEFAULT_LABEL" type="string" label="MIXIN_MESSAGE[Default Label]" description="MIXIN_MESSAGE[Prefilled label for the new repository, you can use the BOA_USER keyworkd in it.]" mandatory="true" templates_only="true"/>
+			<param group="MIXIN_MESSAGE[Template Options]" name="TPL_DEFAULT_LABEL" type="string" label="MIXIN_MESSAGE[Default Label]" description="MIXIN_MESSAGE[Prefilled label for the new repository, you can use the APP_USER keyworkd in it.]" mandatory="true" templates_only="true"/>
             <param group="MIXIN_MESSAGE[Template Options]" name="TPL_ICON_SMALL" type="string" label="MIXIN_MESSAGE[Small Icon]" description="MIXIN_MESSAGE[16X16 Icon for representing the template]" mandatory="false" templates_only="true"/>
             <param group="MIXIN_MESSAGE[Template Options]" name="TPL_ICON_BIG" type="string" label="MIXIN_MESSAGE[Big Icon]" description="MIXIN_MESSAGE[Big Icon for representing the template]" mandatory="false" templates_only="true"/>
 		</server_settings>
@@ -45,7 +45,7 @@
             <param group="MIXIN_MESSAGE[Auth Driver Commons]" name="TRANSMIT_CLEAR_PASS" type="boolean" label="MIXIN_MESSAGE[Transmit Clear Pass]" description="MIXIN_MESSAGE[Whether the password will be transmitted clear or encoded between the client and the server]" default="true"/>
             <param group="MIXIN_MESSAGE[Auth Driver Commons]" name="AUTOCREATE_USER" type="boolean" label="MIXIN_MESSAGE[Auto Create User]" description="MIXIN_MESSAGE[When set to true, the user object is created automatically if the authentication succeed. Used by remote authentication systems.]" mandatory="false" default="false"/>
             <param group="MIXIN_MESSAGE[Auth Driver Commons]" name="LOGIN_REDIRECT" type="string" label="MIXIN_MESSAGE[Login Redirect]" description="MIXIN_MESSAGE[If set to a given URL, the login action will not trigger the display of login screen but redirect to this URL.]" mandatory="false"/>
-            <param group="MIXIN_MESSAGE[Auth Driver Commons]" name="BOA_ADMIN_LOGIN" type="string" label="MIXIN_MESSAGE[Admin Login]" description="MIXIN_MESSAGE[For exotic auth drivers, an user ID that must be considered as admin by default.]" mandatory="false"/>
+            <param group="MIXIN_MESSAGE[Auth Driver Commons]" name="APP_ADMIN_LOGIN" type="string" label="MIXIN_MESSAGE[Admin Login]" description="MIXIN_MESSAGE[For exotic auth drivers, an user ID that must be considered as admin by default.]" mandatory="false"/>
         </server_settings>
     </authdriver_commons>
     <dibidriver_consumer>
@@ -61,7 +61,7 @@
             <global_param group_switch_name="dibi_provider" group_switch_label="MySQL" group_switch_value="mysql" name="mysql_username" default="" label="User" description="User name" type="string" mandatory="true"/>
             <global_param group_switch_name="dibi_provider" group_switch_label="MySQL" group_switch_value="mysql" name="mysql_password" default="" label="Password" description="User password" type="password" mandatory="true"/>
             <global_param group_switch_name="dibi_provider" group_switch_label="Sqlite 3" group_switch_value="sqlite3" name="sqlite3_driver" default="sqlite3" label="Driver" description="Driver type (do not touch)" type="hidden" mandatory="true"/>
-            <global_param group_switch_name="dibi_provider" group_switch_label="Sqlite 3" group_switch_value="sqlite3" name="sqlite3_database" default="BOA_DATA_PATH/plugins/conf.sql/application.db" label="File" description="Database file" type="string" mandatory="true"/>
+            <global_param group_switch_name="dibi_provider" group_switch_label="Sqlite 3" group_switch_value="sqlite3" name="sqlite3_database" default="APP_DATA_PATH/plugins/conf.sql/application.db" label="File" description="Database file" type="string" mandatory="true"/>
         </server_settings>
     </dibidriver_provider>
 </mixins>

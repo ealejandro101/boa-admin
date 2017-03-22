@@ -32,11 +32,11 @@
  * Array is ("extension", "icon_name", "key of the message in the i18n file")
  *
  */
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 $RESERVED_EXTENSIONS = array(
-	"folder"	=> array("boa_folder", "folder.png", 8),
-	"unkown" 	=> array("boa_empty", "mime_empty.png", 23)
+	"folder"	=> array("APP_folder", "folder.png", 8),
+	"unkown" 	=> array("APP_empty", "mime_empty.png", 23)
 );
 $EXTENSIONS = array(
 	// ALL FILES TYPES

@@ -31,7 +31,7 @@ namespace BoA\Core\Exceptions;
 
 use BoA\Core\Services\ConfService;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 /**
  * Custom exception (legacy from php4 when there were no exceptions)
  * @package BoA

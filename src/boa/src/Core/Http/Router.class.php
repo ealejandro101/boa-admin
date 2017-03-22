@@ -39,7 +39,7 @@ use BoA\Core\Services\PluginsService;
 use BoA\Core\Http\XMLWriter;
 use BoA\Plugins\Core\Log;
 
-defined('BOA_EXEC') or die('Access not allowed');
+defined('APP_EXEC') or die('Access not allowed');
 
 class Router {
     const APP_SESSION_COOKIE = "BoA";
@@ -59,7 +59,7 @@ class Router {
         
         if( !isSet($_GET["action"]) && !isSet($_GET["get_action"])
             && !isSet($_POST["action"]) && !isSet($_POST["get_action"])
-            && defined("BOA_FORCE_SSL_REDIRECT") && BOA_FORCE_SSL_REDIRECT === true
+            && defined("APP_FORCE_SSL_REDIRECT") && APP_FORCE_SSL_REDIRECT === true
             && $_SERVER['SERVER_PORT'] != 443) {
             header("HTTP/1.1 301 Moved Permanently");
             header("Location: https://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
@@ -87,7 +87,7 @@ class Router {
         ConfService::init();
         $confPlugin = ConfService::getInstance()->confPluginSoftLoad($pServ);
         try{
-            $pServ->loadPluginsRegistry(BOA_PLUGINS_FOLDER, $confPlugin);
+            $pServ->loadPluginsRegistry(APP_PLUGINS_FOLDER, $confPlugin);
         }catch (\Exception $e){
             die("Severe error while loading plugins registry : ".$e->getMessage());
         }
@@ -158,7 +158,7 @@ class Router {
         //Set language
         $loggedUser = AuthService::getLoggedUser();
         if($loggedUser != null && $loggedUser->getPref("lang") != "") ConfService::setLanguage($loggedUser->getPref("lang"));
-        else if(isSet($_COOKIE["BOA_lang"])) ConfService::setLanguage($_COOKIE["BOA_lang"]);
+        else if(isSet($_COOKIE["APP_lang"])) ConfService::setLanguage($_COOKIE["APP_lang"]);
 
         //------------------------------------------------------------
         // SPECIAL HANDLING FOR FANCY UPLOADER RIGHTS FOR THIS ACTION

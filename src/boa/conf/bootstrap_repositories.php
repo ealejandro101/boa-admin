@@ -33,16 +33,16 @@
  * Use the GUI to add new repositories.
  *   + Log in as "admin" and open the "Settings" Repository
  */
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 $REPOSITORIES[0] = array(
 	"DISPLAY"		=>	"Default Files",
     "DISPLAY_ID"    =>  430,
     "DESCRIPTION_ID"=>  475,
-	"BOA_SLUG"		=>  "default",
+	"APP_SLUG"		=>  "default",
 	"DRIVER"		=>	"fs",
 	"DRIVER_OPTIONS"=> array(
-		"PATH"			=>	"BOA_DATA_PATH/files",
+		"PATH"			=>	"APP_DATA_PATH/files",
 		"CREATE"		=>	true,
 		"RECYCLE_BIN" 	=> 	'recycle_bin',
 		"CHMOD_VALUE"   =>  '0600',
@@ -77,10 +77,10 @@ $REPOSITORIES[1] = array(
 	"DISPLAY"		=>	"My Files",
     "DISPLAY_ID"    =>  432,
     "DESCRIPTION_ID"=>  476,
-	"BOA_SLUG"		=>  "my-files",
+	"APP_SLUG"		=>  "my-files",
 	"DRIVER"		=>	"fs",
 	"DRIVER_OPTIONS"=> array(
-		"PATH"			=>	"BOA_DATA_PATH/personal/BOA_USER",
+		"PATH"			=>	"APP_DATA_PATH/personal/APP_USER",
 		"CREATE"		=>	true,
 		"RECYCLE_BIN" 	=> 	'recycle_bin',
 		"CHMOD_VALUE"   =>  '0600',
@@ -105,7 +105,7 @@ $REPOSITORIES[1] = array(
             ),
             "index.lucene" => array(
                 "index_meta_fields" => "tags",
-                "repository_specific_keywords" => "BOA_USER",
+                "repository_specific_keywords" => "APP_USER",
             )
 		)
 	),

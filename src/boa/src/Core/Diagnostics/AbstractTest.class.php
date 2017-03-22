@@ -29,7 +29,7 @@
  */
 namespace BoA\Core\Diagnostics;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 global $MAIN_testsArray;
 /**

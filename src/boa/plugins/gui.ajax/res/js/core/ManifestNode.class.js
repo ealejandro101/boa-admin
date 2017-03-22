@@ -375,11 +375,11 @@ Class.create("ManifestNode", {
 		return (childPath.substring(0,parentPath.length) == parentPath);
 	},	
 	/**
-	 * Gets the current's node mime type, either by boa_mime or by extension.
+	 * Gets the current's node mime type, either by APP_mime or by extension.
 	 * @returns String
 	 */
 	getMime : function(){
-		if(this._metadata && this._metadata.get("boa_mime")) return this._metadata.get("boa_mime").toLowerCase();
+		if(this._metadata && this._metadata.get("APP_mime")) return this._metadata.get("APP_mime").toLowerCase();
 		if(this._metadata && this.isLeaf()) return getMimeType(this._metadata).toLowerCase();
 		return "";
 	}

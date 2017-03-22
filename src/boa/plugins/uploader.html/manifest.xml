@@ -37,18 +37,18 @@
 	</registry_contributions>
     <dependencies>
         <!-- Stream Wrapper Access, and dependancy to uploader.flex forces the order -->
-        <activePlugin pluginName="access.BOA_STREAM_PROVIDER"/>
+        <activePlugin pluginName="access.APP_STREAM_PROVIDER"/>
     </dependencies>
 	<processing>	
 		<clientForm id="originalUploadForm"><![CDATA[
 			<!-- UPLOAD FORM -->
-			<form action="BOA_SERVER_ACCESS" target="hidden_iframe" enctype="multipart/form-data" method="POST" id="originalUploadForm" style="text-align:left; display:none;" box_width="420">					
+			<form action="APP_SERVER_ACCESS" target="hidden_iframe" enctype="multipart/form-data" method="POST" id="originalUploadForm" style="text-align:left; display:none;" box_width="420">					
 			<table>
 				<tr>                                
 				        <td id="fileInputContainer" valign="top"><div id="fileInputContainerDiv">                                
 				                <div id="fileInputPos"><input type="file" name="userfile_1" class="dialogFocus"></div>                              
-				                <div id="uploadBrowseButton" class="fakeUploadButton"><img src="BOA_THEME_FOLDER/images/actions/22/view_list_details.png"><br/>BOA_MESSAGE[171]</div>
-				                <div id="uploadSendButton" class="fakeUploadButton"><img src="BOA_THEME_FOLDER/images/actions/22/yast_backup.png"><br/>BOA_MESSAGE[77]</div>
+				                <div id="uploadBrowseButton" class="fakeUploadButton"><img src="APP_THEME_FOLDER/images/actions/22/view_list_details.png"><br/>APP_MESSAGE[171]</div>
+				                <div id="uploadSendButton" class="fakeUploadButton"><img src="APP_THEME_FOLDER/images/actions/22/yast_backup.png"><br/>APP_MESSAGE[77]</div>
 				        </div></td>                                
 				        <td rowspan="2" id="uploadFilesListContainer">                                
 				                <div id="upload_files_list" class="uploadFilesList"></div>                                
@@ -56,8 +56,8 @@
 				</tr>                                
 				<tr>                                
 				        <td id="optClosButtonsContainer">                                
-				                <div class="fakeUploadButton fakeOptionButton" id="uploadOptionsButton">BOA_MESSAGE[310] <span style="display:none;">[x]</span></div>
-				                <div class="fakeUploadButton fakeOptionButton" id="uploadCloseButton">BOA_MESSAGE[86]</div>                        
+				                <div class="fakeUploadButton fakeOptionButton" id="uploadOptionsButton">APP_MESSAGE[310] <span style="display:none;">[x]</span></div>
+				                <div class="fakeUploadButton fakeOptionButton" id="uploadCloseButton">APP_MESSAGE[86]</div>                        
 				        </td>				       
 				</tr> 
 			</table>
@@ -68,16 +68,16 @@
 		]]></clientForm>
         <clientForm id="originalUploadForm" theme="vision"><![CDATA[
 			<!-- UPLOAD FORM -->
-			<form action="BOA_SERVER_ACCESS" target="hidden_iframe" enctype="multipart/form-data" method="POST" id="originalUploadForm" style="text-align:left; display:none;" box_width="420">
+			<form action="APP_SERVER_ACCESS" target="hidden_iframe" enctype="multipart/form-data" method="POST" id="originalUploadForm" style="text-align:left; display:none;" box_width="420">
 			<div id="fileInputContainer">
 			    <div id="uploaderTextActions">
-                    <span id="uploadSendButton">BOA_MESSAGE[77] |</span>
-                    <span id="clear_list_button">BOA_MESSAGE[216] |</span>
-                    <span id="uploadOptionsButton">BOA_MESSAGE[310] <span style="display:none;">[x]</span></span>
+                    <span id="uploadSendButton">APP_MESSAGE[77] |</span>
+                    <span id="clear_list_button">APP_MESSAGE[216] |</span>
+                    <span id="uploadOptionsButton">APP_MESSAGE[310] <span style="display:none;">[x]</span></span>
 			    </div>
                 <div id="fileInputContainerDiv">
                         <div id="fileInputPos"><input type="file" name="userfile_1" class="dialogFocus"></div>
-                        <div id="uploadBrowseButton" class="fakeUploadButton"><span class="icon-desktop"></span>BOA_MESSAGE[454]</div>
+                        <div id="uploadBrowseButton" class="fakeUploadButton"><span class="icon-desktop"></span>APP_MESSAGE[454]</div>
                 </div>
             </div>
 			<div id="uploader_options_pane"></div>

@@ -37,11 +37,11 @@ use BoA\Core\Services\ConfService;
 use BoA\Core\Utils\Utils;
 use BoA\Plugins\Core\Log\Logger;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Wrapper for a local filesystem
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Access
  */
 class FsAccessWrapper implements FileWrapper {
@@ -101,7 +101,7 @@ class FsAccessWrapper implements FileWrapper {
         if($insideZip){
             $zipPath = $split[0];
             $localPath = $split[1];
-            require_once(BOA_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
+            require_once(APP_VENDOR_FOLDER."/pclzip/pclzip.lib.php");
             //print($streamType.$path);
             if($streamType == "file"){
                 if(self::$crtZip == null ||  !is_array(self::$currentListingKeys)){

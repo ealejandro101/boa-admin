@@ -38,12 +38,12 @@ use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Xml\ManifestNode;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Simple metadata implementation, stored in hidden files inside the
  * folders
- * @package BoA_Plugins
+ * @package APP_Plugins
  * @subpackage Meta
  */
 class UserMetaManager extends Plugin {
@@ -77,7 +77,7 @@ class UserMetaManager extends Plugin {
         if(!isSet($this->options["meta_visibility"])) $visibilities = array("visible");
         else $visibilities = explode(",", $this->options["meta_visibility"]);
 		$cdataHead = '<div>
-						<div class="panelHeader infoPanelGroup" colspan="2"><span class="icon-edit" data-action="edit_user_meta" title="BOA_MESSAGE[meta.user.1]"></span>BOA_MESSAGE[meta.user.1]</div>
+						<div class="panelHeader infoPanelGroup" colspan="2"><span class="icon-edit" data-action="edit_user_meta" title="APP_MESSAGE[meta.user.1]"></span>APP_MESSAGE[meta.user.1]</div>
 						<table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">';
 		$cdataFoot = '</table></div>';
 		$cdataParts = "";
@@ -202,14 +202,14 @@ class UserMetaManager extends Plugin {
 				$newValues[$key] = Utils::decodeSecureMagic($httpVars[$key]);
 			}else{
 				if(!isset($original)){
-                    $original = $node->retrieveMetadata("users_meta", false, BOA_METADATA_SCOPE_GLOBAL);
+                    $original = $node->retrieveMetadata("users_meta", false, APP_METADATA_SCOPE_GLOBAL);
 				}
 				if(isSet($original) && isset($original[$key])){
 					$newValues[$key] = $original[$key];
 				}
 			}
 		}		
-    $node->setMetadata("users_meta", $newValues, false, BOA_METADATA_SCOPE_GLOBAL);
+    $node->setMetadata("users_meta", $newValues, false, APP_METADATA_SCOPE_GLOBAL);
     Controller::applyHook("node.meta_change", array($node));
 		XMLWriter::header();
     XMLWriter::writeNodesDiff(array("UPDATE" => array($node->getPath() => $node)), true);
@@ -225,8 +225,8 @@ class UserMetaManager extends Plugin {
      */
 	public function extractMeta(&$node, $contextNode = false, $details = false){
 
-        //$metadata = $this->metaStore->retrieveMetadata($node, "users_meta", false, BOA_METADATA_SCOPE_GLOBAL);
-        $metadata = $node->retrieveMetadata("users_meta", false, BOA_METADATA_SCOPE_GLOBAL);
+        //$metadata = $this->metaStore->retrieveMetadata($node, "users_meta", false, APP_METADATA_SCOPE_GLOBAL);
+        $metadata = $node->retrieveMetadata("users_meta", false, APP_METADATA_SCOPE_GLOBAL);
         if(count($metadata)){
             // @todo : Should be UTF8-IZED at output only !!??
             // array_map(array("SystemTextEncoding", "toUTF8"), $metadata);
@@ -247,17 +247,17 @@ class UserMetaManager extends Plugin {
 		if($oldFile == null) return;
         if(!$copy && $this->metaStore->inherentMetaMove()) return;
 		
-		$oldMeta = $this->metaStore->retrieveMetadata($oldFile, "users_meta", false, BOA_METADATA_SCOPE_GLOBAL);
+		$oldMeta = $this->metaStore->retrieveMetadata($oldFile, "users_meta", false, APP_METADATA_SCOPE_GLOBAL);
 		if(!count($oldMeta)){
 			return;
 		}
 		// If it's a move or a delete, delete old data
 		if(!$copy){
-            $this->metaStore->removeMetadata($oldFile, "users_meta", false, BOA_METADATA_SCOPE_GLOBAL);
+            $this->metaStore->removeMetadata($oldFile, "users_meta", false, APP_METADATA_SCOPE_GLOBAL);
 		}
 		// If copy or move, copy data.
 		if($newFile != null){
-            $this->metaStore->setMetadata($newFile, "users_meta", $oldMeta, false, BOA_METADATA_SCOPE_GLOBAL);
+            $this->metaStore->setMetadata($newFile, "users_meta", $oldMeta, false, APP_METADATA_SCOPE_GLOBAL);
 		}
 	}
 	

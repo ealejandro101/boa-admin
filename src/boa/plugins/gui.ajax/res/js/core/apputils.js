@@ -45,11 +45,11 @@ function getRepName(fileName)
 function getMimeType(item){
 	if(!item) return "";
 	if(Object.isHash(item)){
-		return (item.get('boa_mime') || getFileExtension(item.get('filename')));
+		return (item.get('APP_mime') || getFileExtension(item.get('filename')));
 	}else if(Object.isFunction(item.getMetadata)){
-		return (item.getMetadata().get('boa_mime') || getFileExtension(item.getPath()));
+		return (item.getMetadata().get('APP_mime') || getFileExtension(item.getPath()));
 	}else{
-		return (item.getAttribute('boa_mime') || getFileExtension(item.getAttribute('filename')));
+		return (item.getAttribute('APP_mime') || getFileExtension(item.getAttribute('filename')));
 	}	
 }
 
@@ -181,17 +181,17 @@ function setAppCookie(name, value){
 		path: '/',
 		secure: true
 	});
-	cookieJar.put('boa_'+name, value);	
+	cookieJar.put('APP_'+name, value);	
 }
 
 function getAppCookie(name){
 	var cookieJar = new CookieJar({path: '/',secure:true});
-	return cookieJar.get('boa_'+name);	
+	return cookieJar.get('APP_'+name);	
 }
 
 function deleteAppCookie(name){
 	var cookieJar = new CookieJar({path: '/',secure:true});
-	cookieJar.remove('boa_'+name);	
+	cookieJar.remove('APP_'+name);	
 }
 
 function refreshPNGImages(element){

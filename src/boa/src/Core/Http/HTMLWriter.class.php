@@ -33,7 +33,7 @@ use BoA\Core\Http\XMLWriter;
 use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 
-defined('BOA_EXEC') or die( 'Access not allowed');
+defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Static functions for generating HTML.
@@ -64,15 +64,15 @@ class HTMLWriter
      */
     static function getDocFile($docFileName)
     {
-    	$realName = BOA_DOCS_FOLDER."/".$docFileName.".txt";
+    	$realName = APP_DOCS_FOLDER."/".$docFileName.".txt";
     	if(is_file($realName))
     	{
     		$content = implode("<br>", file($realName));
     		$content = preg_replace("(http:\/\/[a-z|.|\/|\-|0-9]*)", "<a target=\"_blank\" href=\"$0\">$0</a>", $content);
     		$content = preg_replace("(\[(.*)\])", "<div class=\"title\">$1</div>", $content);
     		$content = preg_replace("(\+\+ (.*) \+\+)", "<div class=\"subtitle\">$1</div>", $content);
-    		$content = str_replace("__BOA_VERSION__", BOA_VERSION, $content);
-    		$content = str_replace("__BOA_VERSION_DATE__", BOA_VERSION_DATE, $content);
+    		$content = str_replace("__APP_VERSION__", APP_VERSION, $content);
+    		$content = str_replace("__APP_VERSION_DATE__", APP_VERSION_DATE, $content);
     		return $content;
     	}
     	return "File not found : ".$docFileName;

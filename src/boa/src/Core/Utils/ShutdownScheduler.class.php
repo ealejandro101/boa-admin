@@ -31,7 +31,7 @@ namespace BoA\Core\Utils;
 
 use BoA\Plugins\Core\Log\Logger;
 
-defined('BOA_EXEC') or die('Access not allowed');
+defined('APP_EXEC') or die('Access not allowed');
 /**
  *
  * @package BoA

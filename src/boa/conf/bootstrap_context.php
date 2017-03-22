@@ -39,31 +39,30 @@ if(function_exists("xdebug_disable")){
 //Windows users may have to uncomment this
 //setlocale(LC_ALL, '');
 
+list($vNmber,$vDate) = explode("__",file_get_contents(APP_CONF_PATH."/VERSION"));
 
-list($vNmber,$vDate) = explode("__",file_get_contents(BOA_CONF_PATH."/VERSION"));
-
-define("BOA_VERSION", $vNmber);
-define("BOA_VERSION_DATE", $vDate);
-define("BOA_EXEC", true);
+define("APP_VERSION", $vNmber);
+define("APP_VERSION_DATE", $vDate);
+define("APP_EXEC", true);
 
 // APPLICATION PATHES CONFIGURATION
-define("BOA_DATA_PATH", BOA_INSTALL_PATH."/data");
-define("BOA_CACHE_DIR", BOA_DATA_PATH."/cache");
-define("BOA_SHARED_CACHE_DIR", BOA_INSTALL_PATH."/data/cache");
-define("BOA_PLUGINS_CACHE_FILE", BOA_CACHE_DIR."/plugins_cache.ser");
-define("BOA_PLUGINS_REQUIRES_FILE", BOA_CACHE_DIR."/plugins_requires.ser");
-define("BOA_PLUGINS_QUERIES_CACHE", BOA_CACHE_DIR."/plugins_queries.ser");
-define("BOA_PLUGINS_MESSAGES_FILE", BOA_CACHE_DIR."/plugins_messages.ser");
-define("BOA_SERVER_ACCESS", "index.php");
-define("BOA_PLUGINS_FOLDER", BOA_INSTALL_PATH."/boa/plugins");
-define("BOA_PLUGINS_FOLDER_REL", "boa/plugins");
-define("BOA_BIN_FOLDER", BOA_INSTALL_PATH."/boa/src");
-define("BOA_BIN_FOLDER_REL", "boa/src");
-define("BOA_VENDOR_FOLDER", BOA_INSTALL_PATH."/boa/vendor");
-define("BOA_DOCS_FOLDER", BOA_INSTALL_PATH."/boa/docs");
-define("BOA_COREI18N_FOLDER", BOA_PLUGINS_FOLDER."/core.boa/i18n");
-define("TESTS_RESULT_FILE", BOA_CACHE_DIR."/diag_result.php");
-define("BOA_TESTS_FOLDER", BOA_INSTALL_PATH."/boa/tests");
+define("APP_DATA_PATH", APP_INSTALL_PATH."/data");
+define("APP_CACHE_DIR", APP_DATA_PATH."/cache");
+define("APP_SHARED_CACHE_DIR", APP_INSTALL_PATH."/data/cache");
+define("APP_PLUGINS_CACHE_FILE", APP_CACHE_DIR."/plugins_cache.ser");
+define("APP_PLUGINS_REQUIRES_FILE", APP_CACHE_DIR."/plugins_requires.ser");
+define("APP_PLUGINS_QUERIES_CACHE", APP_CACHE_DIR."/plugins_queries.ser");
+define("APP_PLUGINS_MESSAGES_FILE", APP_CACHE_DIR."/plugins_messages.ser");
+define("APP_SERVER_ACCESS", "index.php");
+define("APP_PLUGINS_FOLDER", APP_INSTALL_PATH."/boa/plugins");
+define("APP_PLUGINS_FOLDER_REL", "boa/plugins");
+define("APP_BIN_FOLDER", APP_INSTALL_PATH."/boa/src");
+define("APP_BIN_FOLDER_REL", "boa/src");
+define("APP_VENDOR_FOLDER", APP_INSTALL_PATH."/boa/vendor");
+define("APP_DOCS_FOLDER", APP_INSTALL_PATH."/boa/docs");
+define("APP_COREI18N_FOLDER", APP_PLUGINS_FOLDER."/core.boa/i18n");
+define("TESTS_RESULT_FILE", APP_CACHE_DIR."/diag_result.php");
+define("APP_TESTS_FOLDER", APP_INSTALL_PATH."/boa/tests");
 define("INITIAL_ADMIN_PASSWORD", "admin");
 define("SOFTWARE_UPDATE_SITE", "https://github.com/boa-project");
 // Startup admin password (used at first creation). Once
@@ -74,24 +73,24 @@ define("ADMIN_PASSWORD", "admin");
 // log files will be stored. This should be detected by log.* plugins
 // and used if defined. See bootstrap_plugins.php default configs for
 // example in log.serial. Do not forget the trailing slash
-// define("BOA_FORCE_LOGPATH", "/var/log/application/");
+// define("APP_FORCE_LOGPATH", "/var/log/application/");
 // DEBUG OPTIONS
-define("BOA_CLIENT_DEBUG"  ,   true);
-define("BOA_SERVER_DEBUG"  ,   false);
-define("BOA_SKIP_CACHE"    ,   true);
+define("APP_CLIENT_DEBUG"  ,   true);
+define("APP_SERVER_DEBUG"  ,   false);
+define("APP_SKIP_CACHE"    ,   true);
 
-//require(BOA_BIN_FOLDER."/compat.php");
-function BoA_autoload($className){    
+//require(APP_BIN_FOLDER."/compat.php");
+function APP_autoload($className){    
     //Core Classes
     $className = str_replace('\\', '/', $className);
     $lClassName = preg_replace('/^BoA\//', '', $className);
-    $fileName = BOA_BIN_FOLDER."/".$lClassName.".class.php";
+    $fileName = APP_BIN_FOLDER."/".$lClassName.".class.php";
     if(file_exists($fileName)){
         require_once($fileName);
         return;
     }
     //Core interfaces    
-    $fileName = BOA_BIN_FOLDER."/".$lClassName.".interface.php";
+    $fileName = APP_BIN_FOLDER."/".$lClassName.".interface.php";
     if(file_exists($fileName)){
         require_once($fileName);
         return;
@@ -102,13 +101,13 @@ function BoA_autoload($className){
         $value = explode('/', $className);
         $lClassName = end($value);
         //Try class
-        $corePlugClass = glob(BOA_PLUGINS_FOLDER."/core.*/".$lClassName.".class.php", GLOB_NOSORT);
+        $corePlugClass = glob(APP_PLUGINS_FOLDER."/core.*/".$lClassName.".class.php", GLOB_NOSORT);
         if($corePlugClass !== false && count($corePlugClass)){
             require_once($corePlugClass[0]);
             return;
         }
         //Try interface
-        $corePlugInterface = glob(BOA_PLUGINS_FOLDER."/core.*/".$lClassName.".interface.php", GLOB_NOSORT);
+        $corePlugInterface = glob(APP_PLUGINS_FOLDER."/core.*/".$lClassName.".interface.php", GLOB_NOSORT);
         if($corePlugInterface !== false && count($corePlugInterface)){
             require_once($corePlugInterface[0]);
             return;
@@ -116,18 +115,18 @@ function BoA_autoload($className){
     }
 }
 
-spl_autoload_register('BoA_autoload');
+spl_autoload_register('APP_autoload');
 
 use BoA\Core\Utils\Utils;
 
 Utils::safeIniSet("session.cookie_httponly", 1);
 
-if(is_file(BOA_CONF_PATH."/bootstrap_conf.php")){
-    include(BOA_CONF_PATH."/bootstrap_conf.php");
-    if(isSet($BOA_INISET)){
-        foreach($BOA_INISET as $key => $value) Utils::safeIniSet($key, $value);
+if(is_file(APP_CONF_PATH."/bootstrap_conf.php")){
+    include(APP_CONF_PATH."/bootstrap_conf.php");
+    if(isSet($APP_INISET)){
+        foreach($APP_INISET as $key => $value) Utils::safeIniSet($key, $value);
     }
-    if(defined('BOA_LOCALE')){
-        setlocale(LC_ALL, BOA_LOCALE);
+    if(defined('APP_LOCALE')){
+        setlocale(LC_ALL, APP_LOCALE);
     }
 }

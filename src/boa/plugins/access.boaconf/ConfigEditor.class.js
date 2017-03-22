@@ -201,7 +201,7 @@ Class.create("ConfigEditor",{
             var editorData = app.findEditorById("editor.role");
             app.loadEditorResources(editorData.resourcesManager);
             var node = new ManifestNode(currentPath + "/"+newUserName, true);
-            node.getMetadata().set("boa_mime", "user");
+            node.getMetadata().set("APP_mime", "user");
             modal.openEditorDialog(editorData, node);
         }.bind(this), function(responseXML){
             // error callback;
