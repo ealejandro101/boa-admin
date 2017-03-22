@@ -1,0 +1,8 @@
+{
+    "require-dev": {
+        "squizlabs/php_codesniffer": "2.*",
+        "sebastian/phpdcd": "*",
+        "phpmd/phpmd" : "@stable",
+        "pdepend/pdepend": "2.2.2"
+    }
+}

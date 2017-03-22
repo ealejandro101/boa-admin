@@ -1,0 +1,51 @@
+<img src="boa/plugins/gui.ajax/AppLogo250.png"/>
+<div style="padding-left:10px;">Version __APP_VERSION__ - __APP_VERSION_DATE__
+
+Copyright 2017 BoA Project
+The latest code can be found at https://github.com/boa-project/boa.
+
+++ LICENSE ++
+BoA is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+BoA is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with BoA.  If not, see <http://www.gnu.org/licenses/>.
+
+
+++ CONTRIBUTORS ++
+
+++ THIRD PARTY LIBRARIES ++
+[Amazon S3]
+    S3 Stream Wrapper is released under the BSD license, Copyright 2011 P'unk Avenue LLC http://punkave.com/
+
+[JavaScript] 
+	Prototype, Scriptaculous http://www.prototypejs.org/, http://script.aculo.us/ (MIT)
+	Modernizr 	http://modernizr.com (BSD / MIT)
+	Webfx widgets (selectable, sortable, xtree) : http://webfx.eae.net/ (Apache 2)
+
+[Images]
+	Oxygen : http://www.oxygen-icons.org/ (Creative Common SA 3.0 / LGPL)
+	Font Awesome by Dave Gandy : http://fortawesome.github.com/Font-Awesome/ (SIL Open Font License)
+	
+[Core PHP Classes]
+	SabreDAV Library http://code.google.com/p/sabredav (New BSD)
+	SECURIMAGE http://www.phpcaptcha.org/ (LGPL)
+	Pclzip : http://www.phpconcept.net/pclzip/ (LGPL)
+
+[Plugins]
+	PThumb.php http://www.phpclasses.org (LPGL)
+	OpenLayers http://www.openlayers.org (BSD)
+	Video-js http://www.videojs.com/ (LGPL)
+	Zend Lucene http://www.zend.com/ (New BSD)
+	svn_lib.inc (LGPL)
+	PhpMailer-Lite http://phpmailer.sourceforge.net (LGPL)
+	Mp3 Player : http://www.alsacreations.fr/mp3-dewplayer.html
+	SoundManager : http://www.schillmania.com/projects/soundmanager2/ (BSD)
+</div>

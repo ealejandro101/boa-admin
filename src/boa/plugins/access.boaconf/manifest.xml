@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coredriver name="boaconf" label="CONF_MESSAGE[Admin Driver]" description="CONF_MESSAGE[Access System configuration data.]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
+    <class_definition classname="BoA\Plugins\Access\BoAConf\ConfAccessDriver" filename="access.boaconf/ConfAccessDriver.class.php"/>
+    <plugin_info>
+        <core_relation packaged="true" tested_version="4.2.0"/>
+        <plugin_author>Charles du Jeu</plugin_author>
+    </plugin_info>
+	<client_settings icon="plugins/access.boaconf/admin.png">
+		<resources>
+			<i18n namespace="boaconf" path="access.boaconf/i18n" />		
+			<i18n namespace="shared" path="access.shared/i18n" />
+			<js file="plugins/access.boaconf/ConfigEditor.class.js" className="ConfigEditor"/>			
+		</resources>
+	</client_settings>
+	<registry_contributions>
+		<client_configs>
+            <template_part theme="umbra" appId="sidebar_splitter" appClass="AppPane" appOptions='{"fit":"height"}'><![CDATA[
+                <div id="folderPane" appClass="FoldersTree" appOptions='{"display":"dz","replaceScroller":true}' appPaneHeader="165" appPaneIcon="view_tree.png" style="margin:20px;"></div>
+                <style>
+                    #sidebar_splitter{padding-bottom:20px;background-color:#EFD585;}
+                    .webfx-tree-item:first-of-type{
+                        display:none;
+                    }
+                    .webfx-tree-container>.webfx-tree-item:first-of-type{
+                        display:block;
+                    }
+                    .webfx-tree-container.first_container{
+                        margin-left: -19px;
+                    }
+                    .webfx-tree-container > .webfx-tree-item {
+                        font-weight: bold;
+                    }
+                    .webfx-tree-container > .webfx-tree-container > .webfx-tree-item {
+                        font-weight: normal;
+                    }
+                </style>
+            ]]></template_part>
+            <template_part appClass="AppPane" appId="info_panel" appOptions='{}'><![CDATA[
+                    <style>
+                        .webfx-tree-item:first-of-type{
+                            display:none;
+                        }
+                        .webfx-tree-container>.webfx-tree-item:first-of-type{
+                            display:block;
+                        }
+                        .webfx-tree-container.first_container{
+                            margin-left: -19px;
+                        }
+                        .action_bar a, .menu.desktop.toolbarmenu, div.editor_header a{
+                            background-color: rgb(78, 154, 179) !important;
+                        }
+                        .dialogTitle {
+                            background-color: rgb(78, 154, 179) !important;
+                            border-bottom: 1px solid rgb(50, 102, 119) !important;
+                        }
+                        #switch_to_settings_button {
+                            display: none !important;
+                        }
+                        .developerDoc{
+                            font-size: 12px !important;
+                            line-height: 18px !important;
+                            padding-bottom: 5px;
+                        }
+                        .developerApiAccess{
+                            display: inline-block;
+                            margin: 5px 0;
+                        }
+                        .table_rows_container td{
+                            vertical-align:top;
+                        }
+                    </style>
+                    <script>
+                        var splitter = $("vertical_splitter").paneObject;
+                        splitter.paneB._max = 1;
+                        splitter.options.maxB = 1;
+                        splitter.resizeGroup();
+                        document.observe("boa:user_logged", function(){
+                            if(app.repositoryId == "boaconf"){
+                                splitter.paneB._max = 1;
+                                splitter.options.maxB = 1;
+                            }else{
+                                splitter.paneB._max = 0;
+                                splitter.options.maxB = 0;
+                                if(splitter.foldedPane && splitter.foldedPane == splitter.paneB){
+                                    splitter.paneB.setStyle({width:'26px'});
+                                }
+                            }
+                            splitter.resizeGroup();
+                        });
+                    </script>
+                    ]]></template_part>
+            <template_part appClass="Tabulator" theme="vision" appId="topPane" appOptions='{"defaultTabId": "folders","tabInfos" : [{"id":"folders","label":"130","iconClass":"icon-folder-open","element":"folder_pane"},{"id":"flagged","label":"147","iconClass":"icon-star","element":"flagged_elements"}],"headerToolbarOptions":{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["filter"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}}'><![CDATA[
+                <div id="folder_pane" appClass="FoldersTree" appOptions='{"display":"dz","replaceScroller":true}' ></div>
+                <div id="flagged_elements" appClass="FetchedResultPane" appOptions='{"nodeProviderProperties":{"get_action":"get_bookmarks", "format":"node_list"}}'></div>
+            ]]></template_part>
+            <component_config className="Splitter::vertical_splitter">
+                <property name="resize" value="100%"/>
+            </component_config>
+		</client_configs>
+		<external_file filename="access.boaconf/actions.xml" include="actions/*"/>
+		<external_file filename="access.shared/manifest.xml" include='registry_contributions/actions/action[@name="clear_expired"]'/>
+		<external_file filename="access.boaconf/actions.xml" include="client_configs/*"/>
+	</registry_contributions>	
+</coredriver>

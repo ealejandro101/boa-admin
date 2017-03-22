@@ -14,8 +14,7 @@ A DCO is composed of:
 
 	* metadata file: (LOM based) (Required) (json recommended)
 	* content (distributable content):
-		- file(s) if not external
-		- link if external (It maybe a metadata)
+		- file(s). Can be empty.
 	* manifest file: A file describing the DCO including but not limited to
 		- content type: (Local, External, Adaptative)
 		- display properties  / View type (html, streaming, interpretated, etc)
@@ -24,18 +23,38 @@ A DCO is composed of:
 	* source content (all resources required to produce the content) (Optional)
 
 
-libraries / stores
-
-
-An LO
-
-A learning
-
-
-
+### Stores
 
 A Store is a warehouse for storing common DCOs.
 	Eventually there can be owner Stores, corporation stores among others.
+
+
+### Configuration and Application Data
+
+
+Security
+
+Search Indexes
+
+
+
+Global
+
+
+
+	
+
+
+
+
+
+
+
+A relational database will be used to store user management, settings, among others. e.g
+	Users
+	Roles
+	Stores
+	Settings
 
 
 

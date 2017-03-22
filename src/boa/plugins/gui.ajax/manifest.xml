@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<guidriver name="browser_client" label="CONF_MESSAGE[Client Plugin]" description="CONF_MESSAGE[Browser-based rich interface. Contains configurations for theming, custom welcome message, etc.]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
+	<class_definition classname="BoA\Plugins\Gui\Ajax\ClientDriver" filename="gui.ajax/ClientDriver.class.php"/>
+    <client_settings>
+        <resources>
+            <i18n namespace="APP_gui" path="gui.ajax/res/i18n"/>
+        </resources>
+    </client_settings>
+	<server_settings>
+        <global_param name="GUI_THEME" group="CONF_MESSAGE[Main Options]" type="select" choices="vision|Vision,umbra|Umbra,oxygen|Oxygen (Legacy)" label="CONF_MESSAGE[Theme]" description="CONF_MESSAGE[Theme used for display]" mandatory="true" default="umbra"/>
+        <global_param name="CUSTOM_ICON_ONLY" group="CONF_MESSAGE[Start Up Screen]" type="boolean" label="CONF_MESSAGE[Icon Only]" description="CONF_MESSAGE[Skip the title, only display an image]" mandatory="false" default="true"/>
+        <global_param name="CUSTOM_ICON_BINARY" group="CONF_MESSAGE[Start Up Screen]" type="image" label="CONF_MESSAGE[Custom Icon]" description="CONF_MESSAGE[URI to a custom image to be used as start up logo]"
+        editable="true"
+        uploadAction="store_binary_temp"
+        loadAction="get_global_binary_param"
+        defaultImage="gui.ajax/AppLogo250.png"
+        mandatory="false"/>
+        <global_param name="CUSTOM_ICON" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Icon Path (Legacy)]" description="CONF_MESSAGE[URI to a custom image to be used as start up logo]" default="plugins/gui.ajax/AppLogo250.png" mandatory="false"/>
+        <global_param name="CUSTOM_ICON_WIDTH" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Icon Width]" description="CONF_MESSAGE[Width of the custom image (by default 35px)]" mandatory="false" default="250px"/>
+        <global_param name="CUSTOM_ICON_HEIGHT" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Icon Height]" description="CONF_MESSAGE[Height of the custom icon (with the px mention)]" mandatory="false" default="50px"/>
+        <global_param name="CUSTOM_FONT_SIZE" group="CONF_MESSAGE[Start Up Screen]" type="string" label="CONF_MESSAGE[Title Font Size]" description="CONF_MESSAGE[Font sized used for the title in the start up screen]" mandatory="false" default=""/>
+        <global_param name="CUSTOM_WELCOME_MESSAGE" group="CONF_MESSAGE[Start Up Screen]" type="textarea" label="CONF_MESSAGE[Welcome Message]" description="CONF_MESSAGE[An additionnal message displayed in the start up screen]" mandatory="false" default=""/>
+        <global_param name="CUSTOM_TOP_TITLE" group="CONF_MESSAGE[Top Toolbar]" type="string" label="CONF_MESSAGE[Title]" description="CONF_MESSAGE[Append a title to the image logo]" mandatory="false" default="" expose="true"/>
+        <global_param name="CUSTOM_TOP_LOGO" group="CONF_MESSAGE[Top Toolbar]"  label="CONF_MESSAGE[Logo]" description="CONF_MESSAGE[Replace the top left logo in the top toolbar]"  type="image"
+                      editable="true"
+                      uploadAction="store_binary_temp"
+                      loadAction="get_global_binary_param"
+                      defaultImage="plugins/gui.ajax/res/themes/umbra/images/white_logo.png"
+                      expose="true"
+                />
+        <global_param name="CUSTOM_TOP_LOGO_H" group="CONF_MESSAGE[Top Toolbar]" type="integer" label="CONF_MESSAGE[Logo Height]" description="CONF_MESSAGE[Manually set a logo height]" mandatory="false" default="39" expose="true"/>
+        <global_param name="CUSTOM_TOP_LOGO_W" group="CONF_MESSAGE[Top Toolbar]" type="integer" label="CONF_MESSAGE[Logo Width]" description="CONF_MESSAGE[Manually set a logo width]" mandatory="false" default="" expose="true"/>
+        <global_param name="CUSTOM_TOP_LOGO_T" group="CONF_MESSAGE[Top Toolbar]" type="integer" label="CONF_MESSAGE[Logo Top]" description="CONF_MESSAGE[Manually set a top offset]" mandatory="false" default="0" expose="true"/>
+        <global_param name="CUSTOM_TOP_LOGO_L" group="CONF_MESSAGE[Top Toolbar]" type="integer" label="CONF_MESSAGE[Logo Left]" description="CONF_MESSAGE[Manually set a left offset]" mandatory="false" default="0" expose="true"/>
+        <global_param name="CLIENT_TIMEOUT_TIME" group="CONF_MESSAGE[Client Session Config]" type="integer" label="CONF_MESSAGE[Client Timeout]" description="CONF_MESSAGE[The length of the client session in SECONDS. By default, it's copying the server session length. In most PHP installation, it will be 1440, ie 24minutes. You can set this value to 0, this will make the client session 'infinite' by pinging the server at regular occasions (thus keeping the PHP session alive). This is not a recommanded setting for evident security reasons.]" mandatory="false"/>
+		<global_param name="CLIENT_TIMEOUT_WARN" group="CONF_MESSAGE[Client Session Config]" type="integer" label="CONF_MESSAGE[Warning Before]" description="CONF_MESSAGE[Number of MINUTES before the session expiration for issuing an alert to the user]" mandatory="false" default="3"/>
+		<global_param name="GOOGLE_ANALYTICS_ID" group="CONF_MESSAGE[Google Analytics]" type="string" label="CONF_MESSAGE[Analytics ID]" description="CONF_MESSAGE[Id of your GA account, something like UE-XXXX-YY]" mandatory="false"/>
+		<global_param name="GOOGLE_ANALYTICS_DOMAIN" group="CONF_MESSAGE[Google Analytics]" type="string" label="CONF_MESSAGE[Analytics Domain]" description="CONF_MESSAGE[Set the domain for yuor analytics reports (not mandatory!)]" mandatory="false"/>
+		<global_param name="GOOGLE_ANALYTICS_EVENT" group="CONF_MESSAGE[Google Analytics]" type="boolean" label="CONF_MESSAGE[Analytics Events]" description="CONF_MESSAGE[Use Events Logging, experimental only implemented on download action]" mandatory="false" default="false"/>
+	</server_settings>
+	<registry_contributions>
+		<actions>
+			<action name="get_boot_gui" skipSecureToken="true">
+				<processing>
+					<serverCallback methodName="switchAction"></serverCallback>
+				</processing>
+			</action>
+			<action name="get_boot_conf" skipSecureToken="true">
+				<processing>
+					<serverCallback methodName="switchAction"></serverCallback>
+				</processing>
+			</action>
+		</actions>
+        <hooks>
+            <serverCallback hookName="node.info" methodName="nodeBookmarkMetadata"></serverCallback>
+        </hooks>
+		<external_file filename="gui.ajax/client_actions.xml" include="actions/*" exclude=""/>
+		<client_configs uuidAttr="name">
+			<template name="main_oxygen" element="desktop" position="top" theme="oxygen"><![CDATA[
+				<div id="toolbars">
+					<div id="action_bar">
+						<div id="buttons_bar" class="action_bar" appClass="ActionsToolbar"></div>
+						<div id="locationbar_cont">
+							<div style="height: 100%;" class="separator"></div>
+							<div style="padding-top : 5px;">
+								<div id="repo_chooser" appClass="RepositorySelect"></div>
+								<div id="locationBar" appClass="LocationBar" appOptions='{"flexTo":"locationbar_cont"}'></div>
+								<div id="logging_string" appClass="UserWidget"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
+					<div id="vertical_splitter" style="background-color: #fff;" appClass="Splitter" appOptions='{"direction": "vertical", "initA": 200, "maxA":600, "minA":50,"fit":"height","fitParent":"browser"}'>
+						<div id="sidebar_splitter" style="float:left; overflow:hidden;" appClass="Splitter" appOptions='{"direction":"horizontal","initB":200,"minB":24,"maxB":500}'>
+							<div id="topPane" appClass="FoldersTree" appOptions='{"display":"dz"}' appPaneHeader="130" style="border: 1px solid #676965;"></div>
+					    	<div id="bottomSplitPane" appClass="Tabulator" style="border: 1px solid #676965;" appOptions='{"defaultTabId": "info","tabInfos" : [{"id":"info","label":"131","icon":"file_info.png","element":"info_panel"},{"id":"search","label":"87","icon":"search.png","element":"search_container"}]}'>
+						    	<div id="search_container" appClass="SearchEngine"></div>
+						    	<div id="info_panel" appClass="InfoPanel"></div>
+					    	</div>
+					    </div>
+						<div id="content_pane" appClass="FilesList" appOptions='"list"' style="border: 1px solid #676965;"></div>
+					</div>
+				</div>
+			]]></template>
+            <template name="main_umbra" element="desktop" position="top" theme="umbra"><![CDATA[
+				<div id="toolbars">
+					<div>
+						<div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"skipBubbling":true,"defaultIconSize":16,"defaultStyle":"icon_text","styles":{"icons_only":"Icons Only","icon_text":"Icons and Text","text_only":"Text only"},"stylesImgSizes":{"icons_only":22,"icon_text":16,"text_only":16},"stylesBarSizes":{"icons_only":40,"icon_text":51,"text_only":30}}' class="soft_css_gradient"></div>
+						<div id="locationbar_cont" class="css_gradient">
+							<div style="height: 100%;" class="separator"></div>
+							<div style="padding-top : 5px;">
+								<div id="repo_chooser" appClass="RepositorySelect"></div>
+								<div id="locationBar" appClass="LocationBar" appOptions='{"flexTo":"locationbar_cont","searchButton":"searchbar_splitter","searchIcon":"xmag.png", "searchFocus":"search_txt"}'></div>
+								<div id="logging_string" appClass="UserWidget"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
+					<div id="vertical_splitter" appClass="Splitter" appOptions='{"direction": "vertical", "initA": 350, "maxA":600, "minA":0,"fit":"height","fitParent":"browser", "minSize":0, "foldingButton":true}'>
+						<div id="sidebar_splitter" style="float:left; overflow:hidden;" appClass="Splitter" appOptions='{"direction":"horizontal","initB":300,"minB":57}'>
+							<div id="topPane" appClass="FoldersTree" appOptions='{"display":"dz","replaceScroller":true}' appPaneHeader="130" appPaneIcon="view_tree.png" style="margin:20px;margin-bottom:10px;padding-right: 10px;"></div>
+							<div id="info_panel" appClass="InfoPanel" appPaneHeader="131" appPaneIcon="file_info.png" appOptions='{"replaceScroller":"true"}' style="margin:20px;margin-top:10px;padding-right: 10px;" ></div>
+					    </div>
+						<div id="searchbar_splitter" style="overflow:hidden;" appClass="Splitter" appOptions='{"direction":"horizontal","initA":0, "minSize":0, "startFolded": true, "foldingButton": "A"}'>
+							<div id="search_container" appClass="SearchEngine" appPaneHeader="87" appPaneIcon="xmag.png" data-globalOptions='{"headerClose":{"icon":"panel_vertical_hide.png","splitter":"searchbar_splitter","title":86}}' style="height: 0px; overflow:hidden;"></div>
+    						<div id="content_pane" appClass="FilesList" appOptions='{"displayMode":"list","replaceScroller":true}' style="border: 1px solid #bbb;"></div>
+					    </div>
+					</div>
+				</div>
+			]]></template>
+            <template name="main_vision" element="desktop" position="top" theme="vision"><![CDATA[
+				<div id="toolbars">
+					<div id="global_toolbar" appClass="LogoWidget">
+					    <div id="logging_string" appClass="UserWidget" appOptions='{"menuEvent" : "over"}'></div>
+						<div id="top_toolbar" appClass="ActionsToolbar" appOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["user"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
+						<div id="repo_chooser" appClass="RepositorySelect" appOptions='{"menuPosition": "bottom middle", "menuOffsetTop":11, "menuOffsetLeft":0, "menuMaxHeight":350, "menuEvent":"over", "simpleLabel":"<span class=\"icon-sitemap\"></span><span class=\"ws-label\" message_id=\"455\">APP_MESSAGE[455]</span><span class=\"icon-caret-down\"></span>"}'></div>
+					</div>
+					<div id="workspace_toolbar">
+                        <div id="simple_repository_label" appClass="RepositorySimpleLabel" appOptions='{"bindSizeTo":{"width":{"id":"topPane", "events":["resize-FoldersTree-folder_pane","actions_refreshed"], "min":150,"offset":-5}}}'></div>
+					    <div style="float:left;" appClass="AppPane"  id="buttons_bar_cont">
+						    <div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"toolbarsList":["put", "get"],"groupOtherToolbars":["more", "change", "remote"], "groupOtherLabel":"More","skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
+						</div>
+						<div style="float:right;" appClass="AppPane" appOptions='{"bindSizeTo":{"width":{"id":"info_panel", "events":["resize-InfoPanel-info_panel", "resize-FoldersTree-folder_pane","actions_refreshed"], "min":120, "offset":-20, "checkSiblings":true}}}' id="search_engine_cont">
+						    <div id="search_container" appClass="SearchEngine" appOptions='{"toggleResultsVisibility":"search_results_cont", "fitMarginBottom":20}'></div>
+						</div>
+						<div style="clear:both;" class="skipSibling"/>
+					</div>
+				</div>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
+					<div id="vertical_splitter" appClass="Splitter" appOptions='{"direction": "vertical", "initA":"70%", "minB":26,"fit":"height","fitParent":"browser", "minSize":0, "foldingButton":"B"}'>
+    					<div id="vertical_splitter2" appClass="Splitter" appOptions='{"direction": "vertical", "initA": "50%", "minA":26, "maxA":450, "fit":"height","fitParent":"browser", "minSize":0, "foldingButton":"A"}'>
+    					    <div id="topPane" appClass="Tabulator" appOptions='{"defaultTabId": "folders","tabInfos" : [{"id":"folders","label":"130","iconClass":"icon-folder-open","element":"folder_pane"},{"id":"shared","label":"363","iconClass":"icon-share","element":"shared_elements"},{"id":"flagged","label":"147","iconClass":"icon-star","element":"flagged_elements"}],"headerToolbarOptions":{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["filter","vertical_splitter2-actions"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}}'>
+    							<div id="folder_pane" appClass="FoldersTree" appOptions='{"display":"dz","replaceScroller":true}' ></div>
+    							<div id="shared_elements" appClass="FetchedResultPane" appOptions='{"nodeProviderProperties":{"get_action":"search", "query":"keyword:app_shared"},"reloadOnServerMessage":"tree/reload_shared_elements"}'></div>
+    							<div id="flagged_elements" appClass="FetchedResultPane" appOptions='{"nodeProviderProperties":{"get_action":"search", "query":"keyword:bookmarked"},"reloadOnServerMessage":"tree/reload_bookmarks"}'></div>
+    					    </div>
+							<div id="cpane_container" appClass="AppPane" appOptions='{"fit":"height","fitParent":"browser"}'>
+							    <div id="cpane_header" class="panelHeader">
+							        <div id="display_toolbar" appClass="ActionsToolbar" appOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["default"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
+							        <div id="breadcrumb" appClass="Breadcrumb" style="width:50%;" appOptions='{"flexTo":"cpane_header"}'></div>
+							    </div>
+        						<div id="content_pane" appClass="FilesList" appOptions='{"displayMode":"detail","replaceScroller":true, "fit":"height", "fitParent":"cpane_container", "cellPaddingCorrection":6, "iconBgPosition" : "5px 4px"}' style="border: 1px solid #bbb; border-width:0 1px;"></div>
+							</div>
+                        </div>
+                        <div id="info_panel" appClass="InfoPanel" appPaneHeader="131" appPaneIcon="file_info.png" appOptions='{"replaceScroller":"true", "skipActions":true,"headerToolbarOptions":{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["filter","vertical_splitter-actions"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}}'></div>
+                    </div>
+				</div>
+			]]></template>
+            <template name="widget_umbra" element="widget" position="top" theme="umbra"><![CDATA[
+				<div id="toolbars">
+					<div>
+						<div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"skipBubbling":true,"defaultIconSize":16,"defaultStyle":"icon_text","styles":{"icons_only":"Icons Only","icon_text":"Icons and Text","text_only":"Text only"},"stylesImgSizes":{"icons_only":22,"icon_text":16,"text_only":16},"stylesBarSizes":{"icons_only":40,"icon_text":51,"text_only":30}}' class="soft_css_gradient"></div>
+						<div id="locationbar_cont" class="css_gradient">
+							<div style="height: 100%;" class="separator"></div>
+							<div style="padding-top : 5px;">
+								<div id="locationBar" appClass="LocationBar" appOptions='{"flexTo":"locationbar_cont"}'></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"widget"}'>
+					<div id="content_pane" appClass="FilesList"  appOptions='{"fit":"height","fitParent":"browser"}'  style="margin:0px;"></div>
+				</div>				
+			]]></template>
+            <template name="widget_vision" element="widget" position="top" theme="vision"><![CDATA[
+				<div id="toolbars">
+    			    <div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"toolbarsList":["put", "get"],"groupOtherToolbars":["more", "change", "remote"], "groupOtherLabel":"More","skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
+				</div>
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
+                    <div id="cpane_container" appClass="AppPane" appOptions='{"fit":"height","fitParent":"browser"}'>
+                        <div id="cpane_header" class="panelHeader">
+                            <div id="display_toolbar" appClass="ActionsToolbar" appOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["default"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
+                            <div id="breadcrumb" appClass="Breadcrumb" style="width:50%;" appOptions='{"flexTo":"cpane_header"}'></div>
+                        </div>
+                        <div id="content_pane" appClass="FilesList" appOptions='{"displayMode":"list","replaceScroller":true, "fit":"height", "fitParent":"cpane_container", "cellPaddingCorrection":6, "iconBgPosition" : "5px 4px"}' style="border: 1px solid #bbb; border-width:0 1px;"></div>
+                    </div>
+				</div>
+			]]></template>
+            <template name="minisite_vision" element="shared_folder" position="top" theme="vision"><![CDATA[
+				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"shared_folder"}'>
+      			    <div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"toolbarsList":["minisite"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
+                    <div id="cpane_container" appClass="AppPane" appOptions='{"fit":"height","fitParent":"browser"}'>
+                        <div id="cpane_header" class="panelHeader">
+                            <div id="display_toolbar" appClass="ActionsToolbar" appOptions='{"submenuClassName":"panelHeaderMenu","submenuPosition":"bottom right","submenuOffsetTop":12,"toolbarsList":["default"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
+                            <div id="breadcrumb" appClass="Breadcrumb" style="width:50%;" appOptions='{"flexTo":"cpane_header"}'></div>
+                        </div>
+                        <div id="content_pane" appClass="FilesList" appOptions='{"inlineToolbarOptions":{"toolbarsList":["inline"],"skipBubbling":true, "skipCarousel":true, "unique":false},"displayMode":"detail", "detailThumbSize": 52 ,"replaceScroller":true, "fit":"height", "fitParent":"cpane_container", "cellPaddingCorrection":6, "iconBgPosition" : "5px 4px", "invisibleSelection":true}' style="border: 1px solid #bbb; border-width:0 1px;"></div>
+                    </div>
+				</div>
+			]]></template>
+			<component_config className="FilesList">
+				<property name="thumbSize" value="64"/>
+			</component_config>
+		</client_configs>
+	</registry_contributions>
+</guidriver>

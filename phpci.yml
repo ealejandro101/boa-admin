@@ -1,0 +1,40 @@
+build_settings:
+    ignore:
+        - "docs"
+        - "src/data"
+        - "src/phpunit"
+        - "src/core"
+setup:
+    composer:
+        action: "install"
+test:
+    php_mess_detector:
+        path: "src/boa"
+        allowed_warnings: -1
+        rules:
+            #- "cleancode"
+            #- "codesize"
+            #- "controversial"
+            #- "naming"
+            #- "design"
+            #- "unusedcode"
+            - "src/boa/ci/phpmd/boa.xml"
+    php_code_sniffer:
+        path: "src/boa"
+        standard: "PSR2"
+        ignore:
+            - "src/boa/docs"
+            - "src/boa/tests"
+        allowed_errors: -1
+        allowed_warnings: -1
+        tab_width: 4
+#    php_cpd:
+#        allow_failures: true
+    php_docblock_checker:
+            path: "src/boa"
+            allowed_warnings: -1
+            ignore:
+                - "src/boa/docs"
+                - "src/boa/tests"
+#    php_loc:
+#        directory: "src"
