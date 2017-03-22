@@ -66,75 +66,7 @@
         "METHOD":"enrichMetadata"
       },
       {
-        "PLUGIN_ID":"access.imap",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.webdav",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.hpcloud",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.remote_fs",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.dropbox",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.demo",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.ftp",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.smb",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.s3",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"access.sftp",
-        "METHOD":"loadNodeInfo"
-      },
-      {
-        "PLUGIN_ID":"editor.diaporama",
-        "METHOD":"extractImageMetaData"
-      },
-      {
-        "PLUGIN_ID":"editor.eml",
-        "METHOD":"extractMimeHeaders"
-      },
-      {
-        "PLUGIN_ID":"meta.watch",
-        "METHOD":"enrichNode"
-      },
-      {
-        "PLUGIN_ID":"meta.svn",
-        "METHOD":"extractMeta"
-      },
-      {
-        "PLUGIN_ID":"meta.simple_lock",
-        "METHOD":"processLockMeta"
-      },
-      {
-        "PLUGIN_ID":"meta.filehasher",
-        "METHOD":"getFileHash"
-      },
-      {
         "PLUGIN_ID":"meta.user",
-        "METHOD":"extractMeta"
-      },
-      {
-        "PLUGIN_ID":"meta.exif",
         "METHOD":"extractMeta"
       },
       {
@@ -144,14 +76,6 @@
       {
         "PLUGIN_ID":"gui.ajax",
         "METHOD":"nodeBookmarkMetadata"
-      },
-      {
-        "PLUGIN_ID":"cypher.encfs",
-        "METHOD":"filterENCFS"
-      },
-      {
-        "PLUGIN_ID":"downloader.http",
-        "METHOD":"detectDLParts"
       }
     ]
   },
@@ -266,81 +190,19 @@
     "PARAMETER_SAMPLE":"array(\"<reload_shared_elements\/>\", ConfService::getRepository()->getId())",
     "TRIGGERS":[
       {
-        "FILE":"\/plugins\/meta.quota\/QuotaComputer.class.php",
-        "LINE":122
-      },
-      {
         "FILE":"\/plugins\/core.conf\/AbstractConfDriver.class.php",
         "LINE":525
       },
       {
         "FILE":"\/plugins\/action.share\/ShareCenter.class.php",
-        "LINE":173
+        "LINE":197
       },
       {
         "FILE":"\/plugins\/action.share\/ShareCenter.class.php",
-        "LINE":314
+        "LINE":343
       }
     ],
     "LISTENERS":[
-      {
-        "PLUGIN_ID":"core.mq",
-        "METHOD":"sendInstantMessage"
-      }
-    ]
-  },
-  "msg.queue_notification":{
-    "DESCRIPTION":"Post a notification to the queue. It will be directly processed or not (triggering a msg.notification event)",
-    "PARAMETERS":[
-      {
-        "NAME":"notification",
-        "TYPE":"AJXP_Notification",
-        "DESCRIPTION":"Notification object filled with content, author, date, etc"
-      }
-    ],
-    "TRIGGERS":[
-      {
-        "FILE":"\/plugins\/core.notifications\/class.AJXP_NotificationCenter.php",
-        "LINE":346
-      }
-    ],
-    "LISTENERS":[
-      {
-        "PLUGIN_ID":"core.mq",
-        "METHOD":"sendToQueue"
-      }
-    ],
-    "PARAMETER_SAMPLE":"array($notif)"
-  },
-  "msg.notification":{
-    "DESCRIPTION":"Process a notification from the queue",
-    "PARAMETERS":[
-      {
-        "NAME":"notification",
-        "TYPE":"AJXP_Notification",
-        "DESCRIPTION":"Notification object filled with content, author, date, etc"
-      }
-    ],
-    "PARAMETER_SAMPLE":"array(&$notification)",
-    "TRIGGERS":[
-      {
-        "FILE":"\/plugins\/core.mq\/class.MqManager.php",
-        "LINE":67
-      },
-      {
-        "FILE":"\/plugins\/core.mq\/class.MqManager.php",
-        "LINE":79
-      }
-    ],
-    "LISTENERS":[
-      {
-        "PLUGIN_ID":"core.notifications",
-        "METHOD":"persistNotificationToAlerts"
-      },
-      {
-        "PLUGIN_ID":"core.mailer",
-        "METHOD":"processNotification"
-      }
     ]
   },
   "node.before_path_change":{
@@ -348,12 +210,12 @@
     "PARAMETERS":[
       {
         "NAME":"old_node",
-        "TYPE":"AJXP_Node",
+        "TYPE":"BoA\\Core\\Xml\\ManifestNode",
         "DESCRIPTION":"Node pointing to the original path"
       },
       {
         "NAME":"new_node",
-        "TYPE":"AJXP_Node",
+        "TYPE":"BoA\\Core\\Xml\\ManifestNode",
         "DESCRIPTION":"Node pointing to the target path"
       },
       {
@@ -362,58 +224,42 @@
         "DESCRIPTION":"Whether this is a copy (true) or a move (false)"
       }
     ],
-    "PARAMETER_SAMPLE":"array(new AJXP_Node($origFile))",
+    "PARAMETER_SAMPLE":"array(new BoA\\Core\\Xml\\ManifestNode($origFile))",
     "TRIGGERS":[
       {
-        "FILE":"\/plugins\/access.sftp\/class.sftpAccessDriver.php",
-        "LINE":148
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1419
       },
       {
-        "FILE":"\/plugins\/downloader.http\/class.HttpDownloader.php",
-        "LINE":147
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1591
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1400
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1608
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1575
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1743
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1592
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1769
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1727
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1833
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1753
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1886
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1817
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1872
-      },
-      {
-        "FILE":"\/plugins\/core.access\/class.AbstractAccessDriver.php",
-        "LINE":140
+        "FILE":"\/plugins\/core.access\/AbstractAccessDriver.class.php",
+        "LINE":161
       }
     ],
     "LISTENERS":[
-      {
-        "PLUGIN_ID":"meta.simple_lock",
-        "METHOD":"checkFileLock"
-      },
-      {
-        "PLUGIN_ID":"meta.quota",
-        "METHOD":"precheckQuotaUsage"
-      },
       {
         "PLUGIN_ID":"action.share",
         "METHOD":"updateNodeSharedData"
@@ -425,141 +271,77 @@
     "PARAMETERS":[
       {
         "NAME":"node",
-        "TYPE":"AJXP_Node",
+        "TYPE":"BoA\\Core\\Xml\\ManifestNode",
         "DESCRIPTION":"New node pointing to the original path"
       }
     ],
     "PARAMETER_SAMPLE":"array(&$node)",
     "TRIGGERS":[
       {
-        "FILE":"\/plugins\/editor.zoho\/class.ZohoEditor.php",
-        "LINE":158
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":309
       },
       {
-        "FILE":"\/plugins\/access.sftp\/class.sftpAccessDriver.php",
-        "LINE":151
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":377
       },
       {
-        "FILE":"\/plugins\/access.sftp\/class.sftpAccessDriver.php",
-        "LINE":160
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":677
       },
       {
-        "FILE":"\/plugins\/downloader.http\/class.HttpDownloader.php",
-        "LINE":149
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":710
       },
       {
-        "FILE":"\/plugins\/downloader.http\/class.HttpDownloader.php",
-        "LINE":151
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1421
       },
       {
-        "FILE":"\/plugins\/editor.pixlr\/class.PixlrEditor.php",
-        "LINE":113
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1475
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":289
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1508
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":358
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1541
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":660
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1602
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":693
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1611
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1402
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1628
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1456
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1823
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1489
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1888
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1523
+        "FILE":"\/plugins\/core.access\/AbstractAccessDriver.class.php",
+        "LINE":187
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1586
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1595
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1612
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1807
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1874
-      },
-      {
-        "FILE":"\/plugins\/core.access\/class.AbstractAccessDriver.php",
-        "LINE":166
-      },
-      {
-        "FILE":"\/plugins\/core.access\/class.AbstractAccessDriver.php",
-        "LINE":174
-      },
-      {
-        "FILE":"\/plugins\/access.ftp\/class.ftpAccessDriver.php",
-        "LINE":108
+        "FILE":"\/plugins\/core.access\/AbstractAccessDriver.class.php",
+        "LINE":195
       }
     ],
     "LISTENERS":[
       {
-        "PLUGIN_ID":"editor.diaporama",
-        "METHOD":"removeThumbnail"
-      },
-      {
-        "PLUGIN_ID":"editor.imagick",
-        "METHOD":"deleteImagickCache"
-      },
-      {
-        "PLUGIN_ID":"meta.watch",
-        "METHOD":"processChangeHook"
-      },
-      {
-        "PLUGIN_ID":"meta.git",
-        "METHOD":"changesHook"
-      },
-      {
-        "PLUGIN_ID":"meta.filehasher",
-        "METHOD":"invalidateHash"
-      },
-      {
         "PLUGIN_ID":"meta.user",
         "METHOD":"updateMetaLocation"
-      },
-      {
-        "PLUGIN_ID":"meta.quota",
-        "METHOD":"recomputeQuotaUsage"
-      },
-      {
-        "PLUGIN_ID":"core.notifications",
-        "METHOD":"persistChangeHookToFeed"
-      },
-      {
-        "PLUGIN_ID":"core.mq",
-        "METHOD":"publishNodeChange"
-      },
-      {
-        "PLUGIN_ID":"index.lucene",
-        "METHOD":"updateNodeIndex"
       }
     ]
   },
@@ -568,46 +350,38 @@
     "PARAMETERS":[
       {
         "NAME":"node",
-        "TYPE":"AJXP_Node",
+        "TYPE":"BoA\\Core\\Xml\\ManifestNode",
         "DESCRIPTION":"A simple node containing the target path to create. Callback can trigger a Break Exception to prevent the node creation."
       }
     ],
     "PARAMETER_SAMPLE":"array($destFile)",
     "TRIGGERS":[
       {
-        "FILE":"\/plugins\/downloader.http\/class.HttpDownloader.php",
-        "LINE":105
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":303
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":283
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":502
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":485
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":617
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":600
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1483
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1464
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1557
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1541
-      },
-      {
-        "FILE":"\/plugins\/core.access\/class.AbstractAccessDriver.php",
-        "LINE":150
+        "FILE":"\/plugins\/core.access\/AbstractAccessDriver.class.php",
+        "LINE":171
       }
     ],
     "LISTENERS":[
-      {
-        "PLUGIN_ID":"meta.quota",
-        "METHOD":"precheckQuotaUsage"
-      }
     ]
   },
   "node.read":{
@@ -615,77 +389,33 @@
     "PARAMETERS":[
       {
         "NAME":"node",
-        "TYPE":"AJXP_Node",
+        "TYPE":"BoA\\Core\\Xml\\ManifestNode",
         "DESCRIPTION":"The node opened."
       }
     ],
     "PARAMETER_SAMPLE":"array(&$parentAjxpNode)",
     "TRIGGERS":[
       {
-        "FILE":"\/core\/classes\/sabredav\/ajaxplorer\/class.AJXP_Sabre_Collection.php",
-        "LINE":173
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":240
       },
       {
-        "FILE":"\/core\/classes\/sabredav\/ajaxplorer\/class.AJXP_Sabre_NodeLeaf.php",
-        "LINE":75
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":264
       },
       {
-        "FILE":"\/plugins\/editor.zoho\/class.ZohoEditor.php",
-        "LINE":66
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":343
       },
       {
-        "FILE":"\/plugins\/editor.browser\/class.FileMimeSender.php",
-        "LINE":107
-      },
-      {
-        "FILE":"\/plugins\/editor.pixlr\/class.PixlrEditor.php",
-        "LINE":52
-      },
-      {
-        "FILE":"\/plugins\/editor.video\/class.VideoReader.php",
-        "LINE":110
-      },
-      {
-        "FILE":"\/plugins\/editor.audio\/class.AudioPreviewer.php",
-        "LINE":65
-      },
-      {
-        "FILE":"\/plugins\/editor.imagick\/class.IMagickPreviewer.php",
-        "LINE":76
-      },
-      {
-        "FILE":"\/plugins\/editor.diaporama\/class.ImagePreviewer.php",
-        "LINE":88
-      },
-      {
-        "FILE":"\/plugins\/editor.eml\/class.EmlParser.php",
-        "LINE":55
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":216
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":243
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":324
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":744
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":760
       }
     ],
     "LISTENERS":[
-      {
-        "PLUGIN_ID":"meta.watch",
-        "METHOD":"processReadHook"
-      }
     ]
   },
-  "ajxp_conf.list_config_nodes":{
+  "conf.list_config_nodes":{
     "DESCRIPTION":"Hook used to gather the various nodes displayed in the 'Settings' panel hierarchy.",
     "PARAMETERS":[
       {
@@ -697,15 +427,11 @@
     "PARAMETER_SAMPLE":"array(&$rootNodes)",
     "TRIGGERS":[
       {
-        "FILE":"\/plugins\/access.ajxp_conf\/class.ajxp_confAccessDriver.php",
-        "LINE":285
+        "FILE":"\/plugins\/access.boaconf\/ConfAccessDriver.class.php",
+        "LINE":308
       }
     ],
     "LISTENERS":[
-      {
-        "PLUGIN_ID":"action.scheduler",
-        "METHOD":"placeConfigNode"
-      }
     ]
   },
   "node.before_change":{
@@ -713,66 +439,42 @@
     "PARAMETERS":[
       {
         "NAME":"node",
-        "TYPE":"AJXP_Node",
+        "TYPE":"BoA\\Core\\Xml\\ManifestNode",
         "DESCRIPTION":"Node that will be updated"
       }
     ],
     "PARAMETER_SAMPLE":"array(&$node)",
     "TRIGGERS":[
       {
-        "FILE":"\/plugins\/editor.zoho\/class.ZohoEditor.php",
-        "LINE":143
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":362
       },
       {
-        "FILE":"\/plugins\/editor.pixlr\/class.PixlrEditor.php",
-        "LINE":82
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":615
       },
       {
-        "FILE":"\/plugins\/editor.pixlr\/class.PixlrEditor.php",
-        "LINE":103
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":619
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":343
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1446
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":598
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1485
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":602
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":1831
       },
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1427
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1466
-      },
-      {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":1815
-      },
-      {
-        "FILE":"\/plugins\/meta.user\/class.UserMetaManager.php",
-        "LINE":179
-      },
-      {
-        "FILE":"\/plugins\/access.ftp\/class.ftpAccessDriver.php",
-        "LINE":95
+        "FILE":"\/plugins\/meta.user\/UserMetaManager.class.php",
+        "LINE":199
       }
     ],
     "LISTENERS":[
-      {
-        "PLUGIN_ID":"meta.simple_lock",
-        "METHOD":"checkFileLock"
-      },
-      {
-        "PLUGIN_ID":"meta.quota",
-        "METHOD":"precheckQuotaUsage"
-      }
     ]
   },
   "dl.localname":{
@@ -787,19 +489,15 @@
     "PARAMETER_SAMPLE":"array($origFile, &$localName, $origWrapperData[\"classname\"])",
     "TRIGGERS":[
       {
-        "FILE":"\/plugins\/access.fs\/class.fsAccessDriver.php",
-        "LINE":212
+        "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
+        "LINE":236
       },
       {
-        "FILE":"\/plugins\/core.access\/class.AbstractAccessDriver.php",
-        "LINE":138
+        "FILE":"\/plugins\/core.access\/AbstractAccessDriver.class.php",
+        "LINE":159
       }
     ],
     "LISTENERS":[
-      {
-        "PLUGIN_ID":"access.imap",
-        "METHOD":"attachmentDLName"
-      }
     ]
   },
   "version.commit_file":{
@@ -812,22 +510,18 @@
       },
       {
         "NAME":"node",
-        "TYPE":"AJXP_Node",
+        "TYPE":"BoA\\Core\\Xml\\ManifestNode",
         "DESCRIPTION":"Node that will be updated"
       }
     ],
     "PARAMETER_SAMPLE":"array($metaFile, $ajxpNode)",
     "TRIGGERS":[
       {
-        "FILE":"\/plugins\/metastore.serial\/class.SerialMetaStore.php",
-        "LINE":260
+        "FILE":"\/plugins\/metastore.serial\/SerialMetaStore.class.php",
+        "LINE":280
       }
     ],
     "LISTENERS":[
-      {
-        "PLUGIN_ID":"meta.svn",
-        "METHOD":"commitFile"
-      }
     ]
   }
 }
