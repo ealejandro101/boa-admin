@@ -21,6 +21,10 @@
       {
         "FILE":"\/plugins\/meta.user\/UserMetaManager.class.php",
         "LINE":213
+      },
+      {
+        "FILE":"\/plugins\/meta.lom\/LomMetaManager.class.php",
+        "LINE":213
       }
     ],
     "LISTENERS":[

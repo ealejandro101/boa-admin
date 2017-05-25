@@ -124,6 +124,7 @@ class ClientDriver extends Plugin
                     $refresh = true;
                 }
 				HTMLWriter::charsetHeader('text/javascript');
+                var_dump(ConfService::getMessages($refresh));
 				HTMLWriter::writeI18nMessagesClass(ConfService::getMessages($refresh));
 				
 			break;

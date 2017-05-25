@@ -181,8 +181,12 @@ class Controller{
      * @param DOMNode $action
      * @return bool
      */
-	public static function findActionAndApply($actionName, $httpVars, $fileVars, &$action = null){
+	public static function findActionAndApply($actionName, $httpVars, $fileVars, &$action = null){        
         $actionName = Utils::sanitize($actionName, APP_SANITIZE_EMAILCHARS);
+        $log = $actionName == 'get_specs_list';
+        if ($log){
+            var_dump($actionName);
+        }
         if($actionName == "cross_copy"){
             $pService = PluginsService::getInstance();
             $actives = $pService->getActivePlugins();
@@ -199,8 +203,14 @@ class Controller{
             return ;
         }
         $xPath = self::initXPath();
+        if ($log){
+            var_dump($xPath->document->saveXML());
+        }
         if($action == null){
             $actions = $xPath->query("actions/action[@name='$actionName']");
+            if ($log){
+                var_dump($actions);
+            }
             if(!$actions->length){
                 self::$lastActionNeedsAuth = true;
                 return false;
@@ -243,6 +253,7 @@ class Controller{
 					XMLWriter::close();
 					exit(1);
 				}
+            //echo 'passed requirements and did not exit<br/>';
 		}			
 		
 		$preCalls = self::getCallbackNode($xPath, $action, 'pre_processing/serverCallback', $actionName, $httpVars, $fileVars, true);
@@ -252,7 +263,7 @@ class Controller{
         if($mainCall != null){
             self::checkParams($httpVars, $mainCall, $xPath);
         }
-		
+
 		if($captureCalls !== false){
             // Make sure the ShutdownScheduler has its own OB started BEFORE, as it will presumabily be
             // executed AFTER the end of this one.
@@ -268,9 +279,16 @@ class Controller{
 					$params["pre_processor_results"][$preCall->getAttribute("pluginId")] = $preResult;
 				}
 			}
-		}		
+		}	
+        if($actionName == 'get_specs_list'){
+            var_dump($mainCall);
+            var_dump($actionName);            
+        }	
 		if($mainCall){
+            //echo "calling applyCallback for $actionName";
 			$result = self::applyCallback($xPath, $mainCall, $actionName, $httpVars, $fileVars);
+            //var_dump($result);
+            //var_dump($params);
 			if(isSet($params)){
 				$params["processor_result"] = $result;
 			}			
@@ -306,6 +324,7 @@ class Controller{
      * @return null|UnixProcess
      */
 	public static function applyActionInBackground($currentRepositoryId, $actionName, $parameters, $user ="", $statusFile = ""){
+        echo 'onApplyActionInBackground';
 		$token = md5(time());
         $logDir = APP_CACHE_DIR."/cmd_outputs";
         if(!is_dir($logDir)) mkdir($logDir, 0755);
@@ -444,11 +463,19 @@ class Controller{
      */
 	private static function applyCallback($xPath, $callback, &$actionName, &$httpVars, &$fileVars, &$variableArgs = null, $defer = false){
 		//Processing
+        //var_dump($callback);
 		$plugId = $xPath->query("@pluginId", $callback)->item(0)->value;
 		$methodName = $xPath->query("@methodName", $callback)->item(0)->value;		
 		$plugInstance = PluginsService::findPluginById($plugId);
 		//return call_user_func(array($plugInstance, $methodName), $actionName, $httpVars, $fileVars);	
 		// Do not use call_user_func, it cannot pass parameters by reference.
+
+        if ($actionName == "get_specs_list"){
+            var_dump($methodName);
+            var_dump($plugId);
+            var_dump($plugInstance);
+        }
+
 		if(method_exists($plugInstance, $methodName)){
 			if($variableArgs == null){
 				return $plugInstance->$methodName($actionName, $httpVars, $fileVars);

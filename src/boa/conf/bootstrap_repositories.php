@@ -51,7 +51,7 @@ $REPOSITORIES[0] = array(
 		"PAGINATION_NUMBER" => 200,
 		"META_SOURCES"		=> array(
 			"metastore.serial"=> array(
-				"METADATA_FILE"	=> ".boa",
+				"METADATA_FILE"	=> ".metadata",
                 "METADATA_FILE_LOCATION" => "infolders"
             ),
             "meta.user"     => array(
@@ -77,9 +77,9 @@ $REPOSITORIES[1] = array(
 	"DISPLAY"		=>	"My Files",
     "DISPLAY_ID"    =>  432,
     "DESCRIPTION_ID"=>  476,
-	"APP_SLUG"		=>  "my-files",
-	"DRIVER"		=>	"fs",
-	"DRIVER_OPTIONS"=> array(
+  	"APP_SLUG"		=>  "my-files",
+  	"DRIVER"		=>	"fs",
+  	"DRIVER_OPTIONS"=> array(
 		"PATH"			=>	"APP_DATA_PATH/personal/APP_USER",
 		"CREATE"		=>	true,
 		"RECYCLE_BIN" 	=> 	'recycle_bin',
@@ -89,25 +89,30 @@ $REPOSITORIES[1] = array(
 		"PAGINATION_NUMBER" => 200,
 		"META_SOURCES"		=> array(
 			"metastore.serial"=> array(
-				"METADATA_FILE"	=> ".boa",
-                "METADATA_FILE_LOCATION" => "infolders"
-            ),
-            "meta.user"     => array(
+				"METADATA_FILE"	=> ".metadata",
+        "METADATA_FILE_LOCATION" => "infolders"
+      ),
+      "meta.user"     => array(
 				"meta_fields"		=> "tags",
 				"meta_labels"		=> "Tags",
-                "meta_visibility"   => "hidden"
+        "meta_visibility"   => "hidden"
 			),
-            "meta.filehasher"   => array(),
-            "meta.watch"        => array(),
-            "meta.exif"   => array(
-                "meta_fields" => "COMPUTED_GPS.GPS_Latitude,COMPUTED_GPS.GPS_Longitude",
-                "meta_labels" => "Latitude,Longitude"
-            ),
-            "index.lucene" => array(
-                "index_meta_fields" => "tags",
-                "repository_specific_keywords" => "APP_USER",
-            )
-		)
+      "meta.lom" => array(
+        "lom_meta_fields" => "LOM 1",
+        "lom_meta_labels" => "LOM Field 1",
+        "lom_meta_visibility" => "visible"
+      ),
+      "meta.filehasher"   => array(),
+      "meta.watch"        => array(),
+      "meta.exif"   => array(
+          "meta_fields" => "COMPUTED_GPS.GPS_Latitude,COMPUTED_GPS.GPS_Longitude",
+          "meta_labels" => "Latitude,Longitude"
+      ),
+      "index.lucene" => array(
+        "index_meta_fields" => "tags",
+        "repository_specific_keywords" => "APP_USER",
+      )
+	  )
 	),
 
 );
@@ -146,7 +151,7 @@ $REPOSITORIES["fs_template"] = array(
         "CHARSET"           => "",
 		"META_SOURCES"		=> array(
 			"metastore.serial"=> array(
-				"METADATA_FILE"	=> ".boa",
+				"METADATA_FILE"	=> ".metadata",
                 "METADATA_FILE_LOCATION" => "infolders"
             ),
             "meta.user"     => array(

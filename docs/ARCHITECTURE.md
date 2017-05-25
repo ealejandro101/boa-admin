@@ -42,6 +42,37 @@ Global
 
 
 
+### DCO Simple Object (Not collection)
+
+DCO Folder (root)
+	- metadata (.metadata.lom)
+	- manifest (.manifest)
+	- src (Source Content of the object)
+	- content (folder for object content)
+	
+	
+
+Stores
+	DCO1 (Simple Object)
+		.manifest
+		.metadata.xxx (xxx specification)
+		src (Always present, non editable)
+		content (Always present, non editable)		
+	DCO2  (Complex - Collection)
+		.manifest
+		.metadata.xxx (xxx specification)
+		.res.metadata.xxx (xxx specification)
+		src (Always present, non editable)
+		content (Always present, non editable)
+			cat1
+				IMG1.jpg									
+			cat2 
+				img2.png
+		
+			
+
+
+
 	
 
 

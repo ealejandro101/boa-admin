@@ -386,7 +386,6 @@ class ManifestNode{
         }else{
             $this->urlParts = parse_url($this->_url);
         }
-
 		if(strstr($this->urlParts["scheme"], "app.")!==false){
 			$pServ = PluginsService::getInstance();
 			$this->_wrapperClassName = $pServ->getWrapperClassName($this->urlParts["scheme"]);

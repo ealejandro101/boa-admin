@@ -527,7 +527,7 @@ Class.create("ActionsManager", {
 				}
 				else if(result == '0' || result == '-1')
 				{
-                    var errorId = 285;
+          var errorId = 285;
 				}
 				else if(result == '2')
 				{					
@@ -535,25 +535,25 @@ Class.create("ActionsManager", {
 				}
 				else if(result == '-2')
 				{
-                    var errorId = 285;
+          var errorId = 285;
 				}
 				else if(result == '-3')
 				{
-                    var errorId = 366;
+          var errorId = 366;
 				}
 				else if(result == '-4')
 				{
-                    var errorId = 386;
+          var errorId = 386;
 				}
-                if(errorId){
-                    error = true;
-                    if($("generic_dialog_box") && $("generic_dialog_box").visible() && $("generic_dialog_box").down("div.dialogLegend")){
-                        $("generic_dialog_box").down("div.dialogLegend").insert({bottom:'<div class="login_error" style="background-color: #D33131;display: block;font-size: 9px;color: white;border-radius: 3px;padding: 2px 6px;">'+MessageHash[errorId]+'</div>'});
-                        $("generic_dialog_box").shake();
-                    }else{
-                        alert(MessageHash[errorId]);
-                    }
-                }
+        if(errorId){
+          error = true;
+          if($("generic_dialog_box") && $("generic_dialog_box").visible() && $("generic_dialog_box").down("div.dialogLegend")){
+              $("generic_dialog_box").down("div.dialogLegend").insert({bottom:'<div class="login_error" style="background-color: #D33131;display: block;font-size: 9px;color: white;border-radius: 3px;padding: 2px 6px;">'+MessageHash[errorId]+'</div>'});
+              $("generic_dialog_box").shake();
+          }else{
+              alert(MessageHash[errorId]);
+          }
+        }
 
 			}else if(childs[i].tagName == "trigger_bg_action"){
 				var name = childs[i].getAttribute("name");
@@ -601,10 +601,10 @@ Class.create("ActionsManager", {
 		if(app && app.getContextNode()){ 
 			var crtNode = app.getContextNode();
 		}
-		this.actions.each(function(pair){			
-			pair.value.fireContextChange(this.usersEnabled, 
-									 this.oUser, 									 
-									 crtNode);
+		this.actions.each(function(pair){
+		pair.value.fireContextChange(this.usersEnabled,
+		 this.oUser,
+		 crtNode);
 		}.bind(this));
 		document.fire("boa:actions_refreshed");
 	},
@@ -635,7 +635,7 @@ Class.create("ActionsManager", {
 		}
 		document.fire("boa:actions_loaded", this.actions);
 		this.fireContextChange();
-		this.fireSelectionChange();		
+		this.fireSelectionChange();
 	},
 	
 	/**
@@ -665,7 +665,7 @@ Class.create("ActionsManager", {
 		actions = XPathSelectNodes(documentElement, "actions/action");
 		for(var i=0;i<actions.length;i++){
 			if(actions[i].nodeName != 'action') continue;
-            if(actions[i].getAttribute('enabled') == 'false') continue;
+      if(actions[i].getAttribute('enabled') == 'false') continue;
 			var newAction = new Action();
 			newAction.createFromXML(actions[i]);
 			this.registerAction(newAction);

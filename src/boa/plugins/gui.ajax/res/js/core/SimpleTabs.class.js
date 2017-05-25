@@ -64,8 +64,8 @@ Class.create("SimpleTabs", AppPane, {
         }
 	},
 
-    addTab: function (tab, pane){
-        if(tab instanceof String){
+    addTab: function (tab, pane, activate, position){
+        if(typeof(tab) == 'string'){
             tab = new Element("li", {className:""}).update(tab);
             this.tabRow.insert(tab);
         }
@@ -90,7 +90,10 @@ Class.create("SimpleTabs", AppPane, {
         tab.observe("click", function(){
             tab.setSelected();
         }.bind(this));
-        tab.setSelected();
+
+        if (activate) {
+            tab.setSelected();
+        }
     },
 
     selectTabByIndex : function(index){

@@ -300,15 +300,16 @@ Class.create("Action", {
 			if(selectionContext.behaviour == 'hidden') this.hide();
 			else this.disable();
 		}
-        if(selectionContext.evalMetadata && userSelection && userSelection.isUnique()){
-            var metadata = userSelection.getUniqueNode().getMetadata();
-            var result = eval(selectionContext.evalMetadata);
-            if(!result){
-                if(selectionContext.behaviour == 'hidden') this.hide();
-             	else this.disable();
-                return;
-            }
+    
+    if(selectionContext.evalMetadata && userSelection && userSelection.isUnique()){
+        var metadata = userSelection.getUniqueNode().getMetadata();
+        var result = eval(selectionContext.evalMetadata);
+        if(!result){
+            if(selectionContext.behaviour == 'hidden') this.hide();
+         	else this.disable();
+            return;
         }
+    }
 		if(selectionContext.unique && !bUnique){
 			return this.disable();
 		}
@@ -345,8 +346,7 @@ Class.create("Action", {
             }
         }
 		this.show();
-		this.enable();
-		
+		this.enable();		
 	},
 		
 	/**

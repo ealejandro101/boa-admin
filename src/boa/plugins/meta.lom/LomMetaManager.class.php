@@ -27,7 +27,7 @@
  * @copyright  2017 BoA Project
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
-namespace BoA\Plugins\Meta\User;
+namespace BoA\Plugins\Meta\Lom;
 
 use BoA\Core\Access\UserSelection;
 use BoA\Core\Http\Controller;
@@ -46,7 +46,7 @@ defined('APP_EXEC') or die( 'Access not allowed');
  * @package APP_Plugins
  * @subpackage Meta
  */
-class UserMetaManager extends Plugin {
+class LomMetaManager extends Plugin {
 
   /**
    * @var AbstractAccessDriver
@@ -67,7 +67,7 @@ class UserMetaManager extends Plugin {
 
     $store = PluginsService::getInstance()->getUniqueActivePluginForType("metastore");
     if($store === false){
-        throw new Exception("The 'meta.user' plugin requires at least one active 'metastore' plugin");
+        throw new Exception("The 'meta.lom' plugin requires at least one active 'metastore' plugin");
     }
     $this->metaStore = $store;
     $this->metaStore->initMeta($accessDriver);
@@ -77,7 +77,7 @@ class UserMetaManager extends Plugin {
     if(!isSet($this->options["meta_visibility"])) $visibilities = array("visible");
     else $visibilities = explode(",", $this->options["meta_visibility"]);
     $cdataHead = '<div>
-            <div class="panelHeader infoPanelGroup" colspan="2"><span class="icon-edit" data-action="edit_user_meta" title="APP_MESSAGE[meta.user.1]"></span>APP_MESSAGE[meta.user.1]</div>
+            <div class="panelHeader infoPanelGroup" colspan="2"><span class="icon-edit" data-action="edit_lom_meta" title="APP_MESSAGE[meta.lom.1]"></span>APP_MESSAGE[meta.lom.1]</div>
             <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">';
     $cdataFoot = '</table></div>';
     $cdataParts = "";
@@ -124,7 +124,7 @@ class UserMetaManager extends Plugin {
     $contrib = $selection->item(0);
     $contrib->setAttribute("attributes", implode(",", array_keys($def)));
     if(isset($def["stars_rate"]) || isSet($def["css_label"])){
-      $contrib->setAttribute("modifier", "MetaCellRenderer.prototype.infoPanelModifier");
+      $contrib->setAttribute("modifier", "LomMetaCellRenderer.prototype.infoPanelModifier");
     }
     $htmlSel = $this->xPath->query('html', $contrib);
     $html = $htmlSel->item(0);
@@ -150,19 +150,19 @@ class UserMetaManager extends Plugin {
   protected function getMetaDefinition(){
     foreach($this->options as $key => $val){
       $matches = array();
-      if(preg_match('/^meta_fields_(.*)$/', $key, $matches) != 0){
+      if(preg_match('/^lom_meta_fields_(.*)$/', $key, $matches) != 0){
         $repIndex = $matches[1];
-        $this->options["meta_fields"].=",".$val;
-        $this->options["meta_labels"].=",".$this->options["meta_labels_".$repIndex];
-        if(isSet($this->options["meta_visibility_".$repIndex]) && isSet($this->options["meta_visibility"])){
-          $this->options["meta_visibility"].=",".$this->options["meta_visibility_".$repIndex];
+        $this->options["lom_meta_fields"].=",".$val;
+        $this->options["lom_meta_labels"].=",".$this->options["lom_meta_labels_".$repIndex];
+        if(isSet($this->options["lom_meta_visibility_".$repIndex]) && isSet($this->options["lom_meta_visibility"])){
+          $this->options["lom_meta_visibility"].=",".$this->options["lom_meta_visibility_".$repIndex];
         }
       }
     }
 
-    $fields = $this->options["meta_fields"];
+    $fields = $this->options["lom_meta_fields"];
     $arrF = explode(",", $fields);
-    $labels = $this->options["meta_labels"];
+    $labels = $this->options["lom_meta_labels"];
     $arrL = explode(",", $labels);
 
     $result = array();
@@ -176,7 +176,7 @@ class UserMetaManager extends Plugin {
     return $result;   
   }
   
-  public function editMeta($actionName, $httpVars, $fileVars){
+  public function editLomMeta($actionName, $httpVars, $fileVars){
     if(!isSet($this->actions[$actionName])) return;
     if(is_a($this->accessDriver, "demoAccessDriver")){
       throw new Exception("Write actions are disabled in demo mode!");
@@ -202,14 +202,14 @@ class UserMetaManager extends Plugin {
         $newValues[$key] = Utils::decodeSecureMagic($httpVars[$key]);
       }else{
         if(!isset($original)){
-          $original = $node->retrieveMetadata("users_meta", false, APP_METADATA_SCOPE_GLOBAL);
+          $original = $node->retrieveMetadata("lom_meta", false, APP_METADATA_SCOPE_GLOBAL);
         }
         if(isSet($original) && isset($original[$key])){
           $newValues[$key] = $original[$key];
         }
       }
-    }   
-    $node->setMetadata("users_meta", $newValues, false, APP_METADATA_SCOPE_GLOBAL);
+    }  
+    $node->setMetadata("lom_meta", $newValues, false, APP_METADATA_SCOPE_GLOBAL);
     Controller::applyHook("node.meta_change", array($node));
     XMLWriter::header();
     XMLWriter::writeNodesDiff(array("UPDATE" => array($node->getPath() => $node)), true);
@@ -225,15 +225,16 @@ class UserMetaManager extends Plugin {
    */
   public function extractMeta(&$node, $contextNode = false, $details = false){
 
-    //$metadata = $this->metaStore->retrieveMetadata($node, "users_meta", false, APP_METADATA_SCOPE_GLOBAL);
-    $metadata = $node->retrieveMetadata("users_meta", false, APP_METADATA_SCOPE_GLOBAL);
+    //$metadata = $this->metaStore->retrieveMetadata($node, "loms_meta", false, APP_METADATA_SCOPE_GLOBAL);
+    //echo 'Getting meta for lom';
+    $metadata = $node->retrieveMetadata("lom_meta", false, APP_METADATA_SCOPE_GLOBAL);
     if(count($metadata)){
       // @todo : Should be UTF8-IZED at output only !!??
       // array_map(array("SystemTextEncoding", "toUTF8"), $metadata);
     }
-    //echo $node->getUrl() . PHP_EOL;
-    $metadata["meta_fields"] = $this->options["meta_fields"];
-    $metadata["meta_labels"] = $this->options["meta_labels"];
+    $metadata["lom_meta_fields"] = $this->options["lom_meta_fields"];
+    $metadata["lom_meta_labels"] = $this->options["lom_meta_labels"];
+
     $node->mergeMetadata($metadata);
         
   }
@@ -248,17 +249,26 @@ class UserMetaManager extends Plugin {
     if($oldFile == null) return;
       if(!$copy && $this->metaStore->inherentMetaMove()) return;
     
-    $oldMeta = $this->metaStore->retrieveMetadata($oldFile, "users_meta", false, APP_METADATA_SCOPE_GLOBAL);
+    $oldMeta = $this->metaStore->retrieveMetadata($oldFile, "lom_meta", false, APP_METADATA_SCOPE_GLOBAL);
     if(!count($oldMeta)){
       return;
     }
     // If it's a move or a delete, delete old data
     if(!$copy){
-      $this->metaStore->removeMetadata($oldFile, "users_meta", false, APP_METADATA_SCOPE_GLOBAL);
+      $this->metaStore->removeMetadata($oldFile, "lom_meta", false, APP_METADATA_SCOPE_GLOBAL);
     }
     // If copy or move, copy data.
     if($newFile != null){
-      $this->metaStore->setMetadata($newFile, "users_meta", $oldMeta, false, APP_METADATA_SCOPE_GLOBAL);
+      $this->metaStore->setMetadata($newFile, "lom_meta", $oldMeta, false, APP_METADATA_SCOPE_GLOBAL);
     }
-  }  
+  }
+
+  public function onGet($action, $httpVars, $fileVars){
+    var_dump($action);
+    XMLWriter::header("output");
+    echo "<action>".$action."</action>";
+    XMLWriter::close("output");
+
+  }
+
 }

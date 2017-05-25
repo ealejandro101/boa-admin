@@ -1,0 +1,9 @@
+<registry_contributions>
+  <actions>
+    <action name="get_specs_list">
+      <processing>
+        <serverCallback methodName="onGet"></serverCallback>
+      </processing>
+    </action>
+  </actions>
+</registry_contributions>

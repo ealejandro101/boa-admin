@@ -1,0 +1,35 @@
+table.meta_form_table {
+    border: solid 1px #ccc;
+    border-right:0;
+    border-bottom:0;
+}
+
+table.meta_form_table th{
+    text-align: :left;
+    background: #091db8;
+    color: #fff;
+}
+
+table.meta_form_table th {
+    padding: 5px;
+}
+table.meta_form_table td {
+    padding: 2px;
+}
+
+table.meta_form_table tr td.level2 {
+    padding-left: 15px;
+}
+table.meta_form_table td, table.meta_form_table th {
+    border: solid 1px #ccc;
+    border-top:0;
+    border-left:0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-center input[type=checkbox] {
+    margin: 0 auto;
+}

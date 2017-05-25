@@ -84,6 +84,10 @@ Class.create("FormManager", {
 			var name = param.get('name');
 			var type = param.get('type');
 			var desc = param.get('description');
+
+            if (name == 'btnaddnew') {
+                console.log(type);
+            }
             // deduplicate
             if(form.down('[name="'+name+'"]')) return;
 
@@ -116,6 +120,8 @@ Class.create("FormManager", {
                 element = new Element('input', Object.extend({type: (type == "hidden" ? 'hidden' : 'text'), className:'SF_input', value:defaultValue}, commonAttributes));
             }else if(type == 'button'){
 
+                console.log('button rendering');
+
                 element = new Element('div', {className:'SF_input SF_inlineButton'}).update('<span class="icon-play-circle"></span>'+param.get('description'));
                 element.observe("click", function(event){
                     element.addClassName('SF_inlineButtonWorking');
@@ -136,6 +142,7 @@ Class.create("FormManager", {
                     conn.setParameters(testValues);
                     conn.onComplete = function(transport){
                         element.removeClassName('SF_inlineButtonWorking');
+                        console.log(transport.responseText);
                         if(transport.responseText.startsWith('SUCCESS:')){
                             app.displayMessage("SUCCESS", transport.responseText.replace("SUCCESS:", ""));
                         }else{
