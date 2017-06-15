@@ -44,7 +44,7 @@
 				"MAIN_ELEMENT":"widget",
 				"SERVER_PREFIX_URI": "../../"
 			};
-            document.observe("boa:before_gui_load", function(e){
+            document.observe("app:before_gui_load", function(e){
                app.currentThemeUsesIconFonts = true;
                document.documentElement.className += " theme_vision";
            });

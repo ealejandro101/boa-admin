@@ -122,7 +122,8 @@ Class.create("LOMSpecEditor", {
         var connexion = new Connexion();
         connexion.setParameters(params);        
         connexion.onComplete = function(transport){
-            console.log(transport.responseXML);
+            console.log('getting response');
+            var xmlData = transport.responseXML;
         }.bind(this);
         connexion.sendAsync();
     },

@@ -80,6 +80,10 @@
       {
         "PLUGIN_ID":"gui.ajax",
         "METHOD":"nodeBookmarkMetadata"
+      },
+      {
+        "PLUGIN_ID":"access.dco",
+        "METHOD":"loadNodeInfo"
       }
     ]
   },

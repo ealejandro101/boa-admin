@@ -145,7 +145,7 @@ Class.create("Action", {
 	 */
 	apply: function(){
 		if(this.deny) return;
-        document.fire("boa:beforeApply-"+this.options.name);
+        document.fire("app:beforeApply-"+this.options.name);
 		if(this.options.prepareModal){
 			modal.prepareHeader(
 				this.options.title, 
@@ -193,7 +193,7 @@ Class.create("Action", {
 			this.notify("submenu_active", arguments[0][0]);
 		}
 		window.actionArguments = null;
-        document.fire("boa:afterApply-"+this.options.name);
+        document.fire("app:afterApply-"+this.options.name);
 	},
 		
 	/**
@@ -205,20 +205,24 @@ Class.create("Action", {
 		var usersEnabled = arguments[0];
 		var crtUser = arguments[1];
 
-        var crtIsRecycle = false;
-        var crtInZip = false;
-        var crtIsRoot = false;
-        var crtMime = '';
-        var crtIsReadOnly = false;
+    var crtIsRecycle = false;
+    var crtInZip = false;
+    var crtIsRoot = false;
+    var crtMime = '';
+    var crtIsReadOnly = false;
+    var crtIsRootPath = false;
 
-        var crtNode = arguments[2];
-        if(crtNode){
-            crtIsRecycle = (crtNode.getMime() == "recycle");
-            crtInZip = crtNode.hasMimeInBranch("browsable_archive");
-            crtIsRoot = crtNode.isRoot();
-            crtMime = crtNode.getMime();
-            crtIsReadOnly = crtNode.hasMetadataInBranch("readonly", "true");
-        }
+    var crtNode = arguments[2];
+
+
+    if(crtNode){
+        crtIsRecycle = (crtNode.getMime() == "recycle");
+        crtInZip = crtNode.hasMimeInBranch("browsable_archive");
+        crtIsRoot = crtNode.isRoot();
+        crtMime = crtNode.getMime();
+        crtIsReadOnly = crtNode.hasMetadataInBranch("readonly", "true");
+        crtIsRootPath = crtNode.getPath() == '/';
+    }
 
 		if(this.options.listeners["contextChange"]){
 			window.listenerContext = this;
@@ -251,9 +255,9 @@ Class.create("Action", {
 			if( !this.context.allowedMimes.include("*") && !this.context.allowedMimes.include(crtMime)){
 				return this.hideForContext();
 			}
-            if( this.context.allowedMimes.include("^"+crtMime)){
-                return this.hideForContext();
-            }
+      if( this.context.allowedMimes.include("^"+crtMime)){
+          return this.hideForContext();
+      }
 		}
 		if(this.context.recycle){
 			if(this.context.recycle == 'only' && !crtIsRecycle){
@@ -266,7 +270,7 @@ Class.create("Action", {
 		if(!this.context.inZip && crtInZip){
 			return this.hideForContext();
 		}
-		if(!this.context.root && crtIsRoot){
+		if(!this.context.root && (crtIsRoot || crtIsRootPath)){
 			return this.hideForContext();
 		}
 		this.showForContext();				

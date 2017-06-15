@@ -316,7 +316,7 @@ class ManifestNode{
 
     /**
      * Pass an array of metadata and merge its content with the current metadata.
-     * @param array $metadata
+     * @param array $metadata 
      * @param bool $mergeValues
      * @return void
      */

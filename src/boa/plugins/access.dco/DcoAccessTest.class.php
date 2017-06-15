@@ -27,36 +27,44 @@
  * @copyright  2017 BoA Project
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
-namespace BoA\Core\Exceptions;
+namespace BoA\Plugins\Access\Dco;
 
-use BoA\Core\Services\ConfService;
+use BoA\Core\Diagnostics\AbstractTest;
 
 defined('APP_EXEC') or die( 'Access not allowed');
+
 /**
- * Custom exception (legacy from php4 when there were no exceptions)
- * @package BoA
- * @subpackage Core
+ * @package APP_Plugins
+ * @subpackage Access
  */
-class ApplicationException extends \Exception {
-	
-	function __construct($messageString, $messageId = false){
-		if($messageId !== false && class_exists("BoA\Core\Services\ConfService")){
-			$messages = ConfService::getMessages();
-			if(array_key_exists($messageId, $messages)){
-				$messageString = $messages[$messageId];
-			}else{
-				$messageString = $messageId;
-			}
-		}
-		parent::__construct($messageString);
-	}
-		
-	function errorToXml($mixed)
-	{
-		if(is_a($mixed, "Exception")){
-			throw $this;
-		}else{
-			throw new ApplicationException($mixed);
-		}
-	}
-}
+class DcoAccessTest extends AbstractTest
+{
+    function DcoAccessTest() { parent::AbstractTest("Filesystem Plugin", ""); }
+
+    /**
+     * Test Repository
+     *
+     * @param Repository $repo
+     * @return Boolean
+     */
+    function doRepositoryTest($repo){
+        if ($repo->accessType != 'dco' ) return -1;
+        // Check the destination path
+        $this->failedInfo = "";
+        $path = $repo->getOption("PATH", false);
+        $createOpt = $repo->getOption("CREATE");
+        $create = (($createOpt=="true"||$createOpt===true)?true:false);
+        if(strstr($path, "APP_USER")!==false) return TRUE; // CANNOT TEST THIS CASE!        
+        if (!$create && !@is_dir($path))
+        { 
+        	$this->failedInfo .= "Selected repository path ".$path." doesn't exist, and the CREATE option is false"; return FALSE; 
+        }
+        else if (!$create && !is_writeable($path))
+        { $this->failedInfo .= "Selected repository path ".$path." isn't writeable"; return FALSE; }
+        // Do more tests here  
+        return TRUE;    	
+    }
+    
+};
+
+?>

@@ -250,7 +250,7 @@ function hideLightBox(onFormSubmit)
 		app.enableNavigation();
 		app.focusLast();
 		app.enableShortcuts();
-		document.fire("boa:selection_changed");
+		document.fire("app:selection_changed");
 	}
 	if(currentDraggable) currentDraggable.destroy();
 	if(modal.closeFunction){

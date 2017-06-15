@@ -26,37 +26,26 @@
  * @category   [CATEGORY]
  * @copyright  2017 BoA Project
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
- */
-namespace BoA\Core\Exceptions;
-
-use BoA\Core\Services\ConfService;
-
-defined('APP_EXEC') or die( 'Access not allowed');
-/**
- * Custom exception (legacy from php4 when there were no exceptions)
- * @package BoA
- * @subpackage Core
- */
-class ApplicationException extends \Exception {
-	
-	function __construct($messageString, $messageId = false){
-		if($messageId !== false && class_exists("BoA\Core\Services\ConfService")){
-			$messages = ConfService::getMessages();
-			if(array_key_exists($messageId, $messages)){
-				$messageString = $messages[$messageId];
-			}else{
-				$messageString = $messageId;
-			}
-		}
-		parent::__construct($messageString);
-	}
-		
-	function errorToXml($mixed)
-	{
-		if(is_a($mixed, "Exception")){
-			throw $this;
-		}else{
-			throw new ApplicationException($mixed);
-		}
-	}
-}
+*/
+$mess=array(
+"create" => "Nuevo objeto",
+"create.title" => "Crear nuevo objeto de contenido digital",
+"mkdco" => "Nuevo objecto",
+"mkdco.title" => "Crear nuevo objeto de contenido digital",
+"mkdco.access_key" => "O",
+"dco_title" => "Titulo",
+"dco_type" => "Tipo",
+"dco_contype" => "Tipo de conexión",
+"dco_author" => "Autor",
+"adaptative" => "Aprendizaje adaptativo",
+"external" => "Externo",
+"local" => "Local",
+"streaming" => "Servidor de streaming",
+"dco_mime" => "Objeto de contenido digital",
+"objects_count" => "Total objetos",
+"object_info_label" => "Información del objeto",
+"create.success.pre" => "El objeto",
+"create.success.pos" => "ha sido creado con el id",
+"content_string" => "Contenido",
+"src_string" => "Fuentes"
+);

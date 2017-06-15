@@ -69,7 +69,7 @@ Class.create("AppBootstrap", {
                 this.loadBootConfig();
             }
 		}.bind(this));
-		document.observe("boa:before_gui_load", function(e){
+		document.observe("app:before_gui_load", function(e){
 			var desktop = $(this.parameters.get('MAIN_ELEMENT'));
 			var options = desktop.getAttribute("appOptions").evalJSON(false);
 			if(options.fit && options.fit == 'height'){
@@ -82,7 +82,7 @@ Class.create("AppBootstrap", {
 				fitHeightToBottom($(this.parameters.get('MAIN_ELEMENT')), options.fitParent, marginBottom, true);
 			}
 		}.bind(this));
-		document.observe("boa:actions_loaded", function(){
+		document.observe("app:actions_loaded", function(){
 			if(!this.parameters.get("SELECTOR_DATA") && app.actionBar.actions.get("ext_select")){
 				app.actionBar.actions.unset("ext_select");
 				app.actionBar.fireContextChange();
@@ -91,7 +91,7 @@ Class.create("AppBootstrap", {
 				app.actionBar.defaultActions.set("file", "ext_select");
 			}
 		}.bind(this));					
-		document.observe("boa:loaded", function(e){
+		document.observe("app:loaded", function(e){
 			this.insertAnalytics();
 			if(this.parameters.get("SELECTOR_DATA")){
 	    		app.actionBar.defaultActions.set("file", "ext_select");
@@ -193,7 +193,7 @@ Class.create("AppBootstrap", {
 		}
 		window.zipEnabled = this.parameters.get("zipEnabled");
 		window.multipleFilesDownloadEnabled = this.parameters.get("multipleFilesDownloadEnabled");
-		document.fire("boa:boot_loaded");
+		document.fire("app:boot_loaded");
 		window.app = new App(this.parameters.get("EXT_REP")||"", this.parameters.get("usersEnabled"), this.parameters.get("loggedUser"));
 		if(this.parameters.get("currentLanguage")){
 			window.app.currentLanguage = this.parameters.get("currentLanguage");

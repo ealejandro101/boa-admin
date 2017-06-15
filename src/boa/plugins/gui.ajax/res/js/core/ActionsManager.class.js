@@ -47,19 +47,19 @@ Class.create("ActionsManager", {
 		this.actions = new Hash();
 		this.defaultActions = new Hash();
 		this.toolbars = new Hash();		
-		document.observe("boa:context_changed", function(event){
+		document.observe("app:context_changed", function(event){
 			window.setTimeout(function(){
 				this.fireContextChange();
 			}.bind(this), 0);			
 		}.bind(this) );
 		
-		document.observe("boa:selection_changed", function(event){
+		document.observe("app:selection_changed", function(event){
 			window.setTimeout(function(){
 				this.fireSelectionChange();
 			}.bind(this), 0);
 		}.bind(this) );
 		
-		document.observe("boa:user_logged", function(event){
+		document.observe("app:user_logged", function(event){
 			if(event.memo && event.memo.getPreference){
 				this.setUser(event.memo);
 			}else{
@@ -578,7 +578,7 @@ Class.create("ActionsManager", {
 	
 	/**
 	 * Spreads a selection change to all actions and to registered components 
-	 * by triggering boa:actions_refreshed event.
+	 * by triggering app:actions_refreshed event.
 	 */
 	fireSelectionChange: function(){
 		var userSelection = null;
@@ -589,12 +589,12 @@ Class.create("ActionsManager", {
 		this.actions.each(function(pair){
 			pair.value.fireSelectionChange(userSelection);
 		});		
-		document.fire("boa:actions_refreshed");
+		document.fire("app:actions_refreshed");
 	},
 	
 	/**
 	 * Spreads a context change to all actions and to registered components 
-	 * by triggering boa:actions_refreshed event.
+	 * by triggering app:actions_refreshed event.
 	 */
 	fireContextChange: function(){
 		var crtNode;
@@ -606,7 +606,7 @@ Class.create("ActionsManager", {
 		 this.oUser,
 		 crtNode);
 		}.bind(this));
-		document.fire("boa:actions_refreshed");
+		document.fire("app:actions_refreshed");
 	},
 			
 	/**
@@ -633,7 +633,7 @@ Class.create("ActionsManager", {
 				this.registerAction(act);
 			}.bind(this));
 		}
-		document.fire("boa:actions_loaded", this.actions);
+		document.fire("app:actions_loaded", this.actions);
 		this.fireContextChange();
 		this.fireSelectionChange();
 	},

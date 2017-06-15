@@ -64,7 +64,7 @@ function triggerFlashEvent(){
 	try{
 		switch(eventType){
 			case "currentFiles":
-                parent.document.fire("boa:longtask_starting");
+                parent.document.fire("app:longtask_starting");
 				return parent.app.getUserSelection().getContextFileNames("__APP_SEP__");
 			break;
 			case "currentFolder":
@@ -72,7 +72,7 @@ function triggerFlashEvent(){
 				return folder.replace("+", "%2B");
 			break;	
 			case "uploadComplete":
-                parent.document.fire("boa:longtask_finished");
+                parent.document.fire("app:longtask_finished");
 				parent.app.fireContextRefresh();
 			break;
 			case "getMessage":

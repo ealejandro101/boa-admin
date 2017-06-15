@@ -56,21 +56,21 @@
 
         }
 		this.createMenu();
-		document.observe("boa:registry_loaded", function(event){
+		document.observe("app:registry_loaded", function(event){
 			this.parseXml(event.memo);
 		}.bind(this) );
-		document.observeOnce("boa:actions_loaded", function(){
+		document.observeOnce("app:actions_loaded", function(){
 			var bmAction = app.actionBar.actions.get('bookmark');
 			this.addBookmarkObject = {
 				name:bmAction.getKeyedText(),
 				alt:bmAction.options.title,
 				image:resourcesFolder+'/images/actions/16/bookmark_add.png',
 				callback:function(e){
-                    document.notify("boa:add_bookmark");
+                    document.notify("app:add_bookmark");
 				}.bind(this)
 			};		
 		}.bind(this));
-		document.observe("boa:add_bookmark", function(){
+		document.observe("app:add_bookmark", function(){
 			var node = app.getUserSelection().getUniqueNode();
             if(node.getMetadata().get('bookmarked') && node.getMetadata().get('bookmarked') == 'true'){
                 this.removeBookmark(node.getPath(), function(){app.fireNodeRefresh(node);});
@@ -202,7 +202,7 @@
             connexion.onComplete = onComplete;
         }else{
             connexion.onComplete = function(transport){
-                document.observeOnce("boa:registry_part_loaded", function(event){
+                document.observeOnce("app:registry_part_loaded", function(event){
                     if(event.memo != "user/bookmarks") return;
                     this.parseXml(app.getXmlRegistry());
                 }.bind(this) );

@@ -74,7 +74,7 @@
                         splitter.paneB._max = 1;
                         splitter.options.maxB = 1;
                         splitter.resizeGroup();
-                        document.observe("boa:user_logged", function(){
+                        document.observe("app:user_logged", function(){
                             if(app.repositoryId == "boaconf"){
                                 splitter.paneB._max = 1;
                                 splitter.options.maxB = 1;

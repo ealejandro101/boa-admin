@@ -70,7 +70,7 @@ Class.create("ActivityMonitor", {
 		this._renewTime = serverSessionTime - this._renewMinutes*60;
 		this._lastActive = this.getNow();
 		var activityObserver = this.activityObserver.bind(this);
-		document.observe("boa:user_logged", function(){
+		document.observe("app:user_logged", function(){
 			// Be sure not to multiply the setInterval
 			this._lastActive = this.getNow();
 			if(this.interval) window.clearInterval(this.interval);
@@ -78,22 +78,22 @@ Class.create("ActivityMonitor", {
 			$(document.body).stopObserving("keypress", activityObserver);
 			$(document.body).stopObserving("mouseover", activityObserver);
 			$(document.body).stopObserving("mousemove", activityObserver);
-			document.stopObserving("boa:server_answer", activityObserver);
+			document.stopObserving("app:server_answer", activityObserver);
 			this._state = 'inactive';
 			if(app.user) {
 				this._state = 'active';
 				$(document.body).observe("keypress", activityObserver );
 				$(document.body).observe("mouseover", activityObserver );
 				$(document.body).observe("mousemove", activityObserver );
-				document.observe("boa:server_answer", activityObserver );
+				document.observe("app:server_answer", activityObserver );
 				this.interval = window.setInterval(this.idleObserver.bind(this), 5000);
 				this.serverInterval = window.setInterval(this.serverObserver.bind(this), this._renewTime*1000);
 			}
 		}.bind(this));
-        document.observe("boa:longtask_starting", function(){
+        document.observe("app:longtask_starting", function(){
             this._longTaskRunning = true;
         }.bind(this));
-        document.observe("boa:longtask_finished", function(){
+        document.observe("app:longtask_finished", function(){
             this._longTaskRunning = false;
         }.bind(this));
 	},

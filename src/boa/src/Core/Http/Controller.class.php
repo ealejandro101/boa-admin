@@ -183,10 +183,7 @@ class Controller{
      */
 	public static function findActionAndApply($actionName, $httpVars, $fileVars, &$action = null){        
         $actionName = Utils::sanitize($actionName, APP_SANITIZE_EMAILCHARS);
-        $log = $actionName == 'get_specs_list';
-        if ($log){
-            var_dump($actionName);
-        }
+        $log = $actionName == 'get_specs_list'; //ToDelete
         if($actionName == "cross_copy"){
             $pService = PluginsService::getInstance();
             $actives = $pService->getActivePlugins();
@@ -203,14 +200,8 @@ class Controller{
             return ;
         }
         $xPath = self::initXPath();
-        if ($log){
-            var_dump($xPath->document->saveXML());
-        }
         if($action == null){
             $actions = $xPath->query("actions/action[@name='$actionName']");
-            if ($log){
-                var_dump($actions);
-            }
             if(!$actions->length){
                 self::$lastActionNeedsAuth = true;
                 return false;
@@ -280,10 +271,6 @@ class Controller{
 				}
 			}
 		}	
-        if($actionName == 'get_specs_list'){
-            var_dump($mainCall);
-            var_dump($actionName);            
-        }	
 		if($mainCall){
             //echo "calling applyCallback for $actionName";
 			$result = self::applyCallback($xPath, $mainCall, $actionName, $httpVars, $fileVars);
@@ -469,12 +456,6 @@ class Controller{
 		$plugInstance = PluginsService::findPluginById($plugId);
 		//return call_user_func(array($plugInstance, $methodName), $actionName, $httpVars, $fileVars);	
 		// Do not use call_user_func, it cannot pass parameters by reference.
-
-        if ($actionName == "get_specs_list"){
-            var_dump($methodName);
-            var_dump($plugId);
-            var_dump($plugInstance);
-        }
 
 		if(method_exists($plugInstance, $methodName)){
 			if($variableArgs == null){

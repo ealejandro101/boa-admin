@@ -144,11 +144,11 @@ Class.create("Splitter", AppPane, {
                 this.foldWithoutAnim();
             }
 		}.bind(this);
-		document.observe("boa:user_logged",this.userLoggedObs);
+		document.observe("app:user_logged",this.userLoggedObs);
 
         this.compConfigObs = function(event){
             if(!this.htmlElement){
-                document.stopObserving("boa:component_config_changed", this.compConfigObs);
+                document.stopObserving("app:component_config_changed", this.compConfigObs);
                 return;
             }
             if(event.memo.className == "Splitter::"+this.htmlElement.id){
@@ -171,7 +171,7 @@ Class.create("Splitter", AppPane, {
                 }
             }
         }.bind(this);
-        document.observe("boa:component_config_changed", this.compConfigObs);
+        document.observe("app:component_config_changed", this.compConfigObs);
 
         this.doSplitFunc = this.doSplitMouse.bind(this);
 		Event.observe(this.group, "mousemove", this.doSplitFunc);
@@ -188,8 +188,8 @@ Class.create("Splitter", AppPane, {
         Event.stopObserving(this.group, "mousemove", this.doSplitFunc);
         this.splitbar.stopObserving("mousedown", this.startSplitFunc);
         this.splitbar.stopObserving("mouseup", this.endSplitFunc);
-        document.stopObserving("boa:user_logged",this.userLoggedObs);
-        document.stopObserving("boa:component_config_changed", this.compConfigObs);
+        document.stopObserving("app:user_logged",this.userLoggedObs);
+        document.stopObserving("app:component_config_changed", this.compConfigObs);
         this.splitbar.remove();
         if(this.paneA.paneObject) {
             this.paneA.paneObject.destroy();

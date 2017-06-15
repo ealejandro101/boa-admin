@@ -60,7 +60,7 @@ Class.create("ActionsToolbar", {
         if(this.options.styles){
             this.buildActionBarStylingMenu();
             this.style = this.options.defaultStyle;
-            document.observe("boa:user_logged", function(){
+            document.observe("app:user_logged", function(){
                 if(app.user && app.user.getPreference("action_bar_style")){
                     this.style = app.user.getPreference("action_bar_style");
                 }else{
@@ -70,14 +70,14 @@ Class.create("ActionsToolbar", {
             }.bind(this));
         }
 		attachMobileScroll(oElement.id, "horizontal");
-		document.observe("boa:actions_loaded", this.actionsLoaded.bind(this));
-		document.observe("boa:actions_refreshed", this.refreshToolbarsSeparator.bind(this));
+		document.observe("app:actions_loaded", this.actionsLoaded.bind(this));
+		document.observe("app:actions_refreshed", this.refreshToolbarsSeparator.bind(this));
         this.componentConfigHandler = function(event){
             if(event.memo.className == "ActionsToolbar"){
                 this.parseComponentConfig(event.memo.classConfig.get('all'));
             }
         }.bind(this);
-        document.observe("boa:component_config_changed", this.componentConfigHandler );
+        document.observe("app:component_config_changed", this.componentConfigHandler );
 
 	},
 	
@@ -107,7 +107,7 @@ Class.create("ActionsToolbar", {
     },
 	/**
 	 * Handler for actions_loaded event.
-	 * @param event Event boa:actions_loaded
+	 * @param event Event app:actions_loaded
 	 */
 	actionsLoaded : function(event) {
 		this.actions = event.memo;
@@ -385,6 +385,7 @@ Class.create("ActionsToolbar", {
 	attachListeners : function(button, action){
 
         if(this.options.attachToNode){
+            console.log('from actions toolbar');
             action.fireContextChange(app.usersEnabled, app.user, this.options.attachToNode.getParent());
             var fakeDm = new DataModel();
             fakeDm.setSelectedNodes([this.options.attachToNode]);
