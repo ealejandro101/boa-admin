@@ -31,11 +31,12 @@ Class.create("LogoWidget", AppPane, {
     initialize : function($super, element, options){
         $super(element, options);
         var configs = app.getPluginConfigs("guidriver");
+        console.log(configs);
         this.updateConfig(configs);
     },
 
     updateConfig : function(configs){
-
+        console.log('update config');
         if(configs.get("CUSTOM_TOP_TITLE")){
             if(!this.titleDiv){
                 this.titleDiv = new Element('div', {className : 'custom_top_title'}).update(configs.get("CUSTOM_TOP_TITLE"));

@@ -340,7 +340,7 @@ Class.create("FormManager", {
             if(type != "legend"){
                 div = new Element('div', {className:"SF_element" + (addFieldCheckbox?" SF_elementWithCheckbox":"")});
                 if(type == "hidden") div.setStyle({display:"none"});
-
+                console.log('mandatory:'+mandatory);
                 div.insert(new Element('div', {className:"SF_label"}).update(label+(mandatory?'*':'')+' :'));
                 // INSERT CHECKBOX
                 if(addFieldCheckbox){
@@ -399,7 +399,11 @@ Class.create("FormManager", {
                 if(replicableGroups.get(repGroupName)) {
                     repGroup = replicableGroups.get(repGroupName);
                 }else {
-                    repGroup = new Element("div", {id:"replicable_"+repGroupName, className:'SF_replicableGroup'});
+                    var replicatable = true;
+                    if (param.get('replicatable') !== null && param.get('replicatable') !== undefined){
+                        replicatable = param.get('replicatable');
+                    }
+                    repGroup = new Element("div", {id:"replicable_"+repGroupName, className:'SF_replicableGroup', "data-replicatable":replicatable?'true':'false'});                    
                 }
                 repGroup.insert(div);
                 replicableGroups.set(repGroupName, repGroup);
@@ -430,11 +434,17 @@ Class.create("FormManager", {
         if(replicableGroups.size()){
             replicableGroups.each(function(pair){
                 var repGroup = pair.value;
-                var replicationButton = new Element("a", {className:'SF_replication_Add', title:'Replicate this group'}).update("&nbsp;").observe("click", function(event){
-                    this.replicateRow(repGroup,  1, form);
-                }.bind(this));
-                repGroup.insert({bottom:replicationButton});
-                repGroup.insert({bottom:new Element('div', {className:'SF_rgClear'})});
+                console.log(repGroup);
+                var replicatable = repGroup.getAttribute('data-replicatable');
+                console.log(replicatable);
+                console.log(typeof(replicatable));
+                if (replicatable === null || replicatable === 'true'){                    
+                    var replicationButton = new Element("a", {className:'SF_replication_Add', title:'Replicate this group'}).update("&nbsp;").observe("click", function(event){
+                        this.replicateRow(repGroup,  1, form);
+                    }.bind(this));
+                    repGroup.insert({bottom:replicationButton});
+                    repGroup.insert({bottom:new Element('div', {className:'SF_rgClear'})});
+                }
                 if(values){
                     var hasReplicates = true;
                     var replicIndex = 1;

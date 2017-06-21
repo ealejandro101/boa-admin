@@ -47,5 +47,8 @@ $mess=array(
 "create.success.pre" => "Object",
 "create.success.pos" => "has been created with id",
 "content_string" => "Content",
-"src_string" => "Source"
+"src_string" => "Source",
+"dcometa" => "Edit Meta",
+"dcometa.title" => "Edit specification metadata",
+"dcometa.access_key" => "M"
 );

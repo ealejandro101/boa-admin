@@ -75,6 +75,7 @@
             <xs:attribute name="infoPanel" type="xs:boolean"/>
             <xs:attribute name="recycle" use="required" type="xs:NCName"/>
             <xs:attribute name="selection" use="required" type="xs:boolean"/>
+            <xs:attribute name="customFn"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="selectionContext">
@@ -89,6 +90,7 @@
             <xs:attribute name="multipleOnly" type="xs:boolean"/>
             <xs:attribute name="recycle" use="required" type="xs:boolean"/>
             <xs:attribute name="unique" use="required" type="xs:boolean"/>
+            <xs:attribute name="customFn"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="rightsContext">

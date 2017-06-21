@@ -871,10 +871,16 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 $metaData["readonly"] = "true";
             }
         }
-        $fPerms = @fileperms($node->getUrl());
-        if($fPerms !== false){
-            $fPerms = substr(decoct( $fPerms ), ($isLeaf?2:1));
-        }else{
+
+        if (!$metaData["readonly"]){
+            $fPerms = @fileperms($node->getUrl());
+            if($fPerms !== false){
+                $fPerms = substr(decoct( $fPerms ), ($isLeaf?2:1));
+            }else{
+                $fPerms = '0000';
+            }
+        }
+        else{
             $fPerms = '0000';
         }
         $metaData["file_perms"] = $fPerms;
@@ -1936,8 +1942,8 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
 
     private function getUniqueId($dir){
         $uid = GUID();
-        while (file_exists($this->urlBase.$dir."/".$uid)) $uid = GUID();
-        return $uid;
+        while (file_exists($this->urlBase.$dir."/".$uid."@boa.udea.edu.co")) $uid = GUID();
+        return $uid."@boa.udea.edu.co";
     }
 
 }

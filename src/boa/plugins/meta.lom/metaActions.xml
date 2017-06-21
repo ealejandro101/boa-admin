@@ -5,5 +5,15 @@
         <serverCallback methodName="onGet"></serverCallback>
       </processing>
     </action>
+    <action name="get_spec_by_id">
+      <processing>
+        <serverCallback methodName="onGet"></serverCallback>
+      </processing>
+    </action>
+    <action name="save_dcometa">
+      <processing>
+        <serverCallback methodName="onPost"></serverCallback>
+      </processing>
+    </action>
   </actions>
 </registry_contributions>

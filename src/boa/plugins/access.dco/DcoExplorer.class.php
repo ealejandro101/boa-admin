@@ -102,7 +102,8 @@ class DcoExplorer{
         $type_string = $driver->mess["access_dco.dco_type"];
         $author_string = $driver->mess["access_dco.dco_author"];
         XMLWriter::header();        
-        XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail" switchGridMode="filelist"><column messageString="'.$title_string.'" attributeName="APP_label" sortType="String"/><column messageString="'.$contype_string.'" attributeName="conexion_type" sortType="String"/><column messageString="'.$type_string.'" attributeName="type" sortType="String"/><column messageString="'.$author_string.'" attributeName="author" sortType="String"/></columns>');
+        XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail" switchGridMode="filelist"><column messageString="'.$title_string.'" attributeName="APP_label" sortType="String"/><column messageString="'.$type_string.'" attributeName="type" sortType="String"/><column messageString="'.$author_string.'" attributeName="author" sortType="String"/></columns>');
+        //<column messageString="'.$contype_string.'" attributeName="conexion_type" sortType="String"/>
         foreach ($objects as $dco){
             $dco->loadNodeInfo(false, false, all);
             XmlWriter::renderManifestNode($dco);
@@ -131,7 +132,6 @@ class DcoExplorer{
 
         $entries = glob($path."/*/{.}manifest", GLOB_NOSORT|GLOB_BRACE);
         $count = count($entries);
-
         if($count > $threshold){
             $offset = 0;
             $crtPage = 1;
@@ -155,7 +155,10 @@ class DcoExplorer{
             if($limitPerPage > 0 && ($cursor - $offset) >= $limitPerPage) {
                 break;
             }
-            $objects[] = $this->getDcoManifestNode($options["path"]."/".basename(dirname($entry))."/.manifest");
+            $dco = $this->getDcoManifestNode($options["path"]."/".basename(dirname($entry))."/.manifest");
+            $jsonmeta = $this->getDcoMetadata($options["path"]."/".basename(dirname($entry))."/.metadata");
+            $dco->mergeMetadata(array("dcometadata" => $jsonmeta));
+            $objects[] = $dco;
             $cursor ++;
         }
 
@@ -182,12 +185,32 @@ class DcoExplorer{
             if ($key == "type"){
                 $type = array_search($value, $id_col);
                 $meta[$key] = !is_null($type)?$specs[$type]["name"]:$value;
+                $meta[$key."_id"] = $value;
             }
             else{
                 $meta[$key] = $value;
             }
         }
         return $meta;
+    }
+
+    private function getDcoMetadata($metaPath) {
+        $content = file_get_contents($metaPath);
+        //$json = json_decode($content, true);
+        return $content;
+
+        /*$meta = array();
+        $this->parseJsonMeta($json, null, $meta);
+        return $meta;*/
+    }
+
+    private function parseJsonMeta($json, $basename, $meta){
+        if (is_array($json)){
+            foreach ($json as $key => $value) {
+                $this->parseJsonMeta($value, (is_null($basename)?"":".").$key, $meta);
+            }
+        }
+        $meta[$basename] = $json;
     }
 
     private function readObjectContent($options){
@@ -239,6 +262,7 @@ class DcoExplorer{
             //Set a readable label for content and src folders
             if (preg_match('/^\/[^\/]+\/(content|src)$/', $dir, $matches)){
                 $parentManifestNode->setLabel($driver->mess["access_dco.{$matches[1]}_string"]);
+                $parentManifestNode->mergeMetadata(array("readonly" => true));
             }
         }
 
@@ -250,6 +274,13 @@ class DcoExplorer{
         }else{
             XMLWriter::renderManifestHeaderNode($parentManifestNode);
         }
+
+        XMLWriter::sendFilesListComponentConfig('<columns switchGridMode="filelist">
+                    <column messageId="1" attributeName="APP_label" sortType="StringDirFile" defaultWidth="48%"/>
+                    <column messageId="2" attributeName="filesize" sortType="CellSorterValue" modifier="FilesList.prototype.partSizeCellRenderer" defaultWidth="9%"/>
+                    <column messageId="3" attributeName="mimestring" sortType="String" defaultWidth="5%" defaultVisibilty="hidden"/>
+                    <column messageId="4" attributeName="modiftime" sortType="MyDate" defaultWidth="19%"/>
+                </columns>');
 
         if(isSet($totalPages) && isSet($crtPage)){
             XMLWriter::renderPaginationData(
@@ -305,6 +336,7 @@ class DcoExplorer{
             //Set a readable label for content and src folders
             if (preg_match('/^\/[^\/]+\/(content|src)$/', $node->getPath(), $matches)){ 
                 $node->setLabel($driver->mess["access_dco.{$matches[1]}_string"]);
+                $node->mergeMetadata(array("readonly" => true));
             }
             else{
                 $node->setLabel($nodeName);
