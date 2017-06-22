@@ -401,7 +401,7 @@
         "DESCRIPTION":"The node opened."
       }
     ],
-    "PARAMETER_SAMPLE":"array(&$parentAjxpNode)",
+    "PARAMETER_SAMPLE":"array(&$parentManifestNode)",
     "TRIGGERS":[
       {
         "FILE":"\/plugins\/access.fs\/FsAccessDriver.class.php",
@@ -522,7 +522,7 @@
         "DESCRIPTION":"Node that will be updated"
       }
     ],
-    "PARAMETER_SAMPLE":"array($metaFile, $ajxpNode)",
+    "PARAMETER_SAMPLE":"array($metaFile, $manifestNode)",
     "TRIGGERS":[
       {
         "FILE":"\/plugins\/metastore.serial\/SerialMetaStore.class.php",

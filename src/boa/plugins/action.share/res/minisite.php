@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:ajxp>
+<html xmlns:app>
 	<head>
-		<title>AjaXplorer</title>
+		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-		<link rel="icon" type="image/x-png" href="AJXP_PATH_TO_ROOT/plugins/gui.ajax/res/themes/vision/images/html-folder.png">
-		<link rel="stylesheet" type="text/css" href="AJXP_PATH_TO_ROOT/plugins/gui.ajax/res/themes/vision/css/allz.css">
-        <link rel="stylesheet" href="AJXP_PATH_TO_ROOT/plugins/gui.ajax/res/themes/vision/css/font-awesome.css"/>
-        <link rel="stylesheet" href="AJXP_PATH_TO_ROOT/plugins/gui.ajax/res/themes/vision/css/media.css"/>
+		<link rel="icon" type="image/x-png" href="APP_PLUGINS_FOLDER/gui.ajax/res/themes/vision/images/html-folder.png">
+		<link rel="stylesheet" type="text/css" href="APP_PLUGINS_FOLDER/gui.ajax/res/themes/vision/css/allz.css">
+        <link rel="stylesheet" href="APP_PLUGINS_FOLDER/gui.ajax/res/themes/vision/css/font-awesome.css"/>
+        <link rel="stylesheet" href="APP_PLUGINS_FOLDER/gui.ajax/res/themes/vision/css/media.css"/>
 		<style type="text/css">
 			.widget_title{
                 font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -15,13 +15,13 @@
                 font-weight: normal;
                 padding: 10px 0 0 5px;
                 color: rgb(111,123,136);
-                background-image: url('AJXP_PATH_TO_ROOT/plugins/gui.ajax/AjxpLogo250.png');
+                background-image: url('APP_PLUGINS_FOLDER/gui.ajax/AppLogo250.png');
                 background-repeat: no-repeat;
                 background-position: right 9px;
                 background-size: 170px;
                 margin-right: 5px;
             }
-			#ajxp_shared_folder{
+			#shared_folder{
 				width:100%;
 				text-align:left;
 				/* THESE ONE ARE IMPORTANT */
@@ -61,10 +61,10 @@
                 background-color: rgba(111, 123, 136, 0.09);
                 box-shadow: inset 1px 1px 1px white;
             }
-            .ajxpNodeProvider span.actionbar_button_label {
+            .appNodeProvider span.actionbar_button_label {
                 display: none;
             }
-            .ajxpNodeProvider.detailed span.actionbar_button_label {
+            .appNodeProvider.detailed span.actionbar_button_label {
                 display: inline-block;
             }
             tr div.FL-inlineToolbar {
@@ -77,11 +77,11 @@
                 position: relative;
                 top: -2px;
             }
-            div.ajxpNodeProvider:not(.detailed) div#inline_toolbar a
+            div.appNodeProvider:not(.detailed) div#inline_toolbar a
             {
                 padding: 3px 5px;
             }
-            div.ajxpNodeProvider:not(.detailed) .toolbarGroup {
+            div.appNodeProvider:not(.detailed) .toolbarGroup {
                 position: absolute;
                 top: 1px;
                 right: 1px;
@@ -93,23 +93,23 @@
                 display: none;
             }
 		</style>
-		<script language="javascript" type="text/javascript" src="AJXP_PATH_TO_ROOT/plugins/gui.ajax/res/js/ajaxplorer_boot.js"></script>
+		<script language="javascript" type="text/javascript" src="APP_PLUGINS_FOLDER/gui.ajax/res/js/app_boot.js"></script>
 		<script type="text/javascript">
-			var ajaxplorer, MessageHash={};
+			var app, MessageHash={};
 			var startParameters = {
-				"BOOTER_URL":"AJXP_PATH_TO_ROOT/index_shared.php?get_action=get_boot_conf&goto=AJXP_START_REPOSITORY&minisite_session=true",
+				"BOOTER_URL":"APP_PATH_TO_ROOT/index_shared.php?get_action=get_boot_conf&goto=APP_START_REPOSITORY&minisite_session=true",
 				"EXT_REP":"\/", 
-				"MAIN_ELEMENT":"ajxp_shared_folder",
-				"SERVER_PREFIX_URI": "AJXP_PATH_TO_ROOT/"
+				"MAIN_ELEMENT":"shared_folder",
+				"SERVER_PREFIX_URI": "APP_PATH_TO_ROOT/"
 			};
-            document.observe("ajaxplorer:before_gui_load", function(e){
-               ajaxplorer.currentThemeUsesIconFonts = true;
-               document.documentElement.className += " ajxp_theme_vision";
+            document.observe("app:before_gui_load", function(e){
+               app.currentThemeUsesIconFonts = true;
+               document.documentElement.className += " app_theme_vision";
            });
-			window.ajxpBootstrap = new AjxpBootstrap(startParameters);
-            window.ajxpMinisite = true;
+			window._bootstrap = new AppBootstrap(startParameters);
+            window._minisite = true;
             window.onunload = function(){
-                if(ajaxplorer) ajaxplorer.actionBar.fireAction("logout");
+                if(app) app.actionBar.fireAction("logout");
             }
             document.observe("dom:loaded", function(){
                 var cookieEnabled=(navigator.cookieEnabled)? true : false
@@ -118,15 +118,15 @@
                        cookieEnabled=(document.cookie.indexOf("testcookie")!=-1)? true : false;
                    }
                    if(!cookieEnabled){
-                       alert('AJXP_MESSAGE[share_center.76]');
+                       alert('APP_MESSAGE[share_center.76]');
                    }
             });
 		</script>
-        <noscript><h2>AJXP_MESSAGE[share_center.77]</h2></noscript>
+        <noscript><h2>APP_MESSAGE[share_center.77]</h2></noscript>
 	</head>
 
-	<body marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" class="AJXP_PRELOGED_USER">
-        <div class="widget_title">AJXP_REPOSITORY_LABEL</div>
-        <div id="ajxp_shared_folder" ajxpClass="AjxpPane" ajxpOptions='{"fit":"height", "fitParent":"window"}'></div>
+	<body marginheight="0" marginwidth="0" leftmargin="0" topmargin="0" class="APP_PRELOGED_USER">
+        <div class="widget_title">APP_REPOSITORY_LABEL</div>
+        <div id="shared_folder" appClass="AppPane" appOptions='{"fit":"height", "fitParent":"window"}'></div>
 	</body>
 </html>

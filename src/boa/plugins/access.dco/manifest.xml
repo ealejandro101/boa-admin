@@ -38,40 +38,6 @@
 				<property name="display" value="dz"/>
 			</component_config>			
 		</client_configs>
-<!--
-    <client_configs>
-      <template_part ajxpId="search_container" ajxpClass="SQLSearchEngine" ajxpOptions="{}"/>
-      <template_part ajxpId="search_container" ajxpClass="SearchEngine" ajxpOptions='{"toggleResultsVisibility":"search_results_cont", "fitMarginBottom":20}' theme="vision"/>
-      <component_config className="InfoPanel">
-        <infoPanel mime="no_selection" attributes="">
-          <messages>
-            <message key="folders_string" id="279"/>
-            <message key="files_string" id="280"/>
-            <message key="totalsize_string" id="259"/>
-          </messages>
-          <html><![CDATA[
-            <div style="padding:10px;">
-              <big style="font-weight: bold; font-size: 14px; color:#79f;display: block; text-align:center; padding-bottom:20px;">#{current_folder}</big>
-              <div id="filelist_folders_count"><b>#{folders_string}</b> : #{filelist_folders_count}</div>
-              <div id="filelist_files_count"><b>#{files_string}</b> : #{filelist_files_count}</div>
-              <div id="filelist_totalsize"><b>#{totalsize_string}</b> #{filelist_totalsize}</div>
-            </div> 
-          ]]></html>
-        </infoPanel>
-        <infoPanel mime="table" attributes="count,text">
-          <messages>
-            <message key="files_string" id="280"/>
-          </messages>
-          <html><![CDATA[
-            <div style="padding:10px;">
-              <big style="font-weight: bold; font-size: 14px; color:#79f;display: block; text-align:center; padding-bottom:20px;">#{text}</big>
-              <div><b>#{files_string}</b> : #{count}</div>
-            </div>
-          ]]></html>
-        </infoPanel>
-      </component_config>
-    </client_configs>
--->
 		<external_file filename="access.dco/dcoActions.xml" include="client_configs/*" exclude=""/>
     <hooks>
       <serverCallback hookName="node.info" methodName="loadNodeInfo"/>

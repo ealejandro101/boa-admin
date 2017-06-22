@@ -36,7 +36,7 @@ defined('APP_EXEC') or die( 'Access not allowed');
 
 /**
  * Download counter for publiclets
- * @package AjaXplorer_Plugins
+ * @package BoA_Plugins
  * @subpackage Action
  */
 class PublicletCounter {

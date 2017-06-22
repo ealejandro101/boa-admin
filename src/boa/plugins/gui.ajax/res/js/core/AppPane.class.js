@@ -202,7 +202,6 @@ Class.create("AppPane", {
         }
 		this.htmlElement.insert({top : header});
 		disableTextSelection(header);
-
         if(this.options.headerToolbarOptions){
             var tbD = new Element('div', {id:"display_toolbar"});
             header.insert({top:tbD});
