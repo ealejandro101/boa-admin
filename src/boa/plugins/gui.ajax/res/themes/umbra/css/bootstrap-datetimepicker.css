@@ -113,6 +113,67 @@ Standalone from bootstrap
     list-style: none;
 }
 
+.input-group {
+  position: relative;
+  display: table-row !important;
+  border-collapse: separate;
+  padding: 2px 0;
+}
+
+.input-group .form-control {
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 100%;
+  margin-bottom: 0;
+  border: 0;
+}
+
+.input-group-addon,
+.input-group .form-control {
+  display: table-cell;
+}
+.input-group .form-control.small {
+  width: 40px;
+}
+.input-group-addon{
+  /*width: 1%;*/
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.input-group-addon {
+  padding: 0px 6px;
+  font-size: 11px;
+  font-weight: normal;
+  line-height: 1;
+  color: #555555;
+  text-align: center;
+  background-color: #eeeeee;
+  /*border: 1px solid #cccccc;*/
+  border-radius: 4px;
+}
+
+.input-group-addon:not(:first-child):not(:last-child),
+.input-group .form-control:not(:first-child):not(:last-child) {
+  border-radius: 0;
+}
+
+.input-group .form-control:first-child,
+.input-group-addon:first-child {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+.input-group-addon:first-child {
+  border-right: 0;
+}
+.input-group .form-control:last-child,
+.input-group-addon:last-child{
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+.input-group-addon:last-child {
+  border-left: 0;
+}
 
 /*!
  * Datetimepicker for Bootstrap 3

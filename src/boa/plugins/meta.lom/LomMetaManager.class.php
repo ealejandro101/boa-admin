@@ -391,6 +391,22 @@ class LomMetaManager extends Plugin {
             }
 
         }
+        else if ($type == "duration"){
+            $segments = explode(" ", "years months days hours minutes seconds");
+            $newObj = array();
+            $ret = false;
+            foreach ($segments as $segment) {
+                $key = $parambasename."_".$specField->nodeName."_".$segment;
+                if (array_key_exists($key, $meta)){
+                    $newObj[$segment] = ctype_digit($meta[$key])?intval($meta[$key]):0;
+                    $ret = true;
+                }
+            }
+            if ($ret) {
+                $parent[$specField->nodeName] = $newObj;
+            }
+            return $ret;
+        }
         else{
             $key = $parambasename."_".$specField->nodeName.$colrow;
             if (array_key_exists($key, $meta)){

@@ -127,8 +127,25 @@ Class.create("FormManager", {
             }
             else if (type == 'date'){
                 element = new Element('div', { className: 'input-group date', id: name })
-                    .insert(new Element('input', Object.extend({type: 'text'}, commonAttributes)).store('date', defaultValue))
+                    .insert(new Element('input', Object.extend({type: 'text', className: 'form-control'}, commonAttributes)).store('date', defaultValue))
                     .insert('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
+            }
+            else if (type == 'duration'){
+                element = new Element('div')                    
+                    .insert(new Element('div', { className: 'input-group', id:name+'_row1'})
+                        .insert('<span class="input-group-addon">Years</span>')
+                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.years', value: (defaultValue && defaultValue.years)||'' }))
+                        .insert('<span class="input-group-addon">Months</span>')
+                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.months', value: (defaultValue && defaultValue.months)||'' }))
+                        .insert('<span class="input-group-addon">Days</span>')
+                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.days', value: (defaultValue && defaultValue.days)||'' })))
+                    .insert(new Element('div', { className: 'input-group', id:name+'_row2'})
+                        .insert('<span class="input-group-addon">Hours</span>')
+                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.hours', value: (defaultValue && defaultValue.hours)||'' }))
+                        .insert('<span class="input-group-addon">Minutes</span>')
+                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.minutes', value: (defaultValue && defaultValue.minutes)||'' }))
+                        .insert('<span class="input-group-addon">Seconds</span>')
+                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.seconds', value: (defaultValue && defaultValue.seconds)||'' })));
             }
             else if(type == 'button'){
 

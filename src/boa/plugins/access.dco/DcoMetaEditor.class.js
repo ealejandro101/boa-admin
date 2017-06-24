@@ -261,6 +261,9 @@ Class.create("DcoMetaEditor", AbstractEditor, {
             case 'date':
                 settings.type = 'date';
                 break;
+            case 'duration':
+                settings.type = 'duration';
+                break;
             case 'int':
                 settings.type = 'integer';
                 break;
