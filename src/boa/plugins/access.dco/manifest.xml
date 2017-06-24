@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <coredriver name="dco" label="CONF_MESSAGE[Digital Content Objects]" description="CONF_MESSAGE[The most standard access to a digital content objects repository.]" mixins="filesystem_commons,slug_provider,template_provider" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
 	<class_definition classname="BoA\Plugins\Access\Dco\DcoAccessDriver" filename="access.dco/DcoAccessDriver.class.php"/>
+    <plugin_info>
+        <plugin_author>Jesus Otero</plugin_author>
+        <plugin_version>follow</plugin_version>
+        <plugin_uri>https://github.com/boa-project/boa/plugins/access/dco</plugin_uri>
+        <core_relation packaged="true" tested_version="follow_core"/>
+    </plugin_info>
     <client_settings icon="plugins/access.dco/icon.png">
         <resources>
             <i18n namespace="access_dco" path="access.dco/i18n"/>
@@ -19,6 +25,7 @@
     <global_param name="USE_POSIX" type="boolean" label="CONF_MESSAGE[Use POSIX]" description="CONF_MESSAGE[Use php POSIX extension to read files permissions. Only works on *nix systems.]" default="false"/>
     <global_param name="USE_XSENDFILE" type="boolean" label="CONF_MESSAGE[X-SendFile Active]" description="CONF_MESSAGE[Delegates all download operations to the webserver using the X-SendFile header. Warning, this is an external module to install for Apache. Module is active by default in Lighttpd. Warning, you have to manually add the folders where files will be downloaded in the module configuration (XSendFilePath directive)]" default="false"/>
     <global_param group="MIXIN_MESSAGE[Metadata and indexation]" name="DEFAULT_METASOURCES" type="string" label="MIXIN_MESSAGE[Default Metasources]" description="MIXIN_MESSAGE[Comma separated list of metastore and meta plugins, that will be automatically applied to all repositories created with this driver]" mandatory="false" default="metastore.serial,meta.filehasher,index.lucene,meta.lom"/>
+    <global_param group="MIXIN_MESSAGE[Filesystem Commons]" name="SHOW_HIDDEN_FILES" type="boolean" label="MIXIN_MESSAGE[Show hidden files]" description="MIXIN_MESSAGE[Show files beginning with a .]" default="false" editable="false"/>
 	</server_settings>
 	<registry_contributions>
 		<external_file filename="access.dco/dcoActions.xml" include="actions/*" exclude=""/>

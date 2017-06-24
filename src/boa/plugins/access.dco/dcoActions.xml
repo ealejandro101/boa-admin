@@ -557,7 +557,7 @@
             </processing>
         </action>
         <action name="mkdco">
-            <gui text="access_dco.mkdco" title="access_dco.mkdco.title" src="folder_new.png" iconClass="icon-folder-close" accessKey="access_dco.mkdco.access_key" hasAccessKey="true">
+            <gui text="access_dco.mkdco" title="access_dco.mkdco.title" src="new_dco.png" iconClass="icon-new-dco" accessKey="access_dco.mkdco.access_key" hasAccessKey="true">
                 <context selection="false" dir="false" recycle="hidden" actionBar="true" root="true"
                          contextMenu="true" infoPanel="false" actionBarGroup="create" inZip="false"></context>
             </gui>
@@ -1135,7 +1135,7 @@
             </processing>
         </action>
         <action name="dcometa">
-            <gui text="access_dco.dcometa" title="access_dco.dcometa.title" src="folder_new.png" iconClass="icon-folder-close" accessKey="access_dco.dcometa.access_key" hasAccessKey="true">
+            <gui text="access_dco.dcometa" title="access_dco.dcometa.title" src="edit_dcometa.png" iconClass="icon-dco-editmeta" accessKey="access_dco.dcometa.access_key" hasAccessKey="true">
                 <context selection="true" dir="" recycle="hidden" actionBar="true"
                          contextMenu="true" infoPanel="true" actionBarGroup="change" inZip="false"></context>
                 <selectionContext dir="" file="false" recycle="false" unique="true" allowedMimes="dco"/>

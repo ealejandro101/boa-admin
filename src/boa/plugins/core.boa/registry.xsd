@@ -636,7 +636,7 @@
     <xs:element name="server_settings">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded">
-                <xs:element ref="global_param"/>
+                <xs:element ref="Fparam"/>
                 <xs:element ref="param"/>
                 <xs:element ref="user_param"/>
             </xs:choice>

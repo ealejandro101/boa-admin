@@ -56,7 +56,7 @@ Class.create("DcoMetaEditor", AbstractEditor, {
     },
     createSpecEditor: function(spec){
         this.spec = spec;
-        this.element.down("span.header_label").update(this._node.getMetadata().get("text"));
+        this.updateHeader();
         this.tab = new SimpleTabs(this.oForm.down("#categoryTabulator"));
         var categories = XPathSelectNodes(spec, '//fields/*[@type="category"]');
         var metadata = this._node.getMetadata().get("dcometadata").evalJSON()||{};
@@ -78,7 +78,18 @@ Class.create("DcoMetaEditor", AbstractEditor, {
         modal.setCloseAction(function(){
             this.formManager.destroyForm(this.element.down(".meta_form_container"));
         }.bind(this));
+        console.log(this.isDirty());        
+        this.setClean();
         //oFormObject.down(".action_bar").select("a").invoke("addClassName", "css_gradient");
+    },
+    updateHeader: function(){
+        this.element.down("span.header_label").update(this._node.getMetadata().get("text"));
+        var icon = resolveImageSource(this._node.getIcon(), "/images/mimes/64");
+        this.element.down("span.header_label").setStyle(
+            {
+                backgroundImage:"url('"+icon+"')",
+                backgroundSize : '34px'
+            });
     },
     /**
      * Process a metadata category to prepare form entry fields for it.
@@ -105,10 +116,11 @@ Class.create("DcoMetaEditor", AbstractEditor, {
 
         if (fields.length > 0){
             container.insert(form);
+            form.paneObject = this;
             this.formManager.createParametersInputs(form, fields, true, values, null, true);
             this.formManager.observeFormChanges(form, this.setDirty.bind(this));
             return true;
-        }
+        }        
         return false;
         //function(form, parametersDefinitions, showTip, values, disabled, skipAccordion, addFieldCheckbox, startAccordionClosed)
     },
@@ -247,7 +259,7 @@ Class.create("DcoMetaEditor", AbstractEditor, {
                 settings.type = 'string';
                 break;
             case 'date':
-                settings.type = 'string';
+                settings.type = 'date';
                 break;
             case 'int':
                 settings.type = 'integer';
@@ -267,9 +279,7 @@ Class.create("DcoMetaEditor", AbstractEditor, {
                 settings.choices = choices;
                 break;
         }
-        console.log(typeof(options.meta.getAttribute('required')));
-        console.log(options.meta.getAttribute('required'));
-        settings.mandatory = options.meta.getAttribute('required') === "true";
+        settings.mandatory = options.meta.getAttribute('required');
         settings.readonly = options.meta.getAttribute('editable') !== "true";
         settings.defaultValue = "";
         settings.label = options.text;
@@ -305,7 +315,7 @@ Class.create("DcoMetaEditor", AbstractEditor, {
         toSubmit.set('spec_id', this.getSpecId());
         var missing = this.formManager.serializeParametersInputs(this.element.down("#categoryTabulator"), toSubmit, 'DCO_');
         if(missing){
-            app.displayMessage("ERROR", MessageHash['conf.36']);
+            app.displayMessage("ERROR", MessageHash['boaconf.36']);
         }else{
             var conn = new Connexion();
             conn.setParameters(toSubmit);

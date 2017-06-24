@@ -84,7 +84,7 @@ Class.create("PluginEditor", AbstractEditor, {
         toSubmit.set("plugin_id", this.pluginId);
         var missing = this.formManager.serializeParametersInputs(this.infoPane.down("div.driver_form"), toSubmit, 'DRIVER_OPTION_');
         if(missing){
-            app.displayMessage("ERROR", MessageHash['conf.36']);
+            app.displayMessage("ERROR", MessageHash['boaconf.36']);
         }else{
             var conn = new Connexion();
             conn.setParameters(toSubmit);
@@ -158,6 +158,11 @@ Class.create("PluginEditor", AbstractEditor, {
                 var hashedParams = this.formManager.parameterNodeToHash(params[i]);
                 driverParamsHash.push(hashedParams);
             }
+
+            if (this.pluginId == "access.dco"){
+                console.log(driverParamsHash);
+            }
+
             var form = new Element('div', {className:'driver_form'});
 
             if(documentation){
@@ -263,7 +268,7 @@ Class.create("PluginEditor", AbstractEditor, {
             if(driverParamsHash.size()){
                 this.formManager.createParametersInputs(form, driverParamsHash, true, (paramsValues.size()?paramsValues:null));
             }else{
-                form.update(MessageHash['conf.105']);
+                form.update(MessageHash['boaconf.105']);
             }
 
             if(form.SF_accordion){
