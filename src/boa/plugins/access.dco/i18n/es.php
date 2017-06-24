@@ -47,5 +47,8 @@ $mess=array(
 "create.success.pre" => "El objeto",
 "create.success.pos" => "ha sido creado con el id",
 "content_string" => "Contenido",
-"src_string" => "Fuentes"
+"src_string" => "Fuentes",
+"dcometa" => "Metadatos",
+"dcometa.title" => "Editar metadatos de la especificación",
+"dcometa.access_key" => "M"
 );

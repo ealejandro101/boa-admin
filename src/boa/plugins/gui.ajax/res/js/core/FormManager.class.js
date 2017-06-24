@@ -133,18 +133,18 @@ Class.create("FormManager", {
             else if (type == 'duration'){
                 element = new Element('div')                    
                     .insert(new Element('div', { className: 'input-group', id:name+'_row1'})
-                        .insert('<span class="input-group-addon">Years</span>')
+                        .insert('<span class="input-group-addon">'+MessageHash['duration_years']+'</span>')
                         .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.years', value: (defaultValue && defaultValue.years)||'' }))
-                        .insert('<span class="input-group-addon">Months</span>')
+                        .insert('<span class="input-group-addon">'+MessageHash['duration_months']+'</span>')
                         .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.months', value: (defaultValue && defaultValue.months)||'' }))
-                        .insert('<span class="input-group-addon">Days</span>')
+                        .insert('<span class="input-group-addon">'+MessageHash['duration_days']+'</span>')
                         .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.days', value: (defaultValue && defaultValue.days)||'' })))
                     .insert(new Element('div', { className: 'input-group', id:name+'_row2'})
-                        .insert('<span class="input-group-addon">Hours</span>')
+                        .insert('<span class="input-group-addon">'+MessageHash['duration_hours']+'</span>')
                         .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.hours', value: (defaultValue && defaultValue.hours)||'' }))
-                        .insert('<span class="input-group-addon">Minutes</span>')
+                        .insert('<span class="input-group-addon">'+MessageHash['duration_minutes']+'</span>')
                         .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.minutes', value: (defaultValue && defaultValue.minutes)||'' }))
-                        .insert('<span class="input-group-addon">Seconds</span>')
+                        .insert('<span class="input-group-addon">'+MessageHash['duration_seconds']+'</span>')
                         .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.seconds', value: (defaultValue && defaultValue.seconds)||'' })));
             }
             else if(type == 'button'){

@@ -36,6 +36,12 @@
 $mess=array(
 "languageLabel" => "Español",
 "date_format"  => "d/m/Y H:i",
+"duration_years" => "Años",
+"duration_months" => "Meses",
+"duration_days" => "Días",
+"duration_hours" => "Horas",
+"duration_minutes" => "Minutos",
+"duration_seconds" => "Segundos",
 "byte_unit_symbol" => "b",
 "0" => "Última ver.",
 "1" => "Nombre",
