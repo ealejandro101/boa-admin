@@ -40,6 +40,7 @@ use BoA\Core\Http\XMLWriter;
 use BoA\Core\Security\Credential;
 use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
+use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Core\Xml\ManifestNode;
@@ -65,9 +66,9 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
     public $driverConf;
     public $wrapperClassName;
     public $urlBase;
+    public $metaPlugin;
     public $mess;
     private static $loadedUserBookmarks;
-    private $_specs;
     private $_explorer;
 
     function initRepository(){
@@ -111,6 +112,18 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         if($recycle != ""){
             RecycleBinManager::init($this->urlBase, "/".$recycle);
         }
+
+        $metaSources = $this->repository->getOption("META_SOURCES");
+        foreach ($metaSources as $key => $metaSource) {
+            $parts = explode('.', $key);
+            if ($parts[0] == 'meta'){
+                $plugin = PluginsService::getInstance()->getPluginById($key);
+                if (in_array('BoA\Plugins\Access\Dco\DcoSpecProvider', class_implements($plugin))){
+                    $this->metaPlugin = $plugin;
+                }
+            }
+        }
+
     }
 
     public function getResourceUrl($path){
@@ -496,10 +509,12 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
             //------------------------------------
             //  CREER UN DCO / CREATE DCO
             //------------------------------------
-            case 'get_specs_list':
-                $specs = $this->loadSpecs();
-                foreach($specs as $spec){
-                    print("<spec name=\"".$spec["name"]."\" id=\"".$spec["id"]."\" path=\"".$spec["path"]."\"/>");
+            case 'get_meta_specs':
+                if ($this->metaPlugin != null){
+                    $specs = $this->metaPlugin->loadSpecs();
+                    header('Content-Type: application/json; charset=UTF-8');
+                    header('Cache-Control: no-cache');
+                    print(json_encode(array("LIST" => $specs)));
                 }
                 break;            
       
@@ -809,6 +824,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         $meta["mimestring"] = $mess["access_dco.dco_mime"];
         $meta["mimestring_id"] = "access_dco.dco_mime";
         $meta["icon"] = "dco.png";
+        $meta["meta_editor_class"] = $this->metaPlugin->getMetaEditorClass();
         $node->mergeMetadata($meta);
     }
 

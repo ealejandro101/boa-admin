@@ -38,6 +38,7 @@ use BoA\Core\Services\AuthService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Xml\ManifestNode;
+use BoA\Plugins\Access\Dco\DcoSpecProvider;
 
 defined('APP_EXEC') or die( 'Access not allowed');
 
@@ -47,7 +48,7 @@ defined('APP_EXEC') or die( 'Access not allowed');
  * @package APP_Plugins
  * @subpackage Meta
  */
-class LomMetaManager extends Plugin {
+class LomMetaManager extends Plugin implements DcoSpecProvider {
 
     /**
      * @var AbstractAccessDriver
@@ -66,19 +67,20 @@ class LomMetaManager extends Plugin {
     public function initMeta($accessDriver){
         $this->accessDriver = $accessDriver;
 
-        $store = PluginsService::getInstance()->getUniqueActivePluginForType("metastore");
+        /*$store = PluginsService::getInstance()->getUniqueActivePluginForType("metastore");
         if($store === false){
                 throw new \Exception("The 'meta.lom' plugin requires at least one active 'metastore' plugin");
         }
         $this->metaStore = $store;
-        $this->metaStore->initMeta($accessDriver);
+        $this->metaStore->initMeta($accessDriver);*/
 
         //$messages = ConfService::getMessages();
+        /****** JO Commented this
         $def = $this->getMetaDefinition();
         if(!isSet($this->options["meta_visibility"])) $visibilities = array("visible");
         else $visibilities = explode(",", $this->options["meta_visibility"]);
         $cdataHead = '<div>
-                        <div class="panelHeader infoPanelGroup" colspan="2"><span class="icon-edit" data-action="edit_lom_meta" title="APP_MESSAGE[meta.lom.1]"></span>APP_MESSAGE[meta.lom.1]</div>
+                        <div class="panelHeader infoPanelGroup" colspan="2"><span class="icon-edit" data-action="edit_lom_meta" title="APP_MESSAGE[meta_lom.1]"></span>APP_MESSAGE[meta_lom.1]</div>
                         <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">';
         $cdataFoot = '</table></div>';
         $cdataParts = "";
@@ -119,8 +121,9 @@ class LomMetaManager extends Plugin {
             $trClass = ($even?" class=\"even\"":"");
             $even = !$even;
             $cdataParts .= '<tr'.$trClass.'><td class="infoPanelLabel">'.$label.'</td><td class="infoPanelValue" data-metaType="'.$fieldType.'" id="ip_'.$key.'">#{'.$key.'}</td></tr>';
-        }
+        }*/
         
+        /****** JO Commented this
         $selection = $this->xPath->query('registry_contributions/client_configs/component_config[@className="InfoPanel"]/infoPanelExtension');
         $contrib = $selection->item(0);
         $contrib->setAttribute("attributes", implode(",", array_keys($def)));
@@ -143,12 +146,13 @@ class LomMetaManager extends Plugin {
             }
             $tag->setAttribute("appOptions", $v);
         }
-
+        */
         parent::init($this->options);
     
     }
         
     protected function getMetaDefinition(){
+        /******* JO Commented this
         foreach($this->options as $key => $val){
             $matches = array();
             if(preg_match('/^lom_meta_fields_(.*)$/', $key, $matches) != 0){
@@ -174,49 +178,10 @@ class LomMetaManager extends Plugin {
                 $result[$value] = $value;
             }
         }
-        return $result;   
+        return $result;  */ 
+        return array();
     }
     
-    public function editLomMeta($actionName, $httpVars, $fileVars){
-        if(!isSet($this->actions[$actionName])) return;
-        if(is_a($this->accessDriver, "demoAccessDriver")){
-            throw new Exception("Write actions are disabled in demo mode!");
-        }
-        $repo = $this->accessDriver->repository;
-        $user = AuthService::getLoggedUser();
-        if(!AuthService::usersEnabled() && $user!=null && !$user->canWrite($repo->getId())){
-            throw new Exception("You have no right on this action.");
-        }
-        $selection = new UserSelection();
-        $selection->initFromHttpVars();
-        $currentFile = $selection->getUniqueFile();
-        $urlBase = $this->accessDriver->getResourceUrl($currentFile);
-        $node = new ManifestNode($urlBase);
-
-
-        $newValues = array();
-        $def = $this->getMetaDefinition();
-        $node->setDriver($this->accessDriver);
-        Controller::applyHook("node.before_change", array(&$node));
-        foreach ($def as $key => $label){
-            if(isSet($httpVars[$key])){
-                $newValues[$key] = Utils::decodeSecureMagic($httpVars[$key]);
-            }else{
-                if(!isset($original)){
-                    $original = $node->retrieveMetadata("lom_meta", false, APP_METADATA_SCOPE_GLOBAL);
-                }
-                if(isSet($original) && isset($original[$key])){
-                    $newValues[$key] = $original[$key];
-                }
-            }
-        }  
-        $node->setMetadata("lom_meta", $newValues, false, APP_METADATA_SCOPE_GLOBAL);
-        Controller::applyHook("node.meta_change", array($node));
-        XMLWriter::header();
-        XMLWriter::writeNodesDiff(array("UPDATE" => array($node->getPath() => $node)), true);
-        XMLWriter::close();
-    }
-
     /**
      *
      * @param ManifestNode $node
@@ -226,18 +191,16 @@ class LomMetaManager extends Plugin {
      */
     public function extractMeta(&$node, $contextNode = false, $details = false){
 
-        //$metadata = $this->metaStore->retrieveMetadata($node, "loms_meta", false, APP_METADATA_SCOPE_GLOBAL);
-        //echo 'Getting meta for lom';
-        $metadata = $node->retrieveMetadata("lom_meta", false, APP_METADATA_SCOPE_GLOBAL);
-        if(count($metadata)){
-            // @todo : Should be UTF8-IZED at output only !!??
-            // array_map(array("SystemTextEncoding", "toUTF8"), $metadata);
+        $metaPath = $node->getUrl();
+        if (is_dir($metaPath)){
+            $metaPath .= "/.metadata";
         }
-        $metadata["lom_meta_fields"] = $this->options["lom_meta_fields"];
-        $metadata["lom_meta_labels"] = $this->options["lom_meta_labels"];
-
+        else {
+            $metaPath = dirname($metaPath)."/.".basename($metaPath).".metadata";
+        }
+        $content = @file_get_contents($metaPath);
+        $metadata = array("lommetadata" => $content);
         $node->mergeMetadata($metadata);
-                
     }
     
     /**
@@ -268,12 +231,10 @@ class LomMetaManager extends Plugin {
         
         switch ($action) {
             case 'get_spec_by_id':
-                $this->loadSpec($httpVars);
+                $this->getSpecById($httpVars["spec_id"]);
                 break;
             case 'get_specs_list':
-                XMLWriter::header("output");
-                $this->loadSpecs();
-                XMLWriter::close("output");
+                $this->loadSpecsAsJson();
                 break;
             
             case 'mkdco':
@@ -313,47 +274,18 @@ class LomMetaManager extends Plugin {
         }
     }
 
-    private function loadSpec($httpVars, $print=true){
-        $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs";
-        $specId = $httpVars["spec_id"];
-        $found = glob($specsPath."/".$specId.".xml");
-        if (count($found) > 0){
-            $xml = new \DOMDocument();
-            $xml->load($found[0]);
-            if ($print){
-                header('Content-Type: text/xml; charset=UTF-8');
-                header('Cache-Control: no-cache');
-                print ($xml->saveXML());
-            }
-            else {
-                return $xml;
-            }
-        }
-    }
-
-    private function loadSpecs(){
-        $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs";
-
-        if (!is_dir($specsPath)){
-            mkdir($specsPath, 0755, true);
-        }
-
-        foreach(glob($specsPath."/*.xml") as $file){
-            $xml = new \DOMDocument();
-            $xml->load($file);
-            $xpath = new \DOMXPath($xml);
-
-            $id = $xpath->query("/spec/id");
-            $name = $xpath->query("/spec/name");
-            print("<spec name=\"".$name[0]->nodeValue."\" id=\"".$id[0]->nodeValue."\" path=\"".basename($file)."\"/>");
-        }
+    private function loadSpecsAsJson(){
+        $list = $this->loadSpecs();
+        header('Content-Type: application/json; charset=UTF-8');
+        header('Cache-Control: no-cache');
+        print(json_encode(array("LIST" => $list)));
     }
     
     private function parseParameters(&$repDef, &$options, $userId = null, $globalBinaries = false){
         Utils::parseStandardFormParameters($repDef, $options, $userId, "DCO_", ($globalBinaries?array():null));
     }
 
-    private function readSpecFieldToJson($specField, &$parent, $parambasename, $meta, $colrow=""){
+    private function readSpecFieldToJson($specField, $specXpath, &$parent, $parambasename, $meta, $colrow=""){
         if (!$specField->hasAttribute("enabled") || !$specField->attributes["enabled"]->nodeValue){
             return false;
         }
@@ -370,7 +302,7 @@ class LomMetaManager extends Plugin {
                     foreach ($specField->childNodes as $child) {
                         if ($child->nodeType == XML_TEXT_NODE) continue;
                         if ($child->nodeType == XML_CDATA_SECTION_NODE) continue;
-                        $itemsFound = $this->readSpecFieldToJson($child, $newObj, $parambasename."_".$specField->nodeName, $meta, $colrow);
+                        $itemsFound = $this->readSpecFieldToJson($child, $specXpath, $newObj, $parambasename."_".$specField->nodeName, $meta, $colrow);
                         if (!itemsFound){
                             break;
                         }
@@ -386,7 +318,7 @@ class LomMetaManager extends Plugin {
                 foreach ($specField->childNodes as $child) {
                     if ($child->nodeType == XML_TEXT_NODE) continue;
                     if ($child->nodeType == XML_CDATA_SECTION_NODE) continue;
-                    $this->readSpecFieldToJson($child, $newObj, $parambasename."_".$specField->nodeName.$colrow, $meta);
+                    $this->readSpecFieldToJson($child, $specXpath, $newObj, $parambasename."_".$specField->nodeName.$colrow, $meta);
                 }
             }
 
@@ -408,6 +340,22 @@ class LomMetaManager extends Plugin {
             return $ret;
         }
         else{
+            $specType = $specXpath->query("//types/type[@name='$type']");
+            if ($specType->length > 0){
+                $newObj = array();
+                $ret = false;
+                foreach ($specType[0]->childNodes as $child) {
+                    $key = $parambasename."_".$specField->nodeName."_".$child->nodeName.$colrow;
+                    if (array_key_exists($key, $meta)){
+                        $newObj[$child->nodeName] = $meta[$key];
+                        $ret = true;
+                    }
+                }
+                if ($ret){
+                    $parent[$specField->nodeName] = $newObj;    
+                }
+                return $ret;
+            }
             $key = $parambasename."_".$specField->nodeName.$colrow;
             if (array_key_exists($key, $meta)){
                 $parent[$specField->nodeName] = $meta[$key];
@@ -418,21 +366,6 @@ class LomMetaManager extends Plugin {
     }
 
     private function saveDcoMeta($actionName, $httpVars, $fileVars){
-        /*
-                $options = array();
-                $this->parseParameters($httpVars, $options, null, true);
-                $confStorage = ConfService::getConfStorageImpl();
-                $confStorage->savePluginConfig($httpVars["plugin_id"], $options);
-                @unlink(APP_PLUGINS_CACHE_FILE);
-                @unlink(APP_PLUGINS_REQUIRES_FILE);             
-                @unlink(APP_PLUGINS_MESSAGES_FILE);
-                XMLWriter::header();
-                XMLWriter::sendMessage($mess["boaconf.97"], null);
-                XMLWriter::reloadDataNode();
-                XMLWriter::close();
-                
-                
-        */
         if(!isSet($this->actions[$actionName])) return;
         if(is_a($this->accessDriver, "demoAccessDriver")){
             throw new Exception("Write actions are disabled in demo mode!");
@@ -449,7 +382,7 @@ class LomMetaManager extends Plugin {
         //$node = new ManifestNode($urlBase);
         $meta = array();
         $this->parseParameters($httpVars, $meta, null, true);
-        $spec = $this->loadSpec($httpVars, false);
+        $spec = $this->getSpecById($httpVars["spec_id"], false);
         $xpath = new \DOMXPath($spec);
 
         $categories = $xpath->query("/spec/fields/*[@type='category']");
@@ -460,38 +393,73 @@ class LomMetaManager extends Plugin {
             foreach ($category->childNodes as $field){
                 if ($field->nodeType == XML_TEXT_NODE) continue;
                 if ($field->nodeType == XML_CDATA_SECTION_NODE) continue;
-                $this->readSpecFieldToJson($field, $metaobject[$category->nodeName], "meta_fields_".$category->nodeName, $meta, "");
+                $this->readSpecFieldToJson($field, $xpath, $metaobject[$category->nodeName], "meta_fields_".$category->nodeName, $meta, "");
             }
         }
 
-        $fp = fopen($this->accessDriver->urlBase.$currentFile."/.metadata", "w");
+        $target = is_dir($this->accessDriver->urlBase.$currentFile)?"/.metadata":
+            dirname($currentFile)."/.".basename($currentFile).".metadata";
+        $target = $this->accessDriver->urlBase.$target;
+        $fp = fopen($target, "w");
         if($fp !== false){
             $data = json_encode($metaobject); //, JSON_PRETTY_PRINT
             @fwrite($fp, $data, strlen($data));
             @fclose($fp);
         }
-        /*$newValues = array();
-        $def = $this->getMetaDefinition();
-        $node->setDriver($this->accessDriver);
-        Controller::applyHook("node.before_change", array(&$node));
-        foreach ($def as $key => $label){
-            if(isSet($httpVars[$key])){
-                $newValues[$key] = Utils::decodeSecureMagic($httpVars[$key]);
-            }else{
-                if(!isset($original)){
-                    $original = $node->retrieveMetadata("users_meta", false, APP_METADATA_SCOPE_GLOBAL);
-                }
-                if(isSet($original) && isset($original[$key])){
-                    $newValues[$key] = $original[$key];
-                }
-            }
-        }   
-        $node->setMetadata("users_meta", $newValues, false, APP_METADATA_SCOPE_GLOBAL);*/
         //Controller::applyHook("node.meta_change", array($node));
-        //XMLWriter::header();
-        //XMLWriter::writeNodesDiff(array("UPDATE" => array($node->getPath() => $node)), true);
-        //XMLWriter::close();
         HTMLWriter::charsetHeader("application/json");
         echo isSet($data)?$data:"{}";
     }
+
+    /* DcoSpecProvider Implementation */
+    public function loadSpecs(){
+        $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs";
+
+        if (!is_dir($specsPath)){
+            mkdir($specsPath, 0755, true);
+        }
+
+        $list = array();
+
+        foreach(glob($specsPath."/*.xml") as $file){
+            $xml = new \DOMDocument();
+            $xml->load($file);
+            $xpath = new \DOMXPath($xml);
+
+            $id = $xpath->query("/spec/id");
+            $name = $xpath->query("/spec/name");
+            $list[$id[0]->nodeValue] = $name[0]->nodeValue;
+        }
+        return $list;
+    }
+    
+    public function getSpecById($id, $print=true){
+        $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs";
+
+        if ($id === 'DIGITAL_RESOURCE_OBJECT') {
+            $id = $this->options["dro_spec"];
+        }
+
+        $found = glob($specsPath."/".$id.".xml");
+        if (count($found) > 0){
+            $xml = new \DOMDocument();
+            $xml->load($found[0]);
+            if ($print){
+                header('Content-Type: text/xml; charset=UTF-8');
+                header('Cache-Control: no-cache');
+                print ($xml->saveXML());
+                return false;
+            }
+            return $xml;
+        }
+        return false;
+    }
+
+    public function defaultMetaFromSpec($node){
+    }
+
+    public function getMetaEditorClass(){
+        return "LomMetaEditor";
+    }
+
 }

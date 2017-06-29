@@ -60,6 +60,8 @@ class Controller{
      */
 	private static $includeHooks = array();
 
+    private static $debug = null;
+
     /**
      * Initialize the queryable xPath object
      * @static
@@ -67,10 +69,10 @@ class Controller{
      */
 	private static function initXPath(){		
 		if(!isSet(self::$xPath)){
-			
 			$registry = PluginsService::getXmlRegistry( false );
 			$changes = self::filterActionsRegistry($registry);
 			if($changes) PluginsService::updateXmlRegistry($registry);
+            if (self::$debug != null) echo $registry->saveXML();
 			self::$xPath = new \DOMXPath($registry);		
 		}
 		return self::$xPath;
@@ -183,6 +185,12 @@ class Controller{
      */
 	public static function findActionAndApply($actionName, $httpVars, $fileVars, &$action = null){        
         $actionName = Utils::sanitize($actionName, APP_SANITIZE_EMAILCHARS);
+
+        if (isSet($httpVars["plugin_id"])){
+            $split = explode('.', $httpVars["plugin_id"]);
+            PluginsService::getInstance()->setPluginActive($split[0], $split[1]);
+        }
+
         $log = $actionName == 'get_specs_list'; //ToDelete
         if($actionName == "cross_copy"){
             $pService = PluginsService::getInstance();
@@ -203,6 +211,7 @@ class Controller{
         if($action == null){
             $actions = $xPath->query("actions/action[@name='$actionName']");
             if(!$actions->length){
+                //echo ('no action found');
                 self::$lastActionNeedsAuth = true;
                 return false;
             }

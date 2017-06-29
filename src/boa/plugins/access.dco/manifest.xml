@@ -11,8 +11,6 @@
         <resources>
             <i18n namespace="access_dco" path="access.dco/i18n"/>
             <js file="plugins/access.dco/DcoManager.class.js" className="DcoManager"/>      
-            <js file="plugins/access.dco/DcoMetaEditor.class.js" className="DcoMetaEditor"/>      
-            <css file="plugins/editor.role/rolesEditor.css" />
         </resources>
     </client_settings>
 	<server_settings>

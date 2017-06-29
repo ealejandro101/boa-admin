@@ -26,28 +26,45 @@
  * @category   [CATEGORY]
  * @copyright  2017 BoA Project
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
-*/
-$mess=array(
-"create" => "Create",
-"mkdco" => "New Object",
-"mkdco.title" => "Create a new digital content object",
-"mkdco.access_key" => "O",
-"dco_title" => "Title",
-"dco_type" => "Type",
-"dco_contype" => "Conexion Type",
-"dco_author" => "Author",
-"adaptative" => "Adaptative Learning",
-"external" => "External",
-"local" => "Local",
-"streaming" => "Streaming Server",
-"dco_mime" => "Digital Content Object",
-"objects_count" => "Objects Found",
-"object_info_label" => "Object Info",
-"create.success.pre" => "Object",
-"create.success.pos" => "has been created with id",
-"content_string" => "Content",
-"src_string" => "Assets",
-"dcometa" => "Metadata",
-"dcometa.title" => "Edit Specification Metadata",
-"dcometa.access_key" => "M"
-);
+ */
+namespace BoA\Plugins\Access\Dco;
+
+defined('APP_EXEC') or die( 'Access not allowed');
+
+/**
+ * Interface must be implemented for access drivers that can be accessed via a wrapper protocol.
+ * @package BoA
+ * @subpackage Core
+ * @interface DcoSpecProvider
+ */
+interface DcoSpecProvider {
+
+    /**
+     * @return string
+     */
+    function loadSpecs();
+    /**
+     * Convert a path (from the repository root) to a fully 
+     * qualified app url like app.protocol://repoId/path/to/node
+     * @param String $path
+     * @return String
+     */
+    function getSpecById($id, $print);
+    
+    /**
+     * Creates a directory
+     * @param String $path
+     * @param String $newDirName
+     */
+    function defaultMetaFromSpec($node); 
+    
+    /**
+     * Creates an empty file
+     * @param String $path
+     * @param String $newDirName
+     */
+    function getMetaEditorClass();
+
+}
+
+?>

@@ -27,24 +27,25 @@
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
 "use strict";
-Class.create("DcoMetaEditor", AbstractEditor, {
+Class.create("LomMetaEditor", AbstractEditor, {
     _node: null,
     tab: null,
     spec: null,
     formManager: null,
+    metaTag: '',
     initialize: function($super, oFormObject){
         $super(oFormObject, {fullscreen:false});
         this.oForm = oFormObject;
         this.formManager = this.getFormManager();
     },
-    createEditor: function(selection){
+    show: function(selection){
         var node = this._node = selection.getNode(0);
-        if (node.getMime()!='dco') return; //Only dco objects
-        var type = node.getMetadata().get('type_id');
-
+        var type = 'DIGITAL_RESOURCE_OBJECT'; //By default open with the digital resource object spec
+        if (node.getMime() == 'dco') {//If it is a DCO object, then read the type from the object
+            type = node.getMetadata().get('type_id');
+        }
         var params = new Hash();
         params.set("get_action", "get_spec_by_id");
-        params.set("plugin_id", 'meta.lom');
         params.set("spec_id", type);
         var connexion = new Connexion();
         connexion.setParameters(params);        
@@ -59,7 +60,10 @@ Class.create("DcoMetaEditor", AbstractEditor, {
         this.updateHeader();
         this.tab = new SimpleTabs(this.oForm.down("#categoryTabulator"));
         var categories = XPathSelectNodes(spec, '//fields/*[@type="category"]');
-        var metadata = this._node.getMetadata().get("dcometadata").evalJSON()||{};
+        console.log(1);
+        var metadata = this._node.getMetadata().get("lommetadata");
+        metadata = (metadata && metadata.evalJSON())||{};
+        console.log(2);
         $A(categories).each(function(cat){
             var pane = new Element("div");
             var catName = this.getMetaNodeTranslation(cat, 'meta.fields.');
@@ -76,11 +80,11 @@ Class.create("DcoMetaEditor", AbstractEditor, {
             return true;
         }.bind(this));
         modal.setCloseAction(function(){
-            this.formManager.destroyForm(this.element.down(".meta_form_container"));
+            this.element.select(".meta_form_container").each(function(frm){
+                this.formManager.destroyForm(frm);    
+            }.bind(this));            
         }.bind(this));
-        console.log(this.isDirty());        
         this.setClean();
-        //oFormObject.down(".action_bar").select("a").invoke("addClassName", "css_gradient");
     },
     updateHeader: function(){
         this.element.down("span.header_label").update(this._node.getMetadata().get("text"));
@@ -131,6 +135,7 @@ Class.create("DcoMetaEditor", AbstractEditor, {
      * @param form Element|null Target form where to insert the meta entry fields
      */
     prepareMetaFieldEntry: function(field, container, level, dicprefix, metadata, values){
+        try {
         var type = field.getAttribute('type');
         var enabled = field.getAttribute('enabled');
         if (enabled !== 'true') return;
@@ -176,6 +181,11 @@ Class.create("DcoMetaEditor", AbstractEditor, {
                 values.set(name, metadata[fname]);
             }
             return $H(Object.extend(options, this.getControlSettings({type:type, meta:field, text: label})));
+        }
+        }
+        catch(err){
+            console.log(err);
+            return null;
         }
     },
 
@@ -245,11 +255,18 @@ Class.create("DcoMetaEditor", AbstractEditor, {
      */
     getControlSettings: function(options){
         var settings = {};
+        settings.mandatory = options.meta.getAttribute('required');
+        settings.readonly = options.meta.getAttribute('editable') !== "true";
+        settings.defaultValue = "";
+        settings.label = options.text;
+
         switch(options.type){
             case 'checkbox':
                 settings.type = 'checkbox'
                 break;
             case 'text':
+            case 'string':
+            case null:
                 settings.type = 'string';
                 break;
             case 'longtext':
@@ -281,37 +298,52 @@ Class.create("DcoMetaEditor", AbstractEditor, {
                 }
                 settings.choices = choices;
                 break;
+            default:
+                var type = XPathSelectSingleNode(this.spec, '//types/type[@name="'+options.type+'"]')
+                if (type != null){
+                    var childSettings = [];
+
+                    $A(type.children).each(function(it){
+                        var options = {
+                            label: MessageHash[it.getAttribute("labelId")] || it.getAttribute("labelId"),
+                            name: it.nodeName,
+                            type: it.getAttribute("type"),
+                            mandatory: it.getAttribute('required')
+                        };
+                        childSettings.push($H(options));
+                    }.bind(this));
+                    settings.type = 'composed';
+                    settings.typeName = options.type;
+                    settings.childs = childSettings;
+                }
+                else 
+                    return {};
         }
-        settings.mandatory = options.meta.getAttribute('required');
-        settings.readonly = options.meta.getAttribute('editable') !== "true";
-        settings.defaultValue = "";
-        settings.label = options.text;
         return settings;
     },
 
-    setDirty : function(){
+    setDirty: function(){
         this.actions.get("saveButton").removeClassName("disabled");
     },
 
-    setClean : function(){
+    setClean: function(){
         this.actions.get("saveButton").addClassName("disabled");
     },
 
-    isDirty : function(){
+    isDirty: function(){
         return !this.actions.get("saveButton").hasClassName("disabled");
     },
-    getFormManager : function(){
+    getFormManager: function(){
         return new FormManager(this.element.down(".tabpanes"));
     },
     getSpecId: function(){
         return XPathSelectSingleNode(this.spec, "/spec/id").firstChild.nodeValue;
     },
-    save : function(){
+    save: function(){
         if(!this.isDirty()) return;
 
         var toSubmit = new Hash();
         toSubmit.set("action", "save_dcometa");
-        //toSubmit.set("sub_action", "edit_plugin_options");
         toSubmit.set("plugin_id", 'meta.lom');
         toSubmit.set("dir", app.getContextNode().getPath());
         toSubmit.set("file", this._node.getPath());

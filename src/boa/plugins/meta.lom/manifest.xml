@@ -12,13 +12,15 @@
 			<i18n namespace="meta_lom" path="meta.lom/i18n" />
 			<js file="plugins/meta.lom/LomMetaCellRenderer.class.js" className="LomMetaCellRenderer" autoload="true"/>
 			<js file="plugins/meta.lom/LomSpecEditor.class.js" className="LomSpecEditor" autoload="true"/>
+			<js file="plugins/meta.lom/LomMetaEditor.class.js" className="LomMetaEditor" autoload="true"/>
       <css file="plugins/meta.lom/lommeta.css" autoload="true" />
+      <css file="plugins/editor.role/rolesEditor.css" autoload="true" />
       <img_library alias="meta_lom" path="plugins/meta.lom/img"/>
 		</resources>
 	</client_settings>	
 	<server_settings>
 		<!--<param name="meta_file_name" type="string" label="CONF_MESSAGE[Meta File]" description="CONF_MESSAGE[Hidden file used inside folders to save meta data]" mandatory="true" default=".metadata"/>-->
-		<param name="dro_spec" type="select" label="CONF_MESSAGE[Digital Resource Specification]" description="CONF_MESSAGE[The LOM Specification to user for digital resources.]" choices="1|Recurso Digital,2|Objeto Informativo LOM-CO,3|Objeto de aprendizaje LOM-CO" mandatory="true" default=""/>
+		<param name="dro_spec" type="select" label="CONF_MESSAGE[Digital Resource Specification]" description="CONF_MESSAGE[The LOM Specification to user for digital resources.]" choices="json_list:get_specs_list" mandatory="true" default=""/>
 		<!--<param name="lom_meta_labels" type="string" replicationGroup="group1" label="CONF_MESSAGE[Meta Labels]" description="CONF_MESSAGE[Comma separated list of labels, be sure to define as many as fields!]" mandatory="true" default=""/>
 		<param name="lom_meta_visibility" type="string" replicationGroup="group1" label="CONF_MESSAGE[Columns visibility]" description="CONF_MESSAGE[Set default visibility for each columns. Either by columns, using commas, or one value that will be applied to all columns. Value can be 'visible' or 'hidden'.]" mandatory="false" default="visible"/>-->
 		<config_tab name="tab-specs" label="APP_MESSAGE[meta_lom.9]">
@@ -41,7 +43,7 @@
 				<js file="plugins/meta.lom/LomSpecEditor.class.js" className="LOMSpecEditor"/>
 			</resources>
 			<handler><![CDATA[
-				var specEditor = new LOMSpecEditor(document.getElementById('meta_lom_metadata_entry'), 'tab-specs');
+				var specEditor = new LOMSpecEditor($('meta_lom_metadata_entry'), 'tab-specs');
 				]]>				
 			</handler>
 			<metadata>
@@ -124,49 +126,6 @@
 				</fields>
 			</metadata>
 		</config_tab>
-		<global_multi_param name="specification" group="CONF_MESSAGE[Specifications]" add_action_label="CONF_MESSAGE[Add spec]">
-			<!--<param name="name" type="string" label="CONF_MESSAGE[Name]" description="CONF_MESSAGE[Specification name]" mandatory="true" />
-			<param name="description" type="string" label="CONF_MESSAGE[Description]" description="CONF_MESSAGE[Specification description]" mandatory="true"/>-->
-			<action name="add">
-					<clientCallback prepareModal="true"><![CDATA[
-						var userSelection = app.getUserSelection();
-						var loadFunc = function(oForm){
-							var form = $(oForm).select('div[id="lom_meta_form"]')[0];
-							var nodeMeta = userSelection.getUniqueNode().getMetadata();
-							var metaFields = nodeMeta.get('lom_meta_fields').split(',');
-							var metaLabels = nodeMeta.get('lom_meta_labels').split(',');
-							for(var i=0;i<metaFields.length;i++){
-								var value = nodeMeta.get(metaFields[i]) || '';
-								form.insert('<div class="SF_element"><div class="SF_label">'+metaLabels[i]+' : </div><input class="SF_input" name="'+metaFields[i]+'" value="'+value+'"/></div>');
-								if(metaFields[i] == 'stars_rate'){
-									var element = form.down('input[name="stars_rate"]');
-									LomMetaCellRenderer.prototype.formPanelStars(element, form);
-								}else if(metaFields[i] == 'css_label'){
-									var element = form.down('input[name="css_label"]');
-									LomMetaCellRenderer.prototype.formPanelCssLabels(element, form);
-								}
-								// mod for textarea
-								else if(metaFields[i].substr(0,5) == 'area_'){
-									var element = form.down('input[name="'+metaFields[i]+'"]');
-									LomMetaCellRenderer.prototype.formTextarea(element, form);
-								}
-							}
-						}
-						var closeFunc = function(){
-							var oForm = $(modal.getForm());
-							userSelection.updateFormOrUrl(modal.getForm());	
-							app.actionBar.submitForm(oForm);				
-							hideLightBox(true);
-							return false;
-						};
-						modal.showDialogForm('LOM Meta Edit', 'lom_meta_form', loadFunc, closeFunc);
-						]]></clientCallback>
-			</action>
-			<action name="remove">
-			</action>
-			<action name="edit">
-			</action>
-		</global_multi_param>
 	</server_settings>
 	<registry_contributions>
 		<hooks>
@@ -185,61 +144,10 @@
 				</infoPanelExtension>
 			</component_config>			
 		</client_configs>
-		<actions>
-			<action name="edit_lom_meta">
-				<gui text="meta.lom.1" title="meta.lom.1" src="meta_lom/ICON_SIZE/tag.png" iconClass="icon-tags" hasAccessKey="false">
-					<context selection="true" dir="" recycle="hidden"
-						actionBar="true" contextMenu="true" infoPanel="false"
-						actionBarGroup="more" inZip="false">
-					</context>
-					<selectionContext dir="true" file="file" recycle="false" unique="true"></selectionContext>
-					</gui>
-				<rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
-				<processing>
-					<clientCallback prepareModal="true"><![CDATA[
-						var userSelection = app.getUserSelection();
-						var loadFunc = function(oForm){
-							var form = $(oForm).select('div[id="lom_meta_form"]')[0];
-							var nodeMeta = userSelection.getUniqueNode().getMetadata();
-							var metaFields = nodeMeta.get('lom_meta_fields').split(',');
-							var metaLabels = nodeMeta.get('lom_meta_labels').split(',');
-							for(var i=0;i<metaFields.length;i++){
-								var value = nodeMeta.get(metaFields[i]) || '';
-								form.insert('<div class="SF_element"><div class="SF_label">'+metaLabels[i]+' : </div><input class="SF_input" name="'+metaFields[i]+'" value="'+value+'"/></div>');
-								if(metaFields[i] == 'stars_rate'){
-									var element = form.down('input[name="stars_rate"]');
-									LomMetaCellRenderer.prototype.formPanelStars(element, form);
-								}else if(metaFields[i] == 'css_label'){
-									var element = form.down('input[name="css_label"]');
-									LomMetaCellRenderer.prototype.formPanelCssLabels(element, form);
-								}
-								// mod for textarea
-								else if(metaFields[i].substr(0,5) == 'area_'){
-									var element = form.down('input[name="'+metaFields[i]+'"]');
-									LomMetaCellRenderer.prototype.formTextarea(element, form);
-								}
-							}
-						}
-						var closeFunc = function(){
-							var oForm = $(modal.getForm());
-							userSelection.updateFormOrUrl(modal.getForm());	
-							app.actionBar.submitForm(oForm);				
-							hideLightBox(true);
-							return false;
-						};
-						modal.showDialogForm('LOM Meta Edit', 'lom_meta_form', loadFunc, closeFunc);
-						]]></clientCallback>
-					<clientForm id="lom_meta_form"><![CDATA[
-					<div id="lom_meta_form" action="edit_lom_meta" box_width="250"></div>
-					]]></clientForm>
-					<serverCallback methodName="editLomMeta"></serverCallback>
-					</processing>
-			</action>			
-		</actions>
 		<external_file filename="meta.lom/metaActions.xml" include="actions/*" exclude=""/>
 	</registry_contributions>
 	<dependencies>
 		<!-- Wrapper type plugins only -->
-		<pluginClass pluginName="access.fs|access.ftp|access.demo|access.remote_fs"/>
+		<pluginClass pluginName="access.dco|access.ftp|access.demo|access.remote_fs"/>
 	</dependencies>				
 </meta>

@@ -28,11 +28,10 @@
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
 */
 $mess=array(
-"create" => "Nuevo objeto",
-"create.title" => "Crear nuevo objeto de contenido digital",
-"mkdco" => "Nuevo objecto",
+"create" => "Crear",
+"mkdco" => "Nuevo objeto",
 "mkdco.title" => "Crear nuevo objeto de contenido digital",
-"mkdco.access_key" => "O",
+"mkdco.access_key" => "o",
 "dco_title" => "Titulo",
 "dco_type" => "Tipo",
 "dco_contype" => "Tipo de conexión",
@@ -47,7 +46,7 @@ $mess=array(
 "create.success.pre" => "El objeto",
 "create.success.pos" => "ha sido creado con el id",
 "content_string" => "Contenido",
-"src_string" => "Fuentes",
+"src_string" => "Insumos",
 "dcometa" => "Metadatos",
 "dcometa.title" => "Editar metadatos de la especificación",
 "dcometa.access_key" => "M"

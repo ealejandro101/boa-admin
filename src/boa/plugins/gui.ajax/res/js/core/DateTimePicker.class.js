@@ -482,7 +482,7 @@
                     horizontal = options.widgetPositioning.horizontal,
                     parent;
 
-                if (options.widgetParent) {
+                /*if (options.widgetParent) {
                     parent = options.widgetParent.insert(widget);
                 } else if (element.match('input')) {
                     parent = element.insert({after: widget}).up();
@@ -492,7 +492,9 @@
                 } else {
                     parent = element;
                     element.childElements().first().insert({after: widget});
-                }
+                }*/
+                component.insert(widget);
+                parent = component;
 
                 var windowSize = new WindowSize();
                 var wLayout = widget.getLayout(true);
@@ -522,17 +524,20 @@
                     }
                 }
 
-                if (vertical === 'top') {
+                widget.addClassName('bottom');
+                /*if (vertical === 'top') {
                     widget.addClassName('top').removeClassName('bottom');
                 } else {
                     widget.addClassName('bottom').removeClassName('top');
-                }
+                }*/
 
+                widget.removeClassName('pull-right');
+                /*
                 if (horizontal === 'right') {
                     widget.addClassName('pull-right');
                 } else {
                     widget.removeClassName('pull-right');
-                }
+                }*/
 
                 // find the first parent element that has a non-static css positioning
                 if (parent.getStyle('position') === 'static'){
@@ -551,15 +556,23 @@
                     if (itemZIndex !== 'auto' && Number(itemZIndex) !== 0) parentsZindex.push(Number(itemZIndex));
                 });
                 var zIndex = Math.max.apply(Math, parentsZindex) + 10;
-                console.log([vertical, horizontal, position, eOuterHeight, pOuterHeight, pOuterWidth]);
-                var style = {
+                //console.log([vertical, horizontal, position, eOuterHeight, pOuterHeight, pOuterWidth]);
+                /*ToDo: Correct this to properly calculate positioning var style = {
                     top: vertical === 'top' ? 'auto' : (position.top + eOuterHeight)+'px',
                     bottom: vertical === 'top' ? (pOuterHeight - (parent === element ? 0 : position.top))+'px' : 'auto',
                     left: horizontal === 'left' ? (parent === element ? 0 : position.left)+'px' : 'auto',
                     right: horizontal === 'left' ? 'auto' : (pOuterWidth - eOuterWidth - (parent === element ? 0 : position.left))+'px',
                     zIndex: zIndex
+                };*/
+
+                var style = {
+                    top: '26px',
+                    left: 0,
+                    right: 'auto',
+                    bottom: 'auto',
+                    zIndex: zIndex
                 };
-                console.log(style);
+                //console.log(style);
                 widget.setStyle(style);
             },
 

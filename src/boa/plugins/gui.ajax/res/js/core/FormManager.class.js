@@ -80,6 +80,7 @@ Class.create("FormManager", {
         var replicableGroups = $H({});
 		parametersDefinitions.each(function(param){		
 			var label = param.get('label');
+            if (label)
 			if(param.get('labelId')){
 				label = MessageHash[param.get('labelId')];
 			}
@@ -125,27 +126,60 @@ Class.create("FormManager", {
 			if(type == 'string' || type == 'integer' || type == 'array' || type == "hidden"){
                 element = new Element('input', Object.extend({type: (type == "hidden" ? 'hidden' : 'text'), className:'SF_input', value:defaultValue}, commonAttributes));
             }
-            else if (type == 'date'){
+            else if (type == 'date' || type == 'datetime'){
                 element = new Element('div', { className: 'input-group date', id: name })
                     .insert(new Element('input', Object.extend({type: 'text', className: 'form-control'}, commonAttributes)).store('date', defaultValue))
-                    .insert('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
+                    .insert('<span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar"></span></span>');
             }
             else if (type == 'duration'){
-                element = new Element('div')                    
-                    .insert(new Element('div', { className: 'input-group', id:name+'_row1'})
-                        .insert('<span class="input-group-addon">'+MessageHash['duration_years']+'</span>')
-                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.years', value: (defaultValue && defaultValue.years)||'' }))
-                        .insert('<span class="input-group-addon">'+MessageHash['duration_months']+'</span>')
-                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.months', value: (defaultValue && defaultValue.months)||'' }))
-                        .insert('<span class="input-group-addon">'+MessageHash['duration_days']+'</span>')
-                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.days', value: (defaultValue && defaultValue.days)||'' })))
-                    .insert(new Element('div', { className: 'input-group', id:name+'_row2'})
-                        .insert('<span class="input-group-addon">'+MessageHash['duration_hours']+'</span>')
-                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.hours', value: (defaultValue && defaultValue.hours)||'' }))
-                        .insert('<span class="input-group-addon">'+MessageHash['duration_minutes']+'</span>')
-                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.minutes', value: (defaultValue && defaultValue.minutes)||'' }))
-                        .insert('<span class="input-group-addon">'+MessageHash['duration_seconds']+'</span>')
-                        .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.seconds', value: (defaultValue && defaultValue.seconds)||'' })));
+                element = new Element('div');
+                var layout = { _row1: ['years', 'months', 'days'], _row2: ['hours', 'minutes', 'seconds']};
+                for(var row in layout){
+                    var div = new Element('div', { className: 'input-group', id:name+row });
+                    element.insert(div);
+                    for(var i = 0; i < layout[row].length; i++){
+                        var f = layout[row][i];
+                        div.insert('<span class="input-group-addon">'+MessageHash['duration_'+f]+'</span>')
+                            .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.'+f, value: (defaultValue && defaultValue[f])||'' }));
+                    }
+                }
+            }
+            else if (type == 'composed'){
+                element = new Element('div')
+                try{
+                $A(param.get('childs')).each(function (child){
+                    var childName = child.get('name');
+                    var childType = child.get('type');
+                    var childMandatory = child.get('mandatory') && child.get('mandatory') == 'true';
+
+                    var inputGroup = new Element('div', { className: 'input-group', id:name+'.'+childName});
+                    element.insert(inputGroup);
+                    inputGroup.insert('<span class="input-group-addon">'+child.get('label')+(childMandatory?'*':'')+'</span>');
+
+                    if (childType == 'string' || childType == "integer" || childType == 'email') {
+                        inputGroup.insert(new Element('input', { 
+                            type: 'text',
+                            className: 'form-control',
+                            name: name+"."+childName,
+                            value: (defaultValue && defaultValue[childName])||'',
+                            'data-mandatory': childMandatory?'true':'false'
+                        }));
+                    }
+                    if (childType == 'date' || childType == 'datetime') {
+                        inputGroup.addClassName('date')
+                            .insert(new Element('input', {type: 'text',
+                                className: 'form-control',
+                                name:name+"."+childName,
+                                'data-ctrl_type': childType,
+                                'data-mandatory': childMandatory?'true':'false'
+                            }).store('date', (defaultValue && defaultValue[childName])||''))
+                            .insert('<span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar"></span></span>');
+                    }
+                });
+                }
+                catch(err){
+                    console.log(err);
+                }
             }
             else if(type == 'button'){
 
@@ -396,7 +430,10 @@ Class.create("FormManager", {
                 var conn = new Connexion();
                 element = div.down("select");
                 if(defaultValue) element.defaultValue = defaultValue;
-                conn.setParameters({get_action:json_list});
+                var opts = json_list.split('|');
+                var reqpar = {get_action:opts[0]};
+                if (opts.length > 1) reqpar.plugin_id = opts[1];
+                conn.setParameters(reqpar);
                 conn.onComplete = function(transport){
                     var json = transport.responseJSON;
                     element.down("option").update(json.LEGEND ? json.LEGEND : "Select...");
@@ -625,6 +662,10 @@ Class.create("FormManager", {
                     });
                 }.bind(this) );
             });
+            //set Dirty if a replicated row is removed
+            form.paneObject.observe("after_remove_replicated_row", function(replicate){
+                realCallback();
+            });
         }
     },
 
@@ -645,7 +686,7 @@ Class.create("FormManager", {
 				if(el.getAttribute('data-mandatory') == 'true' && el.value == '' && !el.disabled){
 					missingMandatory.push(el);
 				}
-                if (el.getAttribute('data-ctrl_type') == 'date'){
+                if (/(date|datetime)/i.test(el.getAttribute('data-ctrl_type'))){
                     parametersHash.set(prefix+el.name, el.retrieve('date'));
                 }
                 else {
@@ -798,10 +839,12 @@ Class.create("FormManager", {
             var removeButton = new Element('a', {className:'SF_replication_Remove', title:'Remove this group'})
                 .update('&nbsp;')
                 .observe('click', function(){
+                    if(form.paneObject) $continue = form.paneObject.notify('after_remove_replicated_row', tr);
                     if(tr.select('.SF_replication_Add').length){
                         tr.previous('.SF_replicableGroup').insert(tr.select('.SF_replication_Add')[0]);
                     }
                     tr.remove();
+                    if(form.paneObject) form.paneObject.notify('after_remove_replicated_row', tr);
                 });
             tr.insert(removeButton);
             this.createDatePickers(tr);
@@ -824,7 +867,9 @@ Class.create("FormManager", {
     createDatePickers: function(form){
         form.select('.input-group.date').each(function(el){
             try{
-                new DateTimePicker(el, { format: 'L LT' });    
+                var hasTime = el.down('input').readAttribute('data-ctrl_type') == 'datetime';
+                var debug = false;
+                new DateTimePicker(el, { debug: debug, format: 'L'+(hasTime?' LT':'') });    
             }
             catch(err){
                 console.log(err);

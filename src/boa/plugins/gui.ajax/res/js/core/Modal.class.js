@@ -305,11 +305,11 @@ Class.create("Modal", {
 			}else{
 				app.actionBar.editor = new editorKlass(oForm);
 			}
-            if(editorArgument){
-                app.actionBar.editor.open(editorArgument);
-            }else{
-                app.actionBar.editor.open(app.getUserSelection().getUniqueNode());
-            }
+      if(editorArgument){
+          app.actionBar.editor.open(editorArgument);
+      }else{
+          app.actionBar.editor.open(app.getUserSelection().getUniqueNode());
+      }
 		};
 		this.showDialogForm('', editorData.formId, loadFunc, null, null, true, true);			
 	},

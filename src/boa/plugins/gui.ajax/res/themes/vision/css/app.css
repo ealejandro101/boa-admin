@@ -3926,6 +3926,7 @@ td.ip_geo_cell{
     text-shadow: 0 1px #FFF;
     margin: 0 -5px;
     padding: 0 20px;
+    cursor: pointer;
 }
 .tabrow span {
     color: #555;

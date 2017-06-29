@@ -92,10 +92,6 @@ Class.create("DcoManager", {
                 }
             }
         }
-    },
-
-    createMetaEditor: function(settings){
-        console.log(settings);
     }
 });
 

@@ -156,8 +156,6 @@ class DcoExplorer{
                 break;
             }
             $dco = $this->getDcoManifestNode($options["path"]."/".basename(dirname($entry))."/.manifest");
-            $jsonmeta = $this->getDcoMetadata($options["path"]."/".basename(dirname($entry))."/.metadata");
-            $dco->mergeMetadata(array("dcometadata" => $jsonmeta));
             $objects[] = $dco;
             $cursor ++;
         }
@@ -192,25 +190,6 @@ class DcoExplorer{
             }
         }
         return $meta;
-    }
-
-    private function getDcoMetadata($metaPath) {
-        $content = file_get_contents($metaPath);
-        //$json = json_decode($content, true);
-        return $content;
-
-        /*$meta = array();
-        $this->parseJsonMeta($json, null, $meta);
-        return $meta;*/
-    }
-
-    private function parseJsonMeta($json, $basename, $meta){
-        if (is_array($json)){
-            foreach ($json as $key => $value) {
-                $this->parseJsonMeta($value, (is_null($basename)?"":".").$key, $meta);
-            }
-        }
-        $meta[$basename] = $json;
     }
 
     private function readObjectContent($options){
@@ -374,7 +353,6 @@ class DcoExplorer{
             }
         }
         if(isSet($httpVars["recursive"]) && $httpVars["recursive"] == "true"){
-            echo 'Doing recursive';
             foreach($fullList["d"] as $nodeDir){
                 $this->switchAction("ls", array(
                     "dir" => SystemTextEncoding::toUTF8($nodeDir->getPath()),

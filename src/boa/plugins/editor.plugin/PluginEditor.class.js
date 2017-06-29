@@ -130,7 +130,6 @@ Class.create("PluginEditor", AbstractEditor, {
             var xmlData = transport.responseXML;
             var params = XPathSelectNodes(xmlData, "//global_param");
             var values = XPathSelectNodes(xmlData, "//plugin_settings_values/param");
-            var multi_params = XPathSelectNodes(xmlData, "//global_multi_param");
             var additionalTabs = XPathSelectNodes(xmlData, "//config_tab");
             var documentation = XPathSelectSingleNode(xmlData, "//plugin_doc");
 
@@ -157,10 +156,6 @@ Class.create("PluginEditor", AbstractEditor, {
             for(var i=0;i<params.length;i++){
                 var hashedParams = this.formManager.parameterNodeToHash(params[i]);
                 driverParamsHash.push(hashedParams);
-            }
-
-            if (this.pluginId == "access.dco"){
-                console.log(driverParamsHash);
             }
 
             var form = new Element('div', {className:'driver_form'});
@@ -214,56 +209,6 @@ Class.create("PluginEditor", AbstractEditor, {
                     }
                 });                
             }
-
-            if (multi_params.length && false){
-                $A(multi_params).each(function (child){
-                    var specsPane = new Element("div", {className:"metaPane"});
-                    var addForm = new Element("div");
-                    var addFormDetail = new Element("div");
-                    addForm.insert(addFormDetail);
-                    var onClick = function (event) { console.log('Add on click'); };
-                    
-                    var detailParamNodes = XPathSelectNodes(xmlData, '//global_multi_param[@name="'+child.getAttribute("name")+'"]/param');
-                    var detailParamsHash = $A([]);
-                    for(var i=0;i<detailParamNodes.length;i++){
-                        detailParamsHash.push($this.formManager.parameterNodeToHash(detailParamNodes[i]));
-                    }
-                    $this.formManager.createParametersInputs(addFormDetail, detailParamsHash, true, null, null, true);
-
-                    addFormDetail.insert("<div class='largeButton' style='width:100px;clear:both;margin-top: 7px;margin-left: 0'><img src=\""+
-                        resourcesFolder+"/images/actions/16/filesave.png\"><span class=\"title\">"+child.getAttribute("add_action_label")+"</span></div>");
-                    addFormDetail.down(".largeButton")._form = addForm;
-                    addFormDetail.down(".largeButton").observe("click", onClick.bind($this));
-
-                    specsPane.insert(addForm);
-                    //$this.specsPane.insert({top:addForm});
-                    var items = [{id: 1, name:'Spec 1'},{id: 2, name:'Spec 2'},{id: 3, name:'Spec 3'}]
-                    //Create table for current items
-                    var itemsTable = new Element("div", {id: 'acls-selected'});
-                    $A(items).each(function (item) {
-                        var actionsCell = new Element("div", {className: "repositoryRights"});                    
-                        var tr = new Element("div", {className: "repositoryEntry"})
-                        var titleCell = new Element('div', {className:"repositoryLabel"}).update('');
-                        var theLabel = new Element("span",{style:'cursor:pointer;', 'data-itemId':item.id}).update(item.name);
-                        titleCell.insert(theLabel);
-                        tr.insert(titleCell);
-                        tr.insert(actionsCell);
-                        itemsTable.insert({bottom:tr});
-                    });
-
-
-                    //$this.specsPane.insert({bottom:itemsTable});
-                    specsPane.insert({bottom: itemsTable});
-                    $this.infoPane.insert({bottom: specsPane});
-                    
-                    $("pane-infos").resizeOnShow = function(tab){
-                        fitHeightToBottom($("acls-selected"), $("pane-infos"), 20);
-                    }
-
-                    specsPane.insert({before: new Element("div", {className:"innerTitle"}).update(child.getAttribute("group"))});
-                });
-            }
-
 
             if(driverParamsHash.size()){
                 this.formManager.createParametersInputs(form, driverParamsHash, true, (paramsValues.size()?paramsValues:null));

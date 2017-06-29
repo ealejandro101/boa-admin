@@ -39,9 +39,9 @@
             </processing>
         </action>
         <action name="create">
-            <gui text="access_dco.create" title="access_dco.create.title" src="folder_new.png" iconClass="icon-plus" accessKey="folder_access_key" hasAccessKey="true">
+            <gui text="access_dco.create" src="new_dco.png" iconClass="icon-plus" accessKey="" hasAccessKey="false">
                 <context selection="false" dir="true" recycle="hidden" actionBar="true"
-                         contextMenu="true" infoPanel="false" actionBarGroup="put" inZip="false"/>
+                         contextMenu="false" infoPanel="false" actionBarGroup="put" inZip="false"/>
             </gui>
             <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""/>
             <subMenu>
@@ -567,15 +567,13 @@
                     var callback = function (settings) {                    
                       modal.showDialogForm('Create', 'mkdco_form', function (oForm){
                           var specsEl = oForm.down(".spec_selector");
-                          var choices = '';
                           if (specsEl){
-                              $A(settings.specs).each(function(choice){
-                                  choices += '<option value="'+choice.id+'">'+choice.name+'</option>';
-                              });
+                                var choices = '<option value="" selected="selected">'+MessageHash[321]+'</option>'
+                                for(var k in settings.specs) {
+                                    choices += '<option value="'+k+'">'+settings.specs[k]+'</option>';
+                                }
+                                specsEl.update(choices);
                           }
-                          specsEl.update('');
-                          specsEl.insert(choices);
-
                       }, function(){
                           var oForm = $(modal.getForm());
                           var elementToCheck=(oForm['dcotitle']);
@@ -590,14 +588,10 @@
                       });
                     };
                     var conn = new Connexion();
-                    conn.addParameter('get_action', 'get_specs_list');
-                    conn.addParameter('plugin_id', 'access.dco');
+                    conn.addParameter('get_action', 'get_meta_specs');
                     conn.onComplete = function(transport){
-                        var specs = XPathSelectNodes(transport.responseXML, '//spec');
-                        var settings = { specs: []};
-                        $A(specs).each(function(spec){
-                            settings.specs.push({name:spec.getAttribute('name'), id:spec.getAttribute('id')});
-                        });
+                        var specs = transport.responseJSON;
+                        var settings = { specs: specs && specs.LIST || []};
                         callback(settings);
                     };
                     conn.sendSync();
@@ -1135,7 +1129,7 @@
             </processing>
         </action>
         <action name="dcometa">
-            <gui text="access_dco.dcometa" title="access_dco.dcometa.title" src="edit_dcometa.png" iconClass="icon-dco-editmeta" accessKey="access_dco.dcometa.access_key" hasAccessKey="true">
+            <gui text="access_dco.dcometa" title="access_dco.dcometa.title" src="dcometa.png" iconClass="icon-dco-editmeta" accessKey="access_dco.dcometa.access_key" hasAccessKey="true">
                 <context selection="true" dir="" recycle="hidden" actionBar="true"
                          contextMenu="true" infoPanel="true" actionBarGroup="change" inZip="false"></context>
                 <selectionContext dir="" file="false" recycle="false" unique="true" allowedMimes="dco"/>
@@ -1145,19 +1139,15 @@
                 <clientCallback prepareModal="true"><![CDATA[
                     var userSelection = app.getUserSelection();
                     if (!userSelection.isEmpty()){
+                        var node = userSelection.getNode(0);
+                        var editorClass = node.getMetadata().get('meta_editor_class');
                         var onLoad = function (oForm){
-                            console.log(userSelection);
-                            var metaEditor = new DcoMetaEditor(oForm);
-                            metaEditor.createEditor(userSelection);
+                            var metaEditor = eval('new '+editorClass+'(oForm)');
+                            metaEditor.show(userSelection);
                         }
-                        var onSubmit = function(oForm){
-
-                        }
-
-                        modal.showDialogForm('Create', 'dcometa_form', onLoad, onSubmit, null, true, true);
-                        //this.showDialogForm('', editorData.formId, loadFunc, null, null, true, true);           
+                        var onSubmit = function(oForm){};
+                        modal.showDialogForm('', 'dcometa_form', onLoad, onSubmit, null, true, true);
                     }
-
                 ]]></clientCallback>
                 <clientForm id="dcometa_form"><![CDATA[
                     <div id="dcometa_form" action="dcometa_form" class="tabbed_editor" box_width="80%" box_height="80%" box_resize="true" box_padding="0">
@@ -1183,6 +1173,11 @@
                     //app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
                 ]]>          
                 </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="get_meta_specs">
+            <processing>
                 <serverCallback methodName="switchAction"></serverCallback>
             </processing>
         </action>

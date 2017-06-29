@@ -15,5 +15,44 @@
         <serverCallback methodName="onPost"></serverCallback>
       </processing>
     </action>
+    <action name="edit_lom_meta">
+      <gui text="meta_lom.1" title="meta_lom.1" src="meta_lom/ICON_SIZE/dcometa.png" iconClass="icon-tags" hasAccessKey="false">
+        <context selection="true" dir="false" recycle="hidden" actionBar="false" contextMenu="true" infoPanel="true"
+          actionBarGroup="more" inZip="false">
+        </context>
+        <selectionContext dir="false" file="file" recycle="false" unique="true"></selectionContext>
+        </gui>
+      <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+      <processing>
+        <clientCallback prepareModal="true"><![CDATA[
+          var userSelection = app.getUserSelection();
+          if (!userSelection.isEmpty()){
+              var node = userSelection.getNode(0);
+              var onLoad = function (oForm){
+                  var metaEditor = new LomMetaEditor(oForm);
+                  metaEditor.show(userSelection);
+              }
+              var onSubmit = function(oForm){};
+              modal.showDialogForm('', 'dcometa_form', onLoad, onSubmit, null, true, true);
+          }
+          ]]></clientCallback>
+          <clientForm id="dcometa_form"><![CDATA[
+              <div id="dcometa_form" action="dcometa_form" class="tabbed_editor" box_width="80%" box_height="80%" box_resize="true" box_padding="0">
+                  <div class="editor_header">
+                      <div class="action_bar">
+                          <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
+                      </div>
+                      <span class="header_label"></span>
+                  </div>
+                  <div id="categoryTabulator">
+                      <ul class="tabrow">
+                      </ul>
+                      <div class="tabpanes">
+                      </div>
+                  </div>
+              </div>              
+          ]]></clientForm>
+        </processing>
+    </action>     
   </actions>
 </registry_contributions>

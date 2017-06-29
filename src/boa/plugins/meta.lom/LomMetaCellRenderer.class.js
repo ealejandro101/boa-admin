@@ -31,11 +31,11 @@ Class.create("LomMetaCellRenderer", {
 	initialize: function(){
     console.log('initializing...');
 		this.cssList = new Hash({
-			'low': {cssClass:'meta_low', label:MessageHash['meta.lom.4'], sortValue:'5'},
-			'todo' : {cssClass:'meta_todo', label:MessageHash['meta.lom.5'], sortValue:'4'},
-			'personal' : {cssClass:'meta_personal', label:MessageHash['meta.lom.6'], sortValue:'3'},
-			'work' : {cssClass:'meta_work', label:MessageHash['meta.lom.7'], sortValue:'2'},
-			'important' : {cssClass:'meta_important', label:MessageHash['meta.lom.8'], sortValue:'1'}
+			'low': {cssClass:'meta_low', label:MessageHash['meta_lom.4'], sortValue:'5'},
+			'todo' : {cssClass:'meta_todo', label:MessageHash['meta_lom.5'], sortValue:'4'},
+			'personal' : {cssClass:'meta_personal', label:MessageHash['meta_lom.6'], sortValue:'3'},
+			'work' : {cssClass:'meta_work', label:MessageHash['meta_lom.7'], sortValue:'2'},
+			'important' : {cssClass:'meta_important', label:MessageHash['meta_lom.8'], sortValue:'1'}
 		});
 		var head = $$('head')[0];
 		var href = "plugins/meta.lom/css/labelsClasses.css";
@@ -99,7 +99,7 @@ Class.create("LomMetaCellRenderer", {
 			name:'',
 			value:'', 
 			selected:(!value)
-		}).update(MessageHash['meta.lom.2']));
+		}).update(MessageHash['meta_lom.2']));
 		cssList.each(function(pair){
 			var option = new Element('option', {
 				name:pair.key,
@@ -241,7 +241,7 @@ Class.create("LomMetaCellRenderer", {
 				src:imgRemove,
 				style:'float:left;cursor:pointer;margin-right:2px;padding-right:3px;border-right:1px solid #ccc;',
 				note:0,
-				title:MessageHash['meta.lom.3']
+				title:MessageHash['meta_lom.3']
 			});
 			cont.insert(img);			
 		}
