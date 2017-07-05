@@ -47,19 +47,19 @@ Class.create("ActionsManager", {
 		this.actions = new Hash();
 		this.defaultActions = new Hash();
 		this.toolbars = new Hash();		
-		document.observe("boa:context_changed", function(event){
+		document.observe("app:context_changed", function(event){
 			window.setTimeout(function(){
 				this.fireContextChange();
 			}.bind(this), 0);			
 		}.bind(this) );
 		
-		document.observe("boa:selection_changed", function(event){
+		document.observe("app:selection_changed", function(event){
 			window.setTimeout(function(){
 				this.fireSelectionChange();
 			}.bind(this), 0);
 		}.bind(this) );
 		
-		document.observe("boa:user_logged", function(event){
+		document.observe("app:user_logged", function(event){
 			if(event.memo && event.memo.getPreference){
 				this.setUser(event.memo);
 			}else{
@@ -527,7 +527,7 @@ Class.create("ActionsManager", {
 				}
 				else if(result == '0' || result == '-1')
 				{
-                    var errorId = 285;
+          var errorId = 285;
 				}
 				else if(result == '2')
 				{					
@@ -535,25 +535,25 @@ Class.create("ActionsManager", {
 				}
 				else if(result == '-2')
 				{
-                    var errorId = 285;
+          var errorId = 285;
 				}
 				else if(result == '-3')
 				{
-                    var errorId = 366;
+          var errorId = 366;
 				}
 				else if(result == '-4')
 				{
-                    var errorId = 386;
+          var errorId = 386;
 				}
-                if(errorId){
-                    error = true;
-                    if($("generic_dialog_box") && $("generic_dialog_box").visible() && $("generic_dialog_box").down("div.dialogLegend")){
-                        $("generic_dialog_box").down("div.dialogLegend").insert({bottom:'<div class="login_error" style="background-color: #D33131;display: block;font-size: 9px;color: white;border-radius: 3px;padding: 2px 6px;">'+MessageHash[errorId]+'</div>'});
-                        $("generic_dialog_box").shake();
-                    }else{
-                        alert(MessageHash[errorId]);
-                    }
-                }
+        if(errorId){
+          error = true;
+          if($("generic_dialog_box") && $("generic_dialog_box").visible() && $("generic_dialog_box").down("div.dialogLegend")){
+              $("generic_dialog_box").down("div.dialogLegend").insert({bottom:'<div class="login_error" style="background-color: #D33131;display: block;font-size: 9px;color: white;border-radius: 3px;padding: 2px 6px;">'+MessageHash[errorId]+'</div>'});
+              $("generic_dialog_box").shake();
+          }else{
+              alert(MessageHash[errorId]);
+          }
+        }
 
 			}else if(childs[i].tagName == "trigger_bg_action"){
 				var name = childs[i].getAttribute("name");
@@ -578,7 +578,7 @@ Class.create("ActionsManager", {
 	
 	/**
 	 * Spreads a selection change to all actions and to registered components 
-	 * by triggering boa:actions_refreshed event.
+	 * by triggering app:actions_refreshed event.
 	 */
 	fireSelectionChange: function(){
 		var userSelection = null;
@@ -589,24 +589,24 @@ Class.create("ActionsManager", {
 		this.actions.each(function(pair){
 			pair.value.fireSelectionChange(userSelection);
 		});		
-		document.fire("boa:actions_refreshed");
+		document.fire("app:actions_refreshed");
 	},
 	
 	/**
 	 * Spreads a context change to all actions and to registered components 
-	 * by triggering boa:actions_refreshed event.
+	 * by triggering app:actions_refreshed event.
 	 */
 	fireContextChange: function(){
 		var crtNode;
 		if(app && app.getContextNode()){ 
 			var crtNode = app.getContextNode();
 		}
-		this.actions.each(function(pair){			
-			pair.value.fireContextChange(this.usersEnabled, 
-									 this.oUser, 									 
-									 crtNode);
+		this.actions.each(function(pair){
+		pair.value.fireContextChange(this.usersEnabled,
+		 this.oUser,
+		 crtNode);
 		}.bind(this));
-		document.fire("boa:actions_refreshed");
+		document.fire("app:actions_refreshed");
 	},
 			
 	/**
@@ -633,9 +633,9 @@ Class.create("ActionsManager", {
 				this.registerAction(act);
 			}.bind(this));
 		}
-		document.fire("boa:actions_loaded", this.actions);
+		document.fire("app:actions_loaded", this.actions);
 		this.fireContextChange();
-		this.fireSelectionChange();		
+		this.fireSelectionChange();
 	},
 	
 	/**
@@ -665,7 +665,7 @@ Class.create("ActionsManager", {
 		actions = XPathSelectNodes(documentElement, "actions/action");
 		for(var i=0;i<actions.length;i++){
 			if(actions[i].nodeName != 'action') continue;
-            if(actions[i].getAttribute('enabled') == 'false') continue;
+      if(actions[i].getAttribute('enabled') == 'false') continue;
 			var newAction = new Action();
 			newAction.createFromXML(actions[i]);
 			this.registerAction(newAction);

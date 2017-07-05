@@ -13,7 +13,7 @@
         </resources>
 	</client_settings>
 	<clientForm id="plugin_edit_box"><![CDATA[
-		<div id="plugin_edit_box" class="tabbed_editor" box_width="560" box_height="80%" box_resize="true" box_padding="0">
+		<div id="plugin_edit_box" class="tabbed_editor" box_width="80%" box_height="80%" box_resize="true" box_padding="0">
 		    <div class="editor_header">
                 <div class="action_bar">
                     <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
@@ -24,13 +24,13 @@
 			    <ul class="tabrow">
                     <li class="selected" data-PaneID="pane-infos"><span message_id="plugin_editor.3">APP_MESSAGE[plugin_editor.3]</span></li>
                     <li class="" data-PaneID="pane-docs"><span message_id="plugin_editor.4">APP_MESSAGE[plugin_editor.4]</span></li>
-	            </ul>
-	            <div class="tabpanes">
-	            </div>
+          </ul>
+          <div class="tabpanes">
 	            <div id="pane-infos">
 	            </div>
-                <div id="pane-docs" style="padding:20px;">
-                </div>
+              <div id="pane-docs" style="padding:20px;">
+              </div>
+          </div>
 			</div>
 		</div>				
 	]]></clientForm>

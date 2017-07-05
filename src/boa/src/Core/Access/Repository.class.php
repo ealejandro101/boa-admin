@@ -554,5 +554,16 @@ class Repository implements GroupPathProvider {
         if(strpos($path, "APP_GROUP_PATH_FLAT") !== false) return "GROUP";
         return false;
     }
-
+    
+    public static function fromJsonObject($jsonObject) {
+        $result = array();
+        foreach ($jsonObject AS $key => $value) {
+            $repo = new Repository($key, "", "");
+            foreach ($value as $p => $pValue) {
+                $repo->$p = $pValue;
+            }
+            $result[$key] = $repo;
+        }
+        return $result;
+    }
 }

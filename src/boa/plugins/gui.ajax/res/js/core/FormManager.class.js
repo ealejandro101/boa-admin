@@ -60,7 +60,12 @@ Class.create("FormManager", {
                 collectCdata = true;
                 continue;
             }
-			paramsHash.set(attName, value);
+            if(attName == 'editable'){
+                paramsHash.set('readonly', value != "true");
+            }
+            else{
+                paramsHash.set(attName, value);
+            }
 		}
         if(collectCdata){
             paramsHash.set("value", paramNode.firstChild.nodeValue);
@@ -84,6 +89,10 @@ Class.create("FormManager", {
 			var name = param.get('name');
 			var type = param.get('type');
 			var desc = param.get('description');
+
+            if (name == 'btnaddnew') {
+                console.log(type);
+            }
             // deduplicate
             if(form.down('[name="'+name+'"]')) return;
 
@@ -96,6 +105,7 @@ Class.create("FormManager", {
             }
 			var mandatory = false;
 			if(param.get('mandatory') && param.get('mandatory')=='true') mandatory = true;
+
             var defaultValue = '';
             if(values && values.get(name) !== undefined){
                 defaultValue = values.get(name);
@@ -114,7 +124,65 @@ Class.create("FormManager", {
             }
 			if(type == 'string' || type == 'integer' || type == 'array' || type == "hidden"){
                 element = new Element('input', Object.extend({type: (type == "hidden" ? 'hidden' : 'text'), className:'SF_input', value:defaultValue}, commonAttributes));
-            }else if(type == 'button'){
+            }
+            else if (type == 'date' || type == 'datetime'){
+                element = new Element('div', { className: 'input-group date', id: name })
+                    .insert(new Element('input', Object.extend({type: 'text', className: 'form-control'}, commonAttributes)).store('date', defaultValue))
+                    .insert('<span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar"></span></span>');
+            }
+            else if (type == 'duration'){
+                element = new Element('div');
+                var layout = { _row1: ['years', 'months', 'days'], _row2: ['hours', 'minutes', 'seconds']};
+                for(var row in layout){
+                    var div = new Element('div', { className: 'input-group', id:name+row });
+                    element.insert(div);
+                    for(var i = 0; i < layout[row].length; i++){
+                        var f = layout[row][i];
+                        div.insert('<span class="input-group-addon">'+MessageHash['duration_'+f]+'</span>')
+                            .insert(new Element('input', { type: 'text', className: 'form-control small', name: name+'.'+f, value: (defaultValue && defaultValue[f])||'' }));
+                    }
+                }
+            }
+            else if (type == 'composed'){
+                element = new Element('div')
+                try{
+                $A(param.get('childs')).each(function (child){
+                    var childName = child.get('name');
+                    var childType = child.get('type');
+                    var childMandatory = child.get('mandatory') && child.get('mandatory') == 'true';
+
+                    var inputGroup = new Element('div', { className: 'input-group', id:name+'.'+childName});
+                    element.insert(inputGroup);
+                    inputGroup.insert('<span class="input-group-addon">'+child.get('label')+(childMandatory?'*':'')+'</span>');
+
+                    if (childType == 'string' || childType == "integer" || childType == 'email') {
+                        inputGroup.insert(new Element('input', { 
+                            type: 'text',
+                            className: 'form-control',
+                            name: name+"."+childName,
+                            value: (defaultValue && defaultValue[childName])||'',
+                            'data-mandatory': childMandatory?'true':'false'
+                        }));
+                    }
+                    if (childType == 'date' || childType == 'datetime') {
+                        inputGroup.addClassName('date')
+                            .insert(new Element('input', {type: 'text',
+                                className: 'form-control',
+                                name:name+"."+childName,
+                                'data-ctrl_type': childType,
+                                'data-mandatory': childMandatory?'true':'false'
+                            }).store('date', (defaultValue && defaultValue[childName])||''))
+                            .insert('<span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar"></span></span>');
+                    }
+                });
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            else if(type == 'button'){
+
+                console.log('button rendering');
 
                 element = new Element('div', {className:'SF_input SF_inlineButton'}).update('<span class="icon-play-circle"></span>'+param.get('description'));
                 element.observe("click", function(event){
@@ -214,7 +282,7 @@ Class.create("FormManager", {
                 }
                 if(!choices) choices = [];
                 var multiple = param.get("multiple") ? "multiple='true'":"";
-                element = '<select class="SF_input" name="'+name+'" data-mandatory="'+(mandatory?'true':'false')+'" '+multiple+'>';
+                element = '<select class="SF_input" name="'+name+'" data-mandatory="'+(mandatory?'true':'false')+'" '+multiple+disabledString+'>';
                 if(!mandatory && !multiple) element += '<option value=""></option>';
                 for(var k=0;k<choices.length;k++){
                     var cLabel, cValue;
@@ -333,7 +401,6 @@ Class.create("FormManager", {
             if(type != "legend"){
                 div = new Element('div', {className:"SF_element" + (addFieldCheckbox?" SF_elementWithCheckbox":"")});
                 if(type == "hidden") div.setStyle({display:"none"});
-
                 div.insert(new Element('div', {className:"SF_label"}).update(label+(mandatory?'*':'')+' :'));
                 // INSERT CHECKBOX
                 if(addFieldCheckbox){
@@ -362,7 +429,10 @@ Class.create("FormManager", {
                 var conn = new Connexion();
                 element = div.down("select");
                 if(defaultValue) element.defaultValue = defaultValue;
-                conn.setParameters({get_action:json_list});
+                var opts = json_list.split('|');
+                var reqpar = {get_action:opts[0]};
+                if (opts.length > 1) reqpar.plugin_id = opts[1];
+                conn.setParameters(reqpar);
                 conn.onComplete = function(transport){
                     var json = transport.responseJSON;
                     element.down("option").update(json.LEGEND ? json.LEGEND : "Select...");
@@ -392,7 +462,11 @@ Class.create("FormManager", {
                 if(replicableGroups.get(repGroupName)) {
                     repGroup = replicableGroups.get(repGroupName);
                 }else {
-                    repGroup = new Element("div", {id:"replicable_"+repGroupName, className:'SF_replicableGroup'});
+                    var replicatable = true;
+                    if (param.get('replicatable') !== null && param.get('replicatable') !== undefined){
+                        replicatable = param.get('replicatable');
+                    }
+                    repGroup = new Element("div", {id:"replicable_"+repGroupName, className:'SF_replicableGroup', "data-replicatable":replicatable?'true':'false'});                    
                 }
                 repGroup.insert(div);
                 replicableGroups.set(repGroupName, repGroup);
@@ -419,18 +493,23 @@ Class.create("FormManager", {
                 gDiv.insert(div);
                 groupDivs.set(group, gDiv);
             }
+
 		}.bind(this));
         if(replicableGroups.size()){
             replicableGroups.each(function(pair){
                 var repGroup = pair.value;
-                var replicationButton = new Element("a", {className:'SF_replication_Add', title:'Replicate this group'}).update("&nbsp;").observe("click", function(event){
-                    this.replicateRow(repGroup,  1, form);
-                }.bind(this));
-                repGroup.insert({bottom:replicationButton});
-                repGroup.insert({bottom:new Element('div', {className:'SF_rgClear'})});
+                var replicatable = repGroup.getAttribute('data-replicatable');
+                if (replicatable === null || replicatable === 'true'){                    
+                    var replicationButton = new Element("a", {className:'SF_replication_Add', title:'Replicate this group'}).update("&nbsp;").observe("click", function(event){
+                        this.replicateRow(repGroup,  1, form, null, $(event.target).up('.SF_replicableGroup'));    
+                    }.bind(this));
+                    repGroup.insert({bottom:replicationButton});
+                    repGroup.insert({bottom:new Element('div', {className:'SF_rgClear'})});
+                }
                 if(values){
                     var hasReplicates = true;
                     var replicIndex = 1;
+                    var lastRow = repGroup;
                     while(hasReplicates){
                         //hasReplicates = false;
                         var repInputs = repGroup.select('input,select,textarea');
@@ -440,13 +519,16 @@ Class.create("FormManager", {
                             hasReplicates &= (values.get(name+"_"+replicIndex) != null);
                         });
                         if(hasReplicates){
-                            this.replicateRow(repGroup, 1, form, values);
+                            lastRow = this.replicateRow(repGroup, 1, form, values, lastRow);
                             replicIndex++;
                         }
                     }
                 }
             }.bind(this));
         }
+
+        this.createDatePickers(form);
+
         if(!groupDivs.size()) return;
         var firstGroup = true;
         groupDivs.each(function(pair){
@@ -493,7 +575,7 @@ Class.create("FormManager", {
                     cb.click();                	
                 }
             });
-        }
+        }        
 	},
 
     createUploadForm : function(modalParent, imgSrc, param){
@@ -558,6 +640,7 @@ Class.create("FormManager", {
         }
         form.select("div.SF_element").each(function(element){
             element.select("input,textarea,select").invoke("observe", "change", realCallback);
+            element.select(".input-group.date").invoke("observe", "dp:change", realCallback);
             element.select("input,textarea").invoke("observe", "keydown", function(event){
                 if(event.keyCode == Event.KEY_DOWN || event.keyCode == Event.KEY_UP || event.keyCode == Event.KEY_RIGHT || event.keyCode == Event.KEY_LEFT || event.keyCode == Event.KEY_TAB){
                     return;
@@ -569,6 +652,7 @@ Class.create("FormManager", {
             form.paneObject.observe("after_replicate_row", function(replicate){
                 replicate.select("div.SF_element").each(function(element){
                     element.select("input,textarea,select").invoke("observe", "change", realCallback);
+                    element.select(".input-group.date").invoke("observe", "dp:change", realCallback);
                     element.select("input,textarea").invoke("observe", "keydown", function(event){
                         if(event.keyCode == Event.KEY_DOWN || event.keyCode == Event.KEY_UP || event.keyCode == Event.KEY_RIGHT || event.keyCode == Event.KEY_LEFT || event.keyCode == Event.KEY_TAB){
                             return;
@@ -576,6 +660,10 @@ Class.create("FormManager", {
                         realCallback();
                     });
                 }.bind(this) );
+            });
+            //set Dirty if a replicated row is removed
+            form.paneObject.observe("after_remove_replicated_row", function(replicate){
+                realCallback();
             });
         }
     },
@@ -597,7 +685,12 @@ Class.create("FormManager", {
 				if(el.getAttribute('data-mandatory') == 'true' && el.value == '' && !el.disabled){
 					missingMandatory.push(el);
 				}
-				parametersHash.set(prefix+el.name, el.value);				
+                if (/(date|datetime)/i.test(el.getAttribute('data-ctrl_type'))){
+                    parametersHash.set(prefix+el.name, el.retrieve('date'));
+                }
+                else {
+				    parametersHash.set(prefix+el.name, el.value);
+                }
 			}
 			else if(el.type=="radio" && el.checked){
 				parametersHash.set(prefix+el.name, el.value)
@@ -695,7 +788,7 @@ Class.create("FormManager", {
 	 * @param number Integer
 	 * @param form HTMLForm
 	 */
-	replicateRow : function(templateRow, number, form, values){
+	replicateRow: function(templateRow, number, form, values, lastRow){
         if(form.paneObject) form.paneObject.notify('before_replicate_row', templateRow);
         var repIndex = templateRow.getAttribute('data-replication-index');
         if(repIndex === null){
@@ -714,31 +807,50 @@ Class.create("FormManager", {
 				input.setAttribute('name', newName);
 				if(form && Prototype.Browser.IE){form[newName] = input;}
                 if(values && values.get(newName)){
-                    input.setValue(values.get(newName));
+                    if (input.getAttribute('data-ctrl_type') == 'date'){
+                        input.store('date', values.get(newName));
+                    }
+                    else {                    
+                        input.setValue(values.get(newName));
+                    }
                 }else{
                     input.setValue('');
                 }
 			});
-			templateRow.insert({after:tr});
-            if(tr.select('.SF_replication_Add').length){
-                tr.select('.SF_replication_Add').invoke("remove");
+
+            if (lastRow) {
+                lastRow.insert({after: tr});
+                if(tr.select('.SF_replication_Add').length){
+                    tr.select('.SF_replication_Add').invoke("remove");
+                }
+                tr.insert(lastRow.select('.SF_replication_Add')[0]);
             }
-            if(index == number - 1){
+            else {
+                templateRow.insert({after:tr});
+            }
+
+
+            /*if(index == number - 1){
                 if(templateRow.select('.SF_replication_Add').length){
                     tr.insert(templateRow.select('.SF_replication_Add')[0]);
                 }
-            }
+            }*/
             var removeButton = new Element('a', {className:'SF_replication_Remove', title:'Remove this group'})
                 .update('&nbsp;')
                 .observe('click', function(){
+                    if(form.paneObject) $continue = form.paneObject.notify('after_remove_replicated_row', tr);
                     if(tr.select('.SF_replication_Add').length){
                         tr.previous('.SF_replicableGroup').insert(tr.select('.SF_replication_Add')[0]);
                     }
                     tr.remove();
-            });
+                    if(form.paneObject) form.paneObject.notify('after_remove_replicated_row', tr);
+                });
             tr.insert(removeButton);
+            this.createDatePickers(tr);
+            if(form.paneObject) form.paneObject.notify('after_replicate_row', tr);
+            lastRow = tr;
 		}
-        if(form.paneObject) form.paneObject.notify('after_replicate_row', tr);
+        return lastRow;
         /*
 		templateRow.select('input', 'select', 'textarea').each(function(origInput){
 			var newName = origInput.getAttribute('name')+'_0';
@@ -747,6 +859,22 @@ Class.create("FormManager", {
 		});
 		*/
 	},
+
+    /**
+     * @param form HTMLForm
+     */
+    createDatePickers: function(form){
+        form.select('.input-group.date').each(function(el){
+            try{
+                var hasTime = el.down('input').readAttribute('data-ctrl_type') == 'datetime';
+                var debug = false;
+                new DateTimePicker(el, { debug: debug, format: 'L'+(hasTime?' LT':'') });    
+            }
+            catch(err){
+                console.log(err);
+            }
+        });
+    },
 	
 	/**
 	 * @param form HTMLForm

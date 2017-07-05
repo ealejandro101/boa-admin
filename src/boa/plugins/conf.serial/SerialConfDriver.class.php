@@ -29,6 +29,7 @@
  */
 namespace BoA\Plugins\Conf\Serial;
 
+use BoA\Core\Access\Repository;
 use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Utils\Utils;
@@ -122,7 +123,8 @@ class SerialConfDriver extends AbstractConfDriver {
      * @return Array
      */
     function listRepositories($user = null){
-		$all = Utils::loadSerialFile($this->repoSerialFile);
+		$all = Utils::loadSerialFile($this->repoSerialFile, false, "json");        
+        $all = Repository::fromJsonObject($all);
         if($user != null && $all != null){
             foreach($all as $repoId => $repoObject){
                 if(!ConfService::repositoryIsAccessible($repoId, $repoObject, $user)){
@@ -201,7 +203,8 @@ class SerialConfDriver extends AbstractConfDriver {
 	 * @return Repository
 	 */
 	function getRepositoryById($repositoryId){
-		$repositories = Utils::loadSerialFile($this->repoSerialFile);
+		$repositories = Utils::loadSerialFile($this->repoSerialFile, false, "json");
+        $repositories = Repository::fromJsonObject($repositories);
 		if(isSet($repositories[$repositoryId])){
 			return $repositories[$repositoryId];
 		}
@@ -229,7 +232,8 @@ class SerialConfDriver extends AbstractConfDriver {
 	 * @return -1 if failed
 	 */
 	function saveRepository($repositoryObject, $update = false){
-		$repositories = Utils::loadSerialFile($this->repoSerialFile);
+		$repositories = Utils::loadSerialFile($this->repoSerialFile, false, "json");
+        $repositories = Repository::fromJsonObject($repositories);
 		if(!$update){
 			$repositoryObject->writeable = true;
 			$repositories[$repositoryObject->getUniqueId()] = $repositoryObject;
@@ -241,7 +245,7 @@ class SerialConfDriver extends AbstractConfDriver {
 				}
 			}
 		}
-		$res = Utils::saveSerialFile($this->repoSerialFile, $repositories);
+		$res = Utils::saveSerialFile($this->repoSerialFile, $repositories, true, false, "json", true);
 		if($res == -1){
 			return $res;
 		}else{
@@ -254,14 +258,15 @@ class SerialConfDriver extends AbstractConfDriver {
 	 * @param String $repositoryId
 	 */
 	function deleteRepository($repositoryId){
-		$repositories = Utils::loadSerialFile($this->repoSerialFile);
+		$repositories = Utils::loadSerialFile($this->repoSerialFile, false, "json");
+        $repositories = Repository::fromJsonObject($repositories);
 		$newList = array();
 		foreach ($repositories as $repo){
 			if($repo->getUniqueId() != $repositoryId){
 				$newList[$repo->getUniqueId()] = $repo;
 			}
 		}
-		Utils::saveSerialFile($this->repoSerialFile, $newList);
+		Utils::saveSerialFile($this->repoSerialFile, $newList, true, false, "json", true);
         $this->updateAliasesIndex($repositoryId, null);
         $us = $this->getUsersForRepository($repositoryId);
         foreach($us as $user){

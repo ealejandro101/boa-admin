@@ -61,7 +61,6 @@
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
 					var uploaders = app.getActiveExtensionByType("uploader");
-					console.log(uploaders);
 					if(uploaders.length){
 						var uploader = uploaders[0];
 						if(app.actionBar.getActionByName("trigger_remote_copy")){

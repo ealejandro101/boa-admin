@@ -1,0 +1,1339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<registry_contributions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
+    <actions>
+        <action name="ls" dirDefault="true">            
+            <gui text="32" title="32" src="fileopen.png" iconClass="icon-folder-open-alt"
+                accessKey="folder_access_key">
+                <context selection="true" dir="" recycle="false"
+                    actionBar="true" actionBarGroup="inline,put" contextMenu="true" infoPanel="true">
+                </context>
+                <selectionContext dir="true" file="true" recycle="false"
+                    unique="true" allowedMimes="APP_folder,APP_MIMES_ZIP" behaviour="hidden">
+                </selectionContext>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true"
+                write="false" adminOnly="false">
+            </rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var path;                   
+                    if(window.actionArguments && window.actionArguments.length>0){
+                        path = window.actionArguments[0];
+                        if(Object.isString(path)){path = new ManifestNode(path,false,getBaseName(path));}
+                    }else{
+                        userSelection = app.getUserSelection();
+                        if(userSelection && userSelection.isUnique() && (userSelection.hasDir() || userSelection.hasMime("APP_MIMES_ZIP".split(",")))){
+                            path = userSelection.getUniqueNode();
+                        }
+                    }
+                    if(path){
+                        app.updateContextData(path);
+                    }                       
+                    ]]></clientCallback>
+                <serverCallback methodName="switchAction" restParams="/dir+" checkParams="true" developerComment="Standard listing action to retrieve a list of children for a given directory.">
+                    <input_param description="Directory to browse, from the repository root" name="dir" type="string" mandatory="true"/>
+                    <input_param description="One file to check" name="file" type="string" mandatory="false"/>
+                    <input_param description="Details to send back" name="options" type="string" mandatory="false" default="al"/>
+                    <input_param description="Recursively list all folders" name="recursive" type="boolean" mandatory="false" default="false"/>
+                </serverCallback>
+            </processing>
+        </action>
+        <action name="create">
+            <gui text="access_dco.create" src="new_dco.png" iconClass="icon-plus" accessKey="" hasAccessKey="false">
+                <context selection="false" dir="true" recycle="hidden" actionBar="true"
+                         contextMenu="false" infoPanel="false" actionBarGroup="put" inZip="false"/>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""/>
+            <subMenu>
+                <dynamicItems>
+                    <item1 actionId="mkdco"/>
+                    <item2 actionId="mkdir"/>
+                    <item3 actionId="mkfile"/>
+                </dynamicItems>
+            </subMenu>
+            <processing>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="upload">
+            <gui text="27" title="27" src="yast_backup.png" iconClass="icon-upload-alt" accessKey="upload_access_key" hasAccessKey="true">
+                <context selection="false" dir="true" recycle="hidden"
+                    actionBar="true" contextMenu="true" infoPanel="false"
+                    actionBarGroup="put,minisite" inZip="false">
+                </context></gui>
+            <rightsContext noUser="true" userLogged="only" read="false" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var uploaders = app.getActiveExtensionByType("uploader");
+                    if(uploaders.length){
+                        var uploader = uploaders[0];
+                        if(app.actionBar.getActionByName("trigger_remote_copy")){
+                            modal.setCloseAction(function(){
+                                app.fireContextRefresh();
+                                var bgManager = app.actionBar.bgManager;
+                                bgManager.queueAction("trigger_remote_copy", new Hash(), "Copying files to server");
+                                bgManager.next();
+                            });
+                        }
+                        if(uploader.dialogOnOpen){
+                            uploader.resourcesManager.load();
+                            var dialogOnOpen = new Function("oForm", uploader.dialogOnOpen);
+                        }
+                        if(uploader.dialogOnComplete){
+                            uploader.resourcesManager.load();
+                            var dialogOnComplete = new Function("oForm", uploader.dialogOnComplete);
+                        }
+                        modal.showDialogForm('Upload', uploader.formId, dialogOnOpen, null, dialogOnComplete, true, true);
+                    }
+                ]]></clientCallback>
+                <serverCallback methodName="switchAction" restParams="/input_stream/dir+"/>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="empty_recycle">
+            <gui text="220" title="221" src="trashcan_empty.png" iconClass="icon-ban-circle" accessKey="empty_recycle_access_key" hasAccessKey="true">
+                <context selection="false" dir="true" recycle="only" actionBar="true"
+                         contextMenu="true" infoPanel="false" actionBarGroup="change"/>
+            </gui>
+            <rightsContext noUser="true" userLogged="" read="true" write="true" adminOnly=""/>
+            <processing>
+                <clientCallback prepareModal="false"><![CDATA[
+                    app.getContextHolder().selectAll();                 
+                    window.setTimeout(function(){
+                        app.actionBar.fireAction('delete');
+                    }, 200);
+                    ]]></clientCallback>
+                <serverCallback methodName="switchAction"/>
+            </processing>
+        </action>
+        <action name="download" fileDefault="false">
+            <gui text="88" title="88" src="download_manager.png" iconClass="icon-download-alt" accessKey="download_access_key" hasAccessKey="true">
+                <context selection="true" dir="" recycle="false"
+                    actionBar="true" contextMenu="true" infoPanel="true"
+                    actionBarGroup="get,inline">
+                </context>
+                <selectionContext dir="true" file="true" recycle="false" unique="false"/></gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection = app.getUserSelection();
+                    if((userSelection.isUnique() && !userSelection.hasDir()) || (zipEnabled && multipleFilesDownloadEnabled))
+                    {
+                        if(gaTrackEvent){
+                            fileNames = userSelection.getFileNames();
+                            for(var i=0; i<fileNames.length;i++){
+                                gaTrackEvent("Data", "Download", fileNames[i]);
+                            }                                               
+                        }
+                        var agent = navigator.userAgent;
+                        if(agent && (agent.indexOf('iPhone')!=-1||agent.indexOf('iPod')!=-1||agent.indexOf('iPad')!=-1||agent.indexOf('iOs')!=-1||agent.indexOf('Safari')!=-1)){
+                            var downloadUrl = appServerAccessPath+'&get_action=download';
+                            downloadUrl = userSelection.updateFormOrUrl(null,downloadUrl);
+                            document.location.href=downloadUrl;
+                        }else{
+                            $('download_form').action = window.appServerAccessPath;
+                            $('download_form').secure_token.value = Connexion.SECURE_TOKEN;
+                            $('download_form').select("input").each(function(input){
+                                if(input.name!='get_action' && input.name!='secure_token') input.remove();
+                            });
+                            userSelection.updateFormOrUrl($('download_form'));
+                            try{
+                                $('download_form').submit();
+                            }catch(e){
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var loadFunc = function(oForm){                         
+                            var dObject = oForm.getElementsBySelector('div[id="multiple_download_container"]')[0];
+                            var downloader = new MultiDownloader(dObject, appServerAccessPath+'&action=download&file=');
+                            downloader.triggerEnd = function(){hideLightBox()};
+                            fileNames = userSelection.getFileNames();
+                            for(var i=0; i<fileNames.length;i++)
+                            {
+                                downloader.addListRow(fileNames[i]);
+                            }               
+                        };
+                        var closeFunc = function(){
+                            hideLightBox();
+                            return false;
+                        };
+                        modal.showDialogForm('Download Multiple', 'multi_download_form', loadFunc, closeFunc, null, true);
+                    }
+                ]]></clientCallback>
+                <clientForm id="multi_download_form"><![CDATA[
+                    <div id="multi_download_form" title="APP_MESSAGE[118]"  box_width="345">
+                    <div class="dialogLegend">APP_MESSAGE[119]</div><br/>
+                    <div id="multiple_download_container"></div>
+                    <form style="display:inline;" action="index.php" method="GET" id="download_form" target="download_iframe">
+                        <input type="hidden" name="get_action" value="download">
+                        <input type="hidden" name="secure_token" value="">
+                    </form>
+                    <iframe id="download_iframe" name="download_iframe" style="display:none"></iframe>                  
+                    </div>]]>
+                </clientForm>
+                <clientListener name="selectionChange"><![CDATA[
+                        if(app){
+                            var userSelection = app.getUserSelection();
+                            var action = app.getActionBar().getActionByName("download");
+                            if(zipEnabled && multipleFilesDownloadEnabled){
+                                if(action){
+                                    if((userSelection.isUnique() && !userSelection.hasDir()) || userSelection.isEmpty()){
+                                        action.setIconSrc('download_manager.png');
+                                    }else{
+                                        action.setIconSrc('accessories-archiver.png');
+                                    }
+                                }
+                            }else{
+                                if(userSelection.hasDir() && action){
+                                    action.selectionContext.dir = false;
+                                }
+                            }
+                        }
+                ]]></clientListener>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction" restParams="/file+" />
+            </processing>
+        </action>
+        <action name="download_all">
+            <gui text="463" title="464" src="download_manager.png" iconClass="icon-download-alt" accessKey="download_access_key" hasAccessKey="true">
+                <context selection="false" dir="true" recycle="false" actionBar="true" contextMenu="false" infoPanel="false"
+                    actionBarGroup="minisite">
+                </context>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                        var dm = app.getContextHolder();
+                        dm._selectedNodes = $A([dm.getRootNode()]);
+                        dm._bEmpty = dm._bDir = true; dm._bFile = false;
+                        dm.publish("selection_changed", dm);
+                        window.setTimeout(function(){
+                            app.actionBar.fireAction("download");
+                        }, 200);
+                ]]></clientCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="compress">
+            <gui text="313" title="314" src="archive_insert.png" iconClass="icon-briefcase" accessKey="" hasAccessKey="false">
+                <context selection="true" dir="" recycle="hidden"
+                    actionBar="true" contextMenu="false" infoPanel="true"
+                    actionBarGroup="more" inZip="false">
+                </context>
+                <selectionContext dir="true" file="file" recycle="false" unique="false"/></gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""/>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection = app.getUserSelection();                 
+                    if((zipEnabled && multipleFilesDownloadEnabled))
+                    {
+                        var loadFunc = function(oForm){
+                            var zipName;
+                            if(userSelection.isUnique()){
+                                zipName = getBaseName(userSelection.getUniqueFileName());
+                                if(!userSelection.hasDir()) zipName = zipName.substr(0, zipName.lastIndexOf("\."));
+                            }else{
+                                zipName = getBaseName(userSelection.getContextNode().getPath());
+                                if(zipName == "") zipName = "Archive";
+                            }
+                            var index=1;
+                            var buff = zipName;
+                            while(userSelection.fileNameExists(zipName + ".zip")){
+                                zipName = buff + "-" + index; index ++ ;
+                            }
+                            oForm.select('input[id="archive_name"]')[0].value = zipName + ".zip" ;
+                        };
+                        var closeFunc = function(){
+                            userSelection.updateFormOrUrl(modal.getForm());
+                            app.actionBar.submitForm(modal.getForm());          
+                            hideLightBox();
+                        };
+                        modal.showDialogForm('Compress selection to ...', 'compress_form', loadFunc, closeFunc);
+                    }
+                ]]></clientCallback>
+                <clientForm id="compress_form"><![CDATA[
+                <div id="compress_form" action="compress" box_width="200">
+                    APP_MESSAGE[315]<br/>
+                    <input type="text" name="archive_name" value="" id="archive_name" class="dialogFocus initFicName">
+                </div>
+                ]]></clientForm>                    
+                <clientListener name="selectionChange"><![CDATA[
+                if(app){
+                    var userSelection = app.getUserSelection();
+                    var action = app.getActionBar().getActionByName("compress");
+                    if(!zipEnabled || !multipleFilesDownloadEnabled){
+                        if(action){
+                            if(userSelection.isUnique()) action.selectionContext.multipleOnly = true;
+                            else action.selectionContext.unique = true;
+                        }
+                    }
+                }
+                ]]></clientListener>                
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="prepare_chunk_dl">
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly="false"></rightsContext>
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="open_with" fileDefault="true">
+            <gui text="316" title="316" src="fileopen.png" iconClass="icon-eye-close" accessKey="open_with_access" hasAccessKey="true">
+                <context selection="true" dir="" recycle="hidden"  behaviour="hidden"
+                    actionBar="true" contextMenu="true" infoPanel="false"
+                    actionBarGroup="get" inZip="false">
+                </context>
+                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="APP_MIMES_EDITABLE,^browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
+            <subMenu>
+                <dynamicBuilder><![CDATA[
+                    var context = window.builderContext;
+                    context.builderMenuItems = $A([]);
+                    var selectedMime = getMimeType(app.getUserSelection().getUniqueNode());
+                    var editors = app.findEditorsForMime(selectedMime);
+                    if(editors.length){
+                        var index = 0;
+                        var sepAdded = false;
+                        editors.each(function(el){
+                            if(!el.openable) return;
+                            if(el.mimes.include('*')){
+                                if(!sepAdded && index > 0){
+                                    context.builderMenuItems.push({separator:true});
+                                }
+                                sepAdded = true;
+                            }
+                            context.builderMenuItems.push({
+                                name:el.text,
+                                alt:el.title,
+                                isDefault : (index == 0),
+                                image:resolveImageSource(el.icon, '/images/actions/ICON_SIZE', 22),
+                                icon_class: el.icon_class,
+                                callback:function(e){this.apply([el]);}.bind(context)
+                            } );
+                            index++;
+                        } );
+                    }
+                    if(!index){
+                        context.builderMenuItems.push({
+                            name:MessageHash[324],
+                            alt:MessageHash[324],
+                            image:resolveImageSource('button_cancel.png', '/images/actions/ICON_SIZE', 22),
+                            callback:function(e){}
+                        } );
+                    }
+                ]]></dynamicBuilder>
+            </subMenu>
+            <processing>
+                <clientCallback prepareModal="false"><![CDATA[
+                    var editorData = window.actionArguments[0];
+                    if(!editorData){
+                        var selectedMime = getMimeType(app.getUserSelection().getUniqueNode());
+                        var editors = app.findEditorsForMime(selectedMime);
+                        if(editors.length && editors[0].openable){
+                            editorData = editors[0];
+                        }
+                    }
+                    if(editorData){
+                        app.loadEditorResources(editorData.resourcesManager);
+                        modal.openEditorDialog(editorData);
+                    }else{
+                        if(app.actionBar.getActionByName("download")){
+                            app.actionBar.getActionByName("download").apply();
+                        }
+                    }
+                ]]></clientCallback>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="open_with_unique">
+            <gui text="462" title="462" src="fileopen.png" iconClass="icon-eye-close" accessKey="preview_access_key" hasAccessKey="true">
+                <context selection="true" dir="" recycle="hidden"  behaviour="hidden"
+                    actionBar="true" contextMenu="true" infoPanel="false"
+                    actionBarGroup="inline" inZip="false">
+                </context>
+                <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="APP_MIMES_EDITABLE,^browsable_archive,^zip" behaviour="hidden"></selectionContext></gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="false"><![CDATA[
+                    var editorData = window.actionArguments[0];
+                    if(!editorData){
+                        var selectedMime = getMimeType(app.getUserSelection().getUniqueNode());
+                        var editors = app.findEditorsForMime(selectedMime);
+                        if(editors.length && editors[0].openable){
+                            editorData = editors[0];
+                        }
+                    }
+                    if(editorData){
+                        app.loadEditorResources(editorData.resourcesManager);
+                        modal.openEditorDialog(editorData);
+                    }
+                ]]></clientCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="link">
+            <gui text="369" title="369" src="app-link.png" iconClass="icon-link" hasAccessKey="false">
+                <context selection="true" dir="" recycle="false" actionBar="true" actionBarGroup="remote"
+                         contextMenu="true" infoPanel="true" root="false"/>
+                <selectionContext dir="true" file="true" recycle="false" unique="true"/>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly="false"/>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var loadFunc = function (oForm){
+                        var link;
+                        var input = oForm.down('input[type="text"]');
+                        var url = document.location.href;
+                        if(url.indexOf('#') > 0){
+                            url = url.substring(0, url.indexOf('#'));
+                        }
+                        if(url.indexOf('?') > 0){
+                            url = url.substring(0, url.indexOf('?'));
+                        }
+                        var repoId = app.repositoryId || (app.user ? app.user.activeRepository : null);
+                        if(app.user){
+                            var slug = app.user.repositories.get(repoId).getSlug();
+                            if(slug) repoId = slug;
+                        }
+                        link = url + '?goto=' + repoId + encodeURIComponent(app.getUserSelection().getUniqueNode().getPath());
+                        input.value = link;
+                        var email = oForm.down('a[id="email"]');
+                        if (email){ 
+                            email.setAttribute('href', 'mailto:unknown@unknown.com?Subject=UPLOAD&Body='+encodeURIComponent(link)); 
+                        }
+                        input.select();
+                    };
+                    modal.showDialogForm('Get', 'link_form', loadFunc, function(){
+                        hideLightBox(true);
+                        return false;
+                    }, null, true);
+                ]]></clientCallback>
+                <clientForm id="link_form"><![CDATA[
+                <div id="link_form" title="APP_MESSAGE[369]"  box_width="280" action="link">
+                <fieldset>
+                    <legend message_id="296">APP_MESSAGE[296]</legend>
+                    <input type="text" style="width:195px;margin-right:5px;" id="link_container" class="dialogFocus"/>
+                    <a id="email" title="APP_MESSAGE[323]"><span class="icon-envelope-alt"></span><img style="border:none;" align="absmiddle" src="APP_THEME_FOLDER/images/actions/22/mail_generic.png" height="22" width="22"/></a>
+                  </fieldset>
+                </div>
+                ]]></clientForm>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>       
+        <action name="stat">
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly="false"></rightsContext>
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>       
+        <action name="lsync">
+            <rightsContext noUser="false" userLogged="only" read="true" write="true" adminOnly="false"></rightsContext>
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="apply_check_hook">
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly="false"></rightsContext>
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="get_content">
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly="false"></rightsContext>
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>       
+        <action name="put_content">
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly="false"></rightsContext>
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>       
+        <action name="restore">
+            <gui text="222" title="223" src="folder1_important.png" iconClass="icon-undo" accessKey="restore_access_key" hasAccessKey="true">
+                <context selection="true" dir="" recycle="only"
+                    actionBar="true" contextMenu="true" infoPanel="false"
+                    actionBarGroup="change">
+                </context>
+                <selectionContext dir="true" file="true" recycle="false" unique="true" image="false" editable="false"></selectionContext></gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                   var userSelection = app.getUserSelection();
+                   var fileNames = $A(userSelection.getFileNames());
+                   var connexion = new Connexion();
+                   connexion.addParameter('get_action', 'restore');
+                   connexion.addParameter('dir', userSelection.getCurrentRep());
+                   connexion.onComplete = function(transport){
+                        app.actionBar.parseXmlMessage(transport.responseXML);
+                   };
+                   fileNames.each(function(filename){
+                        connexion.addParameter('file', filename);
+                        connexion.sendAsync();
+                   });
+                    ]]></clientCallback>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="mkdco">
+            <gui text="access_dco.mkdco" title="access_dco.mkdco.title" src="new_dco.png" iconClass="icon-new-dco" accessKey="access_dco.mkdco.access_key" hasAccessKey="true">
+                <context selection="false" dir="false" recycle="hidden" actionBar="true" root="true"
+                         contextMenu="true" infoPanel="false" actionBarGroup="create" inZip="false"></context>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection = app.getUserSelection();
+                    var onLoad = function (oForm){
+                        var manifestEditor = new ManifestEditor(oForm);
+                        manifestEditor.show(userSelection);
+                    };
+                    var onSubmit = function(oForm){};
+                    modal.showDialogForm('', 'mkdco_form', onLoad, onSubmit, null, true, true);
+                ]]></clientCallback>
+                <clientForm id="mkdco_form"><![CDATA[
+                  <div id="mkdco_form" action="dcometa_form" class="tabbed_editor" box_width="70%" box_height="80%" box_resize="true" box_padding="0">
+                      <div class="editor_header">
+                          <div class="action_bar">
+                              <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
+                          </div>
+                          <span class="header_label"></span>
+                      </div>
+                      <div id="dco_manifest_tabs">
+                          <ul class="tabrow">
+                          </ul>
+                          <div class="tabpanes">
+                          </div>
+                      </div>
+                  </div>              
+                ]]></clientForm>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="editdco">
+            <gui text="access_dco.editdco" title="access_dco.editdco.title" src="edit_dco.png" iconClass="icon-new-dco" accessKey="access_dco.editdco.access_key" hasAccessKey="true">
+                <context selection="true" dir="" recycle="hidden" actionBar="true"
+                         contextMenu="true" infoPanel="true" actionBarGroup="change" inZip="false"></context>
+                <selectionContext dir="" file="false" recycle="false" unique="true" allowedMimes="dco"/>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection = app.getUserSelection();
+                    var onLoad = function (oForm){
+                        var manifestEditor = new ManifestEditor(oForm);
+                        manifestEditor.show(userSelection);
+                    };
+                    var onSubmit = function(oForm){};
+                    modal.showDialogForm('', 'mkdco_form', onLoad, onSubmit, null, true, true);
+                ]]></clientCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="mkdir">
+            <gui text="154" title="155" src="folder_new.png" iconClass="icon-folder-close" accessKey="folder_access_key" hasAccessKey="true">
+                <context selection="false" dir="true" recycle="hidden" actionBar="true" root="false"
+                         contextMenu="true" infoPanel="false" actionBarGroup="create" inZip="false"></context>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    modal.showDialogForm('Create', 'mkdir_form', null, function(){
+                        var oForm = $(modal.getForm());
+                        var elementToCheck=(oForm['dirname']);
+                        if(app.getContextHolder().fileNameExists($(elementToCheck).getValue()))
+                        {
+                            alert(MessageHash[125]);
+                            return false;
+                        }
+                        app.actionBar.submitForm(oForm);
+                        hideLightBox(true);
+                        return false;
+                    });
+                    ]]></clientCallback>
+                <clientForm id="mkdir_form"><![CDATA[
+                <div id="mkdir_form" action="mkdir" box_width="200">
+                APP_MESSAGE[173]<br/>
+                <input type="text" name="dirname" size="30" class="dialogFocus">
+                </div>
+                ]]></clientForm>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="mkfile">
+            <gui text="156" title="157" src="filenew.png" accessKey="file_access_key" iconClass="icon-file-alt" hasAccessKey="false">
+                <context selection="false" dir="true" recycle="hidden" actionBar="true" root="false"
+                         contextMenu="true" infoPanel="false" actionBarGroup="create" inZip="false"></context>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    modal.showDialogForm('Create', 'mkfile_form', null, function(){
+                        var oForm = $(modal.getForm());
+                        var elementToCheck=(oForm['filename']);
+                        if(app.getContextHolder().fileNameExists($(elementToCheck).getValue()))
+                        {
+                            alert(MessageHash[125]);
+                            return false;
+                        }
+                        app.actionBar.submitForm(oForm);
+                        hideLightBox(true);
+                        return false;
+                    });
+                    ]]></clientCallback>
+                <clientForm id="mkfile_form"><![CDATA[
+                <div id="mkfile_form" action="mkfile" box_width="200">
+                APP_MESSAGE[174]<br/>
+                <input type="text" name="filename" size="30" class="dialogFocus">
+                </div>
+                ]]></clientForm>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="rename">
+            <gui text="6" title="158" src="applix.png" accessKey="rename_access_key" iconClass="icon-pencil" hasAccessKey="true">
+                <context selection="true" dir="" recycle="hidden"
+                    actionBar="true" contextMenu="true" infoPanel="false"
+                    actionBarGroup="change" inZip="false">
+                </context>
+                <selectionContext dir="true" file="true" recycle="false" unique="true" image="false" editable="false"></selectionContext></gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    if(app.getUserSelection()){
+                        var orig = app.getUserSelection().getSelectionSource();
+                    }
+                    var callback = function(node, newValue){
+                        var filename = node.getPath();
+                        var conn = new Connexion();
+                        conn.addParameter('get_action', 'rename');
+                        conn.addParameter('file', filename);
+                        conn.addParameter('filename_new', newValue);
+                        conn.onComplete = function(transport){
+                            app.actionBar.parseXmlMessage(transport.responseXML);
+                        };
+                        conn.sendSync();
+                        if(orig && app.getUserSelection()){
+                            app.getUserSelection().setSelectionSource(orig);
+                        }
+                    };
+                    if(app.getUserSelection() && app.getUserSelection().getSelectionSource() && app.getUserSelection().getSelectionSource().switchCurrentLabelToEdition) {app.getUserSelection().getSelectionSource().switchCurrentLabelToEdition(callback);}
+                ]]></clientCallback>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="copy" ctrlDragndropDefault="true">
+            <gui text="66" title="159" src="editcopy.png" iconClass="icon-copy" accessKey="copy_access_key" hasAccessKey="true">
+                <context selection="true" dir="" recycle="hidden"
+                    actionBar="true" contextMenu="true" infoPanel="false" root="false"
+                    actionBarGroup="change">
+                </context>
+                <selectionContext dir="true" file="true" recycle="false" unique="false" image="false" editable="false"></selectionContext>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    if(app.user){
+                        var user = app.user;
+                        var activeRepository = user.getActiveRepository();
+                        if(app.getUserSelection().hasDir() && !user.canWrite()){
+                            throw new Error(MessageHash[374]);
+                        }
+                    }
+                    var context = app.actionBar;
+                    var onLoad = function(oForm){
+                        var getAction = oForm.select('input[name="get_action"]')[0];
+                        getAction.value = 'copy';                   
+                        this.treeSelector = new TreeSelector(oForm, {
+                            nodeFilter : function(node){
+                                return (!node.isLeaf() && !node.hasMetadataInBranch("readonly", "true"));
+                            }
+                        });
+                        if(!app.getUserSelection().hasDir() && user && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
+                            var firstKey ;
+                            var reposList = new Hash();
+                            user.getCrossRepositories().each(function(pair){
+                                if(!firstKey) firstKey = pair.key;
+                                reposList.set(pair.key, pair.value.getLabel());                             
+                            }.bind(this));
+                            if(!user.canWrite()){
+                                var nodeProvider = new RemoteNodeProvider();
+                                nodeProvider.initProvider({tmp_repository_id:firstKey});
+                                var rootNode = new ManifestNode("/", false, MessageHash[373], "folder.png", nodeProvider);                              
+                                this.treeSelector.load(rootNode);
+                            }else{
+                                this.treeSelector.load();                               
+                            }
+                            this.treeSelector.setFilterShow(true);                          
+                            reposList.each(function(pair){
+                                this.treeSelector.appendFilterValue(pair.key, pair.value);
+                            }.bind(this)); 
+                            if(user.canWrite()) this.treeSelector.appendFilterValue(activeRepository, "&lt;"+MessageHash[372]+"&gt;", 'top');
+                            this.treeSelector.setFilterSelectedIndex(0);
+                            this.treeSelector.setFilterChangeCallback(function(e){
+                                externalRepo = this.filterSelector.getValue();
+                                var nodeProvider = new RemoteNodeProvider();
+                                nodeProvider.initProvider({tmp_repository_id:externalRepo});
+                                this.resetRootNode(new ManifestNode("/", false, MessageHash[373], "folder.png", nodeProvider));
+                            });
+                        }else{
+                            this.treeSelector.load();
+                        }
+                    }.bind(context);
+                    var onCancel = function(){
+                        this.treeSelector.unload();
+                        hideLightBox();
+                    }.bind(context);
+                    var onSubmit = function(){
+                        var oForm = modal.getForm();
+                        var getAction = oForm.select('input[name="get_action"]')[0];
+                        var selectedNode = this.treeSelector.getSelectedNode();
+                        if(activeRepository && this.treeSelector.getFilterActive(activeRepository)){
+                            getAction.value = "cross_copy" ;
+                        }
+                        app.getUserSelection().updateFormOrUrl(oForm);
+                        this.submitForm(oForm);
+                        this.treeSelector.unload();
+                        hideLightBox();
+                    }.bind(context);
+                    modal.showDialogForm('Move/Copy', 'copymove_form', onLoad, onSubmit, onCancel);             
+                    ]]></clientCallback>
+                <clientForm id="copymove_form"><![CDATA[
+                    <div id="copymove_form" action="copy" box_width="272">
+                        <input type="hidden" name="dest_node" value=""/>
+                        <div class="dialogLegend">APP_MESSAGE[175]</div>                    
+                        <select id="external_repository" name="dest_repository_id" style="width: 248px; font-size: 12px; height: 21px; margin-top:5px; margin-bottom:7px; border: 1px solid #ccc;"></select>
+                        <div style="height:200px; width:246px; padding: 0px 0px; border: 1px solid #ccc;">
+                            <div id="treeCopy" style="height:194px; padding: 3px 2px; overflow:auto; text-align:left;" class="treeCopyContainer"></div>
+                        </div>
+                        <input type="text" name="dest" value="/" readonly  style="width:248px; border: 1px solid #ccc; margin-top:7px; margin-bottom:2px;background-image:none;"/>
+                    </div>
+                ]]></clientForm>
+                <clientListener name="contextChange"><![CDATA[
+                if(app){
+                    var action = app.getActionBar().getActionByName("copy");
+                    if(action){
+                        action.rightsContext.write = true;
+                        var user = app.user;
+                        if(user && !user.canWrite() && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
+                            action.rightsContext.write = false;
+                            action.selectionContext.dir = false;
+                            app.actionBar.defaultActions.unset('ctrldragndrop');
+                            app.actionBar.defaultActions.unset('dragndrop');
+                        }
+                        if(user && user.canWrite() && app.getContextNode().hasMimeInBranch("browsable_archive")){
+                            action.rightsContext.write = false;
+                        }
+                        if(app.getContextNode().hasMimeInBranch("browsable_archive")){
+                            action.setLabel(247, 248);
+                            action.setIconSrc('ark_extract.png');
+                        }else{
+                            action.setLabel(66, 159);
+                            action.setIconSrc('editcopy.png');
+                        }
+                    }
+                }
+                ]]></clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="move" dragndropDefault="true">
+            <gui text="70" title="160" src="editpaste.png" iconClass="icon-paste" accessKey="move_access_key" hasAccessKey="true">
+                <context selection="true" dir="" recycle="hidden"
+                    actionBar="true" contextMenu="true" infoPanel="false" root="false"
+                    actionBarGroup="change" inZip="false">
+                </context>
+                <selectionContext dir="true" file="true" recycle="false" unique="false" image="false" editable="false"></selectionContext></gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var context = app.actionBar;
+                    if(app.user){
+                        var user = app.user;
+                        var activeRepository = user.getActiveRepository();
+                    }
+                    var context = app.actionBar;
+                    var onLoad = function(oForm){
+                        var getAction = oForm.select('input[name="get_action"]')[0];
+                        getAction.value = 'move';
+                        this.treeSelector = new TreeSelector(oForm, {
+                            nodeFilter : function(node){
+                                return (!node.isLeaf() && !node.hasMetadataInBranch("readonly", "true"));
+                            }
+                        });
+                        this.treeSelector.load();
+                        if(!app.getUserSelection().hasDir() && user && user.canCrossRepositoryCopy() && user.hasCrossRepositories()){
+                            this.treeSelector.setFilterShow(true);
+                            user.getCrossRepositories().each(function(pair){
+                                this.treeSelector.appendFilterValue(pair.key, pair.value.getLabel());
+                            }.bind(this));
+                            this.treeSelector.appendFilterValue(activeRepository, "&lt;"+MessageHash[372]+"&gt;", 'top');
+                            this.treeSelector.setFilterSelectedIndex(0);
+                            this.treeSelector.setFilterChangeCallback(function(e){
+                                externalRepo = this.filterSelector.getValue();
+                                var nodeProvider = new RemoteNodeProvider();
+                                nodeProvider.initProvider({tmp_repository_id:externalRepo});
+                                this.resetRootNode(new ManifestNode("/", false, MessageHash[373], "folder.png", nodeProvider));
+                            });
+                        }                       
+                    }.bind(context);
+                    var onCancel = function(){
+                        this.treeSelector.unload();
+                        hideLightBox();
+                    }.bind(context);
+                    var onSubmit = function(){
+                        var oForm = modal.getForm();
+                        var getAction = oForm.down('input[name="get_action"]');
+                        var selectedNode = this.treeSelector.getSelectedNode();
+                        if(selectedNode == app.getContextNode().getPath()){
+                            alert(MessageHash[183]);
+                            return false;
+                        }
+                        app.getUserSelection().updateFormOrUrl(oForm);                      
+                        if(activeRepository && this.treeSelector.getFilterActive(activeRepository)){
+                            getAction.value = "cross_copy" ;
+                            var subAction = new Element('input', {type:'hidden',name:'moving_files',value:'true'});
+                            oForm.insert(subAction);
+                            this.submitForm(oForm, false, function(transport){
+                                var res = this.parseXmlMessage(transport.responseXML);
+                                if(!res) return;
+                                getAction.value = "delete";
+                                subAction.name = "force_deletion";                              
+                                this.submitForm(oForm, false, function(transport2){
+                                    this.parseXmlMessage(transport2.responseXML);
+                                }.bind(this));
+                            }.bind(this));
+                        }else{
+                            this.submitForm(oForm);
+                        }
+                        this.treeSelector.unload();
+                        hideLightBox();
+                    }.bind(context);
+                    modal.showDialogForm('Move/Copy', 'copymove_form', onLoad, onSubmit, onCancel);             
+                    ]]></clientCallback>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="delete">          
+            <gui text="7" title="161" src="editdelete.png" iconClass="icon-trash" accessKey="delete_access_key" hasAccessKey="true" specialAccessKey="delete">
+                <context selection="true" dir="" recycle="false"
+                    actionBar="true" contextMenu="true" infoPanel="false"
+                    actionBarGroup="change" inZip="false" custom="">
+                </context>
+                <selectionContext dir="true" file="true" recycle="false" unique="false" image="false" editable="false"></selectionContext>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var onLoad = function(oForm){
+                        var message = MessageHash[177];
+                        var repoHasRecycle = app.getContextHolder().getRootNode().getMetadata().get("repo_has_recycle");
+                        if(repoHasRecycle && repoHasRecycle == "true" && app.getContextNode().getMime() != "recycle"){
+                            message = MessageHash[176];
+                        }
+                        $(oForm).getElementsBySelector('span[id="delete_message"]')[0].innerHTML = message;
+                    };
+                    modal.showDialogForm('Delete', 'delete_form', onLoad, function(){
+                        var oForm = modal.getForm();
+                        app.getUserSelection().updateFormOrUrl(oForm);
+                        app.actionBar.submitForm(oForm, true, function(transport){
+                            var result = this.parseXmlMessage(transport.responseXML);
+                        }.bind(app.actionBar));
+                        hideLightBox(true);
+                        return false;
+                    });
+                    ]]></clientCallback>
+                <clientForm id="delete_form"><![CDATA[
+                <div id="delete_form" action="delete" box_width="200">
+                <span id="delete_message"></span>
+                </div>              ]]></clientForm>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="chmod">
+            <gui text="287" title="287" src="ksysv.png" iconClass="icon-th" accessKey="" hasAccessKey="false">
+                <context selection="true" dir="true" recycle="hidden"  behaviour="hidden"
+                    actionBar="true" contextMenu="false" infoPanel="true" root="false"
+                    actionBarGroup="change" inZip="false">
+                </context>
+                <selectionContext dir="true" file="true" recycle="false" unique="false" allowedMimes="" behaviour="hidden"/>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""/>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection =  app.getUserSelection();
+                    var loadFunc = function(oForm){
+                        app.actionBar.propertyPane = new PropertyPanel(userSelection, oForm);
+                    };
+                    var completeFunc = function(){
+                        if(!app.actionBar.propertyPane.valueChanged()){
+                            hideLightBox();
+                            return false;
+                        }
+                        userSelection.updateFormOrUrl(modal.getForm());
+                        app.actionBar.submitForm(modal.getForm());
+                        hideLightBox();
+                        return false;
+                    };
+                    modal.showDialogForm('Edit Online', 'properties_box', loadFunc, completeFunc);
+                    ]]></clientCallback>
+                <clientForm id="properties_box"><![CDATA[
+                    <div id="properties_box" action="chmod" box_width="180"></div>
+                ]]></clientForm>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="download_chunk">
+            <gui text="397" title="398" src="download_manager.png" iconClass="icon-cloud-download" hasAccessKey="false">
+                <context selection="true" dir="" recycle="false"
+                         actionBar="true" contextMenu="false" infoPanel="true" actionBarGroup="change" root="false">
+                </context>
+                <selectionContext dir="false" file="true" recycle="false" unique="true"/>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""/>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection = app.getUserSelection();
+
+                    var loadFunc = function(oForm){
+                        var dObject = oForm.down('div[id="multiple_download_container"]');
+                        var legendDiv = oForm.down('div.dialogLegend');
+                        legendDiv.next("br").remove();
+                        legendDiv.update(MessageHash[399]+'<br>'+MessageHash[401]+'<a href="'+MessageHash[402]+'" target="_blank">'+MessageHash[402]+'</a>');
+                        dObject.insert({before:'\
+                            <div class="dialogButtons" id="chunk_dl_form" style="height:36px;"> \
+                                <span style="display:inline-block;float:left;margin-top: 11px;margin-left: 4px;margin-right: 4px;">'+MessageHash[400]+'</span> <input type="text" style="float:left;margin-top:5px; text-align:right; width:30px;height:24px;" name="chunk_count" id="chunk_count" value="4"> \
+                                <input type="image" style="float:left;" id="dl_form_submit" src="APP_THEME_FOLDER/images/actions/22/dialog_ok_apply.png" height="22" width="22" title="OK" class="dialogButton dialogFocus">\
+                            </div> \
+                        '});
+                        $("dl_form_submit").observe("click", function(e){
+                            Event.stop(e);
+                            var conn = new Connexion();
+                            conn.addParameter("get_action", "prepare_chunk_dl");
+                            conn.addParameter("chunk_count", $("chunk_count").value );
+                            conn.addParameter("file", userSelection.getUniqueNode().getPath());
+                            var downloader = new MultiDownloader(dObject, '');
+                            conn.onComplete = function(transp){
+                                var chunkData = transp.responseJSON;
+                                downloader.setDownloadUrl(appServerAccessPath+'&action=download_chunk&file_id='+chunkData.file_id);
+                                downloader.triggerEnd = function(){hideLightBox();};
+                                for(var i=0; i<chunkData.chunk_count;i++){
+                                    downloader.addListRow("&chunk_index=" + i, chunkData.localname + " (part " + (i + 1) + ")");
+                                }
+                                downloader.removeOnLoad();
+                            };
+                            downloader.setOnLoad();
+                            conn.sendAsync();
+                        });
+                    };
+                    var closeFunc = function(){
+                        hideLightBox();
+                        return false;
+                    };
+                    modal.showDialogForm('Download Multiple', 'multi_download_form', loadFunc, closeFunc, null, true);
+
+                    ]]></clientCallback>
+                <clientForm id="multi_download_form"><![CDATA[
+                    <div id="multi_download_form" title="APP_MESSAGE[118]"  box_width="345">
+                    <div class="dialogLegend">APP_MESSAGE[119]</div><br/>
+                    <div id="multiple_download_container"></div>
+                    <form style="display:inline;" action="index.php" method="GET" id="download_form" target="download_iframe">
+                        <input type="hidden" name="get_action" value="download">
+                        <input type="hidden" name="secure_token" value="">
+                    </form>
+                    <iframe id="download_iframe" name="download_iframe" style="display:none"></iframe>
+                    </div>]]>
+                </clientForm>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        <action name="purge">
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <!--
+        <action name="share">
+            <processing>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action>
+        -->
+        <action name="dcometa">
+            <gui text="access_dco.dcometa" title="access_dco.dcometa.title" src="dcometa.png" iconClass="icon-dco-editmeta" accessKey="access_dco.dcometa.access_key" hasAccessKey="true">
+                <context selection="true" dir="" recycle="hidden" actionBar="true"
+                         contextMenu="true" infoPanel="true" actionBarGroup="change" inZip="false"></context>
+                <selectionContext dir="" file="false" recycle="false" unique="true" allowedMimes="dco"/>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection = app.getUserSelection();
+                    if (!userSelection.isEmpty()){
+                        var node = userSelection.getNode(0);
+                        var editorClass = node.getMetadata().get('meta_editor_class');
+                        var onLoad = function (oForm){
+                            var metaEditor = eval('new '+editorClass+'(oForm)');
+                            metaEditor.show(userSelection);
+                        }
+                        var onSubmit = function(oForm){};
+                        modal.showDialogForm('', 'dcometa_form', onLoad, onSubmit, null, true, true);
+                    }
+                ]]></clientCallback>
+                <clientForm id="dcometa_form"><![CDATA[
+                    <div id="dcometa_form" action="dcometa_form" class="tabbed_editor" box_width="80%" box_height="80%" box_resize="true" box_padding="0">
+                        <div class="editor_header">
+                            <div class="action_bar">
+                                <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
+                            </div>
+                            <span class="header_label"></span>
+                        </div>
+                        <div id="categoryTabulator">
+                            <ul class="tabrow">
+                            </ul>
+                            <div class="tabpanes">
+                            </div>
+                        </div>
+                    </div>              
+                ]]></clientForm>
+                <clientListener name="contextChange"><![CDATA[
+                    //app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    //app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="get_meta_specs">
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+    </actions>
+    <client_configs>
+    <component_config className="FoldersTree">
+    </component_config>
+      <!--
+      <component_config className="InfoPanel">
+        <infoPanel mime="no_selection" attributes="">
+          <messages>
+            <message key="objects_string" id="access_dco.objects_count"/>
+          </messages>
+          <html><![CDATA[
+            <div style="padding:10px;">
+              <big style="font-weight: bold; font-size: 14px; color:#79f;display: block; text-align:center; padding-bottom:20px;">#{current_folder}</big>
+              <div id="filelist_folders_count"><b>#{objects_string}</b> : #{filelist_folders_count}</div>
+            </div> 
+          ]]></html>
+        </infoPanel>
+        <infoPanel mime="dco" attributes="title,author">
+          <messages>
+            <message key="files_string" id="280"/>
+            <message key="author_string" id="access_dco.dco_author"/>
+          </messages>
+          <html><![CDATA[
+            <div style="padding:10px;">
+              <big style="font-weight: bold; font-size: 14px; color:#79f;display: block; text-align:center; padding-bottom:20px;">#{title}</big>
+              <div><b>#{author_string}</b> : #{author}</div>
+            </div>
+          ]]></html>
+        </infoPanel>
+      </component_config>
+    -->
+        <component_config className="InfoPanel">
+            <infoPanel mime="no_selection" attributes="">
+                <messages>
+          <message key="objects_string" id="access_dco.objects_count"/>
+                </messages>
+                <html><![CDATA[
+                    <div class="ipanel_no_selection_select">
+                <span class="icon-info-sign"></span>
+                <span class="label">#{current_folder}</span>
+                    </div>
+                    <div class="ipanel_no_selection_data">
+                        <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
+                            <tr>
+                                <td class="infoPanelLabel">#{objects_string}</td>
+                                <td class="infoPanelValue">#{filelist_folders_count}</td>
+                            </tr>
+                        </table>
+                    </div>                  
+                ]]></html>
+            </infoPanel>
+            <infoPanel mime="generic_file" attributes="basename,preview_rich,filesize,mimestring,formated_date">
+                <messages>
+                    <message key="name_string" id="133"/>
+                    <message key="size_string" id="127"/>
+                    <message key="type_string" id="134"/>
+                    <message key="modif_string" id="138"/>
+                    <message key="header_string" id="341"/>
+                </messages>
+                <html><![CDATA[
+                <div class="infoPanelImagePreview">
+                    #{preview_rich}
+                </div>
+                <div class="infoPanelAllMetadata">
+                    <div>
+                        <div class="panelHeader infoPanelGroup"><span class="icon-info" data-action="no-action"></span> #{header_string}</div>
+                        <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
+                            <tr>
+                                <td class="infoPanelLabel">#{name_string}</td>
+                                <td class="infoPanelValue">#{basename}</td>
+                            </tr>
+                            <tr class="even">
+                                <td class="infoPanelLabel">#{size_string}</td>
+                                <td class="infoPanelValue">#{filesize}</td>
+                            </tr>
+                            <tr>
+                                <td class="infoPanelLabel">#{modif_string}</td>
+                                <td class="infoPanelValue">#{formated_date}</td>
+                            </tr>
+                            <tr class="even">
+                                <td class="infoPanelLabel">#{type_string}</td>
+                                <td class="infoPanelValue">#{mimestring}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                ]]></html>
+            </infoPanel>
+          <infoPanel mime="generic_dir" attributes="basename,icon,formated_date">
+            <messages>
+                <message key="name_string" id="133"/>
+                <message key="modif_string" id="138"/>
+                <message key="header_string" id="342"/>
+            </messages>
+                <html><![CDATA[
+                    <div class="folderImage infoPanelImagePreview">
+                        <img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
+                    </div>
+                    <div class="infoPanelAllMetadata">
+                        <div>
+                            <div class="panelHeader infoPanelGroup"><span class="icon-info" data-action="no-action"></span> #{header_string}</div>
+                            <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
+                                <tr>
+                                    <td class="infoPanelLabel">#{name_string}</td>
+                                    <td class="infoPanelValue">#{basename}</td>
+                                </tr>
+                                <tr class="even">
+                                    <td class="infoPanelLabel">#{modif_string}</td>
+                                    <td class="infoPanelValue">#{formated_date}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                ]]></html>
+          </infoPanel>
+            <infoPanel mime="dco" attributes="title,author,type,icon,status">
+                <messages>
+                    <message key="title_string" id="access_dco.dco_title"/>
+                    <message key="type_string" id="access_dco.dco_type"/>
+                    <message key="author_string" id="access_dco.dco_author"/>
+                    <message key="header_string" id="access_dco.object_info_label"/>
+                    <message key="status_string" id="access_dco.dco_status"/>
+                </messages>
+                <html><![CDATA[
+                    <div class="folderImage infoPanelImagePreview">
+                        <img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
+                    </div>
+                    <div class="infoPanelAllMetadata">
+                        <div>
+                            <div class="panelHeader infoPanelGroup">
+                                <span class="icon-info" data-action="no-action"></span> #{header_string}
+                            </div>
+                            <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
+                                <tr>
+                                    <td class="infoPanelLabel">#{title_string}</td>
+                                    <td class="infoPanelValue">#{title}</td>
+                                </tr>
+                                <tr class="even">
+                                    <td class="infoPanelLabel">#{type_string}</td>
+                                    <td class="infoPanelValue">#{type}</td>
+                                </tr>
+                                <tr>
+                                    <td class="infoPanelLabel">#{author_string}</td>
+                                    <td class="infoPanelValue">#{author}</td>
+                                </tr>
+                                <tr class="even">
+                                    <td class="infoPanelLabel">#{status_string}</td>
+                                    <td class="infoPanelValue">#{status}</td>
+                                </tr>
+                          </table>
+                        </div>
+                    </div>
+                ]]></html>
+            </infoPanel>
+        </component_config>
+    </client_configs>
+</registry_contributions>

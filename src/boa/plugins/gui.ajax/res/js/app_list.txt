@@ -22,6 +22,7 @@ js/lib/scriptaculous/src/slider.js
 js/lib/prototype/proto.scroller.js
 js/lib/prototype/carousel.js
 js/lib/prototype/accordion.js
+js/lib/moment/moment-with-locales.js
 js/lib/webfx/xtree.js
 js/lib/webfx/customxtree.js
 js/core/User.class.js
@@ -61,4 +62,5 @@ js/core/BookmarksBar.class.js
 js/core/FormManager.class.js
 js/core/MultiDownloader.class.js
 js/core/ActivityMonitor.class.js
+js/core/DateTimePicker.class.js
 js/core/App.class.js

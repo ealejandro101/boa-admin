@@ -1157,7 +1157,13 @@ class Utils
         // Try with the serialized repositories
         if (is_file(APP_DATA_PATH . "/plugins/conf.serial/repo.ser")) {
             $fileLines = file(APP_DATA_PATH . "/plugins/conf.serial/repo.ser");
-            $repos = unserialize($fileLines[0]);
+            $content = implode("", $fileLines);
+            if (preg_match("/^\{/", $content)) {
+                $repos = json_decode($content);
+            }
+            else {                
+                $repos = unserialize($content);
+            }
             $repoList = array_merge($repoList, $repos);
         }
 

@@ -7,7 +7,7 @@
         </resources>
     </client_settings>
 	<server_settings>
-        <global_param name="GUI_THEME" group="CONF_MESSAGE[Main Options]" type="select" choices="vision|Vision,umbra|Umbra,oxygen|Oxygen (Legacy)" label="CONF_MESSAGE[Theme]" description="CONF_MESSAGE[Theme used for display]" mandatory="true" default="umbra"/>
+        <global_param name="GUI_THEME" group="CONF_MESSAGE[Main Options]" type="select" choices="vision|Vision,umbra|Umbra" label="CONF_MESSAGE[Theme]" description="CONF_MESSAGE[Theme used for display]" mandatory="true" default="umbra"/>
         <global_param name="CUSTOM_ICON_ONLY" group="CONF_MESSAGE[Start Up Screen]" type="boolean" label="CONF_MESSAGE[Icon Only]" description="CONF_MESSAGE[Skip the title, only display an image]" mandatory="false" default="true"/>
         <global_param name="CUSTOM_ICON_BINARY" group="CONF_MESSAGE[Start Up Screen]" type="image" label="CONF_MESSAGE[Custom Icon]" description="CONF_MESSAGE[URI to a custom image to be used as start up logo]"
         editable="true"
@@ -56,34 +56,7 @@
         </hooks>
 		<external_file filename="gui.ajax/client_actions.xml" include="actions/*" exclude=""/>
 		<client_configs uuidAttr="name">
-			<template name="main_oxygen" element="desktop" position="top" theme="oxygen"><![CDATA[
-				<div id="toolbars">
-					<div id="action_bar">
-						<div id="buttons_bar" class="action_bar" appClass="ActionsToolbar"></div>
-						<div id="locationbar_cont">
-							<div style="height: 100%;" class="separator"></div>
-							<div style="padding-top : 5px;">
-								<div id="repo_chooser" appClass="RepositorySelect"></div>
-								<div id="locationBar" appClass="LocationBar" appOptions='{"flexTo":"locationbar_cont"}'></div>
-								<div id="logging_string" appClass="UserWidget"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"desktop"}'>
-					<div id="vertical_splitter" style="background-color: #fff;" appClass="Splitter" appOptions='{"direction": "vertical", "initA": 200, "maxA":600, "minA":50,"fit":"height","fitParent":"browser"}'>
-						<div id="sidebar_splitter" style="float:left; overflow:hidden;" appClass="Splitter" appOptions='{"direction":"horizontal","initB":200,"minB":24,"maxB":500}'>
-							<div id="topPane" appClass="FoldersTree" appOptions='{"display":"dz"}' appPaneHeader="130" style="border: 1px solid #676965;"></div>
-					    	<div id="bottomSplitPane" appClass="Tabulator" style="border: 1px solid #676965;" appOptions='{"defaultTabId": "info","tabInfos" : [{"id":"info","label":"131","icon":"file_info.png","element":"info_panel"},{"id":"search","label":"87","icon":"search.png","element":"search_container"}]}'>
-						    	<div id="search_container" appClass="SearchEngine"></div>
-						    	<div id="info_panel" appClass="InfoPanel"></div>
-					    	</div>
-					    </div>
-						<div id="content_pane" appClass="FilesList" appOptions='"list"' style="border: 1px solid #676965;"></div>
-					</div>
-				</div>
-			]]></template>
-            <template name="main_umbra" element="desktop" position="top" theme="umbra"><![CDATA[
+      <template name="main_umbra" element="desktop" position="top" theme="umbra"><![CDATA[
 				<div id="toolbars">
 					<div>
 						<div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"skipBubbling":true,"defaultIconSize":16,"defaultStyle":"icon_text","styles":{"icons_only":"Icons Only","icon_text":"Icons and Text","text_only":"Text only"},"stylesImgSizes":{"icons_only":22,"icon_text":16,"text_only":16},"stylesBarSizes":{"icons_only":40,"icon_text":51,"text_only":30}}' class="soft_css_gradient"></div>
@@ -110,7 +83,7 @@
 					</div>
 				</div>
 			]]></template>
-            <template name="main_vision" element="desktop" position="top" theme="vision"><![CDATA[
+      <template name="main_vision" element="desktop" position="top" theme="vision"><![CDATA[
 				<div id="toolbars">
 					<div id="global_toolbar" appClass="LogoWidget">
 					    <div id="logging_string" appClass="UserWidget" appOptions='{"menuEvent" : "over"}'></div>
@@ -164,7 +137,7 @@
 					<div id="content_pane" appClass="FilesList"  appOptions='{"fit":"height","fitParent":"browser"}'  style="margin:0px;"></div>
 				</div>				
 			]]></template>
-            <template name="widget_vision" element="widget" position="top" theme="vision"><![CDATA[
+      <template name="widget_vision" element="widget" position="top" theme="vision"><![CDATA[
 				<div id="toolbars">
     			    <div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"toolbarsList":["put", "get"],"groupOtherToolbars":["more", "change", "remote"], "groupOtherLabel":"More","skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
 				</div>
@@ -178,7 +151,7 @@
                     </div>
 				</div>
 			]]></template>
-            <template name="minisite_vision" element="shared_folder" position="top" theme="vision"><![CDATA[
+      <template name="minisite_vision" element="shared_folder" position="top" theme="vision"><![CDATA[
 				<div id="browser" appClass="AppPane" appOptions='{"fit":"height","fitParent":"shared_folder"}'>
       			    <div id="buttons_bar" class="action_bar" appClass="ActionsToolbar" appOptions='{"toolbarsList":["minisite"],"skipBubbling":true, "skipCarousel":true,"submenuOffsetTop":2}'></div>
                     <div id="cpane_container" appClass="AppPane" appOptions='{"fit":"height","fitParent":"browser"}'>

@@ -69,7 +69,7 @@ Class.create("AppBootstrap", {
                 this.loadBootConfig();
             }
 		}.bind(this));
-		document.observe("boa:before_gui_load", function(e){
+		document.observe("app:before_gui_load", function(e){
 			var desktop = $(this.parameters.get('MAIN_ELEMENT'));
 			var options = desktop.getAttribute("appOptions").evalJSON(false);
 			if(options.fit && options.fit == 'height'){
@@ -82,7 +82,7 @@ Class.create("AppBootstrap", {
 				fitHeightToBottom($(this.parameters.get('MAIN_ELEMENT')), options.fitParent, marginBottom, true);
 			}
 		}.bind(this));
-		document.observe("boa:actions_loaded", function(){
+		document.observe("app:actions_loaded", function(){
 			if(!this.parameters.get("SELECTOR_DATA") && app.actionBar.actions.get("ext_select")){
 				app.actionBar.actions.unset("ext_select");
 				app.actionBar.fireContextChange();
@@ -91,7 +91,7 @@ Class.create("AppBootstrap", {
 				app.actionBar.defaultActions.set("file", "ext_select");
 			}
 		}.bind(this));					
-		document.observe("boa:loaded", function(e){
+		document.observe("app:loaded", function(e){
 			this.insertAnalytics();
 			if(this.parameters.get("SELECTOR_DATA")){
 	    		app.actionBar.defaultActions.set("file", "ext_select");
@@ -193,7 +193,7 @@ Class.create("AppBootstrap", {
 		}
 		window.zipEnabled = this.parameters.get("zipEnabled");
 		window.multipleFilesDownloadEnabled = this.parameters.get("multipleFilesDownloadEnabled");
-		document.fire("boa:boot_loaded");
+		document.fire("app:boot_loaded");
 		window.app = new App(this.parameters.get("EXT_REP")||"", this.parameters.get("usersEnabled"), this.parameters.get("loggedUser"));
 		if(this.parameters.get("currentLanguage")){
 			window.app.currentLanguage = this.parameters.get("currentLanguage");
@@ -251,28 +251,33 @@ Class.create("AppBootstrap", {
                 customWording = this.parameters.get("customWording");
             }
 			html+='	<div id="progressBox" class="dialogBox" style="width: 320px;display:block;top:30%;z-index:2002;left:40%;position: absolute;background-color: #fff;padding: 0;">';
-			html+='	<div align="left" class="dialogContent" style="color:#676965;font-family:Trebuchet MS,sans-serif;font-size:11px;font-weight:normal;left:10px;padding:10px;">';
+			html+='	<div align="center" class="dialogContent" style="color:#676965;font-family:Trebuchet MS,sans-serif;font-size:11px;font-weight:normal;left:10px;padding:10px;border-bottom:0px;padding-bottom:0px">';
 			var icon = customWording.icon || resourcesFolder+'/../../../AppLogo250.png';
-      if(customWording.icon_binary_url){
-          icon = this.parameters.get("appServerAccess") + "&" + customWording.icon_binary_url;
-      }
+            if(customWording.icon_binary_url){
+                icon = this.parameters.get("appServerAccess") + "&" + customWording.icon_binary_url;
+            }
 			var title = customWording.title || ""; //Left the title empty if not provided on configuration
 			var iconWidth = customWording.iconWidth || '35px';
 			var fontSize = customWording.titleFontSize || '35px';
             var titleDivSize = (customWording.iconHeight ? 'height:' + customWording.iconHeight + ';' : '');
-			html+=' <div style="margin-bottom:0px; font-size:'+fontSize+';font-weight:bold; background-image:url(\''+ (this.parameters.get("SERVER_PREFIX_URI") || '') + icon+'\');background-position:left center;background-repeat:no-repeat;padding-left:'+iconWidth+';'+titleDivSize+'color:#0077b3;">'+(customWording.iconOnly?'':title)+'</div>';
+			html+=' <div style="margin-bottom:0px; font-size:'+
+                fontSize+';font-weight:bold; background-image:url(\''+ (this.parameters.get("SERVER_PREFIX_URI") || '') + 
+                icon+'\');background-position:left center;background-repeat:no-repeat;width:'+
+                iconWidth+';'+titleDivSize+'color:#0077b3;">'+(customWording.iconOnly?'':title)+'</div>';
+
 			if(customWording.title.toLowerCase() != "app"){
 				html+='	<div style="padding:4px 7px;position: relative;"><div>BoA - Explorer<span id="version_span"></span></div>';
 			}else{
 				html+='	<div style="padding:4px 7px;position: relative;"><div>The web data-browser<span id="version_span"></span></div>';
 			}
 			//html+='	Copyright C. du Jeu 2008-2013 - AGPL License. <div id="progressCustomMessage" style="margin-top: 35px;font-weight: bold;padding-bottom: 5px;">';
-      html+=' Copyright BoA 2017 - AGPL License. <div id="progressCustomMessage" style="margin-top: 35px;font-weight: bold;padding-bottom: 5px;">';
+            html+=' Copyright BoA 2017 - AGPL License. <div id="progressCustomMessage" style="margin-top: 35px;font-weight: bold;padding-bottom: 5px;">';
 			if(customWording.welcomeMessage){
 				html+= customWording.welcomeMessage.replace(new RegExp("\n", "g"), "<br>");
 			}
-            html+="</div>";
-            html+='<div id="progressState" style="float:left; display: inline;">Booting...</div>';
+            html+="</div></div></div>";
+            html+=' <div align="left" class="dialogContent" style="color:#676965;font-family:Trebuchet MS,sans-serif;font-size:11px;font-weight:normal;left:10px;padding:10px;border-top:0px;padding-top:0px">';
+            html+='<div style="padding:4px 7px;position: relative;"><div id="progressState" style="float:left; display: inline;">Booting...</div>';
 			html+='	<div id="progressBarContainer" style="margin-top:3px; margin-left: 126px;"><span id="loaderProgress"></span></div>';
             html+= '<div id="progressBarHeighter" style="height:10px;"></div>';
 			html+='	</div></div>';
@@ -305,7 +310,7 @@ Class.create("AppBootstrap", {
                         ],
                         {afterFinish : function(){
                             $('loading_overlay').remove();
-                            if($('progressCustomMessage').innerHTML.strip() && $("generic_dialog_box") && $("generic_dialog_box").visible() && $("generic_dialog_box").down('div.dialogLegend')){
+                            if ($('progressCustomMessage').innerHTML.strip() && $("generic_dialog_box") && $("generic_dialog_box").visible() && $("generic_dialog_box").down('div.dialogLegend')){
                                 $("generic_dialog_box").down('div.dialogLegend').update($('progressCustomMessage').innerHTML.strip());
                             }
                             $('progressBox').remove();

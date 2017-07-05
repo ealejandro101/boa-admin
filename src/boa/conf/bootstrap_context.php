@@ -96,18 +96,22 @@ function APP_autoload($className){
         return;
     }
     
-    //Core Plugin Classes
-    if (preg_match('/^BoA\/Plugins\/Core/', $className)){
+    //Core Plugin Classes //\\x7f-\\xff\\x7f-\\xff
+    $classNamePattern = "\/([a-zA-Z_][a-zA-Z0-9_]*)";
+    if (preg_match("/^BoA\/Plugins$classNamePattern$classNamePattern$classNamePattern/", $className, $matches)){
         $value = explode('/', $className);
-        $lClassName = end($value);
+        $plugType = strtolower($matches[1]);
+        $plugName = strtolower($matches[2]);
+        $lClassName = $matches[3];
+        //$lClassName = end($value);
         //Try class
-        $corePlugClass = glob(APP_PLUGINS_FOLDER."/core.*/".$lClassName.".class.php", GLOB_NOSORT);
+        $corePlugClass = glob(APP_PLUGINS_FOLDER."/$plugType.$plugName/".$lClassName.".class.php", GLOB_NOSORT);
         if($corePlugClass !== false && count($corePlugClass)){
             require_once($corePlugClass[0]);
             return;
         }
         //Try interface
-        $corePlugInterface = glob(APP_PLUGINS_FOLDER."/core.*/".$lClassName.".interface.php", GLOB_NOSORT);
+        $corePlugInterface = glob(APP_PLUGINS_FOLDER."/$plugType.$plugName/".$lClassName.".interface.php", GLOB_NOSORT);
         if($corePlugInterface !== false && count($corePlugInterface)){
             require_once($corePlugInterface[0]);
             return;

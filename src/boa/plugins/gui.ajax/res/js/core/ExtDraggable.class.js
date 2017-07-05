@@ -34,7 +34,7 @@ var timerClearObserver = {
 		if(WebFXtimer) clearTimeout(WebFXtimer);
 	}
 } ;
-document.observe("boa:loaded", function(){
+document.observe("app:loaded", function(){
 	Draggables.addObserver(timerClearObserver);
 	Draggables.addObserver({onDrag:function(eventName,element,event){
 		if(element.updateCtrlKey){

@@ -705,6 +705,11 @@ div.oneFieldForm input.SF_input{
 div.SF_element{
 	padding-top:5px;
 	clear:left;
+    position: relative;
+}
+
+div.SF_element:last-child{
+    padding-bottom: 5px;
 }
 
 div.SF_disabled{
@@ -3318,6 +3323,7 @@ td.ip_geo_cell{
     text-shadow: 0 1px #FFF;
     margin: 0 -5px;
     padding: 0 20px;
+    cursor: pointer;
 }
 .tabrow span {
     color: #555;

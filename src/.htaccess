@@ -1,9 +1,9 @@
 <IfModule mod_rewrite.c>
 # You must set the correct values here if you want
 # to enable webDAV sharing. The values assume that your 
-# ajaXplorer installation is at http://yourdomain/ajaxplorer 
+# BoA installation is at http://yourdomain/boa 
 # and that you want the webDAV shares to be accessible via 
-# http://yourdomain/ajaxplorer/shares/repository_id/
+# http://yourdomain/boa/shares/repository_id/
 RewriteEngine on
 RewriteBase /boa2
 RewriteCond %{REQUEST_FILENAME} !-f

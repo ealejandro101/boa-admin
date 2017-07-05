@@ -56,8 +56,8 @@ Class.create("FoldersTree", AppPane, {
         if(this.options.replaceScroller){
             this.scrollbar = new Control.ScrollBar('tree_container','tree_scroller');
             var scrollbarLayoutObserver = this.scrollbar.recalculateLayout.bind(this.scrollbar);
-            document.observe("boa:tree_change",  scrollbarLayoutObserver);
-            this.registeredObservers.set("boa:tree_change", scrollbarLayoutObserver);
+            document.observe("app:tree_change",  scrollbarLayoutObserver);
+            this.registeredObservers.set("app:tree_change", scrollbarLayoutObserver);
         }
 
 
@@ -106,16 +106,16 @@ Class.create("FoldersTree", AppPane, {
 				this.setSelectedPath(path);
 			}.bind(this), 100);
 		}.bind(this);
-		document.observe("boa:context_changed",  ctxChangedObs);
-        this.registeredObservers.set("boa:context_changed", ctxChangedObs);
+		document.observe("app:context_changed",  ctxChangedObs);
+        this.registeredObservers.set("app:context_changed", ctxChangedObs);
 
         var rootNodeObs = function(event){
 			var rootNode = event.memo;
 			this.tree.setRootNode(rootNode);
 			this.changeRootLabel(rootNode.getLabel(), rootNode.getIcon());
 		}.bind(this);
-		document.observe("boa:root_node_changed", rootNodeObs);
-        this.registeredObservers.set("boa:root_node_changed", rootNodeObs);
+		document.observe("app:root_node_changed", rootNodeObs);
+        this.registeredObservers.set("app:root_node_changed", rootNodeObs);
 
         var compConfChanged = function(event){
 			if(event.memo.className == "FoldersTree"){
@@ -129,8 +129,8 @@ Class.create("FoldersTree", AppPane, {
 				}
 			}
 		}.bind(this);
-		document.observe("boa:component_config_changed",  compConfChanged);
-        this.registeredObservers.set("boa:component_config_changed", compConfChanged);
+		document.observe("app:component_config_changed",  compConfChanged);
+        this.registeredObservers.set("app:component_config_changed", compConfChanged);
 
 	},
 
@@ -200,7 +200,7 @@ Class.create("FoldersTree", AppPane, {
             this.scroller.setStyle({height:parseInt(this.treeContainer.getHeight())+'px'});
             this.scrollbar.recalculateLayout();
         }
-        document.fire("boa:resize-FoldersTree-" + this.htmlElement.id, this.htmlElement.getDimensions());
+        document.fire("app:resize-FoldersTree-" + this.htmlElement.id, this.htmlElement.getDimensions());
 	},
 	
 	/**

@@ -43,7 +43,7 @@ Class.create("Breadcrumb", {
 		this.element.paneObject = this;
         this.options = options || {};
         this.element.update('Files');
-        document.observe("boa:context_changed", function(event){
+        document.observe("app:context_changed", function(event){
             var newNode = event.memo;
             if(Object.isString(newNode)){
                 newNode = new ManifestNode(newNode);

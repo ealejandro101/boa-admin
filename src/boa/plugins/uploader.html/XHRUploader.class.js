@@ -608,14 +608,14 @@ Class.create("XHRUploader", {
 
         var item;
         if(item = this.getNextItem()){
-            document.fire("boa:longtask_starting");
+            document.fire("app:longtask_starting");
 			this.sendFileMultipart(item);
 		}else{
       if(this.hasLoadingItem()) return;
 			if(this.optionPane.autoCloseCheck.checked){
 				hideLightBox(true);
 			}
-      document.fire("boa:longtask_finished");
+      document.fire("app:longtask_finished");
 		}
 
 	},

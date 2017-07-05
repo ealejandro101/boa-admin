@@ -60,5 +60,3 @@ class ApplicationException extends \Exception {
 		}
 	}
 }
-
-?>

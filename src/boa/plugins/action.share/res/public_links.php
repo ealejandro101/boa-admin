@@ -114,14 +114,14 @@
         </style>
 	</head>
 	<body>
-    <?php if($AJXP_LINK_HAS_PASSWORD){ ?>
+    <?php if($APP_LINK_HAS_PASSWORD){ ?>
 		<form action='' method='post' name="submit_password">
             <div id="main_dl_container">
                 <h1><?php
-                    if(!empty($CUSTOM_SHAREPAGE_TITLE)) echo(str_replace(array("AJXP_APPLICATION_TITLE","AJXP_FILENAME"), array(ConfService::getCoreConf("APPLICATION_TITLE"), $AJXP_LINK_BASENAME), $CUSTOM_SHAREPAGE_TITLE));
+                    if(!empty($CUSTOM_SHAREPAGE_TITLE)) echo(str_replace(array("APP_APPLICATION_TITLE","APP_FILENAME"), array(ConfService::getCoreConf("APPLICATION_TITLE"), $APP_LINK_BASENAME), $CUSTOM_SHAREPAGE_TITLE));
                 else echo sprintf($messages[1], ConfService::getCoreConf("APPLICATION_TITLE"))
                     ?></h1>
-                <?php if($AJXP_LINK_WRONG_PASSWORD): ?>
+                <?php if($APP_LINK_WRONG_PASSWORD): ?>
                     <div style="color: hsl(0, 82%, 51%);width: 261px;position: absolute;top: 80px;left: 11px;"><?php echo $messages[3] ?></div>
                 <?php endif; ?>
                 <input type="password" name="password" placeholder="<?php echo $messages[5] ?>">
@@ -129,14 +129,14 @@
                     <img src="dl.png">
                 </a>
                 <h2 class="legend_w_pass"><?php
-                    if(!empty($CUSTOM_SHAREPAGE_LEGEND_PASS)) echo(str_replace(array("AJXP_APPLICATION_TITLE","AJXP_FILENAME"), array(ConfService::getCoreConf("APPLICATION_TITLE"), $AJXP_LINK_BASENAME), $CUSTOM_SHAREPAGE_LEGEND_PASS));
-                    else echo sprintf($messages[4], $AJXP_LINK_BASENAME) ?></h2>
+                    if(!empty($CUSTOM_SHAREPAGE_LEGEND_PASS)) echo(str_replace(array("APP_APPLICATION_TITLE","APP_FILENAME"), array(ConfService::getCoreConf("APPLICATION_TITLE"), $APP_LINK_BASENAME), $CUSTOM_SHAREPAGE_LEGEND_PASS));
+                    else echo sprintf($messages[4], $APP_LINK_BASENAME) ?></h2>
             </div>
 		</form>
     <?php } else { ?>
         <div id="main_dl_container">
             <h1><?php
-                if(!empty($CUSTOM_SHAREPAGE_TITLE)) echo(str_replace(array("AJXP_APPLICATION_TITLE","AJXP_FILENAME"), array(ConfService::getCoreConf("APPLICATION_TITLE"), $AJXP_LINK_BASENAME), $CUSTOM_SHAREPAGE_TITLE));
+                if(!empty($CUSTOM_SHAREPAGE_TITLE)) echo(str_replace(array("APP_APPLICATION_TITLE","APP_FILENAME"), array(ConfService::getCoreConf("APPLICATION_TITLE"), $APP_LINK_BASENAME), $CUSTOM_SHAREPAGE_TITLE));
                 else echo sprintf($messages[1], ConfService::getCoreConf("APPLICATION_TITLE"))
                 ?></h1>
             <a class="button_link" href="?dl=true" style="position: relative;display: block;height: 200px;width: 203px;margin: 0 auto;">
@@ -147,8 +147,8 @@
             <?php } ?>
             </a>
             <h2 class="legend"><?php
-                if(!empty($CUSTOM_SHAREPAGE_LEGEND)) echo(str_replace(array("AJXP_APPLICATION_TITLE","AJXP_FILENAME"), array(ConfService::getCoreConf("APPLICATION_TITLE"), $AJXP_LINK_BASENAME), $CUSTOM_SHAREPAGE_LEGEND));
-                else echo sprintf($messages[2], $AJXP_LINK_BASENAME) ?></h2>
+                if(!empty($CUSTOM_SHAREPAGE_LEGEND)) echo(str_replace(array("APP_APPLICATION_TITLE","APP_FILENAME"), array(ConfService::getCoreConf("APPLICATION_TITLE"), $APP_LINK_BASENAME), $CUSTOM_SHAREPAGE_LEGEND));
+                else echo sprintf($messages[2], $APP_LINK_BASENAME) ?></h2>
         </div>
     <?php  } ?>
 

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<meta id="meta.lom" label="CONF_MESSAGE[Digital Content Object Metadata]" description="CONF_MESSAGE[Digital Content Object metadata implementation stored in a hidden file.]"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
+	<class_definition filename="meta.lom/LomMetaManager.class.php" classname="BoA\Plugins\Meta\Lom\LomMetaManager"/>
+    <plugin_info>
+        <plugin_author>Jesus Otero</plugin_author>
+        <plugin_version>follow</plugin_version>
+        <plugin_uri>https://github.com/boa-project/boa/plugins/meta/lom</plugin_uri>
+        <core_relation packaged="true" tested_version="follow_core"/>
+    </plugin_info>
+	<client_settings icon="plugins/access.mysql/resources/images/mysql_icon.png">
+		<resources>
+			<i18n namespace="meta_lom" path="meta.lom/i18n" />
+			<js file="plugins/meta.lom/LomMetaCellRenderer.class.js" className="LomMetaCellRenderer" autoload="true"/>
+			<js file="plugins/meta.lom/LomSpecEditor.class.js" className="LomSpecEditor" autoload="true"/>
+			<js file="plugins/meta.lom/LomMetaEditor.class.js" className="LomMetaEditor" autoload="true"/>
+      <css file="plugins/meta.lom/lommeta.css" autoload="true" />
+      <css file="plugins/editor.role/rolesEditor.css" autoload="true" />
+      <img_library alias="meta_lom" path="plugins/meta.lom/img"/>
+		</resources>
+	</client_settings>	
+	<server_settings>
+		<!--<param name="meta_file_name" type="string" label="CONF_MESSAGE[Meta File]" description="CONF_MESSAGE[Hidden file used inside folders to save meta data]" mandatory="true" default=".metadata"/>-->
+		<param name="dro_spec" type="select" label="CONF_MESSAGE[Digital Resource Specification]" description="CONF_MESSAGE[The LOM Specification to user for digital resources.]" choices="json_list:get_specs_list|meta.lom" mandatory="true" default=""/>
+		<!--<param name="lom_meta_labels" type="string" replicationGroup="group1" label="CONF_MESSAGE[Meta Labels]" description="CONF_MESSAGE[Comma separated list of labels, be sure to define as many as fields!]" mandatory="true" default=""/>
+		<param name="lom_meta_visibility" type="string" replicationGroup="group1" label="CONF_MESSAGE[Columns visibility]" description="CONF_MESSAGE[Set default visibility for each columns. Either by columns, using commas, or one value that will be applied to all columns. Value can be 'visible' or 'hidden'.]" mandatory="false" default="visible"/>-->
+		<config_tab name="tab-specs" label="APP_MESSAGE[meta_lom.9]">
+			<template><![CDATA[
+          <div id="pane-specs" style="padding:20px">
+          	<div id="meta_lom_metadata_entry" class="driver_form">
+              <div class="dialogLegend">APP_MESSAGE[meta_lom.10]</div>
+              <div class="innerTitle">APP_MESSAGE[meta_lom.11]</div>
+              <div class="accordion_content">
+              	<div class="SF_Element">
+              </div>
+              <div class="innerTitle">APP_MESSAGE[meta_lom.12]</div>
+              <div class="metaEntry"></div>
+            </div>
+          </div>
+				]]>
+			</template>
+			<resources source="metalom">
+	      <css file="plugins/meta.lom/lommeta.css"/>
+				<js file="plugins/meta.lom/LomSpecEditor.class.js" className="LOMSpecEditor"/>
+			</resources>
+			<handler><![CDATA[
+				var specEditor = new LOMSpecEditor($('meta_lom_metadata_entry'), 'tab-specs');
+				]]>				
+			</handler>
+			<metadata>
+				<types>
+					<type name="language" type="optionset">
+						<values></values>
+					</type>
+					<type name="duration" type="composed">
+						<years type="int"/>
+						<months type="int"/>
+						<days type="int"/>
+						<hours type="int"/>
+						<minutes type="int"/>
+						<seconds type="int"/>
+					</type>
+				</types>
+				<optionsets>
+					<optionset name="catalogs" values="ISBN|ISMN|ISSN|URI"/>
+					<optionset name="structures" values="atomic|collection|networked|hierarchical|linear"/>
+					<optionset name="aggregation-levels" values="1|2|3|4"/>
+					<optionset name="roles" values="author|content provider|editor|educational validator|adviser|graphical designer|initiator|instructutional designer|publisher|script writer|subject matter expert|technical implementer|technical validator|terminator|unknown|validator"/>
+					<optionset name="languages" values="none|ab|aa|af|ay|ak|sq|de|am|ar|an|hy|as|av|ae|az|bm|ba|bn|bh|be|my|bi|bs|br|bg|ks|km|kn|ca|ch|ce|cs|ny|zh|za|cv|si|ko|kw|co|cr|hr|da|dz|cu|sk|sl|es|eo|et|eu|ee|fo|fi|fj|fr|fy|ff|gd|cy|gl|ka|el|kl|gn|gu|ht|ha|he|hz|hi|ho|hu|io|ig|id|en|ia|iu|ik|ga|is|it|ja|jv|kr|kk|ki|ky|rn|kv|kg|kj|ku|lo|la|lv|li|ln|lt|lu|lg|lb|mk|ml|ms|dv|mg|mt|gv|mi|mr|mh|mo|mn|na|nv|nd|nr|ng|nl|ne|no|nb|nn|ie|oc|oj|or|om|os|pi|pa|ps|fa|pl|pt|qu|rm|rw|ro|ru|se|sm|sg|sa|sc|sr|st|tn|sn|sd|so|sw|ss|sv|su|tl|ty|th|ta|tt|tg|te|bo|ti|to|ts|tr|tk|tw|uk|ug|ur|uz|wa|ve|vi|vo|wl|wo|xh|ii|yi|yo|zu"/>
+				</optionsets>
+				<fields>
+					<general type="category">
+						<identifier type="composed">
+							<catalog type="optionset" optionset-name="catalogs"/>
+							<entry type="text"/>
+						</identifier>
+						<language type="optionset" optionset-name="languages" multiple="false"/>
+						<description type="longtext"/>
+						<keywords type="text"/>
+						<coverage type="longtext"/>
+						<structure type="optionset" optionset-name="structures" />
+						<aggregation_level type="optionset" optionset-name="aggregation-levels"/>
+					</general>
+					<lifecycle type="category">
+						<version type="text"/>
+						<contribution type="composed">
+							<entity type="vcard"/>
+							<rol type="text"/>
+							<date type="date"/>
+						</contribution>
+					</lifecycle>
+					<technical type="category">
+						<location type="text"/>
+						<requirements type="composed"/>
+						<installation_remarks type="longtext"/>
+						<other_platform_requirements type="longtext"/>
+						<duration type="duration"/>
+					</technical>
+					<educational type="category">
+						<interactivity_type type="text"/>
+						<learning_resource_type/>
+						<interactivity_level/>
+						<semantic_density/>
+						<intended_end_user_role/>
+						<context/>
+						<typical_age_range/>
+						<difficulty/>
+						<typical_learning_time/>
+						<description/>
+						<language/>
+					</educational>
+					<rights type="category">
+						<cost/>
+						<copyright/>
+						<description/>
+					</rights>
+					<annotation type="category">
+						<entity/>
+						<date/>
+						<description/>
+					</annotation>
+					<clasification type="category">
+						<purpose/>
+						<description/>
+						<taxon_path/>
+					</clasification>
+				</fields>
+			</metadata>
+		</config_tab>
+	</server_settings>
+	<registry_contributions>
+		<hooks>
+			<serverCallback hookName="node.info" methodName="extractMeta" applyCondition="$apply=($args[2]!='minimal');"></serverCallback>
+			<serverCallback hookName="node.change" methodName="updateMetaLocation" defer="true"></serverCallback>
+		</hooks>
+		<client_configs>
+			<template_part appId="search_container" appClass="SearchEngine" appOptions="{}"/>
+			<template_part appId="search_container" appClass="SearchEngine" appOptions='{"toggleResultsVisibility":"search_results_cont", "fitMarginBottom":20}' theme="umbra"/>
+			<component_config className="FilesList">
+				<columns><!-- Dynamically generated by the plugin  --></columns>
+			</component_config>
+			<component_config className="InfoPanel">			
+				<infoPanelExtension mime="generic_file,generic_dir" attributes="">		
+					<html></html>
+				</infoPanelExtension>
+			</component_config>			
+		</client_configs>
+		<external_file filename="meta.lom/metaActions.xml" include="actions/*" exclude=""/>
+	</registry_contributions>
+	<dependencies>
+		<!-- Wrapper type plugins only -->
+		<pluginClass pluginName="access.dco|access.ftp|access.demo|access.remote_fs"/>
+	</dependencies>				
+</meta>

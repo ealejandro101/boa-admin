@@ -4,7 +4,7 @@
         <resources>
             <js file="plugins/editor.role/RoleEditor.class.js" className="RoleEditor"/>
             <i18n path="editor.role/i18n" namespace="role_editor"/>
-            <css file="plugins/editor.role/rolesEditor.css" />
+            <css file="plugins/editor.role/rolesEditor.css" autoload="true" />
         </resources>
 	</client_settings>
 	<clientForm id="role_edit_box"><![CDATA[

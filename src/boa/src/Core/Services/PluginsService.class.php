@@ -389,11 +389,13 @@ class PluginsService{
      */
     public function initActivePlugins(){
         $detected = $this->getDetectedPlugins();
+        //var_dump($detected);
         $toActivate = array();
         foreach ($detected as $pType => $pObjects){
             $coreP = $this->findPlugin("core", $pType);
             if($coreP !== false && !isSet($coreP->AUTO_LOAD_TYPE)) continue;
             foreach ($pObjects as $pName => $pObject){
+                //var_dump($pName);
                 $toActivate[$pObject->getId()] = $pObject ;
             }
         }
@@ -566,6 +568,7 @@ class PluginsService{
             if($status === false) continue;
             $plug = $this->getPluginById($activeName);
             $contribs = $plug->getRegistryContributions($extendedVersion);
+
             foreach($contribs as $contrib){
                 $parent = $contrib->nodeName;
                 $nodes = $contrib->childNodes;

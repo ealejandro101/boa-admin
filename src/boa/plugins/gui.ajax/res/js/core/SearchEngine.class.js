@@ -76,7 +76,7 @@ Class.create("SearchEngine", AppPane, {
 		$super($(mainElementName), this._appOptions);
         this.updateSearchModeFromRegistry();
         this.searchModeObserver = this.updateSearchModeFromRegistry.bind(this);
-        document.observe("boa:registry_loaded", this.searchModeObserver);
+        document.observe("app:registry_loaded", this.searchModeObserver);
 
         this._dataModel = new DataModel(true);
         this._rootNode = new ManifestNode("/", false, "Results", "folder.png");
@@ -204,7 +204,7 @@ Class.create("SearchEngine", AppPane, {
             replaceScroller:true,
             fit:'height',
             fitParent : this.options.toggleResultsVisibility,
-            detailThumbSize:22
+            detailThumbSize:64
         });
 
 
@@ -260,7 +260,7 @@ Class.create("SearchEngine", AppPane, {
             }
         }.bind(this);
 
-        document.observe("boa:repository_list_refreshed", this.refreshObserver );
+        document.observe("app:repository_list_refreshed", this.refreshObserver );
 
         this.resize();
 	},
@@ -301,8 +301,8 @@ Class.create("SearchEngine", AppPane, {
             var appId = this.htmlElement.id;
             this.htmlElement.update('');
         }
-        document.stopObserving("boa:repository_list_refreshed", this.refreshObserver);
-        document.stopObserving("boa:registry_loaded", this.searchModeObserver);
+        document.stopObserving("app:repository_list_refreshed", this.refreshObserver);
+        document.stopObserving("app:registry_loaded", this.searchModeObserver);
 		this.htmlElement = null;
         if(appId && window[appId]){
             try {delete window[appId];}catch(e){}

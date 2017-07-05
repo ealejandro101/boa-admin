@@ -60,7 +60,7 @@ Class.create("AppPane", {
         if(this.options.bindSizeTo){
             if(this.options.bindSizeTo.width){
                 this.options.bindSizeTo.width.events.each(function(eventName){
-                    document.observe("boa:" + eventName, this.resizeBound.bind(this));
+                    document.observe("app:" + eventName, this.resizeBound.bind(this));
                 }.bind(this) );
 
             }
@@ -202,7 +202,6 @@ Class.create("AppPane", {
         }
 		this.htmlElement.insert({top : header});
 		disableTextSelection(header);
-
         if(this.options.headerToolbarOptions){
             var tbD = new Element('div', {id:"display_toolbar"});
             header.insert({top:tbD});

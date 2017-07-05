@@ -39,9 +39,14 @@ Class.create("PluginEditor", AbstractEditor, {
         $super(oFormObject, {fullscreen:false});
         fitHeightToBottom(this.element.down("#pluginTabulator"), this.element.up(".dialogBox"));
         this.contentMainContainer = this.element.down("#pluginTabulator");
+        //var panes = this.contentMainContainer.down(".tabpanes");
+        //panes.insert({bottom:new Element('div', {id:'pane-specs'})});
         // INIT TAB
         var infoPane = this.element.down("#pane-infos");
         var docPane = this.element.down("#pane-docs");
+        //var specPane = this.element.down("#pane-specs");
+
+        this.contentMainContainer
 
         infoPane.setStyle({position:"relative"});
         infoPane.resizeOnShow = function(tab){
@@ -50,6 +55,9 @@ Class.create("PluginEditor", AbstractEditor, {
         docPane.resizeOnShow = function(tab){
             fitHeightToBottom(docPane, $("plugin_edit_box"), Prototype.Browser.IE ? 40 : 0);
         }
+        //specPane.resizeOnShow = function(tab){
+        //    fitHeightToBottom(specPane, $("plugin_edit_box"), Prototype.Browser.IE ? 40 : 0);   
+        //}
         this.tab = new SimpleTabs(oFormObject.down("#pluginTabulator"));
         this.actions.get("saveButton").observe("click", this.save.bind(this) );
         modal.setCloseValidation(function(){
@@ -76,7 +84,7 @@ Class.create("PluginEditor", AbstractEditor, {
         toSubmit.set("plugin_id", this.pluginId);
         var missing = this.formManager.serializeParametersInputs(this.infoPane.down("div.driver_form"), toSubmit, 'DRIVER_OPTION_');
         if(missing){
-            app.displayMessage("ERROR", MessageHash['conf.36']);
+            app.displayMessage("ERROR", MessageHash['boaconf.36']);
         }else{
             var conn = new Connexion();
             conn.setParameters(toSubmit);
@@ -122,6 +130,7 @@ Class.create("PluginEditor", AbstractEditor, {
             var xmlData = transport.responseXML;
             var params = XPathSelectNodes(xmlData, "//global_param");
             var values = XPathSelectNodes(xmlData, "//plugin_settings_values/param");
+            var additionalTabs = XPathSelectNodes(xmlData, "//config_tab");
             var documentation = XPathSelectSingleNode(xmlData, "//plugin_doc");
 
             var paramsValues = new Hash();
@@ -148,14 +157,15 @@ Class.create("PluginEditor", AbstractEditor, {
                 var hashedParams = this.formManager.parameterNodeToHash(params[i]);
                 driverParamsHash.push(hashedParams);
             }
+
             var form = new Element('div', {className:'driver_form'});
 
             if(documentation){
                 var docDiv = new Element('div', {style:'height:100%;'}).insert("<div class='documentation'>" + documentation.firstChild.nodeValue + "</div>");
                 docDiv.select('img').each(function(img){
                     img.setStyle({width:'220px'});
-                    img.setAttribute('src', 'plugins/'+ this.pluginId+'/'+img.getAttribute('src'));
-                });
+                    img.setAttribute('src', 'boa/plugins/'+ this.pluginId+'/'+img.getAttribute('src'));
+                }.bind(this));
                 this.docPane.insert({bottom:docDiv});
 
                 var pluginfo = docDiv.down("ul.pluginfo_list");
@@ -167,14 +177,43 @@ Class.create("PluginEditor", AbstractEditor, {
                 docDiv.down("ul.pluginfo_list").insert({before:new Element("div",{className:"innerTitle"}).update("Plugin Info")});
                 docDiv.down("ul.pluginfo_list").insert({after:new Element("div",{className:"innerTitle"}).update("Plugin Documentation")});
             }
-
             this.infoPane.insert({bottom:form});
             form.paneObject = this;
+            var $this = this;
+            //Add additional tabs for configuration
+            if(additionalTabs.length){
+                $A(additionalTabs).each(function (atab) {
+                    var template = XPathSelectSingleNode(atab, 'template');
+                    var handlerCode = XPathSelectSingleNode(atab, 'handler');
+                    var resources = XPathSelectNodes(atab, "resources");
+                    var pane = new Element("div");
+
+                    if (template){
+                        pane.update(template.firstChild.nodeValue);
+                    }
+
+                    if (resources.length){
+                        var resourcesManager = new ResourcesManager();
+                        for(var j=0;j<resources.length;j++){
+                            var child = resources[j];
+                            resourcesManager.loadFromXmlNode(child);
+                        }
+                        resourcesManager.load()
+                    }
+
+                    $this.tab.addTab(atab.getAttribute('label'), pane);
+
+                    if (handlerCode){
+                        handlerCode = '<script>'+handlerCode.firstChild.nodeValue+'</script>';
+                        handlerCode.evalScripts();
+                    }
+                });                
+            }
 
             if(driverParamsHash.size()){
                 this.formManager.createParametersInputs(form, driverParamsHash, true, (paramsValues.size()?paramsValues:null));
             }else{
-                form.update(MessageHash['conf.105']);
+                form.update(MessageHash['boaconf.105']);
             }
 
             if(form.SF_accordion){

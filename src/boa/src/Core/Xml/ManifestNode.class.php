@@ -316,7 +316,7 @@ class ManifestNode{
 
     /**
      * Pass an array of metadata and merge its content with the current metadata.
-     * @param array $metadata
+     * @param array $metadata 
      * @param bool $mergeValues
      * @return void
      */
@@ -386,7 +386,6 @@ class ManifestNode{
         }else{
             $this->urlParts = parse_url($this->_url);
         }
-
 		if(strstr($this->urlParts["scheme"], "app.")!==false){
 			$pServ = PluginsService::getInstance();
 			$this->_wrapperClassName = $pServ->getWrapperClassName($this->urlParts["scheme"]);

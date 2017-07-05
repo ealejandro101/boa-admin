@@ -141,7 +141,6 @@ function formatDate(dateObject, format){
 }
 
 function parseUrl(data) {
-  console.log(data);
 	var matches = $A();
     //var e=/((http|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+\.[^#?\s]+)(#[\w\-]+)?/;
     var detect=/(((boa\.)(\w+)):\/)?\/?([^:\/\s]+)((\/\w+)*\/)(.*)(#[\w\-]+)?/g; //aj xp -> boa
