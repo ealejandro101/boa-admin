@@ -70,11 +70,15 @@ Class.create("DcoManager", {
                     }
                 }
                 else{
+                    if (action.selectionContext.dir_before === undefined){
+                        action.selectionContext.dir_before = action.selectionContext.dir;
+                    }                        
                     if (/^\/[^\/]+\/(content|src)$/.test(userSelection.getUniqueFileName())){
                         action.selectionContext.dir = false;
                         action.hide();
                     }
                     else {
+                        action.selectionContext.dir = action.selectionContext.dir_before;
                         action.resetHide();
                     }
                 }
