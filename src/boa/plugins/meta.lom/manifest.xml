@@ -20,7 +20,7 @@
 	</client_settings>	
 	<server_settings>
 		<!--<param name="meta_file_name" type="string" label="CONF_MESSAGE[Meta File]" description="CONF_MESSAGE[Hidden file used inside folders to save meta data]" mandatory="true" default=".metadata"/>-->
-		<param name="dro_spec" type="select" label="CONF_MESSAGE[Digital Resource Specification]" description="CONF_MESSAGE[The LOM Specification to user for digital resources.]" choices="json_list:get_specs_list" mandatory="true" default=""/>
+		<param name="dro_spec" type="select" label="CONF_MESSAGE[Digital Resource Specification]" description="CONF_MESSAGE[The LOM Specification to user for digital resources.]" choices="json_list:get_specs_list|meta.lom" mandatory="true" default=""/>
 		<!--<param name="lom_meta_labels" type="string" replicationGroup="group1" label="CONF_MESSAGE[Meta Labels]" description="CONF_MESSAGE[Comma separated list of labels, be sure to define as many as fields!]" mandatory="true" default=""/>
 		<param name="lom_meta_visibility" type="string" replicationGroup="group1" label="CONF_MESSAGE[Columns visibility]" description="CONF_MESSAGE[Set default visibility for each columns. Either by columns, using commas, or one value that will be applied to all columns. Value can be 'visible' or 'hidden'.]" mandatory="false" default="visible"/>-->
 		<config_tab name="tab-specs" label="APP_MESSAGE[meta_lom.9]">
