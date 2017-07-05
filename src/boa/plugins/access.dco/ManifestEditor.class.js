@@ -55,7 +55,7 @@ Class.create("ManifestEditor", AbstractEditor, {
             values.set('dcotitle', this.manifest.title);
             values.set('dcotype', this.manifest.type_id);
             values.set('dcocontype', this.manifest.conexion_type);
-            values.set('externalurl', this.manifest.url);
+            values.set('dcocontype/externalurl', this.manifest.url);
             values.set('customicon', this.manifest.icon);
         }
 
