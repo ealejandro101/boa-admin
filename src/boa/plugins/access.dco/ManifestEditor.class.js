@@ -161,21 +161,12 @@ Class.create("ManifestEditor", AbstractEditor, {
                 defaultImage: 'gui.ajax/AppLogo250.png'
             })*/
         ];
-        /*var connexion = new Connexion();
-        connexion.addParameter('get_action', 'get_meta_specs');
-        connexion.onComplete = function(transport){
-            var specs = transport.responseJSON;
-            fields[TYPE_INDX]*/
-
-            var settings = { 
-                //specs: specs && specs.LIST || [],
-                fields: fields,
-                values: values
-            };/*
-            this.createEditor(settings);
-        }.bind(this);
-        connexion.sendAsync();*/
-            this.createEditor(settings);
+        var settings = { 
+            //specs: specs && specs.LIST || [],
+            fields: fields,
+            values: values
+        };
+        this.createEditor(settings);
     },
     createEditor: function(settings){
         this.updateHeader();

@@ -52,6 +52,23 @@
                   </div>
               </div>              
           ]]></clientForm>
+          <clientListener name="init"><![CDATA[
+            //DIGITAL_RESOURCE_OBJECT             
+            var action = app.getActionBar().getActionByName('edit_lom_meta');
+            if (action && !action.updating){
+              action.updating = true;
+              var connexion = new Connexion();
+              connexion.addParameter('get_action', 'get_spec_by_id');
+              connexion.addParameter('spec_id', 'DIGITAL_RESOURCE_OBJECT');
+              connexion.onComplete = function(transport){
+                var name = XPathSelectSingleNode(transport.responseXML.documentElement, '/spec/name');
+                MessageHash['meta_lom.1'] = name.textContent;
+                action.setLabel('meta_lom.1');
+                action.updating = false;
+              }.bind(this);
+              connexion.sendAsync();
+            }
+          ]]></clientListener>
         </processing>
     </action>     
   </actions>
