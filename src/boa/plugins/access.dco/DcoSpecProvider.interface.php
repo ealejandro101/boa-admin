@@ -56,7 +56,7 @@ interface DcoSpecProvider {
      * @param String $path
      * @param String $newDirName
      */
-    function defaultMetaFromSpec($node); 
+    function initMetaFromSpec($dir, $specId); 
     
     /**
      * Creates an empty file

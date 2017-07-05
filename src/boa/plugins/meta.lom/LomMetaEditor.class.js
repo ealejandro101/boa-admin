@@ -60,10 +60,8 @@ Class.create("LomMetaEditor", AbstractEditor, {
         this.updateHeader();
         this.tab = new SimpleTabs(this.oForm.down("#categoryTabulator"));
         var categories = XPathSelectNodes(spec, '//fields/*[@type="category"]');
-        console.log(1);
         var metadata = this._node.getMetadata().get("lommetadata");
         metadata = (metadata && metadata.evalJSON())||{};
-        console.log(2);
         $A(categories).each(function(cat){
             var pane = new Element("div");
             var catName = this.getMetaNodeTranslation(cat, 'meta.fields.');
@@ -356,9 +354,8 @@ Class.create("LomMetaEditor", AbstractEditor, {
             conn.setParameters(toSubmit);
             conn.setMethod("post");
             conn.onComplete = function(transport){
-                app.actionBar.parseXmlMessage(transport.responseXML);
-                //this.loadPluginConfig();
-                this._node.getMetadata().set('dcometadata', transport.responseText);
+                //app.actionBar.parseXmlMessage(transport.responseXML);
+                this._node.getMetadata().set('lommetadata', transport.responseText);
                 this.setClean();
             }.bind(this);
             conn.sendAsync();

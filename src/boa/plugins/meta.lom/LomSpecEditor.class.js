@@ -114,7 +114,7 @@ Class.create("LOMSpecEditor", {
         this.loadPluginConfig();*/
     },
 
-    loadPluginConfig : function(){
+    loadPluginConfig2 : function(){
         var $this = this;
         var params = new Hash();
         params.set("get_action", "get_specs_list");
@@ -123,12 +123,12 @@ Class.create("LOMSpecEditor", {
         connexion.setParameters(params);        
         connexion.onComplete = function(transport){
             console.log('getting response');
-            var xmlData = transport.responseXML;
+            var specs = transport.responseJSON;
         }.bind(this);
         connexion.sendAsync();
     },
 
-    loadPluginConfig2 : function(){
+    loadPluginConfig : function(){
         var $this = this;
         var params = new Hash();
         params.set("get_action", "get_plugin_manifest");

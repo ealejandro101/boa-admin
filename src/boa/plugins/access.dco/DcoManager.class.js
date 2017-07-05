@@ -59,7 +59,8 @@ Class.create("DcoManager", {
         if (!userSelection.isEmpty()){
             if (userSelection.isUnique()){
                 if (userSelection.hasMime(['dco'])){
-                    if (!/(delete|dcometa)/.test(actionName)){
+                    //console.log(JSON.stringify(userSelection));
+                    if (!/(delete|dcometa|editdco)/.test(actionName)){
                         action.selectionContext.dir = false;
                         action.hide();
                     }
@@ -82,7 +83,7 @@ Class.create("DcoManager", {
         else {
             var context = app.getContextNode();
             if (context.getMime() == 'dco' || context.getPath == "/"){                
-                if (!/(create|delete|dcometa)/.test(actionName)){
+                if (!/(create|delete|dcometa|editdco)/.test(actionName)){
                     action.selectionContext.dir = false;
                     action.hide();
                 }
@@ -101,24 +102,18 @@ if (!app.dcoManager){
 
 
 if (!app.dcoActionRefreshHandlerAssigned){
-    /*
-    document.observe('app:actions_refreshed', function(event){
-        console.log(app.getActionBar().getActionByName('share'));
-        var context = app.getContextNode();
-
-        if (context == null) return;
-
-        if (context.getMime() == "dco"){
-            var userSelection = app.getUserSelection();
-
-            if (!userSelection.isEmpty()){
-                $A(['delete','rename','copy','move','chmod','link','share','create']).each(function(action){
-                    //app.actionBar.getActionByName(action).hide();
-                });
+    var oneTimeHandler = function(event){
+        share = app.getActionBar().getActionByName('share');
+        if (share){
+            if (!share.context.allowedMimes){
+                share.context.allowedMimes = $A(['^dco']);
             }
+            else if (!share.context.allowedMimes.include('^dco')){
+                share.context.allowedMimes.push('^dco'); // = share.context.allowedMimes.toArray().push('^dco');
+            }
+            //Event.stopObserving(document, 'app:actions_refreshed', oneTimeHandler);
         }
-        //console.log('actions refreshed');
-        //console.log(event);
-    });*/
+    };
+    Event.observe(document, 'app:actions_refreshed', oneTimeHandler);
     app.dcoActionRefreshHandlerAssigned = true;
 }

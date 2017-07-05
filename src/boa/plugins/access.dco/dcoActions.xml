@@ -564,61 +564,58 @@
             <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
             <processing>
                 <clientCallback prepareModal="true"><![CDATA[
-                    var callback = function (settings) {                    
-                      modal.showDialogForm('Create', 'mkdco_form', function (oForm){
-                          var specsEl = oForm.down(".spec_selector");
-                          if (specsEl){
-                                var choices = '<option value="" selected="selected">'+MessageHash[321]+'</option>'
-                                for(var k in settings.specs) {
-                                    choices += '<option value="'+k+'">'+settings.specs[k]+'</option>';
-                                }
-                                specsEl.update(choices);
-                          }
-                      }, function(){
-                          var oForm = $(modal.getForm());
-                          var elementToCheck=(oForm['dcotitle']);
-                          if(app.getContextHolder().fileNameExists($(elementToCheck).getValue()))
-                          {
-                              alert(MessageHash[125]);
-                              return false;
-                          }                          
-                          app.actionBar.submitForm(oForm);
-                          hideLightBox(true);
-                          return false;
-                      });
+                    var userSelection = app.getUserSelection();
+                    var onLoad = function (oForm){
+                        var manifestEditor = new ManifestEditor(oForm);
+                        manifestEditor.show(userSelection);
                     };
-                    var conn = new Connexion();
-                    conn.addParameter('get_action', 'get_meta_specs');
-                    conn.onComplete = function(transport){
-                        var specs = transport.responseJSON;
-                        var settings = { specs: specs && specs.LIST || []};
-                        callback(settings);
-                    };
-                    conn.sendSync();
+                    var onSubmit = function(oForm){};
+                    modal.showDialogForm('', 'mkdco_form', onLoad, onSubmit, null, true, true);
                 ]]></clientCallback>
                 <clientForm id="mkdco_form"><![CDATA[
-                <div id="mkdco_form" action="mkdco" box_width="300">
-                  APP_MESSAGE["access_dco.create.long_label"]<br/>
-                  <div class="SF_element">
-                    <div class="SF_label" message_id="access_dco.dco_title">APP_MESSAGE[access_dco.dco_title] : </div><input name="dcotitle" type="text" size="120" class="dialogFocus SF_input"/>
-                  </div>
-                  <div class="SF_element">
-                    <div class="SF_label" message_id="access_dco.dco_type">APP_MESSAGE[access_dco.dco_type] : </div>
-                    <select class="SF_input spec_selector" name="dcotype">
-                      <option value="adaptative">APP_MESSAGE[access_dco.adaptative]</option>
-                      <option value="external" selected="selected">APP_MESSAGE[access_dco.external]</option>
-                    </select>
-                  </div>
-                  <div class="SF_element">
-                    <div class="SF_label" message_id="access_dco.dco_contype">APP_MESSAGE[access_dco.dco_contype] : </div>
-                    <select class="SF_input plugin_selector" name="dcocontype">
-                      <option value="adaptative">APP_MESSAGE[access_dco.adaptative]</option>
-                      <option value="external">APP_MESSAGE[access_dco.external]</option>
-                      <option value="local" selected="selected">APP_MESSAGE[access_dco.local]</option>
-                    </select>
-                  </div>
-                </div>
+                  <div id="mkdco_form" action="dcometa_form" class="tabbed_editor" box_width="70%" box_height="80%" box_resize="true" box_padding="0">
+                      <div class="editor_header">
+                          <div class="action_bar">
+                              <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
+                          </div>
+                          <span class="header_label"></span>
+                      </div>
+                      <div id="dco_manifest_tabs">
+                          <ul class="tabrow">
+                          </ul>
+                          <div class="tabpanes">
+                          </div>
+                      </div>
+                  </div>              
                 ]]></clientForm>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="editdco">
+            <gui text="access_dco.editdco" title="access_dco.editdco.title" src="edit_dco.png" iconClass="icon-new-dco" accessKey="access_dco.editdco.access_key" hasAccessKey="true">
+                <context selection="true" dir="" recycle="hidden" actionBar="true"
+                         contextMenu="true" infoPanel="true" actionBarGroup="change" inZip="false"></context>
+                <selectionContext dir="" file="false" recycle="false" unique="true" allowedMimes="dco"/>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection = app.getUserSelection();
+                    var onLoad = function (oForm){
+                        var manifestEditor = new ManifestEditor(oForm);
+                        manifestEditor.show(userSelection);
+                    };
+                    var onSubmit = function(oForm){};
+                    modal.showDialogForm('', 'mkdco_form', onLoad, onSubmit, null, true, true);
+                ]]></clientCallback>
                 <clientListener name="contextChange"><![CDATA[
                     app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
                 ]]>          
@@ -1116,6 +1113,7 @@
                 <serverCallback methodName="switchAction"></serverCallback>
             </processing>
         </action>
+        <!--
         <action name="share">
             <processing>
                 <clientListener name="contextChange"><![CDATA[
@@ -1128,6 +1126,7 @@
                 </clientListener>
             </processing>
         </action>
+        -->
         <action name="dcometa">
             <gui text="access_dco.dcometa" title="access_dco.dcometa.title" src="dcometa.png" iconClass="icon-dco-editmeta" accessKey="access_dco.dcometa.access_key" hasAccessKey="true">
                 <context selection="true" dir="" recycle="hidden" actionBar="true"
@@ -1269,48 +1268,68 @@
                 </div>
                 ]]></html>
             </infoPanel>
-      <infoPanel mime="generic_dir" attributes="basename,icon,formated_date">
-        <messages>
-          <message key="files_string" id="280"/>
-          <message key="author_string" id="access_dco.dco_author"/>
-        </messages>
-        <html><![CDATA[
-          <div style="padding:10px;">
-            <big style="font-weight: bold; font-size: 14px; color:#79f;display: block; text-align:center; padding-bottom:20px;">#{title}</big>
-            <div><b>#{author_string}</b> : #{author}</div>
-          </div>
-        ]]></html>
-      </infoPanel>
-            <infoPanel mime="dco" attributes="title,author,type,icon">
+          <infoPanel mime="generic_dir" attributes="basename,icon,formated_date">
+            <messages>
+                <message key="name_string" id="133"/>
+                <message key="modif_string" id="138"/>
+                <message key="header_string" id="342"/>
+            </messages>
+                <html><![CDATA[
+                    <div class="folderImage infoPanelImagePreview">
+                        <img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
+                    </div>
+                    <div class="infoPanelAllMetadata">
+                        <div>
+                            <div class="panelHeader infoPanelGroup"><span class="icon-info" data-action="no-action"></span> #{header_string}</div>
+                            <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
+                                <tr>
+                                    <td class="infoPanelLabel">#{name_string}</td>
+                                    <td class="infoPanelValue">#{basename}</td>
+                                </tr>
+                                <tr class="even">
+                                    <td class="infoPanelLabel">#{modif_string}</td>
+                                    <td class="infoPanelValue">#{formated_date}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                ]]></html>
+          </infoPanel>
+            <infoPanel mime="dco" attributes="title,author,type,icon,status">
                 <messages>
                     <message key="title_string" id="access_dco.dco_title"/>
-          <message key="type_string" id="access_dco.dco_type"/>
-          <message key="author_string" id="access_dco.dco_author"/>
+                    <message key="type_string" id="access_dco.dco_type"/>
+                    <message key="author_string" id="access_dco.dco_author"/>
                     <message key="header_string" id="access_dco.object_info_label"/>
+                    <message key="status_string" id="access_dco.dco_status"/>
                 </messages>
                 <html><![CDATA[
-          <div class="folderImage infoPanelImagePreview">
-            <img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
-          </div>
-          <div class="infoPanelAllMetadata">
-            <div>
-              <div class="panelHeader infoPanelGroup">
-                <span class="icon-info" data-action="no-action"></span> #{header_string}
-              </div>
-              <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
-                <tr>
-                  <td class="infoPanelLabel">#{title_string}</td>
-                  <td class="infoPanelValue">#{title}</td>
-                </tr>
-                <tr class="even">
-                    <td class="infoPanelLabel">#{type_string}</td>
-                    <td class="infoPanelValue">#{type}</td>
-                </tr>
-                <tr>
-                  <td class="infoPanelLabel">#{author_string}</td>
-                  <td class="infoPanelValue">#{author}</td>
-                </tr>
-              </table>
+                    <div class="folderImage infoPanelImagePreview">
+                        <img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
+                    </div>
+                    <div class="infoPanelAllMetadata">
+                        <div>
+                            <div class="panelHeader infoPanelGroup">
+                                <span class="icon-info" data-action="no-action"></span> #{header_string}
+                            </div>
+                            <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">
+                                <tr>
+                                    <td class="infoPanelLabel">#{title_string}</td>
+                                    <td class="infoPanelValue">#{title}</td>
+                                </tr>
+                                <tr class="even">
+                                    <td class="infoPanelLabel">#{type_string}</td>
+                                    <td class="infoPanelValue">#{type}</td>
+                                </tr>
+                                <tr>
+                                    <td class="infoPanelLabel">#{author_string}</td>
+                                    <td class="infoPanelValue">#{author}</td>
+                                </tr>
+                                <tr class="even">
+                                    <td class="infoPanelLabel">#{status_string}</td>
+                                    <td class="infoPanelValue">#{status}</td>
+                                </tr>
+                          </table>
                         </div>
                     </div>
                 ]]></html>

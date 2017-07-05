@@ -80,7 +80,6 @@ Class.create("FormManager", {
         var replicableGroups = $H({});
 		parametersDefinitions.each(function(param){		
 			var label = param.get('label');
-            if (label)
 			if(param.get('labelId')){
 				label = MessageHash[param.get('labelId')];
 			}
@@ -283,7 +282,7 @@ Class.create("FormManager", {
                 }
                 if(!choices) choices = [];
                 var multiple = param.get("multiple") ? "multiple='true'":"";
-                element = '<select class="SF_input" name="'+name+'" data-mandatory="'+(mandatory?'true':'false')+'" '+multiple+'>';
+                element = '<select class="SF_input" name="'+name+'" data-mandatory="'+(mandatory?'true':'false')+'" '+multiple+disabledString+'>';
                 if(!mandatory && !multiple) element += '<option value=""></option>';
                 for(var k=0;k<choices.length;k++){
                     var cLabel, cValue;

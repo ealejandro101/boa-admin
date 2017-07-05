@@ -164,8 +164,8 @@ Class.create("PluginEditor", AbstractEditor, {
                 var docDiv = new Element('div', {style:'height:100%;'}).insert("<div class='documentation'>" + documentation.firstChild.nodeValue + "</div>");
                 docDiv.select('img').each(function(img){
                     img.setStyle({width:'220px'});
-                    img.setAttribute('src', 'plugins/'+ this.pluginId+'/'+img.getAttribute('src'));
-                });
+                    img.setAttribute('src', 'boa/plugins/'+ this.pluginId+'/'+img.getAttribute('src'));
+                }.bind(this));
                 this.docPane.insert({bottom:docDiv});
 
                 var pluginfo = docDiv.down("ul.pluginfo_list");

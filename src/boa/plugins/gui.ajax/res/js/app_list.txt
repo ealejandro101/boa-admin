@@ -22,7 +22,6 @@ js/lib/scriptaculous/src/slider.js
 js/lib/prototype/proto.scroller.js
 js/lib/prototype/carousel.js
 js/lib/prototype/accordion.js
-js/lib/prototype/event.simulate.js
 js/lib/moment/moment-with-locales.js
 js/lib/webfx/xtree.js
 js/lib/webfx/customxtree.js

@@ -166,6 +166,7 @@ class DcoExplorer{
     public function getDcoManifestNode($manifestPath, $nonPatchedPath=null) {
         $meta = $this->parseDcoManifest($manifestPath);
         $meta["APP_mime"] = "dco";
+        $meta["manifest"] = json_encode($meta);
         $title = $meta["title"];
         $node = new ManifestNode(dirname($manifestPath), $meta);
         $node->setLabel($title);
@@ -176,13 +177,15 @@ class DcoExplorer{
         $content = file_get_contents($manifestPath);
         $json = json_decode($content, true);
 
-        $specs = $this->_driver->loadSpecs();
-        $id_col = array_column($specs, 'id');
+        $specs = $this->_driver->metaPlugin->loadSpecs();
         $meta = array();        
         foreach ($json as $key => $value){
             if ($key == "type"){
-                $type = array_search($value, $id_col);
-                $meta[$key] = !is_null($type)?$specs[$type]["name"]:$value;
+                $meta[$key] = array_key_exists($value, $specs)?$specs[$value]:$value;
+                $meta[$key."_id"] = $value;
+            }
+            else if ($key == 'status'){
+                $meta[$key] = $this->_driver->mess["access_dco.".$value];
                 $meta[$key."_id"] = $value;
             }
             else{

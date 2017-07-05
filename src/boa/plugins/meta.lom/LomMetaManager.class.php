@@ -411,6 +411,32 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         echo isSet($data)?$data:"{}";
     }
 
+    private function parseMetaToJson($node){
+        if ($node->hasChildNodes() && !$node->hasAttribute("required")){
+            $keys = array();
+            foreach ($node->childNodes as $childNode) {
+                if ($childNode->nodeType == XML_TEXT_NODE) continue;
+                if ($childNode->nodeType == XML_CDATA_SECTION_NODE) continue;
+                $output = $this->parseMetaToJson($childNode);
+                if ((is_array($output) && count($output) <= 0) ||
+                    (is_string($output) && $output == null)
+                    ){
+                    continue; //Ignore empty results
+                }
+                $keys[$childNode->nodeName] = $output;
+            }
+            return $keys;
+        }
+        else {
+            if ($node->hasAttribute("enabled") && $node->attributes["enabled"]->nodeValue){
+                $output = ($node->hasAttribute("defaultValue") ? $node->getAttribute("defaultValue") : "");
+            }
+            else
+                $output = null;
+        }
+        return $output;
+    }
+
     /* DcoSpecProvider Implementation */
     public function loadSpecs(){
         $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs";
@@ -455,7 +481,26 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         return false;
     }
 
-    public function defaultMetaFromSpec($node){
+    public function initMetaFromSpec($dir, $specId){
+        //Create metadata file based on specs defaults
+        $spec = $this->getSpecById($specId, false);
+        if (false === $spec){
+            throw new \Exception("Unable to find DCO specification '{$specId}'");
+        }
+        $xpath = new \DOMXPath($spec);
+        $fields = $xpath->query("/spec/fields");
+
+        if ($fields == null) {
+            throw new \Exception('Unable to load metadata setup');
+        }
+
+        $fields = $fields->item(0);
+        $meta = $this->parseMetaToJson($fields);
+
+        $error = $this->accessDriver->createEmptyFile($dir, "/.metadata", json_encode($meta));
+        if(isSet($error)){
+            throw new ApplicationException($error);
+        }
     }
 
     public function getMetaEditorClass(){

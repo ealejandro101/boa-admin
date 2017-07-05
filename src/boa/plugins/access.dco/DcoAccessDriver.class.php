@@ -518,6 +518,30 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 }
                 break;            
       
+            case "editdco";
+                $selection = new UserSelection();
+                $selection->initFromHttpVars();
+                $currentFile = $selection->getUniqueFile();
+                $urlBase = $this->getResourceUrl($currentFile);
+                Utils::parseStandardFormParameters($httpVars, $meta, null, "DCO_", array());
+
+                $manifest = new \stdClass();
+                $manifest->title = $meta["dcotitle"];
+                $manifest->type = $meta["dcotype"];
+                $contype = $meta["dcocontype"];
+                $manifest->conexion_type = $contype["group_switch_value"];
+                $manifest->url = $manifest->conexion_type == 'external'? $contype["externalurl"] : "";
+                $manifest->version = $meta["version"];
+                $manifest->author = $meta["author"];
+                $manifest->status = $meta["status"];
+                $manifest->id = $meta["dcoid"];
+                $this->updateManifest($urlBase, $manifest);
+
+                if(!isSet($nodesDiffs)) $nodesDiffs = $this->getNodesDiffArray();
+                $nodesDiffs["UPDATE"][$currentFile] = $this->getExplorer()->getDcoManifestNode($urlBase."/.manifest");
+                //HTMLWriter::charsetHeader("application/json");
+                //print(json_encode($manifest));
+                break;
             case "mkdco";
                 $messtmp="";
                 $id = $this->getUniqueId($dir); //$httpVars["dcotitle"]
@@ -529,7 +553,6 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 if(isSet($error)){
                     throw new ApplicationException($error);
                 }
-
                 //Create src and content directories
                 $error = $this->mkDir($dir."/".$dirname, "src");
                 if(isSet($error)){
@@ -540,16 +563,22 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                     throw new ApplicationException($error);
                 }
                 //Create the Manifest file
+                Utils::parseStandardFormParameters($httpVars, $meta, null, "DCO_", array());
                 $manifest = new \stdClass();
-                $manifest->title = $httpVars["dcotitle"];
-                $manifest->type = $httpVars["dcotype"];
-                $manifest->conexion_type = $httpVars["dcocontype"];
+                $manifest->title = $meta["dcotitle"];
+                $manifest->type = $meta["dcotype"];
+                $contype = $meta["dcocontype"];
+                $manifest->conexion_type = $contype["group_switch_value"];
                 $manifest->author = AuthService::getLoggedUser()->id;
-                $manifest->url = "http://"; //ToDo: Construct URL for object
+                $manifest->url = $manifest->conexion_type == 'external'? $contype["externalurl"] : "";
+                $manifest->status = $meta["status"];
                 $manifest->version = "1.0";
                 $manifest->id = $id;
 
                 $this->createManifest($dir."/".$dirname, $manifest);
+                if ($this->metaPlugin != null){
+                    $this->metaPlugin->initMetaFromSpec($dir."/".$dirname, $meta["dcotype"]);
+                }
 
                 $messtmp.=$mess["access_dco.create.success.pre"]." '".SystemTextEncoding::toUTF8($manifest->title)."' ".$mess["access_dco.create.success.pos"]." ".$id;
                 //if($dir=="") {$messtmp.="/";} else {$messtmp.= SystemTextEncoding::toUTF8($dir);}
@@ -1889,8 +1918,18 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         return $specs;
     }
     
+    private function updateManifest($dir, $manifest){
+        $filename="/.manifest";
+        $content = json_encode($manifest, JSON_PRETTY_PRINT);
+
+        $fp = fopen($dir.$filename, "w");
+        if($fp !== false){
+            @fwrite($fp, $content, strlen($content));
+            @fclose($fp);
+        }
+    }
+
     private function createManifest($dir, $manifest){
-        $messtmp="";
         $filename="/.manifest";
         $content = json_encode($manifest, JSON_PRETTY_PRINT);
 
@@ -1898,62 +1937,6 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         if(isSet($error)){
             throw new ApplicationException($error);
         }
-
-        //Create metadata file based on specs defaults
-        $specs = $this->loadSpecs();
-        //var_dump($specs);
-        //var_dump($manifest->type);
-        $spec = array_search($manifest->type, array_column($specs, 'id'));
-        //var_dump($manifest);
-        if (is_null($spec)){
-            throw new \Exception("Unable to find DCO specification '{$manifest->type}'");
-        }
-        $spec = $specs[$spec];
-        $specsPath = $spec["path"];
-        $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs/$specsPath";
-
-        $xml = new \DOMDocument();
-        $xml->load($specsPath);
-        $xpath = new \DOMXPath($xml);
-        $fields = $xpath->query("/spec/fields");
-
-        if ($fields == null) {
-            throw new \Exception('Unable to load metadata setup');
-        }
-
-        $fields = $fields->item(0);
-        $meta = $this->parseMetaToJson($fields);
-
-        $error = $this->createEmptyFile($dir, "/.metadata", json_encode($meta, JSON_PRETTY_PRINT));
-        if(isSet($error)){
-            throw new ApplicationException($error);
-        }
-    }
-
-    private function parseMetaToJson($node){
-        if ($node->hasChildNodes() && !$node->hasAttribute("required")){
-            $keys = array();
-            foreach ($node->childNodes as $childNode) {
-                if ($childNode->nodeType == XML_TEXT_NODE) continue;
-                if ($childNode->nodeType == XML_CDATA_SECTION_NODE) continue;
-                $output = $this->parseMetaToJson($childNode);
-                if ((is_array($output) && count($output) <= 0) ||
-                    (is_string($output) && $output == null)
-                    ){
-                    continue; //Ignore empty results
-                }
-                $keys[$childNode->nodeName] = $output;
-            }
-            return $keys;
-        }
-        else {
-            if ($node->hasAttribute("enabled") && $node->attributes["enabled"]->nodeValue){
-                $output = ($node->hasAttribute("defaultValue") ? $node->getAttribute("defaultValue") : "");
-            }
-            else
-                $output = null;
-        }
-        return $output;
     }
 
     private function getUniqueId($dir){

@@ -217,10 +217,13 @@ Class.create("InfoPanel", AppPane, {
         this.updateTitle(uniqNode.getLabel());
         var isFile = false;
         if(uniqNode) isFile = uniqNode.isLeaf();
-        this.evalTemplateForMime((isFile?'generic_file':'generic_dir'), uniqNode);
-        
+
         var extension = getMimeType(uniqNode);
         var metadata = uniqNode.getMetadata();
+        if (extension != 'dco'){
+            this.evalTemplateForMime((isFile?'generic_file':'generic_dir'), uniqNode);
+        }
+        
         this.registeredMimes.each(function(pair){
             "use strict";
             if(pair.key == extension){
