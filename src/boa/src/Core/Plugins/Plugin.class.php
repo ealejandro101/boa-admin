@@ -114,7 +114,7 @@ class Plugin implements \Serializable{
         if(!$check) return $d;
         if(!is_dir($d)){
             $res = @mkdir($d, 0755, true);
-            if(!$res) throw new Exception("Error while creating plugin directory for ".$this->getId());
+            if(!$res) throw new \Exception("Error while creating plugin directory for ".$this->getId());
         }
         return $d;
     }
@@ -124,7 +124,7 @@ class Plugin implements \Serializable{
         if(!$check) return $d;
         if(!is_dir($d)){
             $res = @mkdir($d, 0755, true);
-            if(!$res) throw new Exception("Error while creating plugin cache directory for ".$this->getId());
+            if(!$res) throw new \Exception("Error while creating plugin cache directory for ".$this->getId());
         }
         return $d;
     }
@@ -352,7 +352,7 @@ class Plugin implements \Serializable{
         $this->manifestDoc = new \DOMDocument();
         try{
             $this->manifestDoc->load($file);
-        }catch (Exception $e){
+        }catch (\Exception $e){
             throw $e;
         }
         $id = $this->manifestDoc->documentElement->getAttribute("id");
