@@ -2,5 +2,3 @@
 *
 #Except this
 !.gitignore
-!plugins
-!cache
