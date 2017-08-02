@@ -2,37 +2,50 @@
 |      Installation Instructions      |
  ------------------------------------------------
  
- 1 SYSTEM REQUIREMENTS & QUICK INSTALL
+ 1 SYSTEM REQUIREMENTS
  
- To be able to run this system on your webserver, it must have PHP 7 or higher
- running, and you must have an FTP access to upload the files on the server. 
- That's all! No database is needed.
+	To be able to run this system on your webserver, it must have PHP 7 or higher running,
+	and you must have an FTP access to upload the files on the server. 
+	
+	That's all! No database is needed.
  
- If you want to use it as fast as possible, just change the ADMIN_PASSWORD in 
- the conf/conf.php file and upload on your server. 
+ 2 QUICK INSTALL
  
- Check that the "data" and its children folders are writeable by apache user.
+ 	a. Download or clone boa-project source to a folder the installation server 
+ 	(git clone https://github.com/boa-project/boa.git [installation-folder])
+ 	
+ 	b. Make sure [installation-folder]/src/data and its children folders are writeable
+ 	by apache user (e.g. chown www [installation-folder]/src/data)
+ 	
+ 	c. Locate [installation-folder]/src/boa/conf/bootstrap_context.php file and change
+ 	ADMIN_PASSWORD to the password you want to set for the admin user on first run, default value is admin.
+ 	
+ 	d. Locate [installation-folder]/src/boa/conf/bootstrap_repositories.php,
+ 	make sure all the paths for the configured repositories exists. 
+ 	
+ 	e. Create a virtual directory pointing to [installation-folder]/src and, 
+ 	reload apache then navigate to the configure virtual directory on your preferred 
+ 	browser. Follow the installation wizard.
+ 	
+ 	For further configuration, read below.
  
- For further configuration, read below.
+ 2 FURTHER CONFIGURATION
  
- 2 CONFIGURATION
- 
- After unzipping the file into a local folder on your computer, use a text editor 
- to edit the configuration file located in conf/conf.php
+	Refer [installation-folder]/src/boa/conf/bootstrap_conf.php file for additional configuration options.
  
  2.1 WORKSPACES
     
-    A workspace is a folder that you want to browse/modify with
-    the application. A workspace does not have to be inside the installation
-    folder, since you set it with an absolute path on your server.
+	A workspace is a folder that you want to browse/modify with the application. 
+	A workspace does not have to be inside the installation folder, since you set
+	it with an absolute path on your server.
+   
+	You can set as many workspaces as you want : you will be able to switch from one
+	to another when logged in, and you can precisely set rights for each
+	users (see paragraph 2.2) on each workspace.
     
-    You can set as many workspaces as you want : you will be able to switch from one to 
-    another when logged in, and you can precisely set rights for each users (see 
-    paragraph 2.2) on each workspace.
-    
-    By default, the basic workspace is set to the "files" folder inside the installation folder. 
+    By default, the basic workspace is set to the "files" folder inside the [installation-folder]/src/data. 
     You can change it to whatever you want, using absolute path 
-    like : /home/login/www/location, or /C:/myfolder/ on windows.
+    like : /home/login/www/location, or /C:/myfolder/ on windows by editing the [installation-folder]/src/boa/conf/bootstrap_repositories.php file.
     
     Note that a workspace does not have to be accessible to the internet, The application will
     work as a "proxy" between your files and the web.
@@ -83,13 +96,4 @@
 	managing plugin.
     								
     				 			
- 2.3 FURTHER CONFIGURATION   
- 
-	. $max_caracteres	=>		Max number of characters for file and directory names.
-	. $upload_max_number=>		Allowed simultaneous upload to the server.
-	. $webmaster_email	=>		The email of the webmaster, not used for the moment
-	. $use_https		=>		Set this to 'true' if you are working on https connexion. This will not
-								set up an secure server! This is here to fix a bug with Internet Explorer
-								when working on a secure server.
- 
  	

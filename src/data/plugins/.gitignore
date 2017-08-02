@@ -1,0 +1,8 @@
+#Ignore all files
+*
+#Except this
+!.gitignore
+!.htaccess
+!auth.serial
+!conf.serial
+!boot.conf
