@@ -1123,6 +1123,9 @@ class Utils
     static function runTests(&$outputArray, &$testedParams)
     {
         // At first, list folder in the tests subfolder
+        if (!is_dir(APP_TESTS_FOLDER)){
+            return; //Do Nothing if the tests folder does not exists
+        }
         chdir(APP_TESTS_FOLDER);
         $files = glob('*.php');
 
