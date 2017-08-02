@@ -428,7 +428,6 @@ class AuthService
             $rootRole = new Role("ROOT_ROLE");
             $rootRole->setLabel("Root Role");
             $rootRole->setAutoApplies(array("standard"));
-            die('bootSequence');
             foreach (ConfService::getRepositoriesList("all") as $repositoryId => $repoObject)
             {
                 if($repoObject->isTemplate) continue;

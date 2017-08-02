@@ -41,6 +41,7 @@ use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Xml\ManifestNode;
 use BoA\Plugins\Action\Share\PublicletCounter;
+use BoA\Plugins\Core\Log\Logger;
 
 
 

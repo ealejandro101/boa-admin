@@ -97,11 +97,7 @@ $REPOSITORIES[1] = array(
 				"meta_labels"		=> "Tags",
         "meta_visibility"   => "hidden"
 			),
-      "meta.lom" => array(
-        "lom_meta_fields" => "LOM 1",
-        "lom_meta_labels" => "LOM Field 1",
-        "lom_meta_visibility" => "visible"
-      ),
+      "meta.lom" => array(),
       "meta.filehasher"   => array(),
       "meta.watch"        => array(),
       "meta.exif"   => array(
