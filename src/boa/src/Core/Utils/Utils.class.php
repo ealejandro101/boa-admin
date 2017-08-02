@@ -1111,7 +1111,7 @@ class Utils
             $ALL_ROWS[$result][$item["name"]] = $item["info"];
         }
 
-        include(APP_INSTALL_PATH."/core/tests/startup.phtml");
+        include(APP_TESTS_FOLDER."/startup.phtml");
     }
 
     /**
@@ -1127,7 +1127,7 @@ class Utils
             return; //Do Nothing if the tests folder does not exists
         }
         chdir(APP_TESTS_FOLDER);
-        $files = glob('*.php');
+        $files = glob('*.test.php');
 
         $outputArray = array();
         $testedParams = array();
@@ -1136,7 +1136,7 @@ class Utils
         {
             require_once($file);
             // Then create the test class
-            $testName = str_replace(".php", "", substr($file, 5));
+            $testName = "BoA\\Tests\\".str_replace(".test.php", "", $file);
             if(!class_exists($testName)) continue;
             $class = new $testName();
 
@@ -1172,13 +1172,13 @@ class Utils
 
         // NOW TRY THE PLUGIN TESTS
         chdir(APP_PLUGINS_FOLDER);
-        $files = glob('access.*/test.*.php');
+        $files = glob('access.*/*.test.php');
         foreach ($files as $file)
         {
             require_once($file);
             // Then create the test class
             list($accessFolder, $testFileName) = explode("/", $file);
-            $testName = str_replace(".php", "", substr($testFileName, 5) . "Test");
+            $testName = str_replace(".test.php", "", $testFileName);
             $class = new $testName();
             foreach ($repoList as $repository) {
                 if($repository->isTemplate || $repository->getParentId() != null) continue;
