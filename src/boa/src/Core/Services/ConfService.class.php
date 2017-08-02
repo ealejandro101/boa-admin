@@ -219,7 +219,6 @@ class ConfService
      */
     public static function getAuthDriverImpl(){
         if(isSet(self::$tmpAuthStorageImpl)) {
-            var_dump(self::$tmpAuthStorageImpl);
             return self::$tmpAuthStorageImpl;
         }
         return PluginsService::getInstance()->getPluginById("core.auth")->getAuthImpl();
