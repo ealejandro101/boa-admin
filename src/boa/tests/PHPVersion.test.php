@@ -39,7 +39,7 @@ defined('APP_EXEC') or die( 'Access not allowed');
  */
 class PHPVersion extends AbstractTest
 {
-    function PHPVersion() { parent::AbstractTest("PHP version", "Minimum required version is PHP 5.3.0"); }
+    function __construct() { parent::__construct("PHP version", "Minimum required version is PHP 5.3.0"); }
     function doTest() 
     { 
         $version = phpversion(); 

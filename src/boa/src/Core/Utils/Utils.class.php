@@ -1111,7 +1111,7 @@ class Utils
             $ALL_ROWS[$result][$item["name"]] = $item["info"];
         }
 
-        include(APP_INSTALL_PATH."/core/tests/startup.phtml");
+        include(APP_TESTS_FOLDER."/startup.phtml");
     }
 
     /**
