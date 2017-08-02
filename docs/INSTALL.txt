@@ -14,14 +14,14 @@
  	a. Download or clone boa-project source to a folder the installation server 
  	(git clone https://github.com/boa-project/boa.git [installation-folder])
  	
- 	b. Make sure [installation-folder]/src/data and its children folders are writeable
- 	by apache user (e.g. chown www [installation-folder]/src/data)
- 	
- 	c. Locate [installation-folder]/src/boa/conf/bootstrap_context.php file and change
+ 	b. Locate [installation-folder]/src/boa/conf/bootstrap_context.php file and change
  	ADMIN_PASSWORD to the password you want to set for the admin user on first run, default value is admin.
  	
- 	d. Locate [installation-folder]/src/boa/conf/bootstrap_repositories.php,
+ 	c. Locate [installation-folder]/src/boa/conf/bootstrap_repositories.php,
  	make sure all the paths for the configured repositories exists. 
+ 	
+ 	d. Make sure [installation-folder]/src/data and its children folders are writeable
+ 	by apache user (e.g. chown -R www [installation-folder]/src/data)
  	
  	e. Create a virtual directory pointing to [installation-folder]/src and, 
  	reload apache then navigate to the configure virtual directory on your preferred 
