@@ -658,6 +658,18 @@ div.oneFieldForm input.SF_input{
     background: white !important;
 }
 
+div.formToolbar {
+    min-height: 30px;
+    border-bottom: solid 1px #ccc;
+    padding: 4px;
+}
+
+div.formToolbar > div {
+    float: right;
+    width: auto;
+    display: inline-table;
+}
+
 /********************/
 /* PROGRESS BAR     */
 /********************/
