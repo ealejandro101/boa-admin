@@ -1951,12 +1951,12 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         return $this->_explorer;
     }
 
-    public function loadSpecs(){
+    /*public function loadSpecs(){
         if ($this->_specs != null){
             return $this->_specs;
         }
 
-        $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs";
+        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
 
         if (!is_dir($specsPath)){
             mkdir($specsPath, 0755, true);
@@ -1977,7 +1977,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         }
         $this->_specs = $specs;
         return $specs;
-    }
+    }*/
     
     private function updateManifest($dir, $manifest){
         $filename="/.manifest";

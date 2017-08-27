@@ -464,7 +464,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
     /* DcoSpecProvider Implementation */
     public function loadSpecs(){
-        $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs";
+        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
 
         if (!is_dir($specsPath)){
             mkdir($specsPath, 0755, true);
@@ -485,7 +485,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
     }
     
     public function getSpecById($id, $print=true){
-        $specsPath = APP_DATA_PATH."/plugins/lom.meta/specs";
+        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
 
         if ($id === 'DIGITAL_RESOURCE_OBJECT') {
             $id = $this->options["dro_spec"];
