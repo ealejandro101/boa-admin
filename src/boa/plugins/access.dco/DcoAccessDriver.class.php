@@ -819,6 +819,47 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
             case "ls":
                 $this->getExplorer()->getAll($dir, $httpVars);
             break;
+
+            //------------------------------------
+            //  GET CUSTOM ICON
+            //------------------------------------
+            case "get_custom_dco_icon" :
+
+                if(isSet($httpVars["tmp_file"])){
+                    $file = Utils::getAppTmpDir()."/".Utils::securePath($httpVars["tmp_file"]);
+                    if(isSet($file)){
+                        header("Content-Type:image/png");
+                        readfile($file);
+                    }
+                }else if(isSet($httpVars["binary_id"])){
+                    $this->loadBinary(array(), $httpVars["binary_id"]);
+                }
+            break;
+
+            //------------------------------------
+            //  SAVE CUSTOM ICON
+            //------------------------------------
+            case "store_custom_dco_icon" :
+
+                if(count($fileVars)){
+                    $keys = array_keys($fileVars);
+                    $boxData = $fileVars[$keys[0]];
+                    $err = Utils::parseFileDataErrors($boxData);
+                    if($err != null){
+
+                    }else{
+                        $rand = substr(md5(time()), 0, 6);
+                        $tmp = $rand."-". $boxData["name"];
+                        @move_uploaded_file($boxData["tmp_name"], Utils::getAppTmpDir()."/". $tmp);
+                    }
+                }
+                if(isSet($tmp) && file_exists(Utils::getAppTmpDir()."/".$tmp)) {
+                    print('<script type="text/javascript">');
+                    print('parent.formManagerHiddenIFrameSubmission("'.$tmp.'");');
+                    print('</script>');
+                }
+
+                break;
         }
 
         $xmlBuffer = "";
@@ -1363,7 +1404,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         }
         $oldNode = new ManifestNode($old);
         Controller::applyHook("node.before_path_change", array(&$oldNode));
-        rename($old,$new);
+        self::myRename($old, $new);
         Controller::applyHook("node.change", array($oldNode, new ManifestNode($new), false));
     }
 
@@ -1537,7 +1578,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
             if($move){
                 Controller::applyHook("node.before_path_change", array(new ManifestNode($realSrcFile)));
                 if(file_exists($destFile)) $this->deldir($destFile);
-                $res = rename($realSrcFile, $destFile);
+                $res = self::myRename($realSrcFile, $destFile);
             }else{
                 $dirRes = $this->dircopy($realSrcFile, $destFile, $errors, $succFiles);
             }
@@ -1554,7 +1595,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
             if($move){
                 Controller::applyHook("node.before_path_change", array(new ManifestNode($realSrcFile)));
                 if(file_exists($destFile)) unlink($destFile);
-                $res = rename($realSrcFile, $destFile);
+                $res = self::myRename($realSrcFile, $destFile);
                 Controller::applyHook("node.change", array(new ManifestNode($realSrcFile), new ManifestNode($destFile), false));
             }else{
                 try{
@@ -1702,7 +1743,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 elseif (!is_dir("$location/$file"))
                 {
                     if(file_exists("$location/$file")){
-                        unlink("$location/$file"); 
+                        self::myUnlink("$location/$file"); 
                     }
                     unset($file);
                 }
@@ -1831,7 +1872,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 if( $docAge > $purgeTime){
                     $node = new ManifestNode($dirName."/".$file);
                     Controller::applyHook("node.before_path_change", array($node));
-                    unlink($dirName."/".$file);
+                    self::myUnlink($dirName."/".$file);
                     Controller::applyHook("node.change", array($node));
                     Logger::logAction("Purge", array("file" => $dirName."/".$file));
                     print(" - Purging document : ".$dirName."/".$file."\n");
@@ -1882,6 +1923,26 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
     /****
     Utilitary methods
     ****/
+    private static function myUnlink($path){
+        $dirname = dirname($path);
+        $filename = basename($path);
+        unlink($file);
+        if (file_exists("$dirname/.$filename.metadata")){
+            unlink("$dirname/.$filename.metadata");
+        }
+    }
+
+    private static function myRename($old, $new){
+        $res = rename($old,$new);
+        $old_metadata = dirname($old)."/.".basename($old).".metadata";
+        if (file_exists($old_metadata)){
+            $new_metadata = dirname($new)."/.".basename($new).".metadata";
+            //echo($old_metadata . "::" . $new_metadata);
+            rename($old_metadata, $new_metadata);
+        }
+        return $res;
+    }
+
     private function getExplorer(){
         if (is_null($this->_explorer)){
             require_once(APP_PLUGINS_FOLDER."/access.dco/DcoExplorer.class.php");

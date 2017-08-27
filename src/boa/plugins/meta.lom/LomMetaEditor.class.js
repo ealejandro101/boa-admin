@@ -29,6 +29,7 @@
 "use strict";
 Class.create("LomMetaEditor", AbstractEditor, {
     _node: null,
+    _optionSetsCache: null,
     tab: null,
     spec: null,
     formManager: null,
@@ -37,6 +38,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
         $super(oFormObject, {fullscreen:false});
         this.oForm = oFormObject;
         this.formManager = this.getFormManager();
+        this._optionSetsCache = {};
     },
     show: function(selection){
         var node = this._node = selection.getNode(0);
@@ -55,7 +57,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
         }.bind(this);
         connexion.sendAsync();
     },
-    createSpecEditor: function(spec){
+    createSpecEditor: function(spec){        
         this.spec = spec;
         this.updateHeader();
         this.tab = new SimpleTabs(this.oForm.down("#categoryTabulator"));
@@ -82,6 +84,17 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 this.formManager.destroyForm(frm);    
             }.bind(this));            
         }.bind(this));
+
+        this.oForm.observe('form:language_changing', function (e){
+            if (e.memo.current == 'none') {
+                var missing = this.formManager.serializeParametersInputs(this.element.down("#categoryTabulator"), new Hash(), 'DCO_');
+                if(missing){
+                    app.displayMessage("ERROR", MessageHash['meta_lom.missing_fields']);
+                    Event.stop(e);
+                }
+            }
+        }.bind(this));
+
         this.setClean();
     },
     updateHeader: function(){
@@ -133,7 +146,6 @@ Class.create("LomMetaEditor", AbstractEditor, {
      * @param form Element|null Target form where to insert the meta entry fields
      */
     prepareMetaFieldEntry: function(field, container, level, dicprefix, metadata, values){
-        try {
         var type = field.getAttribute('type');
         var enabled = field.getAttribute('enabled');
         if (enabled !== 'true') return;
@@ -179,11 +191,6 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 values.set(name, metadata[fname]);
             }
             return $H(Object.extend(options, this.getControlSettings({type:type, meta:field, text: label})));
-        }
-        }
-        catch(err){
-            console.log(err);
-            return null;
         }
     },
 
@@ -244,6 +251,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 ctrl.update(choices);
                 break;
         }
+
         return ctrl;
     },
 
@@ -257,10 +265,17 @@ Class.create("LomMetaEditor", AbstractEditor, {
         settings.readonly = options.meta.getAttribute('editable') !== "true";
         settings.defaultValue = "";
         settings.label = options.text;
+        settings.translatable = options.meta.getAttribute('translatable') === 'true';
 
+        if (settings.translatable){
+            settings.languages = this.getOptionSet('languages');
+        }
         switch(options.type){
             case 'checkbox':
-                settings.type = 'checkbox'
+                settings.type = 'checkbox';
+                break;
+            case 'keywords':
+                settings.type = 'keywords';
                 break;
             case 'text':
             case 'string':
@@ -287,12 +302,16 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 settings.multiple = options.meta.getAttribute('multiple') === "true";
                 var choices = [];
                 var optionsetname=options.meta.getAttribute('optionset-name');                
-                var optionset = XPathSelectSingleNode(this.spec, '//optionsets/optionset[@name="'+optionsetname+'"]');
+                var optionset = this.getOptionSet(optionsetname);
+                //var optionset = XPathSelectSingleNode(this.spec, '//optionsets/optionset[@name="'+optionsetname+'"]');
 
                 if (optionset){
-                    $A(optionset.getAttribute('values').split('|')).each(function(choice){
-                        choices.push(choice+"|"+this.getMetaTranslation(choice, 'optionset.'+optionsetname));
-                    }.bind(this));
+                    $A(Object.keys(optionset)).each(function(choice){
+                        choices.push(choice+"|"+optionset[choice]);
+                    });
+                    //$A(optionset.getAttribute('values').split('|')).each(function(choice){
+                    //    choices.push(choice+"|"+this.getMetaTranslation(choice, 'optionset.'+optionsetname));
+                    //}.bind(this));
                 }
                 settings.choices = choices;
                 break;
@@ -362,5 +381,19 @@ Class.create("LomMetaEditor", AbstractEditor, {
         }
 
 
+    },
+    getOptionSet: function(optionsetname){
+        if (this._optionSetsCache[optionsetname]){
+            return this._optionSetsCache[optionsetname];
+        }
+        //var optionsetname=options.meta.getAttribute('optionset-name');
+        var optionset = XPathSelectSingleNode(this.spec, '//optionsets/optionset[@name="'+optionsetname+'"]');
+        var choices = [];
+        if (optionset){
+            $A(optionset.getAttribute('values').split('|')).each(function(choice){
+                choices[choice] = this.getMetaTranslation(choice, 'optionset.'+optionsetname);// .push({key: choice, value: this.getMetaTranslation(choice, 'optionset.'+optionsetname)});
+            }.bind(this));
+        }
+        return (this._optionSetsCache[optionsetname] = choices);
     }
 });

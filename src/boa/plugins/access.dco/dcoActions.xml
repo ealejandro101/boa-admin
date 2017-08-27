@@ -1180,6 +1180,16 @@
                 <serverCallback methodName="switchAction"></serverCallback>
             </processing>
         </action>
+        <action name="get_custom_dco_icon">
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        <action name="store_custom_dco_icon">
+            <processing>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
     </actions>
     <client_configs>
     <component_config className="FoldersTree">

@@ -69,6 +69,7 @@
 				</optionsets>
 				<fields>
 					<general type="category">
+			      <title type="text"/>
 						<identifier type="composed">
 							<catalog type="optionset" optionset-name="catalogs"/>
 							<entry type="text"/>

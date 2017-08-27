@@ -30,7 +30,7 @@
  * Description : main access point of the application, this script is called by any Ajax query.
  * Will dispatch the actions on the plugins.
  */
-namespace BoA\core\http;
+namespace BoA\Core\Http;
 
 use BoA\Core\Http\Controller;
 use BoA\Core\Services\AuthService;

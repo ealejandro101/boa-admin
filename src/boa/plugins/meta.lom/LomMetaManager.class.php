@@ -290,6 +290,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             return false;
         }
         $type = $specField->getAttribute("type");
+        $translatable = $specField->getAttribute("translatable");
         if ($type == "composed"){
             $isCollection = $specField->getAttribute("collection") == "true";
             if ($isCollection){
@@ -339,6 +340,24 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             }
             return $ret;
         }
+        else if ($type == 'keywords'){
+            $key = $parambasename."_".$specField->nodeName.$colrow;
+            if (array_key_exists($key, $meta)){
+                if ($translatable) {
+                    $translations = json_decode($meta[$key]);
+                    $value = array();
+                    foreach (get_object_vars($translations) as $lang => $langValue) {
+                        $value[$lang] = is_array($langValue) ? $langValue : array_map('trim', explode(',', $langValue));
+                    }
+                    $parent[$specField->nodeName] = $value;
+                }
+                else {
+                    $parent[$specField->nodeName] = array_map('trim', explode(',', $meta[$key]));
+                }
+                return true;
+            }
+            return false;
+        }
         else{
             $specType = $specXpath->query("//types/type[@name='$type']");
             if ($specType->length > 0){
@@ -358,7 +377,12 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             }
             $key = $parambasename."_".$specField->nodeName.$colrow;
             if (array_key_exists($key, $meta)){
-                $parent[$specField->nodeName] = $meta[$key];
+                if ($translatable){
+                    $parent[$specField->nodeName] = json_decode($meta[$key]);
+                }
+                else {
+                    $parent[$specField->nodeName] = $meta[$key];
+                }
                 return true;
             }
             return false;
@@ -397,8 +421,9 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             }
         }
 
-        $target = is_dir($this->accessDriver->urlBase.$currentFile)?"/.metadata":
+        $target = is_dir($this->accessDriver->urlBase.$currentFile)?$currentFile."/.metadata":
             dirname($currentFile)."/.".basename($currentFile).".metadata";
+
         $target = $this->accessDriver->urlBase.$target;
         $fp = fopen($target, "w");
         if($fp !== false){
@@ -496,7 +521,6 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
         $fields = $fields->item(0);
         $meta = $this->parseMetaToJson($fields);
-
         $error = $this->accessDriver->createEmptyFile($dir, "/.metadata", json_encode($meta));
         if(isSet($error)){
             throw new ApplicationException($error);

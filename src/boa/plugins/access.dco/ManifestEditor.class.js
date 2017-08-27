@@ -146,8 +146,8 @@ Class.create("ManifestEditor", AbstractEditor, {
                 descriptionId: 'access_dco.dco_icon.help',
                 mandatory: 'false',
                 editable: true,
-                uploadAction: 'store_binary_temp',
-                loadAction: 'get_global_binary_param',
+                uploadAction: 'store_custom_dco_icon',
+                loadAction: 'get_custom_dco_icon',
                 defaultImage: 'boa/plugins/gui.ajax/res/themes/umbra/images/mimes/64/dco.png'
             })/*, $H({
                 name: 'estado',

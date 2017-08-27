@@ -556,6 +556,9 @@ $mess=array(
 "475" => "Ficheros compartidos con todos los usuarios",
 "476" => "Su espacio de trabajo personal",
 "477" => "Select a file or folder to see its details here",
+"478" => "Agregar",
+"479" => "Remover",
+"480" => "Sin lenguaje"
 /* END SENTENCE */
 );
 ?>

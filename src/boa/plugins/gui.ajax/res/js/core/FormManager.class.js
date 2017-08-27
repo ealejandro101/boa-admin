@@ -32,7 +32,9 @@
  */
 Class.create("FormManager", {
 
+    _lang: null,
     modalParent : null,
+    availableLanguages: [],    
 
 	initialize: function(modalParent){
         if(modalParent) this.modalParent = modalParent;
@@ -44,6 +46,10 @@ Class.create("FormManager", {
             res.push(this.parameterNodeToHash(node));
         }.bind(this));
         return res;
+    },
+
+    setAvailableLanguages: function (availableLanguages){
+        this.availableLanguages = availableLanguages;
     },
 
 	parameterNodeToHash : function(paramNode){
@@ -78,6 +84,7 @@ Class.create("FormManager", {
         var b=document.body;
         var groupDivs = $H({});
         var replicableGroups = $H({});
+
 		parametersDefinitions.each(function(param){		
 			var label = param.get('label');
 			if(param.get('labelId')){
@@ -89,6 +96,11 @@ Class.create("FormManager", {
 			var name = param.get('name');
 			var type = param.get('type');
 			var desc = param.get('description');
+            var translatable = param.get('translatable');
+            var languages = null;
+            if (translatable){
+                languages = param.get('languages') || [];
+            }
 
             if (name == 'btnaddnew') {
                 console.log(type);
@@ -123,12 +135,25 @@ Class.create("FormManager", {
                 commonAttributes['disabled'] = 'true';
             }
 			if(type == 'string' || type == 'integer' || type == 'array' || type == "hidden"){
-                element = new Element('input', Object.extend({type: (type == "hidden" ? 'hidden' : 'text'), className:'SF_input', value:defaultValue}, commonAttributes));
+                if (type == 'string' && translatable) {
+                    element = this.createTranslatable(type, defaultValue, languages, commonAttributes);
+                }
+                else {
+                    element = new Element('input', Object.extend({type: (type == "hidden" ? 'hidden' : 'text'), className:'SF_input', value:defaultValue}, commonAttributes));
+                }
             }
             else if (type == 'date' || type == 'datetime'){
                 element = new Element('div', { className: 'input-group date', id: name })
                     .insert(new Element('input', Object.extend({type: 'text', className: 'form-control'}, commonAttributes)).store('date', defaultValue))
                     .insert('<span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar"></span></span>');
+            }
+            else if(type == 'keywords'){
+                if (defaultValue && defaultValue.join){
+                    defaultValue = defaultValue.join(',');    
+                }
+                
+                element = translatable ? this.createTranslatable(type, defaultValue, languages, commonAttributes) :
+                    new Element('input', Object.extend({type: 'text', className:'SF_input', value:defaultValue}, commonAttributes));
             }
             else if (type == 'duration'){
                 element = new Element('div');
@@ -145,24 +170,32 @@ Class.create("FormManager", {
             }
             else if (type == 'composed'){
                 element = new Element('div')
-                try{
                 $A(param.get('childs')).each(function (child){
                     var childName = child.get('name');
                     var childType = child.get('type');
                     var childMandatory = child.get('mandatory') && child.get('mandatory') == 'true';
+                    var childTranslatable = child.get('translatable') === 'true';
 
                     var inputGroup = new Element('div', { className: 'input-group', id:name+'.'+childName});
                     element.insert(inputGroup);
                     inputGroup.insert('<span class="input-group-addon">'+child.get('label')+(childMandatory?'*':'')+'</span>');
 
                     if (childType == 'string' || childType == "integer" || childType == 'email') {
-                        inputGroup.insert(new Element('input', { 
-                            type: 'text',
-                            className: 'form-control',
-                            name: name+"."+childName,
-                            value: (defaultValue && defaultValue[childName])||'',
-                            'data-mandatory': childMandatory?'true':'false'
-                        }));
+                        if (childType == 'string' && childTranslatable){
+                            inputGroup.insert(this.createTranslatable('childstring', 
+                                (defaultValue && defaultValue[childName]), 
+                                languages,
+                                { name: name+"."+childName, 'data-mandatory': childMandatory?'true':'false'}));
+                        }
+                        else {
+                            inputGroup.insert(new Element('input', { 
+                                type: 'text',
+                                className: 'form-control',
+                                name: name+"."+childName,
+                                value: (defaultValue && defaultValue[childName])||'',
+                                'data-mandatory': childMandatory?'true':'false'
+                            }));                        
+                        }
                     }
                     if (childType == 'date' || childType == 'datetime') {
                         inputGroup.addClassName('date')
@@ -175,10 +208,6 @@ Class.create("FormManager", {
                             .insert('<span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar"></span></span>');
                     }
                 });
-                }
-                catch(err){
-                    console.log(err);
-                }
             }
             else if(type == 'button'){
 
@@ -248,8 +277,14 @@ Class.create("FormManager", {
                 element.pe.onTimerEvent();
 
             }else if(type == 'textarea'){
-                if(defaultValue) defaultValue = defaultValue.replace(new RegExp("__LBR__", "g"), "\n");
-                element = '<textarea class="SF_input" style="height:70px;" data-ctrl_type="'+type+'" data-mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
+                if (translatable) {
+                    if (!/^\s*$/.test(disabledString)) commonAttributes['disabled'] = true;
+                    element = this.createTranslatable(type, defaultValue, languages, commonAttributes);
+                }
+                else {
+                    if(defaultValue) defaultValue = defaultValue.replace(new RegExp("__LBR__", "g"), "\n");
+                    element = '<textarea class="SF_input" style="height:70px;" data-ctrl_type="'+type+'" data-mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
+                }
 		    }else if(type == 'password'){
 				element = '<input type="password" autocomplete="off" data-ctrl_type="'+type+'" data-mandatory="'+(mandatory?'true':'false')+'" name="'+name+'" value="'+defaultValue+'"'+disabledString+' class="SF_input">';
 			}else if(type == 'boolean'){
@@ -527,6 +562,9 @@ Class.create("FormManager", {
             }.bind(this));
         }
 
+        //Create form toolbar
+        this.createFormToolbar(form);
+
         this.createDatePickers(form);
 
         if(!groupDivs.size()) return;
@@ -577,6 +615,78 @@ Class.create("FormManager", {
             });
         }        
 	},
+
+    createFormToolbar: function(form){
+        if (!form.down('[data-language]')) return;
+        var formToolbar = new Element('div', { name: '_form_toolbar_container', className:'formToolbar'});
+        var languageSelect = new Element('select', { name: '_translateto_lang'})
+        formToolbar.insert(new Element('div').insert(languageSelect));
+        var languages = this.availableLanguages;
+        if (!languages || languages.length == 0){
+            languages = window._bootstrap.parameters.get("availableLanguages");
+        }
+        var choices = [];
+        choices.push('<option value="none" selected="selected">'+MessageHash[480]+'</option>');
+        $A(Object.keys(languages)).each(function(key){
+            choices.push('<option value="'+key+'">'+languages[key]+'</option>');
+        });
+        languageSelect.update(choices.join(''));
+        this._lang = 'none';
+        languageSelect.observe("change", function(e){
+            "use strict";
+            if (this._ignoreLanguageChanging || !this.changeInputLanguage(form, e.target.value)) {
+                Event.stop(e);
+                languageSelect.setValue(this._lang);
+            }
+            this._ignoreLanguageChanging = true;
+            form.up('form').select('select[name="_translateto_lang"]').each(function(el){el.setValue(e.target.value)});
+            delete this._ignoreLanguageChanging;
+        }.bind(this));
+
+        form.insert({top:formToolbar});
+    },
+
+    changeInputLanguage: function(form, lang) {
+        if (Event.fire(form.up('form'), 'form:language_changing', { current: this._lang, next: lang }).stopped) return false;
+        $A(form.up('form').select('[data-language]')).each(function (item){
+            var data = item.retrieve('translations');
+            data[this._lang] = item.getValue ? item.getValue() : (item.value || '');
+            item.store('translations', data);
+            item.setValue('');
+            item.setValue(data[lang]);
+            item.setAttribute('data-language', lang);
+        }.bind(this));
+        this._lang = lang;        
+        return true;
+    },
+
+    createTranslatable: function(type, value, languages, httpAttributes){
+        var defaultLang = null;
+        var translations = [];
+        var defaultValue = value ? value['none'] : '';
+
+        switch(type){
+            case 'keywords':
+            case 'string':
+                element = new Element('input', Object.extend({type: 'text', className:'SF_input', value:defaultValue}, httpAttributes));
+                break;
+            case 'childstring':
+                element = new Element('input', Object.extend({type: 'text', className: 'form-control', value: defaultValue}, httpAttributes));
+                break;
+            case 'textarea':
+                if(defaultValue) defaultValue = defaultValue.replace(new RegExp("__LBR__", "g"), "\n");
+                var dtype = httpAttributes['data-ctrl_type'];
+                var mandatory = httpAttributes['data-mandatory'];
+                //var disabledString = httpAttributes['disabled'];
+                //element = '<textarea class="SF_input" style="height:70px;" data-ctrl_type="'+dtype+'" data-mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
+                element = new Element('textarea', Object.extend({ className: 'SF_input', style: 'height:70px;'}, httpAttributes)).update(defaultValue);
+                break;
+        }
+
+        element.store('translations', value || {});
+        element.writeAttribute("data-language", 'none');
+        return element;
+    },
 
     createUploadForm : function(modalParent, imgSrc, param){
         if(this.modalParent) modalParent = this.modalParent;
@@ -681,12 +791,24 @@ Class.create("FormManager", {
 		var missingMandatory = $A();
         var checkboxesActive = false;
 		form.select('input,textarea').each(function(el){
+            var dataLanguage = el.getAttribute('data-language');
 			if(el.type == "text" || el.type == "hidden" || el.type == "password" || el.nodeName.toLowerCase() == 'textarea'){
-				if(el.getAttribute('data-mandatory') == 'true' && el.value == '' && !el.disabled){
+                var oValue = dataLanguage ? el.retrieve('translations') || {} : el.value;
+                if (dataLanguage) oValue[dataLanguage] = el.value;
+                var value = dataLanguage ? (oValue['none'] || '') : oValue;
+				if(el.getAttribute('data-mandatory') == 'true' && value == '' && !el.disabled){
 					missingMandatory.push(el);
 				}
-                if (/(date|datetime)/i.test(el.getAttribute('data-ctrl_type'))){
+                var data_type = el.getAttribute('data-ctrl_type');
+                if (/(date|datetime)/i.test(data_type)){
                     parametersHash.set(prefix+el.name, el.retrieve('date'));
+                }
+                /*else if (data_type == 'keywords'){
+                    parametersHash.set(prefix+el.name, el.value.split(','));
+                }*/
+                else if (dataLanguage) {
+                    el.store('translations', oValue);
+                    parametersHash.set(prefix+el.name, JSON.stringify(oValue));
                 }
                 else {
 				    parametersHash.set(prefix+el.name, el.value);
