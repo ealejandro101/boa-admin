@@ -63,12 +63,12 @@ define("APP_DOCS_FOLDER", APP_INSTALL_PATH."/boa/docs");
 define("APP_COREI18N_FOLDER", APP_PLUGINS_FOLDER."/core.boa/i18n");
 define("TESTS_RESULT_FILE", APP_CACHE_DIR."/diag_result.php");
 define("APP_TESTS_FOLDER", APP_INSTALL_PATH."/boa/tests");
-define("INITIAL_ADMIN_PASSWORD", "admin");
+define("INITIAL_ADMIN_PASSWORD", "Admin_123");
 define("SOFTWARE_UPDATE_SITE", "https://github.com/boa-project");
 // Startup admin password (used at first creation). Once
 // The admin password is created and his password is changed,
 // this config has no more impact.
-define("ADMIN_PASSWORD", "admin");
+define("ADMIN_PASSWORD", "Admin_123");
 // For a specific distribution, you can specify where the
 // log files will be stored. This should be detected by log.* plugins
 // and used if defined. See bootstrap_plugins.php default configs for
@@ -76,7 +76,7 @@ define("ADMIN_PASSWORD", "admin");
 // define("APP_FORCE_LOGPATH", "/var/log/application/");
 // DEBUG OPTIONS
 define("APP_CLIENT_DEBUG"  ,   true);
-define("APP_SERVER_DEBUG"  ,   false);
+define("APP_SERVER_DEBUG"  ,   true);
 define("APP_SKIP_CACHE"    ,   true);
 
 //require(APP_BIN_FOLDER."/compat.php");
