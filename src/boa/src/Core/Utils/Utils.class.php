@@ -883,7 +883,7 @@ class Utils
      *
      * @return string Indented version of the original JSON string.
      */
-    function prettyPrintJSON($json) {
+    static function prettyPrintJSON($json) {
 
         $result      = '';
         $pos         = 0;
