@@ -1,2 +1,2 @@
 # BoA
-Banco de objectos para el aprendizaje - Learning objects store
+Banco de Objetos para el Aprendizaje - Learning objects store
