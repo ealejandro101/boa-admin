@@ -22,7 +22,7 @@ if (!isset($_SERVER['PHP_AUTH_USER'])  || $_SERVER["PHP_AUTH_USER"] != $apiusr |
  * Include basic configuration files required to start BoA app
  */
 include_once("base.conf.php");
-include_once("boa/src/core/utils/polyfills.php"); //ToDo: Is this the rigth way to do this?
+include_once("boa/src/Core/Utils/polyfills.php"); //ToDo: Is this the rigth way to do this?
 
 use BoA\Core\Http\ApiRouter;
 
