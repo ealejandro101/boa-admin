@@ -115,6 +115,7 @@ Class.create("FormManager", {
             if(param.get('groupId')){
                 group = MessageHash[param.get('groupId')];
             }
+
 			var mandatory = false;
 			if(param.get('mandatory') && param.get('mandatory')=='true') mandatory = true;
 
@@ -131,6 +132,7 @@ Class.create("FormManager", {
                 'data-ctrl_type'        : type,
                 'data-mandatory'   : (mandatory?'true':'false')
             };
+
             if(disabled || param.get('readonly')){
                 commonAttributes['disabled'] = 'true';
             }
@@ -319,6 +321,11 @@ Class.create("FormManager", {
                 var multiple = param.get("multiple") ? "multiple='true'":"";
                 element = '<select class="SF_input" name="'+name+'" data-mandatory="'+(mandatory?'true':'false')+'" '+multiple+disabledString+'>';
                 if(!mandatory && !multiple) element += '<option value=""></option>';
+                var groupOpened = false;
+                var selected;
+                if (param.get("multiple")){
+                    selected = Object.isArray(defaultValue) ? defaultValue : defaultValue.split(",");
+                }
                 for(var k=0;k<choices.length;k++){
                     var cLabel, cValue;
                     var cSplit = choices[k].split("|");
@@ -326,14 +333,25 @@ Class.create("FormManager", {
                     if(cSplit.length > 1 ) cLabel = cSplit[1];
                     else cLabel = cValue;
                     var selectedString = '';
-                    if(param.get("multiple")){
-                        $A(defaultValue.split(",")).each(function(defV){
-                            if(defV == cValue) selectedString = ' selected';
-                        });
-                    }else{
-                        selectedString = (defaultValue == cValue ? ' selected' : '');
+                    if (/^_grp_/.test(cValue)){
+                        if (groupOpened) {
+                            element += '</optgroup>';    
+                        }
+                        element += '<optgroup label="'+cLabel+'">';
                     }
-                    element += '<option value="'+cValue+'"'+selectedString+'>'+cLabel+'</option>';
+                    else {
+                        if(param.get("multiple")){
+                            $A(selected).each(function(defV){
+                                if(defV == cValue) selectedString = ' selected';
+                            });
+                        }else{
+                            selectedString = (defaultValue == cValue ? ' selected' : '');
+                        }
+                        element += '<option value="'+cValue+'"'+selectedString+'>'+cLabel+'</option>';
+                    }                    
+                }
+                if (groupOpened) {
+                    element += '</optgroup>';    
                 }
                 element += '</select>';
             }else if(type == "image" && param.get("uploadAction")){
@@ -501,9 +519,12 @@ Class.create("FormManager", {
                     if (param.get('replicatable') !== null && param.get('replicatable') !== undefined){
                         replicatable = param.get('replicatable');
                     }
-                    repGroup = new Element("div", {id:"replicable_"+repGroupName, className:'SF_replicableGroup', "data-replicatable":replicatable?'true':'false'});                    
+                    var groupRequired = param.get('groupRequired');
+                    groupRequired = (groupRequired === null || groupRequired === undefined || groupRequired);
+                    var groupFixed = param.get('groupFixed'); 
+                    repGroup = new Element("div", {id:"replicable_"+repGroupName, className:'SF_replicableGroup', "data-replicatable":replicatable?'true':'false'}).update('<div class="SF_Content" data-required="'+groupRequired+'" data-fixed="'+groupFixed+'"/>');
                 }
-                repGroup.insert(div);
+                repGroup.down('.SF_Content').insert(div);
                 replicableGroups.set(repGroupName, repGroup);
                 div = repGroup;
             }
@@ -534,19 +555,36 @@ Class.create("FormManager", {
             replicableGroups.each(function(pair){
                 var repGroup = pair.value;
                 var replicatable = repGroup.getAttribute('data-replicatable');
-                if (replicatable === null || replicatable === 'true'){                    
-                    var replicationButton = new Element("a", {className:'SF_replication_Add', title:'Replicate this group'}).update("&nbsp;").observe("click", function(event){
-                        this.replicateRow(repGroup,  1, form, null, $(event.target).up('.SF_replicableGroup'));    
-                    }.bind(this));
-                    repGroup.insert({bottom:replicationButton});
+                var contentPane = repGroup.down('.SF_Content');
+                var groupRequired = !(contentPane.getAttribute('data-required') === 'false');
+                var groupFixed = (contentPane.getAttribute('data-fixed') === 'true');
+                var valuesLike = values && values.keys().filter(function(key) { return key.replace(pair.key+'.', '') != key}).length > 0;
+                if (replicatable === null || replicatable === 'true'){
+                    if (!groupFixed){
+                        var replicationButton = new Element("a", {className:'SF_replication_Add', title:'Replicate this group'}).update("&nbsp;").observe("click", function(event){
+                            this.replicateRow(repGroup,  1, form, null, $(event.target).up('.SF_replicableGroup'));    
+                        }.bind(this));
+                        repGroup.insert({bottom:replicationButton});
+                        if (!groupRequired && valuesLike){
+                            var removeButton = new Element('a', {className:'SF_replication_Remove', title:'Remove this group'})
+                                .update('&nbsp;')
+                                .observe('click', function(){
+                                    if(form.paneObject) $continue = form.paneObject.notify('before_remove_replicated_row', repGroup);
+                                    contentPane.hide();
+                                    removeButton.stopObserving('click');
+                                    removeButton.remove();
+                                    if(form.paneObject) form.paneObject.notify('after_remove_replicated_row', repGroup);
+                                });            
+                            repGroup.insert(removeButton);
+                        }
+                    }
                     repGroup.insert({bottom:new Element('div', {className:'SF_rgClear'})});
                 }
-                if(values){
+                if(values){ //There is data
                     var hasReplicates = true;
                     var replicIndex = 1;
                     var lastRow = repGroup;
                     while(hasReplicates){
-                        //hasReplicates = false;
                         var repInputs = repGroup.select('input,select,textarea');
                         if(!repInputs.length) break;
                         repInputs.each(function(element){
@@ -557,6 +595,15 @@ Class.create("FormManager", {
                             lastRow = this.replicateRow(repGroup, 1, form, values, lastRow);
                             replicIndex++;
                         }
+                    }
+
+                    if (!groupRequired && !valuesLike){
+                        contentPane.hide();
+                    }
+                }
+                else {
+                    if (!groupRequired){
+                        contentPane.hide();
                     }
                 }
             }.bind(this));
@@ -793,10 +840,12 @@ Class.create("FormManager", {
 		form.select('input,textarea').each(function(el){
             var dataLanguage = el.getAttribute('data-language');
 			if(el.type == "text" || el.type == "hidden" || el.type == "password" || el.nodeName.toLowerCase() == 'textarea'){
+                if(el.up('.SF_Content') && !el.up('.SF_Content').visible()) return; //Ignore non required collections
                 var oValue = dataLanguage ? el.retrieve('translations') || {} : el.value;
                 if (dataLanguage) oValue[dataLanguage] = el.value;
                 var value = dataLanguage ? (oValue['none'] || '') : oValue;
-				if(el.getAttribute('data-mandatory') == 'true' && value == '' && !el.disabled){
+				if(el.getAttribute('data-mandatory') == 'true' 
+                    && value == '' && !el.disabled){
 					missingMandatory.push(el);
 				}
                 var data_type = el.getAttribute('data-ctrl_type');
@@ -912,6 +961,27 @@ Class.create("FormManager", {
 	 */
 	replicateRow: function(templateRow, number, form, values, lastRow){
         if(form.paneObject) form.paneObject.notify('before_replicate_row', templateRow);
+        var contentPane = lastRow.down('.SF_Content');
+        var isFixed = contentPane.getAttribute('data-fixed') === 'true';
+        if (!contentPane.visible()){
+            templateRow.select('input', 'select', 'textarea').each(function(el) { el.setValue('')});
+            if (!isFixed){
+                var removeButton = new Element('a', {className:'SF_replication_Remove', title:'Remove this group'})
+                    .update('&nbsp;')
+                    .observe('click', function(){
+                        if(form.paneObject) $continue = form.paneObject.notify('before_remove_replicated_row', templateRow);
+                        contentPane.hide();
+                        removeButton.stopObserving('click');
+                        removeButton.remove();
+                        if(form.paneObject) form.paneObject.notify('after_remove_replicated_row', templateRow);
+                    });            
+                lastRow.insert(removeButton);
+            }
+            contentPane.show();
+            return;
+        }
+
+
         var repIndex = templateRow.getAttribute('data-replication-index');
         if(repIndex === null){
             repIndex = 0;
@@ -942,32 +1012,31 @@ Class.create("FormManager", {
 
             if (lastRow) {
                 lastRow.insert({after: tr});
-                if(tr.select('.SF_replication_Add').length){
-                    tr.select('.SF_replication_Add').invoke("remove");
+                if (!isFixed){
+                    if(tr.select('.SF_replication_Add').length){
+                        tr.select('.SF_replication_Add').invoke("remove");
+                    }
+
+                    tr.insert(lastRow.select('.SF_replication_Add')[0]);                
                 }
-                tr.insert(lastRow.select('.SF_replication_Add')[0]);
             }
             else {
                 templateRow.insert({after:tr});
             }
 
-
-            /*if(index == number - 1){
-                if(templateRow.select('.SF_replication_Add').length){
-                    tr.insert(templateRow.select('.SF_replication_Add')[0]);
-                }
-            }*/
-            var removeButton = new Element('a', {className:'SF_replication_Remove', title:'Remove this group'})
-                .update('&nbsp;')
-                .observe('click', function(){
-                    if(form.paneObject) $continue = form.paneObject.notify('after_remove_replicated_row', tr);
-                    if(tr.select('.SF_replication_Add').length){
-                        tr.previous('.SF_replicableGroup').insert(tr.select('.SF_replication_Add')[0]);
-                    }
-                    tr.remove();
-                    if(form.paneObject) form.paneObject.notify('after_remove_replicated_row', tr);
-                });
-            tr.insert(removeButton);
+            if (!isFixed){
+                var removeButton = new Element('a', {className:'SF_replication_Remove', title:'Remove this group'})
+                    .update('&nbsp;')
+                    .observe('click', function(){
+                        if(form.paneObject) $continue = form.paneObject.notify('before_remove_replicated_row', tr);
+                        if(tr.select('.SF_replication_Add').length){
+                            tr.previous('.SF_replicableGroup').insert(tr.select('.SF_replication_Add')[0]);
+                        }
+                        tr.remove();
+                        if(form.paneObject) form.paneObject.notify('after_remove_replicated_row', tr);
+                    });
+                tr.insert(removeButton);
+            }
             this.createDatePickers(tr);
             if(form.paneObject) form.paneObject.notify('after_replicate_row', tr);
             lastRow = tr;

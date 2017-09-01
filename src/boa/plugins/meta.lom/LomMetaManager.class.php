@@ -291,25 +291,34 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         }
         $type = $specField->getAttribute("type");
         $translatable = $specField->getAttribute("translatable");
-        if ($type == "composed"){
+        $isContainer = $type == "container";
+        if ($type == "composed" || $isContainer){
             $isCollection = $specField->getAttribute("collection") == "true";
+            $paramprefix = $isContainer ? $parambasename : $parambasename."_".$specField->nodeName;
             if ($isCollection){
-                $parent[$specField->nodeName] = array();
+                if ($isContainer){
+                    $target = &$parent;
+                }
+                else {
+                    $target = array();
+                    $parent[$specField->nodeName] = &$target;
+                }
+                
                 $itemsFound = true;
                 $index = 0;
                 while($itemsFound){
                     $colrow = $index>0?"_$index":"";
                     $newObj = array();
                     foreach ($specField->childNodes as $child) {
-                        if ($child->nodeType == XML_TEXT_NODE) continue;
-                        if ($child->nodeType == XML_CDATA_SECTION_NODE) continue;
-                        $itemsFound = $this->readSpecFieldToJson($child, $specXpath, $newObj, $parambasename."_".$specField->nodeName, $meta, $colrow);
+                        if ($child->nodeType != XML_ELEMENT_NODE) continue;
+                        //if ($child->nodeType == XML_CDATA_SECTION_NODE) continue;
+                        $itemsFound = $this->readSpecFieldToJson($child, $specXpath, $newObj, $paramprefix, $meta, $colrow);
                         if (!itemsFound){
                             break;
                         }
                     }
                     if ($itemsFound){
-                        $parent[$specField->nodeName][] = $newObj;
+                        $target[] = $newObj;
                         $index++;
                     }
                 }
@@ -317,9 +326,9 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             else{
                 $newObj = $parent[$specField->nodeName] = array();
                 foreach ($specField->childNodes as $child) {
-                    if ($child->nodeType == XML_TEXT_NODE) continue;
-                    if ($child->nodeType == XML_CDATA_SECTION_NODE) continue;
-                    $this->readSpecFieldToJson($child, $specXpath, $newObj, $parambasename."_".$specField->nodeName.$colrow, $meta);
+                    if ($child->nodeType != XML_ELEMENT_NODE) continue;
+                    //if ($child->nodeType == XML_CDATA_SECTION_NODE) continue;
+                    $this->readSpecFieldToJson($child, $specXpath, $newObj, $paramprefix.$colrow, $meta);
                 }
             }
 
@@ -376,7 +385,8 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                 return $ret;
             }
             $key = $parambasename."_".$specField->nodeName.$colrow;
-            if (array_key_exists($key, $meta)){
+            
+            if (array_key_exists($key, $meta)){                
                 if ($translatable){
                     $parent[$specField->nodeName] = json_decode($meta[$key]);
                 }
@@ -408,15 +418,14 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $this->parseParameters($httpVars, $meta, null, true);
         $spec = $this->getSpecById($httpVars["spec_id"], false);
         $xpath = new \DOMXPath($spec);
-
         $categories = $xpath->query("/spec/fields/*[@type='category']");
 
         $metaobject = array();
         foreach($categories as $category){
             $metaobject[$category->nodeName] = array();
             foreach ($category->childNodes as $field){
-                if ($field->nodeType == XML_TEXT_NODE) continue;
-                if ($field->nodeType == XML_CDATA_SECTION_NODE) continue;
+                if ($field->nodeType != XML_ELEMENT_NODE) continue;
+                //if ($field->nodeType == XML_CDATA_SECTION_NODE) continue;
                 $this->readSpecFieldToJson($field, $xpath, $metaobject[$category->nodeName], "meta_fields_".$category->nodeName, $meta, "");
             }
         }
@@ -436,9 +445,36 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         echo isSet($data)?$data:"{}";
     }
 
+    private function hasChildElements($node){
+        if (!$node->hasChildNodes()) return false;
+
+        foreach ($node->childNodes as $child) {
+            if ($child->nodeType == XML_ELEMENT_NODE) return true;            
+        }
+        return false;
+    }
+
     private function parseMetaToJson($node){
-        if ($node->hasChildNodes() && !$node->hasAttribute("required")){
+        if ($this->hasChildElements($node)){
             $keys = array();
+
+            if ($node->getAttribute('collection') === 'true' &&
+                $node->getAttribute('fixed') === 'true'){
+                $defaultString = $node->getAttribute('default');
+                $default = array();
+                if ($defaultString != null && $defaultString != ""){
+                    $default = json_decode($defaultString);
+                }
+                foreach($default as $item){
+                    $entry = array();
+                    foreach(get_object_vars($item) as $key => $value){
+                        $entry[$key] = $value->default;
+                    }
+                    $keys[] = $entry;
+                }
+                return $keys;
+            }
+
             foreach ($node->childNodes as $childNode) {
                 if ($childNode->nodeType == XML_TEXT_NODE) continue;
                 if ($childNode->nodeType == XML_CDATA_SECTION_NODE) continue;

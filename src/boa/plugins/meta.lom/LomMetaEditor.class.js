@@ -150,12 +150,13 @@ Class.create("LomMetaEditor", AbstractEditor, {
         var enabled = field.getAttribute('enabled');
         if (enabled !== 'true') return;
 
+        var isContainer = type == 'container';
         var fname = field.nodeName;
-        var name = dicprefix+fname;
-        var label = this.getMetaNodeTranslation(field, dicprefix);
+        var name = isContainer?dicprefix.replace(/\.$/, ''):dicprefix+fname;
+        var label = this.getMetaNodeTranslation(isContainer?name:field.nodeName, isContainer?'':dicprefix);
         level = level || 1;
         var options = null;
-        if (type=='composed'){
+        if (type=='composed' || isContainer){
             var result = [$H({
                 type:'label',
                 label: label,
@@ -163,11 +164,17 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 description: field.firstChild!=null&&field.firstChild.nodeType==field.firstChild.TEXT_NODE?field.firstChild.wholeText.trim():""
             })];
             var isCollection = field.getAttribute("collection") === 'true';
+            var isRequired = field.getAttribute("required") === 'true';
+            var isFixed = field.getAttribute("fixed") === 'true';
 
+            var nameSuffix = isContainer ? '' : fname+'.'; 
+            var data = isContainer ? metadata : metadata[fname];
             $A(field.children).each(function(child){
-                options = this.prepareMetaFieldEntry(child, container, level+1, dicprefix+fname+'.', (metadata[fname]||{}), values);
+                options = this.prepareMetaFieldEntry(child, container, level+1, dicprefix+nameSuffix, (data||{}), values);
                 if (!options) return;
                 options.set('replicationGroup', name);
+                options.set('groupRequired', isRequired);
+                options.set('groupFixed', isFixed);
                 if (!isCollection){
                     options.set('replicatable', false);
                 }
@@ -184,13 +191,20 @@ Class.create("LomMetaEditor", AbstractEditor, {
             };
             if (Array.isArray(metadata)){
                 for(var i=0; i < metadata.length; i++){
-                    values.set(name+(i==0?'':'_'+i),metadata[i][fname]);
+                    if (i > 0 && /duration|vcard/.test(type)) {
+                        $A(Object.keys(metadata[i][fname])).each(function(key){
+                            values.set(name+'.'+key+(i==0?'':'_'+i),metadata[i][fname][key]);
+                        });
+                    }
+                    else {
+                        values.set(name+(i==0?'':'_'+i),metadata[i][fname]);
+                    }
                 }
             }
             else if (metadata != undefined){
                 values.set(name, metadata[fname]);
             }
-            return $H(Object.extend(options, this.getControlSettings({type:type, meta:field, text: label})));
+            return $H(Object.extend(options, this.getControlSettings({type:type, meta:field, text: label, name: name, values: values})));
         }
     },
 
@@ -301,17 +315,23 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 settings.type = 'select';
                 settings.multiple = options.meta.getAttribute('multiple') === "true";
                 var choices = [];
-                var optionsetname=options.meta.getAttribute('optionset-name');                
+                var optionsetname=options.meta.getAttribute('optionset-name');
+                //Set the option set name based on the value of another field in the collection
+                if (/\{(.*?)\}/.test(optionsetname)) {
+                    var matches = optionsetname.match(/\{(.*?)\}/g);
+                    for(var i = 0; i < matches.length; i++){
+                        var ph = options.name.split('.').slice(0,-1).join('.')+'.'+matches[i].slice(1, -1);
+                        if (options.values && options.values.get(ph)){
+                            optionsetname = optionsetname.replace(matches[i], options.values.get(ph));
+                        }
+                    }    
+                }
                 var optionset = this.getOptionSet(optionsetname);
                 //var optionset = XPathSelectSingleNode(this.spec, '//optionsets/optionset[@name="'+optionsetname+'"]');
-
                 if (optionset){
                     $A(Object.keys(optionset)).each(function(choice){
                         choices.push(choice+"|"+optionset[choice]);
                     });
-                    //$A(optionset.getAttribute('values').split('|')).each(function(choice){
-                    //    choices.push(choice+"|"+this.getMetaTranslation(choice, 'optionset.'+optionsetname));
-                    //}.bind(this));
                 }
                 settings.choices = choices;
                 break;
@@ -389,9 +409,17 @@ Class.create("LomMetaEditor", AbstractEditor, {
         //var optionsetname=options.meta.getAttribute('optionset-name');
         var optionset = XPathSelectSingleNode(this.spec, '//optionsets/optionset[@name="'+optionsetname+'"]');
         var choices = [];
+
         if (optionset){
-            $A(optionset.getAttribute('values').split('|')).each(function(choice){
-                choices[choice] = this.getMetaTranslation(choice, 'optionset.'+optionsetname);// .push({key: choice, value: this.getMetaTranslation(choice, 'optionset.'+optionsetname)});
+            $A(optionset.getAttribute('values').split('||')).each(function(set){
+                if (/::/.test(set)){
+                    var parts = set.split('::');
+                    choices["_grp_"+parts[0]] = this.getMetaTranslation(parts[0], 'optionset.'+optionsetname);
+                    set = parts[1];
+                }
+                $A(set.split('|')).each(function(choice){
+                    choices[choice] = this.getMetaTranslation(choice, 'optionset.'+optionsetname);
+                }.bind(this));
             }.bind(this));
         }
         return (this._optionSetsCache[optionsetname] = choices);
