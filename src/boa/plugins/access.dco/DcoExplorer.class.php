@@ -177,11 +177,11 @@ class DcoExplorer{
         $content = file_get_contents($manifestPath);
         $json = json_decode($content, true);
 
-        $specs = $this->_driver->metaPlugin->loadSpecs();
-        $meta = array();        
+        $specs = (array)$this->_driver->metaPlugin->loadSpecs();
+        $meta = array();
         foreach ($json as $key => $value){
             if ($key == "type"){
-                $meta[$key] = array_key_exists($value, $specs)?$specs[$value]:$value;
+                $meta[$key] = array_key_exists($value, $specs) ? $specs[$value] : $value;
                 $meta[$key."_id"] = $value;
             }
             else if ($key == 'status'){
