@@ -506,7 +506,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             mkdir($specsPath, 0755, true);
         }
 
-        $list = array();
+        $list = new \stdClass();
 
         foreach(glob($specsPath."/*.xml") as $file){
             $xml = new \DOMDocument();
@@ -515,7 +515,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
             $id = $xpath->query("/spec/id");
             $name = $xpath->query("/spec/name");
-            $list[$id[0]->nodeValue] = $name[0]->nodeValue;
+            $list->{$id[0]->nodeValue} = $name[0]->nodeValue;
         }
         return $list;
     }
