@@ -118,6 +118,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
         var values = new Hash();
         $A(category.children).each(function(field){
             var fieldSettings = this.prepareMetaFieldEntry(field, form, 1, 'meta.fields.'+category.nodeName+'.', metadata, values);
+
             if (!fieldSettings) return;
             if (fieldSettings.length){
                 for(var k=0; k<fieldSettings.length; k++){
@@ -169,6 +170,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
 
             var nameSuffix = isContainer ? '' : fname+'.'; 
             var data = isContainer ? metadata : metadata[fname];
+
             $A(field.children).each(function(child){
                 options = this.prepareMetaFieldEntry(child, container, level+1, dicprefix+nameSuffix, (data||{}), values);
                 if (!options) return;
@@ -196,12 +198,12 @@ Class.create("LomMetaEditor", AbstractEditor, {
                             values.set(name+'.'+key+(i==0?'':'_'+i),metadata[i][fname][key]);
                         });
                     }
-                    else {
+                    else if (metadata[i].hasOwnProperty(fname)){
                         values.set(name+(i==0?'':'_'+i),metadata[i][fname]);
                     }
                 }
             }
-            else if (metadata != undefined){
+            else if (metadata != undefined && metadata.hasOwnProperty(fname)){
                 values.set(name, metadata[fname]);
             }
             return $H(Object.extend(options, this.getControlSettings({type:type, meta:field, text: label, name: name, values: values})));
