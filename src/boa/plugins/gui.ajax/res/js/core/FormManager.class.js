@@ -340,10 +340,6 @@ Class.create("FormManager", {
                     var cLabel, cValue;
                     cValue = choices[k].value;
                     cLabel = choices[k].label;
-                    //var cSplit = choices[k].split("|");
-                    //cValue = cSplit[0];
-                    //if(cSplit.length > 1 ) cLabel = cSplit[1];
-                    //else cLabel = cValue;
                     var selectedString = '';
                     if (/^_grp_/.test(cValue)){
                         if (groupOpened) {
