@@ -326,12 +326,24 @@ Class.create("FormManager", {
                 if (param.get("multiple")){
                     selected = Object.isArray(defaultValue) ? defaultValue : defaultValue.split(",");
                 }
+                var group = '';
+                choices = $A(choices).map(function (it) {
+                    var cSplit = it.split('|'), cValue = cSplit[0], cLabel = cSplit[cSplit.length-1];
+                    var isGroup = /^_grp_/.test(cValue);
+                    group = isGroup ? cLabel : group;
+                    return { value: cValue, label: cLabel, sortKey : [group, '::', isGroup ? '' : cLabel].join('') };
+                }).sort(function(a,b){
+                    return a.sortKey.localeCompare(b.sortKey);
+                });
+
                 for(var k=0;k<choices.length;k++){
                     var cLabel, cValue;
-                    var cSplit = choices[k].split("|");
-                    cValue = cSplit[0];
-                    if(cSplit.length > 1 ) cLabel = cSplit[1];
-                    else cLabel = cValue;
+                    cValue = choices[k].value;
+                    cLabel = choices[k].label;
+                    //var cSplit = choices[k].split("|");
+                    //cValue = cSplit[0];
+                    //if(cSplit.length > 1 ) cLabel = cSplit[1];
+                    //else cLabel = cValue;
                     var selectedString = '';
                     if (/^_grp_/.test(cValue)){
                         if (groupOpened) {
