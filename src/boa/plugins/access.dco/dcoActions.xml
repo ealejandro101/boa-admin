@@ -1305,7 +1305,7 @@
                     </div>
                 ]]></html>
           </infoPanel>
-            <infoPanel mime="dco" attributes="title,author,type,icon,status">
+            <infoPanel mime="dco" attributes="title,author,type,customicon,status">
                 <messages>
                     <message key="title_string" id="access_dco.dco_title"/>
                     <message key="type_string" id="access_dco.dco_type"/>
@@ -1315,7 +1315,7 @@
                 </messages>
                 <html><![CDATA[
                     <div class="folderImage infoPanelImagePreview">
-                        <img src="APP_THEME_FOLDER/images/mimes/64/#{icon}" height="64" width="64">
+                        <img src="#{customicon}" height="64" width="64">
                     </div>
                     <div class="infoPanelAllMetadata">
                         <div>

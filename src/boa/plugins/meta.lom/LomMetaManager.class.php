@@ -22,8 +22,8 @@
  * You can have a rather longer description of the file/class as well,
  * if you like, and it can span multiple lines.
  *
- * @package    [PACKAGE]
- * @category   [CATEGORY]
+ * @package    [App Plugins]
+ * @category   [Meta]
  * @copyright  2017 BoA Project
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
@@ -42,12 +42,6 @@ use BoA\Plugins\Access\Dco\DcoSpecProvider;
 
 defined('APP_EXEC') or die( 'Access not allowed');
 
-/**
- * Simple metadata implementation, stored in hidden files inside the
- * folders
- * @package APP_Plugins
- * @subpackage Meta
- */
 class LomMetaManager extends Plugin implements DcoSpecProvider {
 
     /**

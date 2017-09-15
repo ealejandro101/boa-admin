@@ -525,6 +525,8 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 $urlBase = $this->getResourceUrl($currentFile);
                 Utils::parseStandardFormParameters($httpVars, $meta, null, "DCO_", array());
 
+                $manifestNode = $this->getExplorer()->getDcoManifestNode($urlBase."/.manifest");
+
                 $manifest = new \stdClass();
                 $manifest->title = $meta["dcotitle"];
                 $manifest->type = $meta["dcotype"];
@@ -535,10 +537,12 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 $manifest->author = $meta["author"];
                 $manifest->status = $meta["status"];
                 $manifest->id = $meta["dcoid"];
+                $manifest->customicon = $meta["customicon"];
                 $this->updateManifest($urlBase, $manifest);
-
+                $this->updateCustomIcon($urlBase, $manifestNode->icon, $meta["customicon"]);
+                $manifestNode = $this->getExplorer()->getDcoManifestNode($urlBase."/.manifest"); //Reload the node
                 if(!isSet($nodesDiffs)) $nodesDiffs = $this->getNodesDiffArray();
-                $nodesDiffs["UPDATE"][$currentFile] = $this->getExplorer()->getDcoManifestNode($urlBase."/.manifest");
+                $nodesDiffs["UPDATE"][$currentFile] = $manifestNode;
                 //HTMLWriter::charsetHeader("application/json");
                 //print(json_encode($manifest));
                 break;
@@ -574,11 +578,12 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 $manifest->status = $meta["status"];
                 $manifest->version = "1.0";
                 $manifest->id = $id;
-
+                $manifest->customicon = $meta["customicon"];
                 $this->createManifest($dir."/".$dirname, $manifest);
                 if ($this->metaPlugin != null){
                     $this->metaPlugin->initMetaFromSpec($dir."/".$dirname, $meta["dcotype"]);
                 }
+                $this->updateCustomIcon($dir."/".$dirname, null, $meta["customicon"]);
 
                 $messtmp.=$mess["access_dco.create.success.pre"]." '".SystemTextEncoding::toUTF8($manifest->title)."' ".$mess["access_dco.create.success.pos"]." ".$id;
                 //if($dir=="") {$messtmp.="/";} else {$messtmp.= SystemTextEncoding::toUTF8($dir);}
@@ -824,7 +829,6 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
             //  GET CUSTOM ICON
             //------------------------------------
             case "get_custom_dco_icon" :
-
                 if(isSet($httpVars["tmp_file"])){
                     $file = Utils::getAppTmpDir()."/".Utils::securePath($httpVars["tmp_file"]);
                     if(isSet($file)){
@@ -832,6 +836,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                         readfile($file);
                     }
                 }else if(isSet($httpVars["binary_id"])){
+                    
                     $this->loadBinary(array(), $httpVars["binary_id"]);
                 }
             break;
@@ -1997,6 +2002,22 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         $error = $this->createEmptyFile($dir, $filename, $content);
         if(isSet($error)){
             throw new ApplicationException($error);
+        }
+    }
+
+    private function updateCustomIcon($path, $oldIconId, $newIconId){
+        if ($oldIconId == $newIconId) return; //There is nothing to do.
+        if ($oldIconId != null) { //need to delete oldIconId
+            $targetPath = $path."/src/".$oldIconId;    
+            unlink($targetPath);        
+        }
+
+        if ($newIconId != null) { //need to save the newIconId
+            $targetPath = $path."/src/".$newIconId;
+            $iconFile = fopen($targetPath, "wb");
+            ConfService::getConfStorageImpl()->loadBinary(array(), $newIconId, $iconFile);
+            fclose($iconFile);
+            ConfService::getConfStorageImpl()->deleteBinary(array(), $newIconId);
         }
     }
 

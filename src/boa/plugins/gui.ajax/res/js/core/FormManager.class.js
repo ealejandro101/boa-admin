@@ -363,7 +363,7 @@ Class.create("FormManager", {
                 }
                 element += '</select>';
             }else if(type == "image" && param.get("uploadAction")){
-                if(defaultValue){
+                if(defaultValue && !param.get('useDefaultImage')){
                     var conn = new Connexion();
                     var imgSrc = conn._baseUrl + "&get_action=" +param.get("loadAction") + "&binary_id=" + defaultValue;
                     if(param.get("binary_context")){
