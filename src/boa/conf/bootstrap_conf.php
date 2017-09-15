@@ -35,7 +35,7 @@
  *
  * See php.ini settings below for the session.save_path value as well.
  */
-//define("APP_TMP_DIR", APP_DATA_PATH."/tmp");
+define("APP_TMP_DIR", APP_DATA_PATH."/tmp");
 
 
 /*

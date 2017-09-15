@@ -1300,7 +1300,7 @@ var Hash = Class.create(Enumerable, (function() {
           var queryValues = [];
           for (var i = 0, len = values.length, value; i < len; i++) {
             value = values[i];
-            queryValues.push(toQueryPair(key+'[]', value));
+            queryValues.push(toQueryPair(key+'[]', value)); //J. Otero Added [] so it is parsed as an array
           }
           return results.concat(queryValues);
         }

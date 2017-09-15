@@ -16,17 +16,6 @@
 //
 // The latest code can be found at <https://github.com/boa-project/>.
  
-/**
- * This is a one-line short description of the file/class.
- *
- * You can have a rather longer description of the file/class as well,
- * if you like, and it can span multiple lines.
- *
- * @package    [PACKAGE]
- * @category   [CATEGORY]
- * @copyright  2017 BoA Project
- * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
- */
 namespace BoA\Plugins\Core\Log;
 
 use BoA\Core\Plugins\Plugin;
@@ -41,10 +30,16 @@ define("LOG_LEVEL_NOTICE", "Notice");
 define("LOG_LEVEL_WARNING", "Warning");
 define("LOG_LEVEL_ERROR", "Error");
 /**
- * @package APP_Plugins
- * @subpackage Core
- * @static
  * Provides static access to the logging mechanism
+ *
+ * You can have a rather longer description of the file/class as well,
+ * if you like, and it can span multiple lines.
+ *
+ * @package    Plugins
+ * @category   Core
+ * @copyright  2017 BoA Project
+ * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
+ * @static
  */
 class Logger extends Plugin {
 

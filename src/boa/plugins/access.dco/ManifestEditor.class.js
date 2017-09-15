@@ -56,11 +56,26 @@ Class.create("ManifestEditor", AbstractEditor, {
             values.set('dcotype', this.manifest.type_id);
             values.set('dcocontype', this.manifest.conexion_type);
             values.set('dcocontype/externalurl', this.manifest.url);
-            values.set('customicon', this.manifest.icon);
+            values.set('customicon', this.manifest.customicon);
         }
-
         var statusChoices = ['inprogress', 'ready', 'published', 'unpublished'];
         statusChoices = $A(statusChoices).map(function(it) { return [it, MessageHash['access_dco.'+it]].join('|'); }).join(',');
+        //var defaultIcon = resolveImageSource(this.manifest.icon); // 'boa/plugins/gui.ajax/res/themes/umbra/images/mimes/64/dco.png';
+        if (!this.manifest.customicon) {
+            this.manifest.iconsrc = resolveImageSource(this._node.getMetadata().get('icon'), "/images/mimes/64");
+        }
+        else {
+            var extension = this.manifest.customicon.split('.').pop().toLowerCase();
+            var editors = app.findEditorsForMime(extension);
+            if (editors.length) {
+                var node = new ManifestNode([this._node.getPath(), 'src', this.manifest.customicon].join('/'), true);
+                node.getMetadata().set("repository_id", this._node.getMetadata().get('repository_id'));
+                this.manifest.iconsrc = Class.getByName(editors[0].editorClass).prototype.getThumbnailSource(node);
+            }
+            else {
+                this.manifest.iconsrc = resolveImageSource(this._node.getMetadata().get('icon'), "/images/mimes/64");
+            }
+        }
 
         var TYPE_INDX = 2;
         var fields = [$H({ 
@@ -148,18 +163,9 @@ Class.create("ManifestEditor", AbstractEditor, {
                 editable: true,
                 uploadAction: 'store_custom_dco_icon',
                 loadAction: 'get_custom_dco_icon',
-                defaultImage: 'boa/plugins/gui.ajax/res/themes/umbra/images/mimes/64/dco.png'
-            })/*, $H({
-                name: 'estado',
-                type: 'image',
-                labelId: 'access_dco.dco_icon',
-                descriptionId: 'access_dco.dco_icon.help',
-                mandatory: 'false',
-                editable: true,
-                uploadAction: 'store_binary_temp',
-                loadAction: 'get_global_binary_param',
-                defaultImage: 'gui.ajax/AppLogo250.png'
-            })*/
+                useDefaultImage: true,
+                defaultImage: this.manifest.iconsrc
+            })
         ];
         var settings = { 
             //specs: specs && specs.LIST || [],
@@ -198,11 +204,8 @@ Class.create("ManifestEditor", AbstractEditor, {
     },
     updateHeader: function(){
         this.element.down("span.header_label").update(this.manifest.title || MessageHash["access_dco.mkdco"]);
-        
-        var icon = resolveImageSource("dco.png", "/images/mimes/64"); //this._node.getIcon()
-        this.element.down("span.header_label").setStyle(
-            {
-                backgroundImage:"url('"+icon+"')",
+        this.element.down("span.header_label").setStyle({
+                backgroundImage:"url('"+this.manifest.iconsrc+"')",
                 backgroundSize : '34px'
             });
     },

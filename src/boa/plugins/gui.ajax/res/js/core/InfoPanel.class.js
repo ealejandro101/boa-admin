@@ -366,7 +366,7 @@ Class.create("InfoPanel", AppPane, {
             var panelWidth = this.htmlElement.getWidth();
             var oThis = this;
             if(fileNode){
-                var metadata = fileNode.getMetadata();          
+                var metadata = fileNode.getMetadata();   
                 tAttributes.each(function(attName){             
                     if(attName == 'basename' && metadata.get('filename')){
                         this[attName] = getBaseName(metadata.get('filename'));                      
@@ -411,6 +411,25 @@ Class.create("InfoPanel", AppPane, {
                             url = url.substr(0, url.lastIndexOf('/'));
                         }
                         this[attName] = url;
+                    }
+                    else if (attName == 'customicon'){
+                        var value = metadata.get(attName);
+                        if (!value || value == '') {
+                            value = resolveImageSource(metadata.get('icon'), "/images/mimes/64");
+                        }
+                        else {
+                            var extension = value.split('.').pop().toLowerCase();
+                            var editors = app.findEditorsForMime(extension);
+                            if (editors.length) {
+                                var node = new ManifestNode([fileNode.getPath(), 'src', value].join('/'), true);
+                                node.getMetadata().set("repository_id", fileNode.getMetadata().get('repository_id'));
+                                value = Class.getByName(editors[0].editorClass).prototype.getThumbnailSource(node);
+                            }
+                            else {
+                                value = resolveImageSource(metadata.get('icon'), "/images/mimes/64");
+                            }
+                        }
+                        this[attName] = value;
                     }
                     else if(metadata.get(attName)){
                         this[attName] = metadata.get(attName);

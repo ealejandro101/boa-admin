@@ -78,5 +78,6 @@ http://ajaxplorer.info/plugins/ -> https://github.com/boa-project/boa
 /ajaxplorer/shares -> /application/shares
 /js/ajaxplorer -> /js/core
 AjxpMailer -> AppMailer
-
+AJXP_Cache —> CacheManager
+data-ajxpAction -> data-action
 BOA_REPO_SCOPE_ALL
