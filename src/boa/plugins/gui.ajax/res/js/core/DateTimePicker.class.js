@@ -951,7 +951,6 @@
                 if (!use24Hours) {
                     toggle = widget.select('.timepicker [data-action=togglePeriod]').first();
                     newDate = date.clone().add((date.hours() >= 12) ? -12 : 12, 'h');
-
                     toggle.update(date.format('A'));
 
                     if (isValid(newDate, 'h')) {
@@ -1329,6 +1328,7 @@
             },
 
             doAction = function (e) {
+                Event.stop(e);
                 var actionEl = e.findElement('[data-action]');
                 if (!actionEl) return false;
                 if ($(e.target).match('.disabled')){
@@ -1367,10 +1367,14 @@
                 var val = input.retrieve('date');
                 if (!val){
                     val = $F(input);
+                    val = moment(val.trim(), actualFormat);
+                }
+                else {
+                    val = moment(val.trim());
                 }
 
-                if (val !== undefined && val.trim().length !== 0) {
-                    setValue(parseInputDate(val.trim()));
+                if (val !== undefined) { //} && val.trim().length !== 0) {
+                    setValue(parseInputDate(val));
                 } else if (unset && options.useCurrent && (options.inline || (input.match('input') && val.trim().length === 0))) {
                     currentMoment = getMoment();
                     if (typeof options.useCurrent === 'string') {
@@ -1678,7 +1682,6 @@
             if ((typeof newFormat !== 'string') && ((typeof newFormat !== 'boolean') || (newFormat !== false))) {
                 throw new TypeError('format() expects a string or boolean:false parameter ' + newFormat);
             }
-
             options.format = newFormat;
             if (actualFormat) {
                 initFormatting(); // reinit formatting
@@ -1946,9 +1949,9 @@
             }
 
             options.locale = locale;
+            options.tooltips = localeTooltips[locale] || options.locale;
             date.locale(options.locale);
             viewDate.locale(options.locale);
-
             if (actualFormat) {
                 initFormatting(); // reinit formatting
             }
@@ -2735,50 +2738,45 @@
         viewDate: false
     };
 
+    var localeTooltips = {
+        es: {
+            today: 'Hoy',
+            clear: 'Limpiar selección',
+            close: 'Cerrar',
+            selectMonth: 'Seleccionar mes',
+            prevMonth: 'Mes anterior',
+            nextMonth: 'Mes siguiente',
+            selectYear: 'Seleccionar año',
+            prevYear: 'Año anterior',
+            nextYear: 'Año siguiente',
+            selectDecade: 'Seleccionar década',
+            prevDecade: 'Década anterior',
+            nextDecade: 'Década siguiente',
+            prevCentury: 'Siglo siguiente',
+            nextCentury: 'Siglo anterior',
+            pickHour: 'Seleccionar hora',
+            incrementHour: 'Aumentar hora',
+            decrementHour: 'Disminuir hora',
+            pickMinute: 'Seleccionar minuto',
+            incrementMinute: 'Aumentar minuto',
+            decrementMinute: 'Disminuir minuto',
+            pickSecond: 'Seleccionar segundo',
+            incrementSecond: 'Aumentar segundo',
+            decrementSecond: 'Disminuir segundo',
+            togglePeriod: 'Toggle Period',
+            selectTime: 'Select Time'
+        }
+    };
+
     Class.create('DateTimePicker', {
         picker: null,
         initialize: function (element, options) {
             var thisOptions = Object.extend({}, dpDefaults);
             thisOptions = Object.extend(thisOptions, options || {});
+            thisOptions.tooltips = localeTooltips[thisOptions.locale] || thisOptions.tooltips;
             this.picker = dateTimePicker(element, thisOptions);
-
-/*
-            var args = Array.prototype.slice.call(arguments, 1),
-                isInstance = true,
-                thisMethods = ['destroy', 'hide', 'show', 'toggle'],
-                returnValue;
-
-            if (typeof options === 'object') {
-                return this.each(function () {
-                    var $this = $(this),
-                        _options;
-                    if (!$this.data('DateTimePicker')) {
-                        // create a private copy of the defaults object
-                        _options = Object.extend(true, {}, $.fn.datetimepicker.defaults, options);
-                        $this.data('DateTimePicker', dateTimePicker($this, _options));
-                    }
-                });
-            } else if (typeof options === 'string') {
-                this.each(function () {
-                    var $this = $(this),
-                        instance = $this.data('DateTimePicker');
-                    if (!instance) {
-                        throw new Error('bootstrap-datetimepicker("' + options + '") method was called on an element that is not using DateTimePicker');
-                    }
-
-                    returnValue = instance[options].apply(instance, args);
-                    isInstance = returnValue === instance;
-                });
-
-                if (isInstance || $.inArray(options, thisMethods) > -1) {
-                    return this;
-                }
-
-                return returnValue;
-            }
-            throw new TypeError('Invalid arguments for DateTimePicker: ' + options);
-    */
         }
     });
+
 
 })();

@@ -305,7 +305,8 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 settings.type = 'string';
                 break;
             case 'date':
-                settings.type = 'date';
+            case 'datetime':
+                settings.type = options.type;
                 break;
             case 'duration':
                 settings.type = 'duration';
