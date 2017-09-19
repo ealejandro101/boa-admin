@@ -62,7 +62,8 @@ Class.create("ManifestEditor", AbstractEditor, {
         statusChoices = $A(statusChoices).map(function(it) { return [it, MessageHash['access_dco.'+it]].join('|'); }).join(',');
         //var defaultIcon = resolveImageSource(this.manifest.icon); // 'boa/plugins/gui.ajax/res/themes/umbra/images/mimes/64/dco.png';
         if (!this.manifest.customicon) {
-            this.manifest.iconsrc = resolveImageSource(this._node.getMetadata().get('icon'), "/images/mimes/64");
+            var icon = this._node ? this._node.getMetadata().get('icon') : 'dco.png';
+            this.manifest.iconsrc = resolveImageSource(icon, "/images/mimes/64");
         }
         else {
             var extension = this.manifest.customicon.split('.').pop().toLowerCase();
@@ -73,7 +74,8 @@ Class.create("ManifestEditor", AbstractEditor, {
                 this.manifest.iconsrc = Class.getByName(editors[0].editorClass).prototype.getThumbnailSource(node);
             }
             else {
-                this.manifest.iconsrc = resolveImageSource(this._node.getMetadata().get('icon'), "/images/mimes/64");
+                var icon = this._node ? this._node.getMetadata().get('icon') : 'dco.png';
+                this.manifest.iconsrc = resolveImageSource(icon, "/images/mimes/64");
             }
         }
 
