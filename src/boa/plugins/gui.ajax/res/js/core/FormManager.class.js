@@ -1007,7 +1007,7 @@ Class.create("FormManager", {
 				input.setAttribute('name', newName);
 				if(form && Prototype.Browser.IE){form[newName] = input;}
                 if(values && values.get(newName)){
-                    if (input.getAttribute('data-ctrl_type') == 'date'){
+                    if (/(date|datetime)/.test(input.getAttribute('data-ctrl_type'))){
                         input.store('date', values.get(newName));
                     }
                     else {                    
@@ -1066,8 +1066,7 @@ Class.create("FormManager", {
         form.select('.input-group.date').each(function(el){
             try{
                 var hasTime = el.down('input').readAttribute('data-ctrl_type') == 'datetime';
-                var debug = false;
-                new DateTimePicker(el, { debug: debug, format: 'L'+(hasTime?' LT':'') });    
+                new DateTimePicker(el, { debug: false, locale: app.currentLanguage, format: 'YYYY-MM-DD'+(hasTime?' LT':'') }); //'L'+(hasTime?' h:mm A':'')
             }
             catch(err){
                 console.log(err);
