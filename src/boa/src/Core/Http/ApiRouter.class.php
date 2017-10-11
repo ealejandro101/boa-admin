@@ -93,12 +93,13 @@ class ApiRouter {
     }
 
     private function getRepoView($repo){
-        return array(
-            "id" => $repo->id,
-            "alias" => $repo->slug,
-            "type" => $repo->accessType,
-            "name" => $repo->display,
-            "path" => str_replace("APP_DATA_PATH", APP_DATA_PATH, $repo->options["PATH"])
-            ); 
+        return empty($repo) ? null :
+            array(
+                "id" => $repo->id,
+                "alias" => $repo->slug,
+                "type" => $repo->accessType,
+                "name" => $repo->display,
+                "path" => str_replace("APP_DATA_PATH", APP_DATA_PATH, $repo->options["PATH"])
+                ); 
     }
 }
