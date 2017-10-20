@@ -845,18 +845,29 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                     $keys = array_keys($fileVars);
                     $boxData = $fileVars[$keys[0]];
                     $err = Utils::parseFileDataErrors($boxData);
-                    if($err != null){
-
+                    if($err !== null){
+                        Logger::debug($err);
+                        return $err;
                     }else{
                         $rand = substr(md5(time()), 0, 6);
                         $tmp = $rand."-". $boxData["name"];
-                        @move_uploaded_file($boxData["tmp_name"], Utils::getAppTmpDir()."/". $tmp);
+                        move_uploaded_file($boxData["tmp_name"], Utils::getAppTmpDir()."/". $tmp);
                     }
                 }
+                else {
+                    Logger::debug("Not file vars", $fileVars);
+                    return "Not file vars";
+                }
+
                 if(isSet($tmp) && file_exists(Utils::getAppTmpDir()."/".$tmp)) {
                     print('<script type="text/javascript">');
                     print('parent.formManagerHiddenIFrameSubmission("'.$tmp.'");');
                     print('</script>');
+                }
+                else {
+                    $errorMessage = 'File not exist: [tmp_dir]/' . $tmp;
+                    Logger::debug($errorMessage);
+                    return $errorMessage;
                 }
 
                 break;
