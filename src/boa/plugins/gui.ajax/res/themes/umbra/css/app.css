@@ -782,7 +782,7 @@ input.SF_input.SF_number{
 }
 
 .SF_failed{
-	border: 1px solid #D8B0B0 !important;
+	border: 1px solid #d60000 !important;
 }
 
 .SF_replicableGroup{

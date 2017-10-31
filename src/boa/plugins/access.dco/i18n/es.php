@@ -61,5 +61,6 @@ $mess=array(
 "inprogress" => "En progreso",
 "ready" => "Listo para publicar",
 "published" => "Publicado",
-"unpublished" => "Despublicado"
+"unpublished" => "Despublicado",
+"publish" => "Publicar"
 );

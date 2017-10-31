@@ -164,9 +164,10 @@ class DcoExplorer{
     }
 
     public function getDcoManifestNode($manifestPath, $nonPatchedPath=null) {
-        $meta = $this->parseDcoManifest($manifestPath);
+        $json = $this->parseDcoManifest($manifestPath);
+        $meta = $json->manifest;
         $meta["APP_mime"] = "dco";
-        $meta["manifest"] = json_encode($meta);
+        $meta["manifest"] = json_encode($json->manifest);
         $title = $meta["title"];
         $node = new ManifestNode(dirname($manifestPath), $meta);
         $node->setLabel($title);
@@ -175,24 +176,24 @@ class DcoExplorer{
 
     private function parseDcoManifest($manifestPath){
         $content = file_get_contents($manifestPath);
-        $json = json_decode($content, true);
-
+        $json = json_decode($content);
         $specs = (array)$this->_driver->metaPlugin->loadSpecs();
-        $meta = array();
-        foreach ($json as $key => $value){
+        $manifest = array();
+        foreach (get_object_vars($json->manifest) as $key => $value){
             if ($key == "type"){
-                $meta[$key] = array_key_exists($value, $specs) ? $specs[$value] : $value;
-                $meta[$key."_id"] = $value;
+                $manifest[$key] = array_key_exists($value, $specs) ? $specs[$value] : $value;
+                $manifest[$key."_id"] = $value;
             }
             else if ($key == 'status'){
-                $meta[$key] = $this->_driver->mess["access_dco.".$value];
-                $meta[$key."_id"] = $value;
+                $manifest[$key] = $this->_driver->mess["access_dco.".$value];
+                $manifest[$key."_id"] = $value;
             }
             else{
-                $meta[$key] = $value;
+                $manifest[$key] = $value;
             }
         }
-        return $meta;
+        $json->manifest = $manifest;
+        return $json;
     }
 
     private function readObjectContent($options){

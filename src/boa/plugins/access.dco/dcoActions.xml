@@ -576,7 +576,7 @@
                   <div id="mkdco_form" action="dcometa_form" class="tabbed_editor" box_width="70%" box_height="80%" box_resize="true" box_padding="0">
                       <div class="editor_header">
                           <div class="action_bar">
-                              <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
+                              <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
                           </div>
                           <span class="header_label"></span>
                       </div>
@@ -1152,6 +1152,7 @@
                     <div id="dcometa_form" action="dcometa_form" class="tabbed_editor" box_width="80%" box_height="80%" box_resize="true" box_padding="0">
                         <div class="editor_header">
                             <div class="action_bar">
+                                <a href="#" onclick="return false;" class="icon-publish disabled" id="publishButton"><img src="APP_THEME_FOLDER/images/actions/22/share.png" width="22" height="22" alt="APP_MESSAGE['publish']" border="0"><br><span message_id="access_dco.publish">APP_MESSAGE['access_dco.publish']</span></a>
                                 <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
                             </div>
                             <span class="header_label"></span>

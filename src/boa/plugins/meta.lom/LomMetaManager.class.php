@@ -43,7 +43,7 @@ use BoA\Plugins\Access\Dco\DcoSpecProvider;
 defined('APP_EXEC') or die( 'Access not allowed');
 
 class LomMetaManager extends Plugin implements DcoSpecProvider {
-
+    const PUBLISHED_STATUS = 'published';
     /**
      * @var AbstractAccessDriver
      */
@@ -187,13 +187,14 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
         $metaPath = $node->getUrl();
         if (is_dir($metaPath)){
-            $metaPath .= "/.metadata";
+            $metaPath .= "/.manifest";
         }
         else {
-            $metaPath = dirname($metaPath)."/.".basename($metaPath).".metadata";
+            $metaPath = dirname($metaPath)."/.".basename($metaPath).".manifest";
         }
         $content = @file_get_contents($metaPath);
-        $metadata = array("lommetadata" => $content);
+        $meta = json_decode($content);
+        $metadata = array("lommetadata" => json_encode($meta->metadata));
         $node->mergeMetadata($metadata);
     }
     
@@ -265,6 +266,8 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             case "save_dcometa":
                 $this->saveDcoMeta($action, $httpVars, $fileVars);
             break;
+            case "publish_metadata":
+                $this->publish();
         }
     }
 
@@ -410,7 +413,8 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         //$node = new ManifestNode($urlBase);
         $meta = array();
         $this->parseParameters($httpVars, $meta, null, true);
-        $spec = $this->getSpecById($httpVars["spec_id"], false);
+        $spec_id = $httpVars["spec_id"];
+        $spec = $this->getSpecById($spec_id, false);
         $xpath = new \DOMXPath($spec);
         $categories = $xpath->query("/spec/fields/*[@type='category']");
 
@@ -424,19 +428,69 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             }
         }
 
-        $target = is_dir($this->accessDriver->urlBase.$currentFile)?$currentFile."/.metadata":
-            dirname($currentFile)."/.".basename($currentFile).".metadata";
+        $target = is_dir($this->accessDriver->urlBase.$currentFile)?$currentFile."/.manifest":
+            dirname($currentFile)."/.".basename($currentFile).".manifest";
 
         $target = $this->accessDriver->urlBase.$target;
+        $json = json_decode(file_get_contents($target));
         $fp = fopen($target, "w");
         if($fp !== false){
-            $data = json_encode($metaobject); //, JSON_PRETTY_PRINT
+            if (!isset($json->manifest)) {
+                $json->manifest = new \stdClass();
+                $json->manifest->title = basename($currentFile);
+                $json->manifest->type = $spec_id;
+                $json->manifest->id = $currentFile;
+            }
+            $json->manifest->lastupdated = date('c');
+            $json->metadata = $metaobject;
+            $data = json_encode($json);
             @fwrite($fp, $data, strlen($data));
             @fclose($fp);
         }
         //Controller::applyHook("node.meta_change", array($node));
         HTMLWriter::charsetHeader("application/json");
         echo isSet($data)?$data:"{}";
+    }
+
+    private function publish(){
+        $repo = $this->accessDriver->repository;
+        $user = AuthService::getLoggedUser();
+        if(!AuthService::usersEnabled() && $user!=null && !$user->canWrite($repo->getId())){
+            throw new Exception("You have no right on this action.");
+        }
+
+        $selection = new UserSelection();
+        $selection->initFromHttpVars();
+        $currentFile = $selection->getUniqueFile();
+        $urlBase = $this->accessDriver->getResourceUrl($currentFile);
+
+        $manifestPath = is_dir($this->accessDriver->urlBase.$currentFile)?$currentFile."/.manifest":
+            dirname($currentFile)."/.".basename($currentFile).".manifest";
+
+        $manifestPath = $this->accessDriver->urlBase.$manifestPath;
+        $json = json_decode(file_get_contents($manifestPath));
+        $json->manifest->status = self::PUBLISHED_STATUS;
+        $json->manifest->lastpublished = date('c');
+        $fp = fopen($manifestPath, "w");
+        if($fp !== false){
+            $json->manifest->lastupdated = date('c');
+            $data = json_encode($json);
+            @fwrite($fp, $data, strlen($data));
+            @fclose($fp);
+        }
+        //Create a published version of the meta
+        copy($manifestPath, $manifestPath.".published");
+
+        header('Content-Type: application/json; charset=UTF-8');
+        header('Cache-Control: no-cache');
+        $manifest = $json->manifest;
+        $specs = (array)$this->loadSpecs();
+        $type = array_key_exists($manifest->type, $specs) ? $specs[$manifest->type] : $manifest->type;
+        $manifest->type_id = $manifest->type;
+        $manifest->type = $type;
+        $manifest->status_id = $manifest->status;
+        $manifest->status = $mess["access_dco.".$manifest->status];
+        print(json_encode($manifest));
     }
 
     private function hasChildElements($node){
@@ -551,10 +605,11 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
         $fields = $fields->item(0);
         $meta = $this->parseMetaToJson($fields);
-        $error = $this->accessDriver->createEmptyFile($dir, "/.metadata", json_encode($meta));
-        if(isSet($error)){
-            throw new ApplicationException($error);
-        }
+        return $meta;
+        //$error = $this->accessDriver->createEmptyFile($dir, "/.metadata", json_encode($meta));
+        //if(isSet($error)){
+        //    throw new ApplicationException($error);
+        //}
     }
 
     public function getMetaEditorClass(){

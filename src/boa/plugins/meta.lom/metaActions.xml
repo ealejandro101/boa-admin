@@ -10,6 +10,11 @@
         <serverCallback methodName="onGet"></serverCallback>
       </processing>
     </action>
+    <action name="publish_metadata">
+      <processing>
+        <serverCallback methodName="onPost"></serverCallback>
+      </processing>
+    </action>
     <action name="save_dcometa">
       <processing>
         <serverCallback methodName="onPost"></serverCallback>
@@ -70,6 +75,6 @@
             }
           ]]></clientListener>
         </processing>
-    </action>     
+    </action>
   </actions>
 </registry_contributions>
