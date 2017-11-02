@@ -870,6 +870,13 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 }
 
                 break;
+
+            //------------------------------------
+            //  SET OBJECT ENTRY POINT
+            //------------------------------------
+            case 'set_entry_point':
+                print($this->setObjectEntryPoint($httpVars["path"]));
+                break;
         }
 
         $xmlBuffer = "";
@@ -1966,9 +1973,13 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         if (!isset($manifest->lastupdated)) $manifest->lastupdated = date('c');
         $meta = json_decode(file_get_contents($dir.$filename));
         $meta->manifest = $manifest;
-        $fp = fopen($dir.$filename, "w");
+        $this->saveJsonFile($dir.$filename, $meta);
+    }
+
+    private function saveJsonFile($path, $json){
+        $fp = fopen($path, "w");
         if($fp !== false){
-            $content = json_encode($meta);
+            $content = json_encode($json);
             @fwrite($fp, $content, strlen($content));
             @fclose($fp);
         }
@@ -2005,6 +2016,46 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         $uid = GUID();
         while (file_exists($this->urlBase.$dir."/".$uid."@boa.udea.edu.co")) $uid = GUID();
         return $uid."@boa.udea.edu.co";
+    }
+
+    private function setObjectEntryPoint($path){
+        if (!file_exists($this->urlBase . $path)){
+            Logger::logAction("ERROR : setObjectEntryPoint : Invalid Path : " . $path, "");
+            return $mess["access_dco.set_entry_point_invalid_path"];
+        }
+
+        $parts = explode('/', $path);
+        if (count($parts) < 3 || $parts[2] !== 'content'){
+            Logger::logAction("ERROR : setObjectEntryPoint : Path is not a content file : " . $path, "");
+            return $mess["access_dco.set_entry_point_not_content"];
+        }
+
+        $object_id = implode('/', array_slice($parts, 0, 2));
+        $manifestPath = $this->urlBase . $object_id . "/.manifest";
+        if (!file_exists($manifestPath)){
+            Logger::logAction("ERROR : setObjectEntryPoint : Manifest file not found : " . $path, "");
+            return $mess["access_dco.set_entry_point_manifest_error"];
+        }
+
+        $json = json_decode(file_get_contents($manifestPath));
+        if (!$json || $json === null){
+            Logger::logAction("ERROR : setObjectEntryPoint : Corrupted manifest file : " . $path, "");
+            return $mess["access_dco.set_entry_point_manifest_error"];
+        }
+        
+        array_splice($parts, 0, 3);
+        $path = implode('/', $parts);
+        $json->manifest->entrypoint = $path;
+        $this->saveJsonFile($manifestPath, $json);
+
+        $manifestPath .=".published";
+        //If object is already published, then update the preview icon there also
+        if (file_exists($manifestPath)){
+            $json = json_decode(file_get_contents($manifestPath));
+            $json->manifest->entrypoint = $path;
+            $this->saveJsonFile($manifestPath, $json);
+        }
+        return "SUCCESS";
     }
 
 }

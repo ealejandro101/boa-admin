@@ -62,5 +62,11 @@ $mess=array(
 "ready" => "Listo para publicar",
 "published" => "Publicado",
 "unpublished" => "Despublicado",
-"publish" => "Publicar"
+"publish" => "Publicar",
+"set_entry_point" => "Establer como inicio",
+"set_entry_point_confirmation" => "Se establecerá [FILE] como el archivo de inicio predeterminado ¿Desea continuar?",
+"set_entry_point_succeed" => "El archivo de inicio para el objecto ha sido establecido exitosamente",
+"set_entry_point_invalid_path" => "La ruta del archivo es invalida",
+"set_entry_point_not_content" => "La ruta no corresponde a un archivo de contenido",
+"set_entry_point_manifest_error" => "No se pudo cargar el manifiesto del objeto"
 );

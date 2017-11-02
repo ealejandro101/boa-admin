@@ -1191,37 +1191,67 @@
                 <serverCallback methodName="switchAction"></serverCallback>
             </processing>
         </action>
-    </actions>
+        <action name="set_entry_point">
+          <gui text="access_dco.set_entry_point" title="access_dco.set_entry_point" src="app-link.png" iconClass="icon-link" hasAccessKey="false">
+            <context selection="true" dir="false" recycle="hidden" actionBar="false" contextMenu="true" infoPanel="true"
+              actionBarGroup="more" inZip="false">
+            </context>
+            <selectionContext dir="false" file="file" recycle="false" unique="true"></selectionContext>
+            </gui>
+          <rightsContext noUser="true" userLogged="only" read="false" write="true" adminOnly=""></rightsContext>
+          <processing>
+            <clientCallback prepareModal="true"><![CDATA[
+                var userSelection = app.getUserSelection();
+                if (!userSelection.isEmpty()){
+                  var node = userSelection.getNode(0),
+                    path = node.getPath(),
+                    label = node.getLabel();
+
+                    var message = MessageHash["access_dco.set_entry_point_confirmation"].replace('[FILE]', label);
+                    if (window.confirm(message)) {
+                        var action = app.getActionBar().getActionByName('set_entry_point');
+                        if (action && !action.updating){
+                            action.updating = true;
+                            var connexion = new Connexion();
+                            connexion.addParameter('get_action', 'set_entry_point');
+                            connexion.addParameter('path', path);
+                            connexion.onComplete = function(transport){
+                                var result = transport.responseText;
+                                if (result == 'SUCCESS'){
+                                    app.displayMessage("SUCCESS", MessageHash['access_dco.set_entry_point_succeed']);
+                                }
+                                else {
+                                    app.displayMessage("ERROR", result);
+                                }
+                                action.updating = false;
+                            }.bind(this);
+                            connexion.sendAsync();
+                        }
+                    }
+                }
+                ]]></clientCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    var userSelection = app.getUserSelection(),
+                        context = userSelection.getContextNode(),
+                        enabled = !!context;
+
+                    if (enabled) {
+                        var path = context.getPath(),
+                            pathParts = path.split('/');
+                        pathParts.splice(0,1);
+                        enabled = pathParts[1] === 'content';
+                    }
+                    context = { selection : enabled, contextMenu: enabled, infoPanel: enabled };
+                    window.listenerContext.setContext(context);
+                ]]>          
+                </clientListener>
+                <serverCallback methodName="switchAction"></serverCallback>
+            </processing>
+        </action>
+        </actions>
     <client_configs>
     <component_config className="FoldersTree">
     </component_config>
-      <!--
-      <component_config className="InfoPanel">
-        <infoPanel mime="no_selection" attributes="">
-          <messages>
-            <message key="objects_string" id="access_dco.objects_count"/>
-          </messages>
-          <html><![CDATA[
-            <div style="padding:10px;">
-              <big style="font-weight: bold; font-size: 14px; color:#79f;display: block; text-align:center; padding-bottom:20px;">#{current_folder}</big>
-              <div id="filelist_folders_count"><b>#{objects_string}</b> : #{filelist_folders_count}</div>
-            </div> 
-          ]]></html>
-        </infoPanel>
-        <infoPanel mime="dco" attributes="title,author">
-          <messages>
-            <message key="files_string" id="280"/>
-            <message key="author_string" id="access_dco.dco_author"/>
-          </messages>
-          <html><![CDATA[
-            <div style="padding:10px;">
-              <big style="font-weight: bold; font-size: 14px; color:#79f;display: block; text-align:center; padding-bottom:20px;">#{title}</big>
-              <div><b>#{author_string}</b> : #{author}</div>
-            </div>
-          ]]></html>
-        </infoPanel>
-      </component_config>
-    -->
         <component_config className="InfoPanel">
             <infoPanel mime="no_selection" attributes="">
                 <messages>
