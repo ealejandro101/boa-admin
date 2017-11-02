@@ -428,7 +428,8 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             }
         }
 
-        $target = is_dir($this->accessDriver->urlBase.$currentFile)?$currentFile."/.manifest":
+        $isRoot = is_dir($this->accessDriver->urlBase.$currentFile);
+        $target = $isRoot?$currentFile."/.manifest":
             dirname($currentFile)."/.".basename($currentFile).".manifest";
 
         $target = $this->accessDriver->urlBase.$target;
@@ -440,6 +441,9 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                 $json->manifest->title = basename($currentFile);
                 $json->manifest->type = $spec_id;
                 $json->manifest->id = $currentFile;
+            }
+            if (!isset($json->manifest->is_a)){
+                $json->manifest->is_a = $isRoot?'dco':'dro';
             }
             $json->manifest->lastupdated = date('c');
             $json->metadata = $metaobject;
@@ -464,7 +468,8 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $currentFile = $selection->getUniqueFile();
         $urlBase = $this->accessDriver->getResourceUrl($currentFile);
 
-        $manifestPath = is_dir($this->accessDriver->urlBase.$currentFile)?$currentFile."/.manifest":
+        $isRoot = is_dir($this->accessDriver->urlBase.$currentFile);
+        $manifestPath = $isRoot?$currentFile."/.manifest":
             dirname($currentFile)."/.".basename($currentFile).".manifest";
 
         $manifestPath = $this->accessDriver->urlBase.$manifestPath;
@@ -474,6 +479,9 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $fp = fopen($manifestPath, "w");
         if($fp !== false){
             $json->manifest->lastupdated = date('c');
+            if (!isset($json->manifest->is_a)){
+                $json->manifest->is_a = $isRoot?'dco':'dro';
+            }
             $data = json_encode($json);
             @fwrite($fp, $data, strlen($data));
             @fclose($fp);
