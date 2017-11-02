@@ -21,6 +21,10 @@ function join_files($pathtype, $filepath){
   $manifestcontent = file_exists($manifestpath) ? file_get_contents($manifestpath) : "{}";
   $merge = new stdClass();
   $merge->manifest = json_decode($manifestcontent);
+  //Check manifest file has not been already fixed
+  if (isset($merge->manifest) && (isset($merge->manifest->manifest) || isset($merge->manifest->metadata)){ 
+    return;
+  }
   $merge->metadata = json_decode($metadatacontent);
   $data = json_encode($merge);
   $fp = fopen($manifestpath, "w");
@@ -34,7 +38,7 @@ function join_files($pathtype, $filepath){
 }
 
 
-define(WWW_USER, "www");
+define("WWW_USER", "www-data"); //Set this value to the web/apache user
 
 foreach ($argv as $path) {
   $entries = glob($path."/*/{.}manifest", GLOB_NOSORT|GLOB_BRACE);
