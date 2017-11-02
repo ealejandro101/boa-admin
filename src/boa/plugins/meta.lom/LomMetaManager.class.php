@@ -432,7 +432,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             dirname($currentFile)."/.".basename($currentFile).".manifest";
 
         $target = $this->accessDriver->urlBase.$target;
-        $json = json_decode(file_get_contents($target));
+        $json = (file_exists($target) ? json_decode(file_get_contents($target)) : new \stdClass());
         $fp = fopen($target, "w");
         if($fp !== false){
             if (!isset($json->manifest)) {
