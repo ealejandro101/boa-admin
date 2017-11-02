@@ -94,8 +94,20 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 }
             }
         }.bind(this));
-
         this.setClean();
+        this.refreshActionsToolbar();
+    },
+    refreshActionsToolbar: function(){
+        var meta = this._node.getMetadata();
+        var status = meta.get('status_id'),
+            lastupdated = meta.get('lastupdated'),
+            lastpublished = meta.get('lastpublished'),
+            publishButton = this.actions.get("publishButton");
+        publishButton.stopObserving('click');
+        if (status == null || status == undefined || status == 'inprogress' || status == 'published' && lastpublished < lastupdated) {
+            publishButton.observe("click", this.publish.bind(this));
+            publishButton.removeClassName("disabled");
+        }
     },
     updateHeader: function(){
         this.element.down("span.header_label").update(this._node.getMetadata().get("text"));
@@ -118,7 +130,6 @@ Class.create("LomMetaEditor", AbstractEditor, {
         var values = new Hash();
         $A(category.children).each(function(field){
             var fieldSettings = this.prepareMetaFieldEntry(field, form, 1, 'meta.fields.'+category.nodeName+'.', metadata, values);
-
             if (!fieldSettings) return;
             if (fieldSettings.length){
                 for(var k=0; k<fieldSettings.length; k++){
@@ -220,55 +231,6 @@ Class.create("LomMetaEditor", AbstractEditor, {
         prefix = ('meta_lom.' + (prefix || '')).replace(/\.$/, '');
         var text = MessageHash[prefix+'.'+key];
         return text||key;
-    },
-
-    /**
-     * Create a Form control with specific options
-     * @param options object|null, key value pair properties to create the form control
-     */
-    createFormControl: function(options){
-        var $this = this;
-        var ctrl;
-        switch(options.type){
-            case 'checkbox':
-                ctrl = new Element('input', {type:'checkbox', className:"SF_fieldCheckBox", name: options.name});
-                ctrl.checked = options.defaultValue?true:false;
-                break;
-            case 'text':
-                ctrl = new Element('input', {type:'text', className:"SF_Input", name: options.name});
-                ctrl.checked = options.defaultValue?true:false;
-                break;
-            case 'longtext':
-                ctrl = new Element('textarea', {type:'text', className:"SF_Input", name: options.name});
-                //element = '<textarea class="SF_input" style="height:70px;" data-ctrl_type="'+type+'" data-mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
-                ctrl.checked = options.defaultValue?true:false;
-                break;
-            case 'label':
-                ctrl = new Element('span').update(options.text);
-                break;
-            case 'date':
-                ctrl = new Element('input', {type:'date', className:"SF_Input", name: options.name});
-                break;
-            case 'optionset':
-                var multiple = options.multiple?'multiple="true"':'';
-                var ctrl = new Element('select', {className:'SF_input', name:options.name, 'data-mandatory':options.mandatory?true:false});
-                if (multiple) ctrl.multiple = true;
-
-                var choices = '';
-                if(!options.mandatory && !multiple) choices += '<option value=""></option>';
-                var optionsetname=options.meta.getAttribute('optionset-name');
-                var optionset = XPathSelectSingleNode(this.metadata, '//optionsets/optionset[@name="'+optionsetname+'"]');
-
-                if (optionset){
-                    $A(optionset.getAttribute('values').split('|')).each(function(choice){
-                        choices += '<option value="'+choice+'">'+$this.getMetaTranslation(choice, 'optionset.'+optionsetname)+'</option>';
-                    });
-                }
-                ctrl.update(choices);
-                break;
-        }
-
-        return ctrl;
     },
 
     /**
@@ -397,12 +359,60 @@ Class.create("LomMetaEditor", AbstractEditor, {
             conn.setMethod("post");
             conn.onComplete = function(transport){
                 //app.actionBar.parseXmlMessage(transport.responseXML);
-                this._node.getMetadata().set('lommetadata', transport.responseText);
+                var meta = this._node.getMetadata();
+                var data = transport.responseJSON || {};
+                meta.set('lommetadata', JSON.stringify(data.metadata||{}));
+                meta.set('lastupdated', data.manifest && data.manifest.lastupdated);
                 this.setClean();
+                this.refreshActionsToolbar();
             }.bind(this);
             conn.sendAsync();
         }
 
+
+    },
+    publish: function(){
+        if (this.isDirty()){
+            app.displayMessage("ERROR", MessageHash['meta_lom.save_required']);
+            return;
+        }
+        var toSubmit = new Hash();
+        var missing = this.formManager.serializeParametersInputs(this.element.down("#categoryTabulator"), toSubmit, 'DCO_');
+        if(missing){
+            app.displayMessage("ERROR", MessageHash['boaconf.36']);
+        }else{
+            if (!window.confirm(MessageHash["meta_lom.publish_confirmation"])) return;
+            toSubmit = new Hash();
+            toSubmit.set("action", "publish_metadata");
+            toSubmit.set("plugin_id", 'meta.lom');
+            toSubmit.set("dir", app.getContextNode().getPath());
+            toSubmit.set("file", this._node.getPath());
+            toSubmit.set('spec_id', this.getSpecId());
+            app.actionBar.submitForm(this.oForm);
+ 
+            var conn = new Connexion();
+            conn.setParameters(toSubmit);
+            conn.setMethod("post");
+            conn.onComplete = function(transport){
+                if (transport.responseJSON){
+                    var publishButton = this.actions.get("publishButton");
+                    publishButton.addClassName("disabled");
+                    publishButton.stopObserving('click');
+                    var data = transport.responseJSON;
+                    var meta = this._node.getMetadata();                    
+                    meta.set('status_id', data.status_id);
+                    meta.set('status', data.status);
+                    meta.set('lastpublished', data.lastpublished);
+                    meta.set('manifest', transport.responseText);
+                }
+                else {
+                    app.actionBar.parseXmlMessage(transport.responseXML);
+                }
+                this.setClean();
+                //hideLightBox(true);
+            }.bind(this);
+            conn.sendAsync();
+        }
 
     },
     getOptionSet: function(optionsetname){

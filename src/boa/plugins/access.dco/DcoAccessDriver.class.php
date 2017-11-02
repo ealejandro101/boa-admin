@@ -518,7 +518,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 }
                 break;            
       
-            case "editdco";
+            case "editdco":
                 $selection = new UserSelection();
                 $selection->initFromHttpVars();
                 $currentFile = $selection->getUniqueFile();
@@ -538,15 +538,16 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 $manifest->status = $meta["status"];
                 $manifest->id = $meta["dcoid"];
                 $manifest->customicon = $meta["customicon"];
+                $manifest->lastupdated = date('c'); //ISO format
                 $this->updateManifest($urlBase, $manifest);
-                $this->updateCustomIcon($urlBase, $manifestNode->icon, $meta["customicon"]);
+                $this->updateCustomIcon($urlBase, $manifestNode->customicon, $meta["customicon"]);
                 $manifestNode = $this->getExplorer()->getDcoManifestNode($urlBase."/.manifest"); //Reload the node
                 if(!isSet($nodesDiffs)) $nodesDiffs = $this->getNodesDiffArray();
                 $nodesDiffs["UPDATE"][$currentFile] = $manifestNode;
                 //HTMLWriter::charsetHeader("application/json");
                 //print(json_encode($manifest));
                 break;
-            case "mkdco";
+            case "mkdco":
                 $messtmp="";
                 $id = $this->getUniqueId($dir); //$httpVars["dcotitle"]
                 $dirname=$id;// Utils::decodeSecureMagic($id, APP_SANITIZE_HTML_STRICT);
@@ -579,11 +580,15 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                 $manifest->version = "1.0";
                 $manifest->id = $id;
                 $manifest->customicon = $meta["customicon"];
-                $this->createManifest($dir."/".$dirname, $manifest);
+                $metadata = array();
                 if ($this->metaPlugin != null){
-                    $this->metaPlugin->initMetaFromSpec($dir."/".$dirname, $meta["dcotype"]);
+                    $metadata = $this->metaPlugin->initMetaFromSpec($dir."/".$dirname, $meta["dcotype"]);
                 }
-                $this->updateCustomIcon($dir."/".$dirname, null, $meta["customicon"]);
+                $json = new \stdClass();
+                $json->manifest = $manifest;
+                $json->metadata = $metadata;
+                $this->createManifest($dir."/".$dirname, $json);
+                $this->updateCustomIcon($this->urlBase."/".$dirname, null, $meta["customicon"]);
 
                 $messtmp.=$mess["access_dco.create.success.pre"]." '".SystemTextEncoding::toUTF8($manifest->title)."' ".$mess["access_dco.create.success.pos"]." ".$id;
                 //if($dir=="") {$messtmp.="/";} else {$messtmp.= SystemTextEncoding::toUTF8($dir);}
@@ -875,6 +880,13 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
                     return $errorMessage;
                 }
 
+                break;
+
+            //------------------------------------
+            //  SET OBJECT ENTRY POINT
+            //------------------------------------
+            case 'set_entry_point':
+                print($this->setObjectEntryPoint($httpVars["path"]));
                 break;
         }
 
@@ -1943,16 +1955,16 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         $dirname = dirname($path);
         $filename = basename($path);
         unlink($file);
-        if (file_exists("$dirname/.$filename.metadata")){
-            unlink("$dirname/.$filename.metadata");
+        if (file_exists("$dirname/.$filename.manifest")){
+            unlink("$dirname/.$filename.manifest");
         }
     }
 
     private static function myRename($old, $new){
         $res = rename($old,$new);
-        $old_metadata = dirname($old)."/.".basename($old).".metadata";
+        $old_metadata = dirname($old)."/.".basename($old).".manifest";
         if (file_exists($old_metadata)){
-            $new_metadata = dirname($new)."/.".basename($new).".metadata";
+            $new_metadata = dirname($new)."/.".basename($new).".manifest";
             //echo($old_metadata . "::" . $new_metadata);
             rename($old_metadata, $new_metadata);
         }
@@ -1967,49 +1979,27 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         return $this->_explorer;
     }
 
-    /*public function loadSpecs(){
-        if ($this->_specs != null){
-            return $this->_specs;
-        }
-
-        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
-
-        if (!is_dir($specsPath)){
-            mkdir($specsPath, 0755, true);
-        }
-
-        $specs = array();
-        foreach(glob($specsPath."/*.xml") as $file){
-            $xml = new \DOMDocument();
-            $xml->load($file);
-            $xpath = new \DOMXPath($xml);
-
-            $id = $xpath->query("/spec/id");
-            $name = $xpath->query("/spec/name");
-            $spec = array("name" => $name[0]->nodeValue, "id" => $id[0]->nodeValue, "path" => basename($file)); //basename($file));
-            //$spec->name = $name[0]->nodeValue;
-            //$spec->path = $name[0]->basename($file);
-            $specs[] = $spec;
-        }
-        $this->_specs = $specs;
-        return $specs;
-    }*/
-    
     private function updateManifest($dir, $manifest){
         $filename="/.manifest";
-        $content = json_encode($manifest, JSON_PRETTY_PRINT);
+        if (!isset($manifest->lastupdated)) $manifest->lastupdated = date('c');
+        $meta = json_decode(file_get_contents($dir.$filename));
+        $meta->manifest = $manifest;
+        $this->saveJsonFile($dir.$filename, $meta);
+    }
 
-        $fp = fopen($dir.$filename, "w");
+    private function saveJsonFile($path, $json){
+        $fp = fopen($path, "w");
         if($fp !== false){
+            $content = json_encode($json);
             @fwrite($fp, $content, strlen($content));
             @fclose($fp);
         }
     }
 
-    private function createManifest($dir, $manifest){
+    private function createManifest($dir, $json){
         $filename="/.manifest";
-        $content = json_encode($manifest, JSON_PRETTY_PRINT);
-
+        $json->manifest->lastupdated = date('c');
+        $content = json_encode($json);
         $error = $this->createEmptyFile($dir, $filename, $content);
         if(isSet($error)){
             throw new ApplicationException($error);
@@ -2018,9 +2008,10 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
 
     private function updateCustomIcon($path, $oldIconId, $newIconId){
         if ($oldIconId == $newIconId) return; //There is nothing to do.
+
         if ($oldIconId != null) { //need to delete oldIconId
             $targetPath = $path."/src/".$oldIconId;    
-            unlink($targetPath);        
+            @unlink($targetPath);        
         }
 
         if ($newIconId != null) { //need to save the newIconId
@@ -2036,6 +2027,46 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         $uid = GUID();
         while (file_exists($this->urlBase.$dir."/".$uid."@boa.udea.edu.co")) $uid = GUID();
         return $uid."@boa.udea.edu.co";
+    }
+
+    private function setObjectEntryPoint($path){
+        if (!file_exists($this->urlBase . $path)){
+            Logger::logAction("ERROR : setObjectEntryPoint : Invalid Path : " . $path, "");
+            return $mess["access_dco.set_entry_point_invalid_path"];
+        }
+
+        $parts = explode('/', $path);
+        if (count($parts) < 3 || $parts[2] !== 'content'){
+            Logger::logAction("ERROR : setObjectEntryPoint : Path is not a content file : " . $path, "");
+            return $mess["access_dco.set_entry_point_not_content"];
+        }
+
+        $object_id = implode('/', array_slice($parts, 0, 2));
+        $manifestPath = $this->urlBase . $object_id . "/.manifest";
+        if (!file_exists($manifestPath)){
+            Logger::logAction("ERROR : setObjectEntryPoint : Manifest file not found : " . $path, "");
+            return $mess["access_dco.set_entry_point_manifest_error"];
+        }
+
+        $json = json_decode(file_get_contents($manifestPath));
+        if (!$json || $json === null){
+            Logger::logAction("ERROR : setObjectEntryPoint : Corrupted manifest file : " . $path, "");
+            return $mess["access_dco.set_entry_point_manifest_error"];
+        }
+        
+        array_splice($parts, 0, 3);
+        $path = implode('/', $parts);
+        $json->manifest->entrypoint = $path;
+        $this->saveJsonFile($manifestPath, $json);
+
+        $manifestPath .=".published";
+        //If object is already published, then update the preview icon there also
+        if (file_exists($manifestPath)){
+            $json = json_decode(file_get_contents($manifestPath));
+            $json->manifest->entrypoint = $path;
+            $this->saveJsonFile($manifestPath, $json);
+        }
+        return "SUCCESS";
     }
 
 }

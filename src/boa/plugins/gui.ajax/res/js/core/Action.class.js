@@ -773,6 +773,17 @@ Class.create("Action", {
                 this[key] = value;
             }
         }.bind(object));
+    },
+    setContext: function (context){
+        var prop, properties = ['selection', 'dir', 'allowedMimes', 'root', 'inZip', 'recycle',
+            'behaviour', 'actionBar', 'actionBarGroup', 'contextMenu', 'appWidgets', 'infoPanel', 'customFn'];
+        
+        for(var i = 0; i < properties.length; i++){
+            prop = properties[i];
+            if (prop in context) {
+                this.context[prop] = context[prop];
+            }
+        }
     }
 
 });

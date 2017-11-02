@@ -52,6 +52,7 @@ Class.create("ManifestEditor", AbstractEditor, {
             values.set('dcoid', this.manifest.id);
             values.set('author', this.manifest.author);
             values.set('version', this.manifest.version);
+            values.set('status', this.manifest.status_id);
             values.set('dcotitle', this.manifest.title);
             values.set('dcotype', this.manifest.type_id);
             values.set('dcocontype', this.manifest.conexion_type);
@@ -240,10 +241,18 @@ Class.create("ManifestEditor", AbstractEditor, {
         }else{
             app.actionBar.submitForm(this.oForm);
 
+            if (toSubmit.get('DCO_customicon') != ''){
+                toSubmit.unset('DCO_customicon_original_binary');
+                toSubmit.unset('DCO_customicon_original_binary_apptype');
+            }
             var conn = new Connexion();
             conn.setParameters(toSubmit);
             conn.setMethod("post");
             conn.onComplete = function(transport){
+                if (this._node && this._node.getMime() == 'dco'){
+                    var src = this._node.findChildByPath(this._node.getPath()+'/src');
+                    src && src.clear();
+                }
                 app.actionBar.parseXmlMessage(transport.responseXML);
                 this.setClean();
                 hideLightBox(true);
