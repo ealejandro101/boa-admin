@@ -1983,6 +1983,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         $filename="/.manifest";
         if (!isset($manifest->lastupdated)) $manifest->lastupdated = date('c');
         $meta = json_decode(file_get_contents($dir.$filename));
+        $manifest->is_a = 'dco';
         $meta->manifest = $manifest;
         $this->saveJsonFile($dir.$filename, $meta);
     }
@@ -1999,6 +2000,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
     private function createManifest($dir, $json){
         $filename="/.manifest";
         $json->manifest->lastupdated = date('c');
+        $json->is_a = 'dco';
         $content = json_encode($json);
         $error = $this->createEmptyFile($dir, $filename, $content);
         if(isSet($error)){
