@@ -107,16 +107,45 @@ Class.create("LomMetaEditor", AbstractEditor, {
         if (status == null || status == undefined || status == 'inprogress' || status == 'published' && lastpublished < lastupdated) {
             publishButton.observe("click", this.publish.bind(this));
             publishButton.removeClassName("disabled");
+            var statusText = MessageHash["meta_lom.pending_to_publish"];
+            if (lastpublished){
+                var otherText = MessageHash["meta_lom.last_published"];
+                otherText = otherText.replace('[DATE]', moment(lastpublished).format('MMMM D, YYYY hh:mm a'));
+                statusText += ' ' + otherText;
+                this.element.down('span.header_sublabel').update('<i class="fa-exclamation-sign" style="font-size:16px;color:#ffff00;padding:0 4px 0 0"/>');
+                this.element.down('span.header_sublabel').insert(statusText);
+            }
+            var overlay = meta.get('overlay_icon');
+            if (overlay){
+                if (/(,?)(alert|ok)\.png/.test(overlay)){
+                    overlay = overlay.replace(/(,?)(alert|ok)\.png/, '$1alert.png');    
+                }
+                else {
+                    overlay += ',alert.png';
+                }
+                
+            }
+            else {
+                overlay = 'alert.png';
+            }
+            meta.set('overlay_icon', overlay);
+            this._node.notify('loaded');
         }
     },
     updateHeader: function(){
-        this.element.down("span.header_label").update(this._node.getMetadata().get("text"));
+        var meta = this._node.getMetadata();
+        this.element.down("span.header_label").update(meta.get("text"));
         var icon = resolveImageSource(this._node.getIcon(), "/images/mimes/64");
-        this.element.down("span.header_label").setStyle(
-            {
+        this.element.down("span.header_label").setStyle({
                 backgroundImage:"url('"+icon+"')",
                 backgroundSize : '34px'
             });
+        var statusText = meta.get('status');
+        var lastPublished = meta.get('lastpublished');
+        if (lastPublished){
+            statusText += moment(lastPublished).format(" (YYYY-MM-DD hh:mm a)");
+        }
+        this.element.down('span.header_sublabel').update(statusText);
     },
     /**
      * Process a metadata category to prepare form entry fields for it.
@@ -399,11 +428,27 @@ Class.create("LomMetaEditor", AbstractEditor, {
                     publishButton.addClassName("disabled");
                     publishButton.stopObserving('click');
                     var data = transport.responseJSON;
-                    var meta = this._node.getMetadata();                    
+                    var meta = this._node.getMetadata();
                     meta.set('status_id', data.status_id);
                     meta.set('status', data.status);
                     meta.set('lastpublished', data.lastpublished);
                     meta.set('manifest', transport.responseText);
+                    var overlay = meta.get('overlay_icon');
+                    if (overlay){
+                        if (/(,?)alert\.png/.test(overlay)){
+                            overlay = overlay.replace(/(,?)alert\.png/, '$1ok.png');
+                        }
+                        else {
+                            overlay += ',ok.png';
+                        }
+                        
+                    }
+                    else {
+                        overlay = 'ok.png';
+                    }
+                    meta.set('overlay_icon', overlay);
+                    this._node.notify('loaded');
+                    this.updateHeader();
                 }
                 else {
                     app.actionBar.parseXmlMessage(transport.responseXML);

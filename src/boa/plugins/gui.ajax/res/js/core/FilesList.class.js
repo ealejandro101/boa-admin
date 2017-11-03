@@ -1830,6 +1830,16 @@ Class.create("FilesList", SelectableElements, {
             {
                 var metaValue = metaData.get(s) || "";
                 if(!metaValue) continue;
+                var attr = attributeList.get(s);
+                if (attr && attr.additionalText) {
+                    var isDate = /^date:/.test(attr.additionalText);
+                    var metaKey = attr.additionalText.replace(/^date:/, '');
+                    var extraText = metaData.get(metaKey);
+                    if (extraText) {
+                        if (isDate) extraText = moment(extraText).format('YYYY-MM-DD hh:mm a');
+                        metaValue += " ("+extraText+")";
+                    }
+                }
                 cell.update('<span class="text_label">' + metaValue  + "</span>");
             }
             if(!first){

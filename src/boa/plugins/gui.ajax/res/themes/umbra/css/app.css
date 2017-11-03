@@ -951,6 +951,11 @@ div.editor_header > span.header_label{
     overflow: visible;
 }
 
+div.editor_header > span.header_sublabel{
+    padding: 5px 0 0 62px;
+    color: #ebebeb;
+}
+
 .action_bar.text_only{
     line-height: 16px;
     height:30px;

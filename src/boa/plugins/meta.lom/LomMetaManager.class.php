@@ -35,6 +35,7 @@ use BoA\Core\Http\HTMLWriter;
 use BoA\Core\Http\XMLWriter;
 use BoA\Core\Plugins\Plugin;
 use BoA\Core\Services\AuthService;
+use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Xml\ManifestNode;
@@ -44,6 +45,7 @@ defined('APP_EXEC') or die( 'Access not allowed');
 
 class LomMetaManager extends Plugin implements DcoSpecProvider {
     const PUBLISHED_STATUS = 'published';
+    const INPROGRESS_STATUS = 'inprogress';
     /**
      * @var AbstractAccessDriver
      */
@@ -52,6 +54,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
      * @var MetaStoreProvider
      */
     protected $metaStore;
+    private $mess;
 
     public function init($options){
         $this->options = $options;
@@ -184,17 +187,48 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
      * @return void
      */
     public function extractMeta(&$node, $contextNode = false, $details = false){
-
         $metaPath = $node->getUrl();
-        if (is_dir($metaPath)){
+        if (is_dir($metaPath) && $node->APP_mime != 'dco') return;
+
+        $this->mess = ConfService::getMessages();
+        $isRoot = is_dir($metaPath);
+        if ($isRoot){
+
             $metaPath .= "/.manifest";
         }
         else {
             $metaPath = dirname($metaPath)."/.".basename($metaPath).".manifest";
+            $overlay = 'dro.png';
         }
-        $content = @file_get_contents($metaPath);
+        if (!file_exists($metaPath)) return;
+        $content = file_get_contents($metaPath);
         $meta = json_decode($content);
         $metadata = array("lommetadata" => json_encode($meta->metadata));
+
+        if (!$isRoot){
+            $metadata["status_id"] = $meta->manifest->status;
+            $metadata["status"] = $this->mess["access_dco.".$meta->manifest->status];
+            $metadata["lastupdated"] = $meta->manifest->lastupdated;
+            if (isset($meta->manifest->lastpublished)){
+                $metadata["lastpublished"] = $meta->manifest->lastpublished;    
+            }
+        }
+        $status = $meta->manifest->status;
+        if ($status == self::PUBLISHED_STATUS){
+            if (isset($meta->manifest->lastpublished) && $meta->manifest->lastpublished < $meta->manifest->lastupdated){
+                $overlay = (isset($overlay)?$overlay.",":"")."alert.png";
+            }
+            else {
+                $overlay = (isset($overlay)?$overlay.",":"")."ok.png";
+            }
+            
+        }
+        else if ($status == self::INPROGRESS_STATUS) {
+            $overlay = (isset($overlay)?$overlay.",":"")."alert.png";
+        }
+        if (isset($overlay)){
+            $metadata['overlay_icon'] = $overlay;
+        }
         $node->mergeMetadata($metadata);
     }
     
@@ -224,6 +258,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
     public function onGet($action, $httpVars, $fileVars){
         
+        $mess = $this->mess = ConfService::getMessages();
         switch ($action) {
             case 'get_spec_by_id':
                 $this->getSpecById($httpVars["spec_id"]);
@@ -241,7 +276,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                 Controller::applyHook("node.before_create", array(new ManifestNode($dir."/".$dirname), -2));
                 $error = $this->mkDir($dir, $dirname);
                 if(isSet($error)){
-                        throw new ApplicationException($error);
+                    throw new ApplicationException($error);
                 }
                 $messtmp.="$mess[38] ".SystemTextEncoding::toUTF8($dirname)." $mess[39] ";
                 if($dir=="") {$messtmp.="/";} else {$messtmp.= SystemTextEncoding::toUTF8($dir);}
@@ -262,6 +297,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
     }
 
     public function onPost($action, $httpVars, $fileVars){
+        $this->mess = ConfService::getMessages();
         switch ($action) {
             case "save_dcometa":
                 $this->saveDcoMeta($action, $httpVars, $fileVars);
@@ -440,6 +476,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                 $json->manifest = new \stdClass();
                 $json->manifest->title = basename($currentFile);
                 $json->manifest->type = $spec_id;
+                $json->manifest->status = self::INPROGRESS_STATUS;
                 $json->manifest->id = $currentFile;
             }
             if (!isset($json->manifest->is_a)){
@@ -497,7 +534,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $manifest->type_id = $manifest->type;
         $manifest->type = $type;
         $manifest->status_id = $manifest->status;
-        $manifest->status = $mess["access_dco.".$manifest->status];
+        $manifest->status = $this->mess["access_dco.".$manifest->status];
         print(json_encode($manifest));
     }
 
