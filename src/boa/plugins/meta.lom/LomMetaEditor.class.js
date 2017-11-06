@@ -115,21 +115,6 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 this.element.down('span.header_sublabel').update('<i class="fa-exclamation-sign" style="font-size:16px;color:#ffff00;padding:0 4px 0 0"/>');
                 this.element.down('span.header_sublabel').insert(statusText);
             }
-            var overlay = meta.get('overlay_icon');
-            if (overlay){
-                if (/(,?)(alert|ok)\.png/.test(overlay)){
-                    overlay = overlay.replace(/(,?)(alert|ok)\.png/, '$1alert.png');    
-                }
-                else {
-                    overlay += ',alert.png';
-                }
-                
-            }
-            else {
-                overlay = 'alert.png';
-            }
-            meta.set('overlay_icon', overlay);
-            this._node.notify('loaded');
         }
     },
     updateHeader: function(){
@@ -394,6 +379,20 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 meta.set('lastupdated', data.manifest && data.manifest.lastupdated);
                 this.setClean();
                 this.refreshActionsToolbar();
+                var overlay = meta.get('overlay_icon');
+                if (overlay){
+                    if (/(,?)(alert|ok)\.png/.test(overlay)){
+                        overlay = overlay.replace(/(,?)(alert|ok)\.png/, '$1alert.png');    
+                    }
+                    else {
+                        overlay += ',alert.png';
+                    }                
+                }
+                else {
+                    overlay = (meta.get('is_file')?'dro.png,':'')+'alert.png';
+                }
+                meta.set('overlay_icon', overlay);
+                this._node.notify('node_replaced', this._node);
             }.bind(this);
             conn.sendAsync();
         }
@@ -433,6 +432,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
                     meta.set('status', data.status);
                     meta.set('lastpublished', data.lastpublished);
                     meta.set('manifest', transport.responseText);
+                    this.updateHeader();
                     var overlay = meta.get('overlay_icon');
                     if (overlay){
                         if (/(,?)alert\.png/.test(overlay)){
@@ -447,8 +447,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
                         overlay = 'ok.png';
                     }
                     meta.set('overlay_icon', overlay);
-                    this._node.notify('loaded');
-                    this.updateHeader();
+                    this._node.notify('node_replaced', this._node);
                 }
                 else {
                     app.actionBar.parseXmlMessage(transport.responseXML);
