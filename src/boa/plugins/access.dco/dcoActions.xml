@@ -1156,6 +1156,7 @@
                                 <a href="#" onclick="return false;" class="icon-save disabled" id="saveButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/filesave.png" width="22" height="22" alt="APP_MESSAGE[53]" border="0"><br><span message_id="53">APP_MESSAGE[53]</span></a>
                             </div>
                             <span class="header_label"></span>
+                            <span class="header_sublabel"></span>
                         </div>
                         <div id="categoryTabulator">
                             <ul class="tabrow">

@@ -1087,7 +1087,7 @@ Class.create("FilesList", SelectableElements, {
      */
     reload: function(additionnalParameters){
         if(this.getCurrentContextNode()){
-      this.empty();
+            this.empty();
             this.fill(this.getCurrentContextNode());
         }
     },
@@ -1515,20 +1515,20 @@ Class.create("FilesList", SelectableElements, {
                     switch(ovIcs.length){
                         case 1:
                             backgroundPosition = '14px 11px, ' + backgroundPosition;
-                            backgroundImage = 'url("'+resolveImageSource(ovIcs[0], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(metaData.get('icon'), "/images/mimes/ICON_SIZE", 16)+'")';
+                            backgroundImage = 'url("'+resolveImageSource(ovIcs[0], "/images/overlays/ICON_SIZE", 8)+'"), ' + backgroundImage;
                         break;
                         case 2:
                             backgroundPosition = '2px 11px, 14px 11px, ' + backgroundPosition;
-                            backgroundImage = 'url("'+resolveImageSource(ovIcs[0], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[1], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(metaData.get('icon'), "/images/mimes/ICON_SIZE", 16)+'")';
+                            backgroundImage = 'url("'+resolveImageSource(ovIcs[0], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[1], "/images/overlays/ICON_SIZE", 8)+'"), ' + backgroundImage;
                         break;
                         case 3:
                             backgroundPosition = '14px 2px, 2px 11px, 14px 11px, ' + backgroundPosition;
-                            backgroundImage = 'url("'+resolveImageSource(ovIcs[0], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[1], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[2], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(metaData.get('icon'), "/images/mimes/ICON_SIZE", 16)+'")';
+                            backgroundImage = 'url("'+resolveImageSource(ovIcs[0], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[1], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[2], "/images/overlays/ICON_SIZE", 8)+'"), ' + backgroundImage;
                         break;
                         case 4:
                         default:
                             backgroundPosition = '2px 2px, 14px 2px, 2px 11px, 14px 11px, ' + backgroundPosition;
-                            backgroundImage = 'url("'+resolveImageSource(ovIcs[0], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[1], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[2], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[3], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(metaData.get('icon'), "/images/mimes/ICON_SIZE", 16)+'")';
+                            backgroundImage = 'url("'+resolveImageSource(ovIcs[0], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[1], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[2], "/images/overlays/ICON_SIZE", 8)+'"), url("'+resolveImageSource(ovIcs[3], "/images/overlays/ICON_SIZE", 8)+'"), ' + backgroundImage;
                         break;
                     }
                 }
@@ -1830,6 +1830,16 @@ Class.create("FilesList", SelectableElements, {
             {
                 var metaValue = metaData.get(s) || "";
                 if(!metaValue) continue;
+                var attr = attributeList.get(s);
+                if (attr && attr.additionalText) {
+                    var isDate = /^date:/.test(attr.additionalText);
+                    var metaKey = attr.additionalText.replace(/^date:/, '');
+                    var extraText = metaData.get(metaKey);
+                    if (extraText) {
+                        if (isDate) extraText = moment(extraText).format('YYYY-MM-DD hh:mm a');
+                        metaValue += " ("+extraText+")";
+                    }
+                }
                 cell.update('<span class="text_label">' + metaValue  + "</span>");
             }
             if(!first){

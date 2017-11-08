@@ -10,47 +10,47 @@ function splitOverlayIcons(node){
 }
 
 function CustomXTree(rootNode, sAction, filter) {
-	this.WebFXTree = WebFXTree;
-	this.loaded = true;
-	this.node = rootNode;
-	var icon = rootNode.getIcon();
-	if(icon.indexOf(resourcesFolder+"/") != 0){
-		icon = resolveImageSource(icon, "/images/mimes/ICON_SIZE", 16);
-	}
-	var openIcon = rootNode.getMetadata().get("openicon");
-	if(openIcon){
-		if(openIcon.indexOf(resourcesFolder+"/") != 0){
-			openIcon = resolveImageSource(openIcon, "/images/mimes/ICON_SIZE", 16);
-		}
-	}else{
-		openIcon = icon;
-	}
-	
-	this.WebFXTree(rootNode.getLabel(), sAction, 'explorer', icon, openIcon);
-	// setup default property values
-	this.loading = false;
-	this.loaded = false;
-	this.errorText = "";
-	if(filter){
-		this.filter = filter;
- 	}
+    this.WebFXTree = WebFXTree;
+    this.loaded = true;
+    this.node = rootNode;
+    var icon = rootNode.getIcon();
+    if(icon.indexOf(resourcesFolder+"/") != 0){
+        icon = resolveImageSource(icon, "/images/mimes/ICON_SIZE", 16);
+    }
+    var openIcon = rootNode.getMetadata().get("openicon");
+    if(openIcon){
+        if(openIcon.indexOf(resourcesFolder+"/") != 0){
+            openIcon = resolveImageSource(openIcon, "/images/mimes/ICON_SIZE", 16);
+        }
+    }else{
+        openIcon = icon;
+    }
+    
+    this.WebFXTree(rootNode.getLabel(), sAction, 'explorer', icon, openIcon);
+    // setup default property values
+    this.loading = false;
+    this.loaded = false;
+    this.errorText = "";
+    if(filter){
+        this.filter = filter;
+    }
     this.overlayIcon = splitOverlayIcons(rootNode);
 
-	this._loadingItem = new WebFXTreeItem(MessageHash?MessageHash[466]:webFXTreeConfig.loadingText);
-	if(this.open) this.node.load();
-	else{
-		this.add(this._loadingItem);
-	}
+    this._loadingItem = new WebFXTreeItem(MessageHash?MessageHash[466]:webFXTreeConfig.loadingText);
+    if(this.open) this.node.load();
+    else{
+        this.add(this._loadingItem);
+    }
 };
 
 CustomXTree.prototype = new WebFXTree;
 
 CustomXTree.prototype._webfxtree_expand = WebFXTree.prototype.expand;
 CustomXTree.prototype.expand = function() {
-	if(!this.node.fake){
-		this.node.load();
-	}
-	this._webfxtree_expand();
+    if(!this.node.fake){
+        this.node.load();
+    }
+    this._webfxtree_expand();
 };
 
 CustomXTree.prototype.destroy = function(){
@@ -58,97 +58,97 @@ CustomXTree.prototype.destroy = function(){
 };
 
 CustomXTree.prototype.setRootNode = function(rootNode){
-	if(this.node){
-		var oldNode = this.node;
-	}
-	this.node = rootNode;	
-	var clear = function(){
-		this.open = false;
-		while (this.childNodes.length > 0)
-			this.childNodes[this.childNodes.length - 1].remove();
-		this.loaded = false;
-	};
-	this.node.observe("force_clear",  clear.bind(this));
-	this.node.observe("node_replaced",  clear.bind(this));
-	this.attachListeners(this, rootNode);
-	if(oldNode){
-		oldNode.notify("node_replaced");
-	}
-	//this.node.load();
+    if(this.node){
+        var oldNode = this.node;
+    }
+    this.node = rootNode;   
+    var clear = function(){
+        this.open = false;
+        while (this.childNodes.length > 0)
+            this.childNodes[this.childNodes.length - 1].remove();
+        this.loaded = false;
+    };
+    this.node.observe("force_clear",  clear.bind(this));
+    this.node.observe("node_replaced",  clear.bind(this));
+    this.attachListeners(this, rootNode);
+    if(oldNode){
+        oldNode.notify("node_replaced");
+    }
+    //this.node.load();
 };
 
 CustomXTree.prototype.attachListeners = function(jsNode, node){
-	node.observe("child_added", function(childPath){
-		if(node.getMetadata().get('paginationData')){
-			var pData = node.getMetadata().get('paginationData');
-			if(!this.paginated){
-				this.paginated = true;
-				if(pData.get('dirsCount')!="0"){
-					this.updateLabel(this.text + " (" + MessageHash[pData.get('overflowMessage')]+ ")");
-				}
-			}
-			//return;
-		}else if(this.paginated){
-			this.paginated = false;
-			this.updateLabel(this.text);
-		}
-		var child = node.findChildByPath(childPath);
-		if(child){
-			var jsChild = _nodeToTree(child, this);
-			if(jsChild){
-				this.attachListeners(jsChild, child);
-			}
-		}
-	}.bind(jsNode));
-	node.observe("node_replaced", function(newNode){
-		// Should refresh label / icon
-		if(jsNode.updateIcon){ 
-			var ic = resolveImageSource(node.getIcon(), "/images/mimes/ICON_SIZE", 16);
-			var oic = ic;
-			if(node.getMetadata().get("openicon")){
-				oic = resolveImageSource(node.getMetadata().get("openicon"), "/images/mimes/ICON_SIZE", 16);
-			}
-			jsNode.updateIcon(ic, oic);
+    node.observe("child_added", function(childPath){
+        if(node.getMetadata().get('paginationData')){
+            var pData = node.getMetadata().get('paginationData');
+            if(!this.paginated){
+                this.paginated = true;
+                if(pData.get('dirsCount')!="0"){
+                    this.updateLabel(this.text + " (" + MessageHash[pData.get('overflowMessage')]+ ")");
+                }
+            }
+            //return;
+        }else if(this.paginated){
+            this.paginated = false;
+            this.updateLabel(this.text);
+        }
+        var child = node.findChildByPath(childPath);
+        if(child){
+            var jsChild = _nodeToTree(child, this);
+            if(jsChild){
+                this.attachListeners(jsChild, child);
+            }
+        }
+    }.bind(jsNode));
+    node.observe("node_replaced", function(newNode){
+        // Should refresh label / icon
+        if(jsNode.updateIcon){ 
+            var ic = resolveImageSource(node.getIcon(), "/images/mimes/ICON_SIZE", 16);
+            var oic = ic;
+            if(node.getMetadata().get("openicon")){
+                oic = resolveImageSource(node.getMetadata().get("openicon"), "/images/mimes/ICON_SIZE", 16);
+            }
             jsNode.overlayIcon = splitOverlayIcons(node);
-		}
-		if(jsNode.updateLabel) jsNode.updateLabel(node.getLabel());
-	}.bind(jsNode));
+            jsNode.updateIcon(ic, oic);
+        }
+        if(jsNode.updateLabel) jsNode.updateLabel(node.getLabel());
+    }.bind(jsNode));
     var remover = function(e){
         jsNode.remove();
         window.setTimeout(function(){
             node.stopObserving("node_removed", remover);
         }, 200);
     };
-	node.observe("node_removed", remover);
-	node.observe("loading", function(){
-		//this.add(this._loadingItem);
-	}.bind(jsNode) );
-	node.observe("loaded", function(){
-		this._loadingItem.remove();
-		if(this.childNodes.length){
-			this._webfxtree_expand();
-		}
-	}.bind(jsNode) );
+    node.observe("node_removed", remover);
+    node.observe("loading", function(){
+        //this.add(this._loadingItem);
+    }.bind(jsNode) );
+    node.observe("loaded", function(){
+        this._loadingItem.remove();
+        if(this.childNodes.length){
+            this._webfxtree_expand();
+        }
+    }.bind(jsNode) );
 };
 
 function CustomXTreeItem(node, sAction, eParent) {
-	this.WebFXTreeItem = WebFXTreeItem;
-	this.node = node;
-	var icon = node.getIcon();
-	if(icon.indexOf(resourcesFolder+"/") != 0){
-		icon = resolveImageSource(icon, "/images/mimes/ICON_SIZE", 16);
-	}
-	var openIcon = node.getMetadata().get("openicon");
-	if(openIcon){
-		if(openIcon.indexOf(resourcesFolder+"/") != 0){
-			openIcon = resolveImageSource(openIcon, "/images/mimes/ICON_SIZE", 16);
-		}
-	}else{
-		openIcon = icon;
-	}
-	
-	this.folder = true;
-	this.WebFXTreeItem(
+    this.WebFXTreeItem = WebFXTreeItem;
+    this.node = node;
+    var icon = node.getIcon();
+    if(icon.indexOf(resourcesFolder+"/") != 0){
+        icon = resolveImageSource(icon, "/images/mimes/ICON_SIZE", 16);
+    }
+    var openIcon = node.getMetadata().get("openicon");
+    if(openIcon){
+        if(openIcon.indexOf(resourcesFolder+"/") != 0){
+            openIcon = resolveImageSource(openIcon, "/images/mimes/ICON_SIZE", 16);
+        }
+    }else{
+        openIcon = icon;
+    }
+    
+    this.folder = true;
+    this.WebFXTreeItem(
         node.getLabel(),
         sAction,
         eParent,
@@ -157,25 +157,25 @@ function CustomXTreeItem(node, sAction, eParent) {
         splitOverlayIcons(node)
     );
 
-	this.loading = false;
-	this.loaded = false;
-	this.errorText = "";
+    this.loading = false;
+    this.loaded = false;
+    this.errorText = "";
 
-	this._loadingItem = new WebFXTreeItem(MessageHash?MessageHash[466]:webFXTreeConfig.loadingText);
-	if (this.open) {
-		this.node.load();
-	}else{
-		this.add(this._loadingItem);
-	}
-	webFXTreeHandler.all[this.id] = this;
+    this._loadingItem = new WebFXTreeItem(MessageHash?MessageHash[466]:webFXTreeConfig.loadingText);
+    if (this.open) {
+        this.node.load();
+    }else{
+        this.add(this._loadingItem);
+    }
+    webFXTreeHandler.all[this.id] = this;
 };
 
 CustomXTreeItem.prototype = new WebFXTreeItem;
 
 CustomXTreeItem.prototype._webfxtree_expand = WebFXTreeItem.prototype.expand;
 CustomXTreeItem.prototype.expand = function() {
-	this.node.load();
-	this._webfxtree_expand();
+    this.node.load();
+    this._webfxtree_expand();
 };
 
 CustomXTreeItem.prototype.attachListeners = CustomXTree.prototype.attachListeners;
@@ -186,29 +186,29 @@ CustomXTreeItem.prototype.attachListeners = CustomXTree.prototype.attachListener
  */
 // Converts an xml tree to a js tree. See article about xml tree format
 function _nodeToTree(node, parentNode) {
-	if(parentNode.filter && !parentNode.filter(node)){
-		return false;
-	}
-	var jsNode = new CustomXTreeItem(node, null, parentNode);	
-	if(node.isLoaded())
-	{
-		jsNode.loaded = true;
-	}
-	jsNode.filename = node.getPath();	
-	if(parentNode.filter){
-		jsNode.filter = parentNode.filter;
-	}
+    if(parentNode.filter && !parentNode.filter(node)){
+        return false;
+    }
+    var jsNode = new CustomXTreeItem(node, null, parentNode);   
+    if(node.isLoaded())
+    {
+        jsNode.loaded = true;
+    }
+    jsNode.filename = node.getPath();   
+    if(parentNode.filter){
+        jsNode.filter = parentNode.filter;
+    }
     jsNode.overlayIcon = splitOverlayIcons(node);
 
-	node.getChildren().each(function(child){
-		var newNode = _nodeToTree(child, jsNode);
-		if(newNode){
-			if(jsNode.filter){
-				newNode.filter = jsNode.filter;
-			}
+    node.getChildren().each(function(child){
+        var newNode = _nodeToTree(child, jsNode);
+        if(newNode){
+            if(jsNode.filter){
+                newNode.filter = jsNode.filter;
+            }
             newNode.overlayIcon = splitOverlayIcons(child);
-			jsNode.add( newNode , false );
-		}
-	});	
-	return jsNode;	
+            jsNode.add( newNode , false );
+        }
+    }); 
+    return jsNode;  
 };

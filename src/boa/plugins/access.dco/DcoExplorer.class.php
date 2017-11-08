@@ -101,8 +101,9 @@ class DcoExplorer{
         $contype_string = $driver->mess["access_dco.dco_contype"];
         $type_string = $driver->mess["access_dco.dco_type"];
         $author_string = $driver->mess["access_dco.dco_author"];
+        $author_string = $driver->mess["access_dco.status"];
         XMLWriter::header();        
-        XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail" switchGridMode="filelist"><column messageString="'.$title_string.'" attributeName="APP_label" sortType="String"/><column messageString="'.$type_string.'" attributeName="type" sortType="String"/><column messageString="'.$author_string.'" attributeName="author" sortType="String"/></columns>');
+        XMLWriter::sendFilesListComponentConfig('<columns switchDisplayMode="detail" switchGridMode="filelist"><column messageString="'.$title_string.'" attributeName="APP_label" sortType="String"/><column messageString="'.$type_string.'" attributeName="type" sortType="String"/><column messageString="'.$author_string.'" attributeName="author" sortType="String"/><column messageString="'.$status_string.'" attributeName="status" sortType="String" additionalText="date:lastpublished"/></columns>');
         //<column messageString="'.$contype_string.'" attributeName="conexion_type" sortType="String"/>
         foreach ($objects as $dco){
             $dco->loadNodeInfo(false, false, all);
