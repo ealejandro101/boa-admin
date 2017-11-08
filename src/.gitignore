@@ -1,2 +1,4 @@
 #Exclude site configuration
+.DS_Store
 .htaccess
+/node_modules
