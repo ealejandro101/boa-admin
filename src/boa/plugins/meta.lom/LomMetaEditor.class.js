@@ -64,6 +64,10 @@ Class.create("LomMetaEditor", AbstractEditor, {
         var categories = XPathSelectNodes(spec, '//fields/*[@type="category"]');
         var metadata = this._node.getMetadata().get("lommetadata");
         metadata = (metadata && metadata.evalJSON())||{};
+        //set available languages
+        var languages = this.getOptionSet('languages');
+        this.formManager.setAvailableLanguages(languages);
+        
         $A(categories).each(function(cat){
             var pane = new Element("div");
             var catName = this.getMetaNodeTranslation(cat, 'meta.fields.');
