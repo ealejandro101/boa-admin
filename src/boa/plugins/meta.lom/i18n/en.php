@@ -327,6 +327,12 @@ $mess=array(
 "optionset.languages.yi" => "Yídish",
 "optionset.languages.yo" => "Yoruba",
 "optionset.languages.zu" => "Zulú",
+"optionset.languages.way" => "Wayuunaki",
+"optionset.languages.ebc" => "êbêra chamí",
+"optionset.languages.kri" => "Kriol",
+"optionset.languages.min" => "Mɨnɨka",
+"optionset.languages.gun" => "Gunadule",
+"optionset.languages.yep" => "Ye´pa mha´sã",
 
 "optionset.requirements_types.browser" => "Browser",
 "optionset.requirements_types.operating system" => "Operating System",
@@ -351,6 +357,7 @@ $mess=array(
 "optionset.learning_resource_types.table" => "Table",
 "optionset.learning_resource_types.narrative text" => "Narrative Text",
 "optionset.learning_resource_types.thematic unit" => "Thematic Unit",
+"optionset.learning_resource_types.didactic sequence" => "Didactic Sequence",
 
 "optionset.interactivity_levels.very low" => "Very Low",
 "optionset.difficulty_levels.very easy" => "Muy fácil",

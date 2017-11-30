@@ -34,7 +34,7 @@ Class.create("FormManager", {
 
     _lang: null,
     modalParent : null,
-    availableLanguages: [],    
+    availableLanguages: null,    
 
 	initialize: function(modalParent){
         if(modalParent) this.modalParent = modalParent;
@@ -677,13 +677,14 @@ Class.create("FormManager", {
         var languageSelect = new Element('select', { name: '_translateto_lang'})
         formToolbar.insert(new Element('div').insert(languageSelect));
         var languages = this.availableLanguages;
-        if (!languages || languages.length == 0){
+        if (!languages || Object.keys(languages).length == 0){
             languages = window._bootstrap.parameters.get("availableLanguages");
         }
         var choices = [];
         choices.push('<option value="none" selected="selected">'+MessageHash[480]+'</option>');
         $A(Object.keys(languages)).each(function(key){
-            choices.push('<option value="'+key+'">'+languages[key]+'</option>');
+            if (key != 'none') 
+                choices.push('<option value="'+key+'">'+languages[key]+'</option>');
         });
         languageSelect.update(choices.join(''));
         this._lang = 'none';
