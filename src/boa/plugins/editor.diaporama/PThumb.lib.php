@@ -468,7 +468,7 @@ class PThumb{
             $isStream = (preg_match( "!^$wrappers_re://!", $target_file ) === 1);
             if($isStream){
                 $backToStreamTarget = $target_file;
-                $target_file = tempnam(AJXP_Utils::getAjxpTmpDir(), "pthumb_");
+                $target_file = tempnam(BoA\Core\Utils\Utils\Utils::getAppTmpDir(), "pthumb_");
             }
 
             switch ($format){

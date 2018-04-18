@@ -267,7 +267,7 @@ Class.create("Diaporama", AbstractEditor, {
         if(this.splitter){
             this.splitter.options.onDrag = function(){
                 this.resizeImage(false);
-                this.actionBarPlacer();
+                if (this.actionBarPlacer) this.actionBarPlacer(); //Only available if floating
             }.bind(this);
             if(window.appMobile || !this.actions.get("toggleButton")) {
                 window.setTimeout(function(){
