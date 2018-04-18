@@ -1,5 +1,4 @@
 <?php
-<?php
 // This file is part of BoA - https://github.com/boa-project
 //
 // BoA is free software: you can redistribute it and/or modify

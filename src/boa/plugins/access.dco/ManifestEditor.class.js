@@ -179,8 +179,8 @@ Class.create("ManifestEditor", AbstractEditor, {
     },
     createEditor: function(settings){
         this.updateHeader();
-        this.tab = new SimpleTabs(this.oForm.down("#dco_manifest_tabs"));
         var container = this.oForm.down('#dco_manifest_tabs');
+        this.tab = new SimpleTabs(container);
         var pane = new Element('div');
         var form = new Element("div", {className:'manifest_form_container'});
 

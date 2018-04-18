@@ -170,8 +170,8 @@ Class.create("AbstractEditor" , {
         modal.observe("modal:resize", obs);
         this.element.observe("editor:close", function(){
             modal.stopObserving("modal:resize", obs);
-        });
-        
+            this.element.up("div.dialogContent").setStyle({position:null}); //Remove relative positioning which affects other editors
+        }.bind(this));
     },
     
     /**
