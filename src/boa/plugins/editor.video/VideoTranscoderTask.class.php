@@ -89,7 +89,7 @@ class VideoTranscoderTask implements ITask {
     function scan() {
         $repositories = ConfService::getRepositoriesList();
         $this->readConfiguration();
-        
+
         $mimesNode = $this->_plugin->getManifestRawContent("/editor/@mimes", "xml");
         $this->extensions = "";
         if ($mimesNode != null && $mimesNode->length) {
@@ -159,7 +159,7 @@ class VideoTranscoderTask implements ITask {
     * scan all folders in current repository
     */
     private function scanRepository($repository) {
-        $path = $path = $repository->getOption("PATH");
+        $path = $repository->getOption("PATH");
         if (empty($path)) return;
 
         $alternatepath = $repository->getOption("ALTERNATE_PATH");
@@ -245,21 +245,21 @@ class VideoTranscoderTask implements ITask {
 
     private function toMp4($input, $output, $size) {
         list($width, $height) = $this->availableSizes[$size];
-        $command = "ffmpeg -i $input -c:v libx264 -crf 19 -level 3.1 -preset slow -filter:v scale=$width:$height" .
-            " -sws_flags lanczos -c:a libfdk_aac -movflags faststart $output";
+        $command = "ffmpeg -i '$input' -c:v libx264 -crf 19 -level 3.1 -preset slow -filter:v scale=$width:$height" .
+            " -sws_flags lanczos -c:a libfdk_aac -movflags faststart '$output'";
         
         $result = shell_exec($command);
     }
 
     private function toWebM($input, $output, $size) {
         list($width, $heigh) = $this->availableSizes[$size];
-        $command = "ffmpeg -i $input -c:v libvpx -c:a libvorbis -filter:v scale=$width:$height $output";
+        $command = "ffmpeg -i '$input' -c:v libvpx -c:a libvorbis -filter:v scale=$width:$height '$output'";
         $result = shell_exec($command);
     }
 
     private function toOgv($input, $output, $size) {        
         list($width, $heigh) = $this->availableSizes[$size];
-        $command = "ffmpeg -i input.mkv -codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 output.ogv" .
+        $command = "ffmpeg -i '$input' -codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 '$output'" .
             " -sws_flags lanczos -c:a libfdk_aac -movflags faststart $output";
         
         $result = shell_exec($command);
