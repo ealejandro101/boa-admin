@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor id="editor.video" openable="true" formId="videojs_previewer"
+        mimes="flv,mov,mp4,m4v,m4a,aac,ogv,webm,mkv" previewProvider="true"
+        text="video_editor.1" title="video_editor.1" icon="frame_image.png" iconClass="icon-film"
+        className="VideoPreviewer" label="CONF_MESSAGE[Video Player]"
+        description="CONF_MESSAGE[Inserts a video player in the info panel, either HTML5 or Flash depending on the format.]" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../core.boa/registry.xsd">
+	<class_definition filename="editor.video/VideoReader.class.php" classname="BoA\Plugins\Editor\Video\VideoReader"/>
+    <server_settings>
+        <global_param name="STREAMING_SIZES" group="CONF_MESSAGE[Streaming]" type="string" label="CONF_MESSAGE[Available sizes]" description="CONF_MESSAGE[Provide the sizes that will be available for streaming as a comma separated list of values in the format: [KEY]:[WIDTH]x[HEIGHT]. E.g. high:1920x1080,small:640x360]" default="high:1920x1080,medium:1280x720,small:640x360" />
+        <global_param name="STREAMING_MP4" group="CONF_MESSAGE[Streaming]" type="boolean" label="CONF_MESSAGE[Mp4?]" description="CONF_MESSAGE[Convert video files to mp4 for streaming?]" default="true"/>
+        <global_param name="STREAMING_OGV" group="CONF_MESSAGE[Streaming]" type="boolean" label="CONF_MESSAGE[Ogv?]" description="CONF_MESSAGE[Convert video files to ogv for streaming?]" default="false"/>
+        <global_param name="STREAMING_WEBM" group="CONF_MESSAGE[Streaming]" type="boolean" label="CONF_MESSAGE[WebM?]" description="CONF_MESSAGE[Convert video files to webm for streaming?]" default="false"/>
+        <global_param name="MISC_THUMBNAILS" group="CONF_MESSAGE[Miscellaneous]" type="boolean" label="CONF_MESSAGE[Generate Thumbnails?]" description="CONF_MESSAGE[Should thumbnails be generated for video files?]" default=""/>
+        <global_param name="MISC_PREVIEW" group="CONF_MESSAGE[Miscellaneous]" type="boolean" label="CONF_MESSAGE[Generate gif preview?]" description="CONF_MESSAGE[Should a gif preview be generated for video files?]" default=""/>
+        <!--global_param name="THUMBNAIL_QUALITY" group="CONF_MESSAGE[Thumbnails]" type="integer" label="CONF_MESSAGE[Quality]" description="CONF_MESSAGE[Thumbs quality]" default="2"/-->
+    </server_settings>
+    <client_settings>
+        <resources>
+            <js file="plugins/editor.video/VideoPreviewer.class.js" className="VideoPreviewer"/>
+            <js file="plugins/editor.video/video-js/video.js" className="VideoJS"/>
+            <css file="plugins/editor.video/video-js/video-js.css"/>
+            <i18n path="plugins/editor.video/i18n" namespace="video_editor"/>
+        </resources>
+    </client_settings>
+    <clientForm id="videojs_previewer"><![CDATA[
+         <div id="videojs_previewer" box_width="420"></div>
+    ]]></clientForm>
+	<registry_contributions>
+		<actions>
+			<action name="read_video_data" contentTypedProvider="true">
+				<processing>
+					<serverCallback methodName="switchAction"></serverCallback>
+				</processing>
+			</action>
+			<action name="get_sess_id">
+				<processing>
+					<serverCallback methodName="switchAction"></serverCallback>
+				</processing>
+			</action>
+		</actions>
+        <!--
+        Sample hook for registering pre-encoded alternative versions of the videos. Still experimental.
+        <hooks>
+            <serverCallback methodName="videoAlternateVersions" hookName="node.info"/>
+        </hooks>
+        -->
+	</registry_contributions>
+	<dependencies>
+		<!-- Stream Wrapper must be implemented -->
+		<activePlugin pluginName="access.APP_STREAM_PROVIDER"/>
+	</dependencies>				
+</editor>
