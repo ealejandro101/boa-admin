@@ -191,7 +191,6 @@ class Controller{
             PluginsService::getInstance()->setPluginActive($split[0], $split[1]);
         }
 
-        $log = $actionName == 'get_specs_list'; //ToDelete
         if($actionName == "cross_copy"){
             $pService = PluginsService::getInstance();
             $actives = $pService->getActivePlugins();

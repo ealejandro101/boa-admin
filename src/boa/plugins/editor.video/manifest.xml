@@ -17,9 +17,10 @@
     <client_settings>
         <resources>
             <js file="plugins/editor.video/VideoPreviewer.class.js" className="VideoPreviewer"/>
+            <js file="plugins/editor.video/VideoPropertiesEditor.class.js?t=3" className="VideoPropertiesEditor"/>
             <js file="plugins/editor.video/video-js/video.js" className="VideoJS"/>
             <css file="plugins/editor.video/video-js/video-js.css"/>
-            <i18n path="plugins/editor.video/i18n" namespace="video_editor"/>
+            <i18n path="editor.video/i18n" namespace="video_editor"/>
         </resources>
     </client_settings>
     <clientForm id="videojs_previewer"><![CDATA[
@@ -32,17 +33,110 @@
 					<serverCallback methodName="switchAction"></serverCallback>
 				</processing>
 			</action>
-			<action name="get_sess_id">
-				<processing>
-					<serverCallback methodName="switchAction"></serverCallback>
-				</processing>
-			</action>
-		</actions>
-        <!--
-        Sample hook for registering pre-encoded alternative versions of the videos. Still experimental.
+            <action name="get_sess_id">
+                <processing>
+                    <serverCallback methodName="switchAction"></serverCallback>
+                </processing>
+            </action>
+            <action name="get_video_thumbnail">
+                <processing>
+                    <serverCallback methodName="switchAction"></serverCallback>
+                </processing>
+            </action>
+            <action name="store_video_thumbnail">
+                <processing>
+                    <serverCallback methodName="switchAction"></serverCallback>
+                </processing>
+            </action>
+            <action name="get_video_preview">
+                <processing>
+                    <serverCallback methodName="switchAction"></serverCallback>
+                </processing>
+            </action>
+            <action name="store_video_preview">
+                <processing>
+                    <serverCallback methodName="switchAction"></serverCallback>
+                </processing>
+            </action>
+            <action name="video_properties">
+                <gui text="video_editor.2" title="video_editor.3" src="dcometa.png" iconClass="icon-tags" hasAccessKey="false">
+                    <context selection="true" dir="false" recycle="hidden" actionBar="false" contextMenu="true" infoPanel="true"
+                        actionBarGroup="get" inZip="false">
+                    </context>
+                    <selectionContext dir="false" file="true" recycle="false" unique="true" allowedMimes="flv,mov,mp4,m4v,m4a,aac,ogv,webm,mkv"></selectionContext>
+                </gui>
+                <rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
+                <processing>
+                    <clientCallback prepareModal="true"><![CDATA[
+                        var userSelection = app.getUserSelection();
+                        if (!userSelection.isEmpty()){
+                            var node = userSelection.getNode(0);
+                            var onLoad = function (oForm){
+                                var editor = new VideoPropertiesEditor(oForm);
+                                editor.show(userSelection);
+                            }
+                            var onSubmit = function(oForm){};
+                            modal.showDialogForm('', 'videoproperties_form', onLoad, onSubmit, null, true, true);
+                        }
+                        ]]></clientCallback>
+                        <clientForm id="videoproperties_form"><![CDATA[
+                            <div id="videoproperties_form" action="videoproperties_form" class="tabbed_editor" box_width="80%" box_height="80%" box_resize="true" box_padding="0">
+                                <div class="editor_header">
+                                    <div class="action_bar">
+                                    </div>
+                                    <span class="header_label"></span>
+                                </div>
+                                <div id="properties_tabs">
+                                    <ul class="tabrow">
+                                    </ul>
+                                    <div class="tabpanes">
+                                    </div>
+                                </div>
+                            </div>              
+                        ]]></clientForm>
+                        <clientListener name="contextChange"><![CDATA[
+                            /*var action = window.listenerContext;
+                            var userSelection = app.getUserSelection(),
+                                context = userSelection.getContextNode(),
+                                enabled = !!context;
+                            //console.log(action);
+                            //console.log(userSelection.hasMime(['flv','mov','mp4','m4v','m4a','aac','ogv','webm','mkv']));
+                            //console.log(action && action.options.name);
+                            if (enabled) {
+                                var path = context.getPath(),
+                                    pathParts = path.split('/');
+                                pathParts.splice(0,1);
+                                enabled = pathParts[1] === 'content';
+                            }
+                            //context = { selection : enabled, contextMenu: enabled, infoPanel: enabled };
+                            //window.listenerContext.setContext(context);*/
+                        ]]>          
+                        </clientListener>
+                        <clientListener name="init"><![CDATA[
+                            //DIGITAL_RESOURCE_OBJECT             
+                            /*var action = app.getActionBar().getActionByName('edit_lom_meta');
+                            if (action && !action.updating){
+                                action.updating = true;
+                                var connexion = new Connexion();
+                                connexion.addParameter('get_action', 'get_spec_by_id');
+                                connexion.addParameter('spec_id', 'DIGITAL_RESOURCE_OBJECT');
+                                connexion.onComplete = function(transport){
+                                    var name = XPathSelectSingleNode(transport.responseXML.documentElement, '/spec/name');
+                                    MessageHash['meta_lom.1'] = name.textContent;
+                                    action.setLabel('meta_lom.1');
+                                    action.updating = false;
+                                }.bind(this);
+                                connexion.sendAsync();
+                            }*/
+                        ]]></clientListener>
+                    </processing>
+            </action>
+        </actions>
         <hooks>
             <serverCallback methodName="videoAlternateVersions" hookName="node.info"/>
         </hooks>
+        <!--
+        Sample hook for registering pre-encoded alternative versions of the videos. Still experimental.
         -->
 	</registry_contributions>
 	<dependencies>

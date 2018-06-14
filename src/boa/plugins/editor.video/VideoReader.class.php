@@ -42,8 +42,10 @@ defined('APP_EXEC') or die( 'Access not allowed');
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
 class VideoReader extends Plugin implements ITaskProviderFactory {
+	const THUMBNAIL = 'thumb';
+	const PREVIEW = 'preview';
 	
-	public function switchAction($action, $httpVars, $filesVars){
+	public function switchAction($action, $httpVars, $fileVars){
 		
 		if(!isSet($this->actions[$action])) return false;
     	
@@ -128,6 +130,18 @@ class VideoReader extends Plugin implements ITaskProviderFactory {
 			HTMLWriter::charsetHeader("text/plain");
 			print(session_id());
 		}
+		else if($action == "get_video_thumbnail"){
+			$this->getVideoResource(self::THUMBNAIL, $httpVars);
+		}
+		else if($action == "get_video_preview"){
+			$this->getVideoResource(self::PREVIEW, $httpVars);
+		}
+		else if($action == "store_video_thumbnail"){
+			return $this->saveVideoResource(self::THUMBNAIL, $httpVars, $fileVars);
+		}
+		else if($action == "store_video_preview"){
+			return $this->saveVideoResource(self::PREVIEW, $httpVars, $fileVars);
+		}
 	}
 
     /**
@@ -144,7 +158,7 @@ class VideoReader extends Plugin implements ITaskProviderFactory {
         $root = array_shift($parts);
         $relpath = implode("/", $parts);
 
-        $altpath = $path . '/' . $root . '/.alternate/' . $relpath . '/';
+        $altpath = $path . '/' . $root . '/.alternate/' . $relpath;
 
         $entries = glob($altpath."/*.{[mM][pP]4,[wW][eE][bB][mM],[oO][gG][vV]}", GLOB_NOSORT|GLOB_BRACE);
 
@@ -153,17 +167,17 @@ class VideoReader extends Plugin implements ITaskProviderFactory {
         foreach ($entries as $entry => $value) {
         	# code...
         	$info = pathinfo($value);
-        	$alternates[$info['filename']] = $altpath . "/" . $info['basename'];
+        	$alternates[$info['extension']][] = $info['filename']; //$altpath . "/" . $info['basename'];
         }
         
-        $extra = array("alternates" => $alternates);
-
-        if (file_exists($altpath . "thumb.png")) {
-        	$extra["customicon"] = $altpath . "thumb.png";
+        $extra = array("alternates" => json_encode($alternates));
+        $list = glob($altpath . "/thumb.{[pP][nN][gG],[jJ][pP][gG],[jJ][pP][eE][gG]}", GLOB_NOSORT|GLOB_BRACE);
+        if (count($list) > 0) {//file_exists($altpath . "thumb.png")) {
+        	$extra["customicon"] = basename($list[0]); // $altpath . "thumb.png";
         }
 
-        if (file_exists($altpath . "preview.gif")) {
-        	$extra["preview"] = $altpath . "preview.gif";
+        if (file_exists($altpath . "/preview.gif")) {
+        	$extra["preview"] = "preview.gif";
         }
 
         //var_dump($extra);
@@ -175,5 +189,141 @@ class VideoReader extends Plugin implements ITaskProviderFactory {
      */
 	public function getTaskProvider() {
 		return isset($this->taskProvider) ? $this->taskProvider : ($this->taskProvider = new VideoTasks());
+	}
+
+    /**
+     * @param ManifestNode $node
+     */
+	public function getVideoResource($type, $httpVars, $outputStream = null) {
+		$repository = ConfService::getRepository();
+		if(!$repository->detectStreamWrapper(true)){
+			return;
+		}
+
+        if(!isSet($httpVars["binary_id"]) || !isSet($httpVars["binary_path"])){
+	        Logger::debug("binary information not found", $httpVars);
+	        return;
+		}
+
+		$path = $repository->getOption("PATH");
+		$relpath = $httpVars["binary_path"]. "/" . $httpVars["binary_id"];
+		$parts = explode("/", ltrim($relpath, "/"));
+		$root = array_shift($parts);
+		$relpath = implode("/", $parts);
+		$filename = $path . '/' . $root . '/.alternate/' . $relpath;
+
+		//$fileName = $this->getBinaryPathStorage($context)."/".$ID;
+		if(is_file($filename)){
+			if($outputStream == null){
+				header("Content-Type: ".Utils::getImageMimeType($ID));
+				// PROBLEM AT STARTUP
+				header('Pragma:');
+				header('Cache-Control: public');
+				header("Last-Modified: " . gmdate("D, d M Y H:i:s", filemtime($filename)) . " GMT");
+				header("Expires: " . gmdate("D, d M Y H:i:s", filemtime($filename)+5*24*3600) . " GMT");
+				readfile($filename);
+			}else if(is_resource($outputStream)) {
+				fwrite($outputStream, file_get_contents($filename));
+			}
+		}
+	}
+
+	public function saveVideoResource($type, $httpVars, $fileVars){
+
+		if (!count($fileVars)){
+	        Logger::debug("Not file vars", $fileVars);
+	        return "Not file vars";
+		}
+
+		$repository = ConfService::getRepository();
+		if(!$repository->detectStreamWrapper(true)){
+			return "No stream wrapper";
+		}
+
+		$path = $repository->getOption("PATH");
+		$binarypath = $httpVars["binary_path"];
+		$parts = explode("/", ltrim($binarypath, "/"));
+		$root = array_shift($parts);
+		$relpath = implode("/", $parts);
+		$isThumbnail = $type == self::THUMBNAIL;
+		$name = ($isThumbnail ? "thumb.png" : "preview.gif");
+		$filename = $path . '/' . $root . '/.alternate/' . $relpath ."/" . $name;
+
+		$keys = array_keys($fileVars);
+		$boxData = $fileVars[$keys[0]];
+		$err = Utils::parseFileDataErrors($boxData);
+		
+		if($err !== null){
+			Logger::debug($err);
+			return $err;
+		}
+
+		//Check max size allowed
+		//$boxData["size"]
+		//1603300
+
+		$extension = strpos($boxData["name"], ".") ? array_pop(explode('.', $boxData["name"])) : "";
+		$extension = strtolower($extension);
+
+		if (($isThumbnail && !preg_match("/^(?:jpe?g|png)$/", $extension)) ||
+			(!$isThumbnail && $extension != "gif")) 
+		{
+			print('<script type="text/javascript">');
+	        print('parent.app.displayMessage("ERROR", "' . "Unexpected image extension: $extension". '")');
+	        print('</script>');
+			return; // "ERROR: Unexpected image extension: $extension";
+		}
+
+		$uploadedfile = $boxData["tmp_name"];
+		if($extension=="jpg" || $extension=="jpeg" )
+		{
+			$src = imagecreatefromjpeg($uploadedfile);
+		}
+		else if($extension=="png")
+		{
+			$src = imagecreatefrompng($uploadedfile);
+		}
+		else 
+		{
+			$src = imagecreatefromgif($uploadedfile);
+		}
+
+		list($width,$height) = getimagesize($uploadedfile);
+
+		//Calculate dimensions
+		$size = 256;
+		$newwidth = min($size, $width);
+		$newheight = ($height/$width)*$newwidth;
+		//Create black canvas
+		$target = imagecreatetruecolor($size, $size);
+ 		$color = imagecolorallocate($target, 0, 0, 0);  //The three parameters are R,G,B
+ 		imagefilledrectangle($target, 0, 0, $size, $size, $color);		 
+		imagecopyresampled($target, $src, ($size-$newwidth)/2,($size-$newheight)/2, 0, 0, $newwidth, $newheight, $width, $height);  //Just the coordinates was changed
+		
+		//Save to final destination
+		if ($isThumbnail){
+			imagepng($target, $filename, -1); //Use default compression (9 for BEST Compression)
+		}
+		else{
+			imagegif($target, $filename);
+		}
+
+		//Clear resources
+		imagedestroy($src);
+		imagedestroy($target);
+
+		print('<script type="text/javascript">');
+	    if(file_exists($filename)) {
+			$name .= "&binary_path=$binarypath&binary_id=$name#t=".time();
+	        print('parent.formManagerHiddenIFrameSubmission("'. $name .'");');
+	    }
+	    else {
+	        $errorMessage = 'Unable to create ' . ($isThumbnail ? 'thumbnail' : 'preview');
+	        Logger::debug($errorMessage);
+			print('<script type="text/javascript">');
+	        print('parent.app.displayMessage("ERROR", "' . $errorMessage . '")');
+			return;
+	    }
+		print('</script>');
 	}
 }

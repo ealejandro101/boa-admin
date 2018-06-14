@@ -246,7 +246,7 @@ class VideoTranscoderTask implements ITask {
     private function toMp4($input, $output, $size) {
         list($width, $height) = $this->availableSizes[$size];
         $command = "ffmpeg -i '$input' -c:v libx264 -crf 19 -level 3.1 -preset slow -filter:v scale=$width:$height" .
-            " -sws_flags lanczos -c:a libfdk_aac -movflags faststart '$output'";
+            " -sws_flags lanczos -c:a aac -movflags faststart '$output'";
         
         $result = shell_exec($command);
     }
@@ -257,10 +257,10 @@ class VideoTranscoderTask implements ITask {
         $result = shell_exec($command);
     }
 
-    private function toOgv($input, $output, $size) {        
+    private function toOgv($input, $output, $size) {
         list($width, $heigh) = $this->availableSizes[$size];
         $command = "ffmpeg -i '$input' -codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 '$output'" .
-            " -sws_flags lanczos -c:a libfdk_aac -movflags faststart $output";
+            " -sws_flags lanczos -c:a aac -movflags faststart '$output'";
         
         $result = shell_exec($command);
     }
@@ -275,7 +275,7 @@ class VideoTranscoderTask implements ITask {
 
         //$command = "ffmpeg -i $input -f image2 -frames:v 1 $thumbpath";
         //$command = "ffmpeg -i $input -vf scale=560:-1,pad=max(iw\\,ih):420:(ow-iw)/2:(oh-ih)/2 -frames:v 1 -s 256x256 $thumbpath";
-        $command = "ffmpeg -i $input -vf \"scale=560:-1,pad=max(iw\,ih):420:(ow-iw)/2:(oh-ih)/2\" -frames:v 1 -s 256x256 $thumbpath";
+        $command = "ffmpeg -i '$input' -vf \"scale=560:-1,pad=max(iw\,ih):420:(ow-iw)/2:(oh-ih)/2\" -frames:v 1 -s 256x256 '$thumbpath'";
         $result = shell_exec($command);
     }
 
@@ -286,7 +286,7 @@ class VideoTranscoderTask implements ITask {
         if (!file_exists($outputdir)) {
             mkdir($outputdir, 0777, true);
         }
-        $command = "ffmpeg -i $input -vf \"scale=560:-1,pad=max(iw\,ih):420:(ow-iw)/2:(oh-ih)/2\" -t 10 -r 10 -s 256x256 $previewpath";
+        $command = "ffmpeg -i '$input' -vf \"scale=560:-1,pad=max(iw\,ih):420:(ow-iw)/2:(oh-ih)/2\" -t 10 -r 2 -s 256x256 '$previewpath'";
         $result = shell_exec($command);
     }
 

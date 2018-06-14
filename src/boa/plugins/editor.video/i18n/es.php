@@ -17,16 +17,16 @@
 // The latest code can be found at <https://github.com/boa-project/>.
 
 $mess=array(
-"1" => "Media Player",
-"2" => "Properties",
-"3" => "View video properties",
+"1" => "Reproductor de video",
+"2" => "Propiedades",
+"3" => "Ver propiedades del video",
 "general" => "General",
-"thumnail" => "Thumbnail",
-"thumnail.help" => "Icon to show on video lists",
-"preview" => "Preview",
-"preview.help" => "Short animation to show instead of video",
+"thumbnail" => "Miniatura",
+"thumbnail.help" => "Imagen reducidad para presentar en listas de video",
+"preview" => "Previsualización",
+"preview.help" => "Animación corta sobre el contenido del video",
 "mp4alternative" => "Mp4",
 "webmalternative" => "WebM",
 "ogvalternative" => "Ogv",
-"alternatives" => "Alternative formats and sizes",
+"alternatives" => "Formatos y tamaños alternativos",
 );
