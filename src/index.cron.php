@@ -27,8 +27,6 @@
  * @copyright  2017 BoA Project
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
-require '../vendor/autoload.php';
-
 include_once("base.conf.php");
 include_once("boa/src/Core/Utils/polyfills.php"); //ToDo: Is this the rigth way to do this?
 
