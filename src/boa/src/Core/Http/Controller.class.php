@@ -462,11 +462,6 @@ class Controller{
 		$plugId = $xPath->query("@pluginId", $callback)->item(0)->value;
 		$methodName = $xPath->query("@methodName", $callback)->item(0)->value;		
 		$plugInstance = PluginsService::findPluginById($plugId);
-        $nodeInfo = preg_match('/loadNodeInfo/', $methodName);
-        if ($nodeInfo) {
-            //var_dump($variableArgs);
-            //exit('About to call loadNodeInfo');
-        }
 		//return call_user_func(array($plugInstance, $methodName), $actionName, $httpVars, $fileVars);	
 		// Do not use call_user_func, it cannot pass parameters by reference.
 
@@ -485,9 +480,6 @@ class Controller{
                 }
 			}
 		}else{
-        //var_dump($plugInstance);
-        //echo '<br/>*****************************************<br/>';
-        //var_dump($methodName);          
 			throw new ApplicationException("Cannot find method $methodName for plugin $plugId!");
 		}
 	}
