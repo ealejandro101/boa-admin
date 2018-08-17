@@ -191,7 +191,6 @@ class Controller{
             PluginsService::getInstance()->setPluginActive($split[0], $split[1]);
         }
 
-        $log = $actionName == 'get_specs_list'; //ToDelete
         if($actionName == "cross_copy"){
             $pService = PluginsService::getInstance();
             $actives = $pService->getActivePlugins();
@@ -470,16 +469,17 @@ class Controller{
 			if($variableArgs == null){
 				return $plugInstance->$methodName($actionName, $httpVars, $fileVars);
 			}else{
+                $args = array();
+                foreach($variableArgs as $k => &$arg){ 
+                    $args[$k] = &$arg; 
+                }
                 if($defer == true){
-                    ShutdownScheduler::getInstance()->registerShutdownEventArray(array($plugInstance, $methodName), $variableArgs);
+                    ShutdownScheduler::getInstance()->registerShutdownEventArray(array($plugInstance, $methodName), $args);
                 }else{
-                    call_user_func_array(array($plugInstance, $methodName), $variableArgs);
+                    call_user_func_array(array($plugInstance, $methodName), $args);
                 }
 			}
 		}else{
-        //var_dump($plugInstance);
-        //echo '<br/>*****************************************<br/>';
-        //var_dump($methodName);          
 			throw new ApplicationException("Cannot find method $methodName for plugin $plugId!");
 		}
 	}

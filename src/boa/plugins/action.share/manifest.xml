@@ -144,7 +144,7 @@
                             </div>
                             <div id="target_repository" class="SF_element oneFieldForm" style="margin: 5px 10px 15px;">
                                 <div class="SF_label" style="font-size:12px;" message_id="share_center.35">APP_MESSAGE[share_center.35]</div>
-                                <input type="text" value="" id="repo_label" name="repo_label" class="SF_input" style="float:right;font-size:12px;"/>
+                                <input type="text" value="" name="repo_label" class="SF_input" style="float:right;font-size:12px;"/>
                                 <div class="SF_label" style="font-size:12px; clear:left;" message_id="share_center.35">Description</div>
                                 <textarea id="repo_description" name="repo_description" class="SF_input" style="float:right;font-size:12px;"></textarea>
                                 <div id="target_user_simple" class="mode-minipub">
@@ -178,18 +178,18 @@
                                     <span id="header_write" message_id="share_center.32">APP_MESSAGE[share_center.32]</span>
                                     <span id="header_watch" message_id="share_center.33">APP_MESSAGE[share_center.33]</span>
                                 </div>
-                                <input type="text" class="dialogFocus" value="" style="width:98%;" placeholder="APP_MESSAGE[share_center.34]" name="shared_user" id="shared_user"/>
+                                <input type="text" class="dialogFocus" value="" style="width:98%;" placeholder="APP_MESSAGE[share_center.34]" name="shared_user"/>
                                 <div id="complete_indicator" style="position:absolute;top:25px;right:4px;display:none;"><img src="APP_THEME_FOLDER/images/autocompleter-loader.gif"></div>
                                 <div id="shared_users_autocomplete_choices" class="autocomplete" style="margin-top:0px !important;z-index:20000 !important;"></div>
                                 <div class="editable_users_list grey_gradient_light_inputs" id="shared_users_summary" style="margin-bottom:7px;">
                                     <div style="display:none;" id="create_shared_user" class="soft_css_gradient">
                                         <div class="SF_element">
                                             <div message_id="share_center.12" class="SF_label">APP_MESSAGE[share_center.12]</div>
-                                            <input type="password" class="SF_input" value="" name="shared_pass" id="shared_pass">
+                                            <input type="password" class="SF_input" value="" name="shared_pass">
                                         </div>
                                         <div class="SF_element" id="shared_pass_div">
                                             <div class="SF_label" message_id="share_center.37">APP_MESSAGE[share_center.37]</div>
-                                            <input type="password" autocomplete="off" value="" name="shared_pass_confirm" id="shared_pass_confirm" class="SF_input"/>
+                                            <input type="password" autocomplete="off" value="" name="shared_pass_confirm" class="SF_input"/>
                                         </div>
                                         <div class="SF_element" id="pass_strength_container"></div>
                                         <div class="dialogButtons">
