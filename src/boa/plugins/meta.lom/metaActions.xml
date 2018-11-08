@@ -10,6 +10,11 @@
                 <serverCallback methodName="onGet"></serverCallback>
             </processing>
         </action>
+        <action name="save_spec_xml">
+            <processing>
+                <serverCallback methodName="onPost"></serverCallback>
+            </processing>
+        </action>
         <action name="publish_metadata">
             <processing>
                 <serverCallback methodName="onPost"></serverCallback>

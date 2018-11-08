@@ -125,6 +125,7 @@ Class.create("FormManager", {
             }else if(param.get('default') !== undefined){
                 defaultValue = param.get('default');
             }
+
 			var element;
 			var disabledString = (disabled || param.get('readonly')?' disabled="true" ':'');
             var commonAttributes = {
@@ -141,6 +142,10 @@ Class.create("FormManager", {
                     element = this.createTranslatable(type, defaultValue, languages, commonAttributes);
                 }
                 else {
+                    //Fix if changed from translatable to not translatable.
+                    if (!translatable && defaultValue && defaultValue.none) {
+                        defaultValue = defaultValue.none || '';
+                    }
                     element = new Element('input', Object.extend({type: (type == "hidden" ? 'hidden' : 'text'), className:'SF_input', value:defaultValue}, commonAttributes));
                 }
             }
@@ -150,6 +155,11 @@ Class.create("FormManager", {
                     .insert('<span class="input-group-addon datepickerbutton"><span class="glyphicon glyphicon-calendar"></span></span>');
             }
             else if(type == 'keywords'){
+                //Fix if changed from translatable to not translatable.
+                if (!translatable && defaultValue && defaultValue.none) {
+                    defaultValue = defaultValue.none || '';
+                }
+                
                 if (defaultValue && defaultValue.join){
                     defaultValue = defaultValue.join(',');    
                 }
@@ -284,7 +294,9 @@ Class.create("FormManager", {
                     element = this.createTranslatable(type, defaultValue, languages, commonAttributes);
                 }
                 else {
-                    if(defaultValue) defaultValue = defaultValue.replace(new RegExp("__LBR__", "g"), "\n");
+                    if(defaultValue) {
+                        defaultValue = (defaultValue.none ? defaultValue.none : defaultValue).replace(new RegExp("__LBR__", "g"), "\n");
+                    }
                     element = '<textarea class="SF_input" style="height:70px;" data-ctrl_type="'+type+'" data-mandatory="'+(mandatory?'true':'false')+'" name="'+name+'"'+disabledString+'>'+defaultValue+'</textarea>'
                 }
 		    }else if(type == 'password'){
@@ -719,10 +731,12 @@ Class.create("FormManager", {
     createTranslatable: function(type, value, languages, httpAttributes){
         var defaultLang = null;
         var translations = [];
-        var defaultValue = value ? value['none'] : '';
+        var defaultValue = value ? (value.none ? value.none : '') : ''; //Fix in case it was not translatable and changed to translatable
 
         switch(type){
             case 'keywords':
+                element = new Element('input', Object.extend({type: 'text', className:'SF_input', value:defaultValue}, httpAttributes));
+                break;
             case 'string':
                 element = new Element('input', Object.extend({type: 'text', className:'SF_input', value:defaultValue}, httpAttributes));
                 break;

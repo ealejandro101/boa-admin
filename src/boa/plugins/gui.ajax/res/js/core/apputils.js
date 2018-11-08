@@ -783,3 +783,19 @@ function attachMobileScroll(targetId, direction){
 	target.addEventListener("touchstart", function(event){ scrollByTouch(event, direction, targetId); });
 	target.addEventListener("touchend", function(event){ scrollByTouch(event, direction, targetId); });
 }
+
+function resizeIframe(obj){
+	console.log(obj.contentWindow.document.body.scrollHeight);
+	obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+	obj.contentWindow.addEventListener("resize", function (ev){
+		console.log('iframe resizing');
+	});
+	
+	var interval = setInterval(function (){
+		if (obj.contentWindow == null){
+			clearInterval(interval);
+			return;
+		}
+		obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+	}, 500);	
+}

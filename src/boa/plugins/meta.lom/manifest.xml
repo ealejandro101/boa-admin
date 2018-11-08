@@ -25,8 +25,8 @@
 		<param name="lom_meta_visibility" type="string" replicationGroup="group1" label="CONF_MESSAGE[Columns visibility]" description="CONF_MESSAGE[Set default visibility for each columns. Either by columns, using commas, or one value that will be applied to all columns. Value can be 'visible' or 'hidden'.]" mandatory="false" default="visible"/>-->
 		<config_tab name="tab-specs" label="APP_MESSAGE[meta_lom.9]">
 			<template><![CDATA[
-          <div id="pane-specs" style="padding:20px">
-          	<div id="meta_lom_metadata_entry" class="driver_form">
+          <div id="pane-specs" style="padding:5px">
+          	<!--div id="meta_lom_metadata_entry" class="driver_form">
               <div class="dialogLegend">APP_MESSAGE[meta_lom.10]</div>
               <div class="innerTitle">APP_MESSAGE[meta_lom.11]</div>
               <div class="accordion_content">
@@ -34,7 +34,8 @@
               </div>
               <div class="innerTitle">APP_MESSAGE[meta_lom.12]</div>
               <div class="metaEntry"></div>
-            </div>
+            </div-->
+			<iframe id="meta_lom_metadata_entry" src="plugins/meta.lom/dco-spec-editor/index.html" frameborder="0" scrolling="no" onload="resizeIframe(this)" style="width:100%;height:500px;margin:0"></iframe>
           </div>
 				]]>
 			</template>

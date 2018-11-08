@@ -261,10 +261,10 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $mess = $this->mess = ConfService::getMessages();
         switch ($action) {
             case 'get_spec_by_id':
-                $this->getSpecById($httpVars["spec_id"]);
+                $this->getSpecById($httpVars["spec_id"], true, $httpVars["draft"]);
                 break;
             case 'get_specs_list':
-                $this->loadSpecsAsJson();
+                $this->loadSpecsAsJson($httpVars["draft"]);
                 break;
             
             case 'mkdco':
@@ -302,13 +302,17 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             case "save_dcometa":
                 $this->saveDcoMeta($action, $httpVars, $fileVars);
             break;
+            case "save_spec_xml":
+                $this->saveSpecXml($action, $httpVars, $fileVars);
+            break;
             case "publish_metadata":
                 $this->publish();
+            break;
         }
     }
 
-    private function loadSpecsAsJson(){
-        $list = $this->loadSpecs();
+    private function loadSpecsAsJson($draft=false){
+        $list = $this->loadSpecs($draft);
         header('Content-Type: application/json; charset=UTF-8');
         header('Cache-Control: no-cache');
         print(json_encode(array("LIST" => $list)));
@@ -435,12 +439,12 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
     private function saveDcoMeta($actionName, $httpVars, $fileVars){
         if(!isSet($this->actions[$actionName])) return;
         if(is_a($this->accessDriver, "demoAccessDriver")){
-            throw new Exception("Write actions are disabled in demo mode!");
+            throw new \Exception("Write actions are disabled in demo mode!");
         }
         $repo = $this->accessDriver->repository;
         $user = AuthService::getLoggedUser();
         if(!AuthService::usersEnabled() && $user!=null && !$user->canWrite($repo->getId())){
-            throw new Exception("You have no right on this action.");
+            throw new \Exception("You have no right on this action.");
         }
         $selection = new UserSelection();
         $selection->initFromHttpVars();
@@ -497,7 +501,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $repo = $this->accessDriver->repository;
         $user = AuthService::getLoggedUser();
         if(!AuthService::usersEnabled() && $user!=null && !$user->canWrite($repo->getId())){
-            throw new Exception("You have no right on this action.");
+            throw new \Exception("You have no right on this action.");
         }
 
         $selection = new UserSelection();
@@ -591,8 +595,33 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         return $output;
     }
 
+    private function saveSpecXml($actionName, $httpVars, $fileVars){
+        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
+        if (!isset($httpVars["xml"])) {
+            throw new \Exception("Spec xml content must be provided");
+        }
+        $content = $httpVars["xml"];
+        $xml = new \DOMDocument();
+        $xml->loadXML($content);
+        $xpath = new \DOMXPath($xml);
+        $id = $xpath->query("/spec/id");
+        if (!$id || $id->length == 0 || empty($id[0]->nodeValue)) {
+            throw new \Exception("Spec id is a required field");
+        }
+        $id = $id[0]->nodeValue;
+
+        $name = $xpath->query("/spec/name");
+        if (!$name || $name->length == 0 || empty($name[0]->nodeValue)) {
+            throw new \Exception("Spec name is a required field");
+        }
+
+        //$found = glob($specsPath."/".$id.".{[xX][mM][lL],[xX][mM][lL].[dD][rR][aA][fF][tT]}");
+        $filename = "$specsPath/$id.xml.draft";
+        $xml->save($filename);
+    }
+
     /* DcoSpecProvider Implementation */
-    public function loadSpecs(){
+    public function loadSpecs($draft=0){
         $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
 
         if (!is_dir($specsPath)){
@@ -601,26 +630,46 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
         $list = new \stdClass();
 
-        foreach(glob($specsPath."/*.xml") as $file){
+        if ($draft==1){
+            foreach(glob($specsPath."/*.[xX][mM][lL].[dD][rR][aA][fF][tT]") as $file){
+                $xml = new \DOMDocument();
+                $xml->load($file);
+                $xpath = new \DOMXPath($xml);
+                $id = $xpath->query("/spec/id");
+                $name = $xpath->query("/spec/name");
+                $list->{$id[0]->nodeValue} = $name[0]->nodeValue;
+            }
+        }
+
+        foreach(glob($specsPath."/*.[xX][mM][lL]") as $file){
             $xml = new \DOMDocument();
             $xml->load($file);
             $xpath = new \DOMXPath($xml);
 
             $id = $xpath->query("/spec/id");
             $name = $xpath->query("/spec/name");
-            $list->{$id[0]->nodeValue} = $name[0]->nodeValue;
+            if (!isset($list->{$id[0]->nodeValue})){
+                $list->{$id[0]->nodeValue} = $name[0]->nodeValue;
+            }
         }
         return $list;
     }
     
-    public function getSpecById($id, $print=true){
+    public function getSpecById($id, $print, $draft=0){
         $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
 
         if ($id === 'DIGITAL_RESOURCE_OBJECT') {
             $id = $this->options["dro_spec"];
         }
 
-        $found = glob($specsPath."/".$id.".xml");
+        if ($draft == 1) {
+            $found = glob($specsPath."/".$id.".xml.draft");
+        }
+
+        if ($draft == 0 || count($found) == 0) {
+            $found = glob($specsPath."/".$id.".xml");
+        }
+
         if (count($found) > 0){
             $xml = new \DOMDocument();
             $xml->load($found[0]);
@@ -660,5 +709,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
     public function getMetaEditorClass(){
         return "LomMetaEditor";
     }
+
+
 
 }
