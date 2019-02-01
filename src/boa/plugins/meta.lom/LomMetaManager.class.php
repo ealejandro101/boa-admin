@@ -305,6 +305,9 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             case "save_spec_xml":
                 $this->saveSpecXml($action, $httpVars, $fileVars);
             break;
+            case "publish_spec_xml":
+                $this->publishSpecXml($action, $httpVars, $fileVars);
+            break;
             case "publish_metadata":
                 $this->publish();
             break;
@@ -620,6 +623,42 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $xml->save($filename);
     }
 
+    private function publishSpecXml($actionName, $httpVars, $fileVars){
+        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
+        if (!isset($httpVars["spec_id"])) {
+            throw new \Exception("Spec id must be provided");
+        }
+        $id = $httpVars["spec_id"];
+        $path = $specsPath."/".$id.".[xX][mM][lL].[dD][rR][aA][fF][tT]";
+        $found = glob($path);
+        if(count($found) == 0){
+            throw new \Exception("Required spec is not in a draf state: $path");
+        }
+        //Load the spec document
+        $xml = new \DOMDocument();
+        $xml->load($found[0]);
+
+        //Create a backup
+        $foundB = glob($specsPath."/".$id.".[xX][mM][lL]");
+        if (count($foundB) > 0){
+            $xml1 = new \DOMDocument();
+            $xml1->load($foundB[0]);
+            $nodeList = $xml1->getElementsByTagName("version");
+            $version = ($nodeList->length == 0 || empty($nodeList->item(0)->nodeValue)) ? "" : $nodeList->item(0)->nodeValue;
+            $aversion = $this->parseVersion($version);
+            $this->updateVersion($xml1, $aversion);
+            $xml1->save($foundB[0]);
+            rename($foundB[0], $foundB[0]. "." . implode("_", $aversion));
+        }
+        //Upgrade the version, and create a version backup
+        if (!isset($aversion)) $aversion = [0, 0, 0];
+        $aversion = $this->nextVersion($aversion);
+        $this->updateVersion($xml, $aversion);
+        //$filename = "$specsPath/$id.xml";
+        $xml->save($found[0]);
+        rename($found[0], str_replace(".draft", "", $found[0]));
+    }
+
     /* DcoSpecProvider Implementation */
     public function loadSpecs($draft=0){
         $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
@@ -662,17 +701,24 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             $id = $this->options["dro_spec"];
         }
 
+        $isDraft = false;
+
         if ($draft == 1) {
             $found = glob($specsPath."/".$id.".xml.draft");
+            $isDraft = count($found) > 0;
         }
 
-        if ($draft == 0 || count($found) == 0) {
+        if ($draft == 0 || !$isDraft) {
             $found = glob($specsPath."/".$id.".xml");
         }
 
         if (count($found) > 0){
             $xml = new \DOMDocument();
             $xml->load($found[0]);
+            if ($isDraft) {
+                $root = $xml->firstChild;
+                $root->setAttribute("isDraft", "true");
+            }
             if ($print){
                 header('Content-Type: text/xml; charset=UTF-8');
                 header('Cache-Control: no-cache');
@@ -710,6 +756,27 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         return "LomMetaEditor";
     }
 
+    private function parseVersion($versionString){
+        if (!preg_match("/(\d+).(\d+).(\d+)/", $versionString, $matches)){
+            return [0, 0, 1];
+        }
+        return [intval($matches[1]), intval($matches[2]), intval($matches[3])];
+    }
 
+    private function nextVersion($aversion){
+        $aversion[2] = (++$aversion[2] % 100);
+        if ($aversion[2] == 0){
+            $aversion[1] = (++$aversion[1] % 100);
+            if($aversion[1] == 0){
+                $aversion[0] += 1;
+            }
+        }
+        return $aversion;
+    }
+
+    private function updateVersion($xml, $aversion){
+        $root = $xml->firstChild;
+        $root->setAttribute("version", implode(".", $aversion));
+    }
 
 }
