@@ -81,3 +81,4 @@ AjxpMailer -> AppMailer
 AJXP_Cache —> CacheManager
 data-ajxpAction -> data-action
 BOA_REPO_SCOPE_ALL
+ajxpBootstrap -> _bootstrap
