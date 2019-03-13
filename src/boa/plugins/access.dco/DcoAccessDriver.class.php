@@ -1962,13 +1962,23 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
 
     private static function myRename($old, $new){
         $res = rename($old,$new);
+        //Rename metadata
         $old_metadata = dirname($old)."/.".basename($old).".manifest";
-        if (file_exists($old_metadata)){
-            $new_metadata = dirname($new)."/.".basename($new).".manifest";
-            //echo($old_metadata . "::" . $new_metadata);
-            rename($old_metadata, $new_metadata);
-        }
+        $new_metadata = dirname($new)."/.".basename($new).".manifest";
+        $title = basename($new);
+        self::renameMetadataFile($old_metadata, $new_metadata, $title);
+        //Rename published metadata
+        self::renameMetadataFile($old_metadata.".published", $new_metadata.".published", $title);
         return $res;
+    }
+
+    private static function renameMetadataFile($filename, $newFilename, $title){
+        if (file_exists($filename)){
+            rename($filename, $newFilename);
+            $meta = json_decode(file_get_contents($newFilename));
+            $meta->manifest->title = $title;
+            self::saveJsonFile($newFilename, $meta);
+        }
     }
 
     private function getExplorer(){
@@ -1985,10 +1995,10 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         $meta = json_decode(file_get_contents($dir.$filename));
         $manifest->is_a = 'dco';
         $meta->manifest = $manifest;
-        $this->saveJsonFile($dir.$filename, $meta);
+        self::saveJsonFile($dir.$filename, $meta);
     }
 
-    private function saveJsonFile($path, $json){
+    private static function saveJsonFile($path, $json){
         $fp = fopen($path, "w");
         if($fp !== false){
             $content = json_encode($json);
@@ -2059,14 +2069,14 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         array_splice($parts, 0, 3);
         $path = implode('/', $parts);
         $json->manifest->entrypoint = $path;
-        $this->saveJsonFile($manifestPath, $json);
+        self::saveJsonFile($manifestPath, $json);
 
         $manifestPath .=".published";
         //If object is already published, then update the preview icon there also
         if (file_exists($manifestPath)){
             $json = json_decode(file_get_contents($manifestPath));
             $json->manifest->entrypoint = $path;
-            $this->saveJsonFile($manifestPath, $json);
+            self::saveJsonFile($manifestPath, $json);
         }
         return "SUCCESS";
     }
