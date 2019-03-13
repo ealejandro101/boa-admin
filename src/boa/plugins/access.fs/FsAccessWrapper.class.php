@@ -273,7 +273,7 @@ class FsAccessWrapper implements FileWrapper {
     {
         try{
             $this->realPath = Utils::securePath(self::initPath($path, "file"));
-        }catch (Exception $e){
+        }catch (\Exception $e){
             Logger::logAction("error", array("message" => "Error while opening stream $path"));
             return false;
         }

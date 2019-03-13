@@ -68,7 +68,7 @@ class BootConfLoader extends AbstractConfDriver {
         parent::init($options);
         try{
             $this->getPluginWorkDir(true);
-        }catch(Exception $e){
+        }catch(\Exception $e){
             die("Impossible write into the APP_DATA_PATH folder: Make sure to grant write access to this folder for your webserver!");
         }
     }
@@ -107,7 +107,7 @@ class BootConfLoader extends AbstractConfDriver {
                 $checkErrorMessage = "";
                 try{
                     $typePlug->performChecks();
-                }catch (Exception $e){
+                }catch (\Exception $e){
                     $checkErrorMessage = " (Warning : ".$e->getMessage().")";
                 }
                 $tParams = XMLWriter::replaceXmlKeywords($typePlug->getManifestRawContent("server_settings/param"));

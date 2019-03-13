@@ -1290,7 +1290,7 @@ class Utils
             }
             fwrite($fp, $content);
             fclose($fp);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if ($silent) return;
             else throw $e;
         }

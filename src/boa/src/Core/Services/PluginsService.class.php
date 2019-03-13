@@ -407,7 +407,7 @@ class PluginsService{
                 $pObject->performChecks();
                 if(!$pObject->isEnabled()) continue;
                 $this->setPluginActiveInst($pObject->getType(), $pObject->getName(), true);
-            }catch (Exception $e){
+            }catch (\Exception $e){
                 //$this->errors[$pName] = "[$pName] ".$e->getMessage();
             }
 
