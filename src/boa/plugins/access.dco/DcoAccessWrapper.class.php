@@ -110,7 +110,7 @@ class DcoAccessWrapper implements FileWrapper {
                     $tmpFileName = $tmpDir.DIRECTORY_SEPARATOR.basename($localPath);
                     Logger::debug("Tmp file $tmpFileName");
                     register_shutdown_function(array("fsAccessWrapper", "removeTmpFile"), $tmpDir, $tmpFileName);
-                    $crtZip = new PclZip(Utils::securePath(realpath($repoObject->getOption("PATH")).$repoObject->resolveVirtualRoots($zipPath)));
+                    $crtZip = new \PclZip(Utils::securePath(realpath($repoObject->getOption("PATH")).$repoObject->resolveVirtualRoots($zipPath)));
                     $content = $crtZip->listContent();
                     foreach ($content as $item){
                         $fName = Utils::securePath($item["stored_filename"]);
@@ -133,7 +133,7 @@ class DcoAccessWrapper implements FileWrapper {
                     }
                 }
             }else{
-                $crtZip = new PclZip(Utils::securePath(realpath($repoObject->getOption("PATH")).$repoObject->resolveVirtualRoots($zipPath)));
+                $crtZip = new \PclZip(Utils::securePath(realpath($repoObject->getOption("PATH")).$repoObject->resolveVirtualRoots($zipPath)));
                 $liste = $crtZip->listContent();
                 if($storeOpenContext) self::$crtZip = $crtZip;
                 $folders = array(); $files = array();$builtFolders = array();
