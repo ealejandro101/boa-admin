@@ -113,6 +113,10 @@ class VideoManager {
     }
 
     public function generateThumb($outputdir) {
+
+        // Only video can be used to build Thumb image
+        if ($this->getCodecType() != 'video') return;
+
         $input = $this->clearFilename();
         $thumbpath = $outputdir . "/thumb.png";
         if (file_exists($thumbpath)) return;
@@ -127,6 +131,10 @@ class VideoManager {
     }
 
     public function generatePreview($outputdir) {
+
+        // Only video can be used to build preview image
+        if ($this->getCodecType() != 'video') return;
+
         $input = $this->clearFilename();
         $previewpath = $outputdir . "/preview.gif";
         if (file_exists($previewpath)) return;
@@ -134,9 +142,15 @@ class VideoManager {
         list($fw, $fh) = $this->defineScaleFactors(256, 256);
 
         $nb_frames = $this->getNBFrames();
-        $nb = round($nb_frames / 10);
 
-        $command = escapeshellcmd("ffmpeg -i '$input' -vf \"scale=$fw:$fh,pad=256:256:(ow-iw)/2:(oh-ih)/2, select=not(mod(n\, $nb)), setpts=N/1/TB\" -frames 10 '$previewpath'");
+        if ($nb_frames) {
+            $nb = round($nb_frames / 10);
+
+            $command = escapeshellcmd("ffmpeg -i '$input' -vf \"scale=$fw:$fh,pad=256:256:(ow-iw)/2:(oh-ih)/2, select=not(mod(n\, $nb)), setpts=N/1/TB\" -frames 10 '$previewpath'");
+        }
+        else {
+            $command = escapeshellcmd("ffmpeg -i '$input' -vf \"scale=$fw:$fh,pad=256:256:(ow-iw)/2:(oh-ih)/2\" -t 10 -r 1 '$previewpath'");
+        }
 
         $result = shell_exec($command);
     }
@@ -229,5 +243,16 @@ class VideoManager {
         }
 
         return intval($nb_frames);
+    }
+
+    public function getCodecType() {
+        if (is_array($this->videoinfo)) {
+            $codec_type = $this->videoinfo['streams'][0]['codec_type'];
+        }
+        else {
+            $codec_type = $this->videoinfo->streams->codec_type;
+        }
+
+        return $codec_type;
     }
 }
