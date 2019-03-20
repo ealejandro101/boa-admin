@@ -213,7 +213,7 @@ class XMLWriter
 		}
         try{
             Logger::logAction("error", array("message" => $message));
-        }catch(Exception $e){
+        }catch(\Exception $e){
             // This will probably trigger a double exception!
             echo "<pre>Error in error";
             debug_print_backtrace();
@@ -233,7 +233,7 @@ class XMLWriter
 	static function catchException($exception){
         try{
             XMLWriter::catchError($exception->getCode(), SystemTextEncoding::fromUTF8($exception->getMessage()), $exception->getFile(), $exception->getLine(), null);
-        }catch(Exception $innerEx){
+        }catch(\Exception $innerEx){
             print get_class($innerEx)." thrown within the exception handler! Message was: ".$innerEx->getMessage()." in ".$innerEx->getFile()." on line ".$innerEx->getLine()." ".$innerEx->getTraceAsString();            
         }
 	}

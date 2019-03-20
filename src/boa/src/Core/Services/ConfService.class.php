@@ -1058,7 +1058,7 @@ class ConfService
                 try{
                     $instance->init(AuthService::filterPluginParameters($plugId, $metaSources[$plugId], $crtRepository->getId()));
                     $instance->beforeInitMeta($plugInstance);
-                }catch(Exception $e){
+                }catch(\Exception $e){
                     Logger::logAction('ERROR : Cannot instanciate Meta plugin, reason : '.$e->getMessage());
                     $this->errors[] = $e->getMessage();
                 }
@@ -1073,7 +1073,7 @@ class ConfService
         try{
             $plugInstance->initRepository();
             $crtRepository->driverInstance = $plugInstance;
-        }catch (Exception $e){
+        }catch (\Exception $e){
             // Remove repositories from the lists
             unset($this->configs["REPOSITORIES"][$crtRepository->getId()]);
             if(isSet($_SESSION["PREVIOUS_REPO_ID"]) && $_SESSION["PREVIOUS_REPO_ID"] !=$crtRepository->getId()){
@@ -1099,7 +1099,7 @@ class ConfService
                 try{
                     $instance->init(AuthService::filterPluginParameters($plugId, $metaSources[$plugId], $crtRepository->getId()));
                     $instance->initMeta($plugInstance);
-                }catch(Exception $e){
+                }catch(\Exception $e){
                     Logger::logAction('ERROR : Cannot instanciate Meta plugin, reason : '.$e->getMessage());
                     $this->errors[] = $e->getMessage();
                 }
@@ -1162,7 +1162,7 @@ class ConfService
                 try{
                     $instance->init(AuthService::filterPluginParameters($plugId, $metaSources[$plugId], $repository->getId()));
                     $instance->beforeInitMeta($plugInstance);
-                }catch(Exception $e){
+                }catch(\Exception $e){
                     Logger::logAction('ERROR : Cannot instanciate Meta plugin, reason : '.$e->getMessage());
                     $this->errors[] = $e->getMessage();
                 }
@@ -1173,7 +1173,7 @@ class ConfService
         $plugInstance->init($repository);
         try{
             $plugInstance->initRepository();
-        }catch (Exception $e){
+        }catch (\Exception $e){
             throw $e;
         }
         $pServ->setPluginUniqueActiveForType("access", $accessType);
@@ -1192,7 +1192,7 @@ class ConfService
                 try{
                     $instance->init(AuthService::filterPluginParameters($plugId, $metaSources[$plugId], $repository->getId()));
                     $instance->initMeta($plugInstance);
-                }catch(Exception $e){
+                }catch(\Exception $e){
                     Logger::logAction('ERROR : Cannot instanciate Meta plugin, reason : '.$e->getMessage());
                     $this->errors[] = $e->getMessage();
                 }

@@ -79,10 +79,10 @@ class ShutdownScheduler
          $callback = func_get_args();
 
          if (empty($callback)) {
-             throw new Exception('No callback passed to '.__FUNCTION__.' method');
+             throw new \Exception('No callback passed to '.__FUNCTION__.' method');
          }
          if (!is_callable($callback[0])) {
-             throw new Exception('Invalid callback ('.$callback[0].') passed to the '.__FUNCTION__.' method');
+             throw new \Exception('Invalid callback ('.$callback[0].') passed to the '.__FUNCTION__.' method');
          }
          $this->callbacks[] = $callback;
          return true;
@@ -101,7 +101,7 @@ class ShutdownScheduler
             $callback = array_shift($arguments);
             try{
                 call_user_func_array($callback, $arguments);
-            }catch (Exception $e){
+            }catch (\Exception $e){
                 Logger::logAction("error", array("context"=>"Applying hook ".get_class($callback[0])."::".$callback[1],  "message" => $e->getMessage()));
             }
         }

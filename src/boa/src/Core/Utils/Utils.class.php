@@ -280,7 +280,7 @@ class Utils
         if (isSet($parameters["repository_id"]) && isSet($parameters["folder"]) || isSet($parameters["goto"])) {
             if(isSet($parameters["goto"])){
                 $repoId = array_shift(explode("/", ltrim($parameters["goto"], "/")));
-                $parameters["folder"] = str_replace($repoId, "", ltrim($parameters["goto"], "/"));
+                $parameters["folder"] = ltrim(ltrim($parameters["goto"], "/"), $repoId);
             }else{
                 $repoId = $parameters["repository_id"];
             }
@@ -1290,7 +1290,7 @@ class Utils
             }
             fwrite($fp, $content);
             fclose($fp);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if ($silent) return;
             else throw $e;
         }
