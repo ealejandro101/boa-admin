@@ -191,109 +191,35 @@ class VideoTranscoderTask implements ITask {
         $alternatepath = str_replace("$$__ROOT", $root, $repo["altpath"]) . "/" . $relpath;// . $filename_parts["filename"];
         $ext = strtolower($filename_parts["extension"]);
 
-        $info = $this->getVideoInfo($filename);
+        if (!file_exists($alternatepath)) {
+            @mkdir($alternatepath, 0777, true);
+        }
+
+        if (!file_exists($alternatepath)) {
+            throw new Exception("Path -$filename- don't exists and can't be created. " . __FUNCTION__ . " method");
+        }
+
+        $video_manager = new VideoManager($filename, $this->availableSizes);
 
         if ($this->mp4) {
-            $this->ensureFormat(MP4, $filename, $alternatepath);
+            $video_manager->ensureFormat(MP4, $alternatepath);
         }
 
         if ($this->webm) {
-            $this->ensureFormat(WEBM, $filename, $alternatepath);
+            $video_manager->ensureFormat(WEBM, $alternatepath);
         }
 
         if ($this->ogv) {
-            $this->ensureFormat(OGV, $filename, $alternatepath);
+            $video_manager->ensureFormat(OGV, $alternatepath);
         }
-        
+
         if ($this->generateThumbs) {
-            $this->generateThumb($filename, $alternatepath);   
+            $video_manager->generateThumb($alternatepath);
         }
 
         if ($this->generatePreview) {
-            $this->generatePreview($filename, $alternatepath);
+            $video_manager->generatePreview($alternatepath);
         }
     }
 
-    private function ensureFormat($format, $filename, $alternatepath) {
-        foreach ($this->availableSizes as $size => $value) {
-            $alternatefilename = $alternatepath . "/$size." . $format;
-            if (file_exists($alternatefilename)) continue;
-            $this->transcode($filename, $alternatefilename, $format, $size);
-        }
-    }
-
-    private function transcode($input, $output, $format, $size) {
-        $outputdirname = pathinfo($output, PATHINFO_DIRNAME);
-
-        if (!file_exists($outputdirname)) {
-            mkdir($outputdirname, 0777, true);
-        }
-
-        switch ($format) {
-            case MP4:
-                $this->toMp4($input, $output, $size);
-                break;            
-            case WEBM:
-                $this->toWebM($input, $output, $size);
-                break;
-
-            case OGV:
-                $this->toOgv($input, $output, $size);
-                break;
-        }
-    }
-
-    private function toMp4($input, $output, $size) {
-        list($width, $height) = $this->availableSizes[$size];
-        $command = "ffmpeg -i '$input' -c:v libx264 -crf 19 -level 3.1 -preset slow -filter:v scale=$width:$height" .
-            " -sws_flags lanczos -c:a aac -movflags faststart '$output'";
-        
-        $result = shell_exec($command);
-    }
-
-    private function toWebM($input, $output, $size) {
-        list($width, $heigh) = $this->availableSizes[$size];
-        $command = "ffmpeg -i '$input' -c:v libvpx -c:a libvorbis -filter:v scale=$width:$height '$output'";
-        $result = shell_exec($command);
-    }
-
-    private function toOgv($input, $output, $size) {
-        list($width, $heigh) = $this->availableSizes[$size];
-        $command = "ffmpeg -i '$input' -codec:v libtheora -qscale:v 7 -codec:a libvorbis -qscale:a 5 '$output'" .
-            " -sws_flags lanczos -c:a aac -movflags faststart '$output'";
-        
-        $result = shell_exec($command);
-    }
-
-    private function generateThumb($input, $outputdir) {
-        $thumbpath = $outputdir . "/thumb.png";
-        if (file_exists($thumbpath)) return;
-        //$outputdirname = pathinfo($thumb, PATHINFO_DIRNAME);
-        if (!file_exists($outputdir)) {
-            mkdir($outputdir, 0777, true);
-        }
-
-        //$command = "ffmpeg -i $input -f image2 -frames:v 1 $thumbpath";
-        //$command = "ffmpeg -i $input -vf scale=560:-1,pad=max(iw\\,ih):420:(ow-iw)/2:(oh-ih)/2 -frames:v 1 -s 256x256 $thumbpath";
-        $command = "ffmpeg -i '$input' -vf \"scale=560:-1,pad=max(iw\,ih):420:(ow-iw)/2:(oh-ih)/2\" -frames:v 1 -s 256x256 '$thumbpath'";
-        $result = shell_exec($command);
-    }
-
-    private function generatePreview($input, $outputdir) {
-        $previewpath = $outputdir . "/preview.gif";
-        if (file_exists($previewpath)) return;
-        //$outputdirname = pathinfo($output, PATHINFO_DIRNAME);
-        if (!file_exists($outputdir)) {
-            mkdir($outputdir, 0777, true);
-        }
-        $command = "ffmpeg -i '$input' -vf \"scale=560:-1,pad=max(iw\,ih):420:(ow-iw)/2:(oh-ih)/2\" -t 10 -r 2 -s 256x256 '$previewpath'";
-        $result = shell_exec($command);
-    }
-
-    private function getVideoInfo($input) {
-        $command = "ffprobe -v quiet -print_format json -show_format -show_streams -hide_banner \"$input\" 2>&1";
-        $output = array();
-        exec($command, $output);
-        return json_decode(implode("", $output), true);
-    }
 }
