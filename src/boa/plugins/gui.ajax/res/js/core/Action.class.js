@@ -68,6 +68,8 @@ Class.create("Action", {
             allowedMimes:$A([]),
                         evalMetadata:'',
             root:true,
+            onlyRoot:false,
+            minPathDepth:0,
             inZip:true,
             recycle:false,
             behaviour:'hidden',
@@ -76,7 +78,7 @@ Class.create("Action", {
             contextMenu:false,
             appWidgets:null,
             infoPanel:false,
-            customFn: null        
+            customFn: null
             }, arguments[1] || { });
             
         this.selectionContext = Object.extend({         
@@ -213,6 +215,8 @@ Class.create("Action", {
         var crtMime = '';
         var crtIsReadOnly = false;
         var crtIsRootPath = false;
+        var crtPath = '';
+        var crtPathDepth = 0;
 
         var crtNode = arguments[2];
 
@@ -223,7 +227,9 @@ Class.create("Action", {
                 crtIsRoot = crtNode.isRoot();
                 crtMime = crtNode.getMime();
                 crtIsReadOnly = crtNode.hasMetadataInBranch("readonly", "true");
-                crtIsRootPath = crtNode.getPath() == '/';
+                crtPath = crtNode.getPath();                
+                crtIsRootPath = crtPath == '/';
+                crtPathDepth = (crtPath.match(/\//g) || []).length;
         }
 
         if(this.options.listeners["contextChange"]){
@@ -275,8 +281,13 @@ Class.create("Action", {
         if(!this.context.root && (crtIsRoot || crtIsRootPath)){
             return this.hideForContext();
         }
-        this.showForContext();              
-        
+        if(this.context.onlyRoot && (!crtIsRoot && !crtIsRootPath)){
+            return this.hideForContext();
+        }
+        if(this.context.minPathDepth && (crtPathDepth < parseInt(this.context.minPathDepth))){
+            return this.hideForContext();
+        }
+        this.showForContext();        
     },
         
     /**
@@ -775,7 +786,7 @@ Class.create("Action", {
         }.bind(object));
     },
     setContext: function (context){
-        var prop, properties = ['selection', 'dir', 'allowedMimes', 'root', 'inZip', 'recycle',
+        var prop, properties = ['selection', 'dir', 'allowedMimes', 'root', 'onlyRoot', 'minPathDepth', 'inZip', 'recycle',
             'behaviour', 'actionBar', 'actionBarGroup', 'contextMenu', 'appWidgets', 'infoPanel', 'customFn'];
         
         for(var i = 0; i < properties.length; i++){
