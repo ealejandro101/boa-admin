@@ -1947,6 +1947,17 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         || DcoAccessDriver::$filteringDriverInstance->filterFolder($search, "contains"));
     }
 
+    function renameBookmark($oldNode, $newNode){
+        if ($oldNode == null) return;        
+        $loggedUser = AuthService::getLoggedUser();        
+        if ($loggedUser == null) return;
+        
+        $oldpath = $oldNode->getPath();
+        if ($loggedUser->removeBookmark($oldpath)){
+            $loggedUser->addBookmark($newNode->getPath());
+        }
+    }
+
 
     /****
     Utilitary methods
