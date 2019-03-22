@@ -301,9 +301,13 @@ abstract class AbstractUser
 					$toCompare = "";
 					if(is_string($v)) $toCompare = $v;
 					else if(is_array($v)) $toCompare = $v["PATH"];					
-					if($toCompare == trim($path)) unset($this->bookmarks[$repId][$k]);
+					if($toCompare == trim($path)) {
+                        unset($this->bookmarks[$repId][$k]);
+                        return true;
+                    }
 				}
-			} 		
+			}
+        return false;
 	}
 	
 	function renameBookmark($path, $title){

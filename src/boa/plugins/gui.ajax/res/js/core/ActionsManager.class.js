@@ -474,17 +474,19 @@ Class.create("ActionsManager", {
                     updates.each(function(tree){
                         var newNode = dm.getManifestNodeProvider().parseManifestNode(tree);
                         var original = newNode.getMetadata().get("original_path");
-                        if(original && original != newNode.getPath()
-                            && getRepName(original) != getRepName(newNode.getPath())){
+                        var newPath = newNode.getPath();
+                        var newRepName = getRepName(newPath);
+                        if(original && original != newPath
+                            && getRepName(original) != newRepName){
                             // Node was really moved to another folder
                             var fake = new ManifestNode(original);
                             var n = fake.findInArbo(dm.getRootNode(), undefined);
                             if(n){
                                 n.getParent().removeChild(n);
                             }
-                            var parentFake = new ManifestNode(getRepName(newNode.getPath()));
+                            var parentFake = new ManifestNode(newRepName);
                             var parent = parentFake.findInArbo(dm.getRootNode(), undefined);
-                            if(!parent && getRepName(newNode.getPath()) == "") parent = dm.getRootNode();
+                            if(!parent && newRepName == "") parent = dm.getRootNode();
                             if(parent){
                                 newNode.getMetadata().set("original_path", undefined);
                                 parent.addChild(newNode);
@@ -497,6 +499,9 @@ Class.create("ActionsManager", {
                                 n.replaceBy(newNode, "override");
                                 dm.setSelectedNodes([n], {});
                             }
+                        }
+                        if (original && original != newPath){
+                            document.fire('app:file_renamed', { old: original, new: newPath });
                         }
                     });
                 }

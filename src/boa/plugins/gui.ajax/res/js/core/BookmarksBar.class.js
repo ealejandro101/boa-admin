@@ -66,7 +66,7 @@
 				alt:bmAction.options.title,
 				image:resourcesFolder+'/images/actions/16/bookmark_add.png',
 				callback:function(e){
-                    document.notify("app:add_bookmark");
+          document.fire("app:add_bookmark");
 				}.bind(this)
 			};		
 		}.bind(this));
@@ -78,6 +78,13 @@
                 this.addBookmark(node.getPath(), node.getLabel(),function(){app.fireNodeRefresh(node);});
             }
 		}.bind(this) );
+        if (this.bmMenu) {
+            document.observeOnce("app:file_renamed", function(e){
+                var parameters = new Hash();
+                parameters.set('bm_action', 'load_bookmarks');
+                this.load(parameters, true, null);
+            }.bind(this));
+        }
 	},
 	/**
 	 * Parses the registry to find the bookmarks definition
@@ -175,7 +182,6 @@
 	 * @param bmTitle String
 	 */
 	toggleRenameForm:function(bmPath, bmTitle){
-		
 		modal.prepareHeader(MessageHash[225], resourcesFolder+'/images/actions/16/bookmark.png');
 	 	var onLoad = function(newForm){
 	 		$(newForm).bm_path.value = bmPath;
@@ -198,21 +204,18 @@
 		if(!actionsParameters) actionsParameters = new Hash();
 		actionsParameters.set('get_action', 'get_bookmarks');
 		connexion.setParameters(actionsParameters);
-        if(onComplete){
-            connexion.onComplete = onComplete;
-        }else{
-            connexion.onComplete = function(transport){
-                document.observeOnce("app:registry_part_loaded", function(event){
-                    if(event.memo != "user/bookmarks") return;
-                    this.parseXml(app.getXmlRegistry());
-                }.bind(this) );
-                app.loadXmlRegistry(false, "user/bookmarks");
-                if(this.bmMenu){
-                    this.bmMenu.refreshList();
-                    if(!silently) this.bmMenu.show();
-                }
-            }.bind(this);
-        }
+        connexion.onComplete = function(transport){
+            if (onComplete) onComplete();
+            document.observeOnce("app:registry_part_loaded", function(event){
+                if(event.memo != "user/bookmarks") return;
+                this.parseXml(app.getXmlRegistry());
+            }.bind(this) );
+            app.loadXmlRegistry(false, "user/bookmarks");
+            if(this.bmMenu){
+                this.bmMenu.refreshList();
+                if(!silently) this.bmMenu.show();
+            }
+        }.bind(this);
 		connexion.sendAsync();
 	},
 	
@@ -228,7 +231,7 @@
 		if(title){
 			parameters.set('bm_title', title);
 		}
-		this.load(parameters, false, onComplete);
+		this.load(parameters, true, onComplete);
 	},
 	
 	/**
@@ -239,7 +242,7 @@
 		var parameters = new Hash();
 		parameters.set('bm_action', 'delete_bookmark');
 		parameters.set('bm_path', path);
-		this.load(parameters, false, onComplete);
+		this.load(parameters, true, onComplete);
 	},
 	
 	/**
