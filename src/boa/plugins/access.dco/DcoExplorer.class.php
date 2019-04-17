@@ -64,7 +64,7 @@ class DcoExplorer{
         $this->_driver = $driver;
     }
 
-    public function getAll($dir, $httpVars){        
+    public function getAll($dir, $page, $httpVars){        
         if(!isSet($dir) || $dir == "/") $dir = "";
 
         $options = array();
@@ -86,17 +86,17 @@ class DcoExplorer{
         $options["nonPatchedPath"] = $nonPatchedPath;
 
         if ($dir == "") {
-            $this->readRootPath($options);
+            $this->readRootPath($options, $page);
         }
         else{
-            $this->readObjectContent($options);
+            $this->readObjectContent($options, $page);
         }
         Logger::debug("LS Time : ".intval((microtime()-$startTime)*1000)."ms");
     }
 
-    private function readRootPath($options){
+    private function readRootPath($options, $page){
         $driver = $this->_driver;
-        $objects = $this->listObjects($options);
+        list( $objects, $totalPages, $crtPage, $countFiles ) = $this->listObjects($options, $page);
         $title_string = $driver->mess["access_dco.dco_title"];
         $contype_string = $driver->mess["access_dco.dco_contype"];
         $type_string = $driver->mess["access_dco.dco_type"];
@@ -109,10 +109,11 @@ class DcoExplorer{
             $dco->loadNodeInfo(false, false, "all");
             XmlWriter::renderManifestNode($dco);
         }
+        $this->renderPagination($options, $totalPages, $crtPage, $countFiles);
         XMLWriter::close();
     }
 
-    private function listObjects($options){
+    private function listObjects($options, $page){
         $driver = $this->_driver;
         $threshold = $driver->repository->getOption("PAGINATION_THRESHOLD");
         if(!isSet($threshold) || intval($threshold) == 0) $threshold = 500;
@@ -161,7 +162,7 @@ class DcoExplorer{
             $cursor ++;
         }
 
-        return $objects;
+        return [ $objects, $totalPages, $crtPage, $countFiles ];
     }
 
     public function getDcoManifestNode($manifestPath, $nonPatchedPath=null) {
@@ -197,7 +198,7 @@ class DcoExplorer{
         return $json;
     }
 
-    private function readObjectContent($options){
+    private function readObjectContent($options, $page){
         $driver = $this->_driver;
         $mess = $driver->mess;
         $dir = $options["dir"];
@@ -266,18 +267,7 @@ class DcoExplorer{
                     <column messageId="4" attributeName="modiftime" sortType="MyDate" defaultWidth="19%"/>
                 </columns>');
 
-        if(isSet($totalPages) && isSet($crtPage)){
-            XMLWriter::renderPaginationData(
-                $countFiles, 
-                $crtPage, 
-                $totalPages, 
-                $this->countFiles($path, TRUE)
-            );
-            if(!$lsOptions["f"]){
-                XMLWriter::close();
-                exit(1);
-            }
-        }
+        $this->renderPagination($options, $totalPages, $crtPage, $countFiles);
 
         $cursor = 0;
         $handle = opendir($path);
@@ -410,13 +400,14 @@ class DcoExplorer{
     }
 
     private function countFiles($dirName, $foldersOnly = false, $nonEmptyCheckOnly = false){
+        $driver = $this->_driver;   
         $handle=@opendir($dirName);
         if($handle === false){
             throw new \Exception("Error while trying to open directory ".$dirName);
         }
-        if($foldersOnly && !call_user_func(array($this->wrapperClassName, "isRemote"))){
+        if($foldersOnly && !call_user_func(array($driver->wrapperClassName, "isRemote"))){
             closedir($handle);
-            $path = call_user_func(array($this->wrapperClassName, "getRealFSReference"), $dirName);
+            $path = call_user_func(array($driver->wrapperClassName, "getRealFSReference"), $dirName);
             $dirs = glob($path."/*", GLOB_ONLYDIR|GLOB_NOSORT);
             if($dirs === false) return 0;
             return count($dirs);
@@ -433,5 +424,22 @@ class DcoExplorer{
         }
         closedir($handle);
         return $count;
+    }
+
+    private function renderPagination($options, $totalPages, $crtPage, $countFiles ){       
+        $lsOptions = $options["options"];
+
+        if(isSet($totalPages) && isSet($crtPage)){
+            XMLWriter::renderPaginationData(
+                 $countFiles, 
+                $crtPage, 
+                $totalPages, 
+                $this->countFiles($options["path"], TRUE)
+            ); 
+            if(!$lsOptions["f"]){
+                XMLWriter::close();
+                exit(1);
+            }          
+        }
     }
 }
