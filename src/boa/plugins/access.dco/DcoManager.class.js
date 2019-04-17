@@ -59,43 +59,45 @@ Class.create("DcoManager", {
         if (!userSelection.isEmpty()){
             if (userSelection.isUnique()){
                 if (userSelection.hasMime(['dco'])){
-                    //console.log(JSON.stringify(userSelection));
                     if (!/(delete|dcometa|editdco)/.test(actionName)){
-                        action.selectionContext.dir = false;
-                        action.hide();
+                        this.setContextProperty(action.selectionContext, 'dir', false);
                     }
                     else {
-                        action.selectionContext.dir = true;
-                        action.resetHide();
+                        this.restoreContextProperty(action.selectionContext, 'dir');
                     }
                 }
                 else{
-                    if (action.selectionContext.dir_before === undefined){
-                        action.selectionContext.dir_before = action.selectionContext.dir;
-                    }                        
-                    if (/^\/[^\/]+\/(content|src)$/.test(userSelection.getUniqueFileName())){
-                        action.selectionContext.dir = false;
-                        action.hide();
+                    var isDcoRoot = /^\/[^\/]+\/(content|src)$/.test(userSelection.getUniqueFileName());
+                    if (isDcoRoot&&/(rename|copy|move|delete)/.test(actionName)){
+                        this.setContextProperty(action.selectionContext, 'dir', false);
                     }
                     else {
-                        action.selectionContext.dir = action.selectionContext.dir_before;
-                        action.resetHide();
+                        this.restoreContextProperty(action.selectionContext, 'dir')
                     }
                 }
             }
         }
         else {
             var context = app.getContextNode();
-            if (context.getMime() == 'dco' || context.getPath == "/"){                
+            if (context.getMime() == 'dco'){
                 if (!/(create|delete|dcometa|editdco)/.test(actionName)){
-                    action.selectionContext.dir = false;
-                    action.hide();
+                    this.setContextProperty(action.selectionContext, 'dir', false);
                 }
                 else{
-                    action.selectionContext.dir = true;
-                    action.resetHide();
+                    this.setContextProperty(action.selectionContext, 'dir', true)
                 }
             }
+        }
+    },
+    setContextProperty:function(context, property, value){
+        if (context[property+'_before'] === undefined) {
+            context[property+'_before'] = context[property];
+        }
+        context[property] = value;
+    },
+    restoreContextProperty: function(context, property) {
+        if (context[property+'_before'] !== undefined){
+            context[property] = context[property+'_before'];
         }
     }
 });
@@ -113,9 +115,8 @@ if (!app.dcoActionRefreshHandlerAssigned){
                 share.context.allowedMimes = $A(['^dco']);
             }
             else if (!share.context.allowedMimes.include('^dco')){
-                share.context.allowedMimes.push('^dco'); // = share.context.allowedMimes.toArray().push('^dco');
+                share.context.allowedMimes.push('^dco');
             }
-            //Event.stopObserving(document, 'app:actions_refreshed', oneTimeHandler);
         }
     };
     Event.observe(document, 'app:actions_refreshed', oneTimeHandler);

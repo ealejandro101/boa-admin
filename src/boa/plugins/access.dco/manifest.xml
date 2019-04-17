@@ -47,6 +47,7 @@
 		<external_file filename="access.dco/dcoActions.xml" include="client_configs/*" exclude=""/>
     <hooks>
       <serverCallback hookName="node.info" methodName="loadNodeInfo"/>
+      <serverCallback hookName="node.change" methodName="renameBookmark"/>
     </hooks>
 	</registry_contributions>
     <class_stream_wrapper filename="access.dco/DcoAccessWrapper.class.php" classname="BoA\Plugins\Access\Dco\DcoAccessWrapper" protocol="app.dco"/>
