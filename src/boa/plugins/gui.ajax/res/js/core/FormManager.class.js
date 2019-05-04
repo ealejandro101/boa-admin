@@ -496,7 +496,9 @@ Class.create("FormManager", {
                 conn.setParameters(reqpar);
                 conn.onComplete = function(transport){
                     var json = transport.responseJSON;
+                    
                     element.down("option").update(json.LEGEND ? json.LEGEND : "Select...");
+                    element.setAttribute("data-empty", element.down("option").value);
                     if(json.HAS_GROUPS){
                         for(var key in json.LIST){
                             var opt = new Element("OPTGROUP", {label:key});
@@ -887,7 +889,7 @@ Class.create("FormManager", {
             }
 		});
 		form.select('select').each(function(el){
-			if(el.getAttribute("data-mandatory") == 'true' && el.getValue() == '' && !el.disabled){
+			if(el.getAttribute("data-mandatory") == 'true' && (el.getValue() == '' ||  el.getValue() == el.getAttribute('data-empty')) && !el.disabled){
 				missingMandatory.push(el);
 			}
             if(el.getAttribute('data-ctrl_type')){

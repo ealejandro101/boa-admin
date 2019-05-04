@@ -27,7 +27,7 @@ var uglifyOptions = {
 };
 
 gulp.task('app_boot', function(cb){
-  pump([
+  return pump([
     gulp.src(getFilePaths(JSDIR+'app_boot_list.txt')),
     concat('app_boot.js'),
     uglify(uglifyOptions),
@@ -36,7 +36,7 @@ gulp.task('app_boot', function(cb){
 });
 
 gulp.task('app_boot_protolegacy', function(){
-  pump([
+  return pump([
     gulp.src(getFilePaths(JSDIR+'app_boot_protolegacy_list.txt')),
     concat('app_boot_protolegacy.js'),
     uglify(),
@@ -45,7 +45,7 @@ gulp.task('app_boot_protolegacy', function(){
 });
 
 gulp.task('app', function(){
-  pump([
+  return pump([
     gulp.src(getFilePaths(JSDIR+'app_list.txt')),
     concat('app.js'),
     uglify(uglifyOptions),
@@ -54,7 +54,7 @@ gulp.task('app', function(){
 });
 
 gulp.task('themes-css', function(){
-  pump([
+  return pump([
     gulp.src(getFilePaths(THEMESDIR+'allz_list.txt')),
     concat('allz.css'),
     uglifycss({ uglyComments: true}),
@@ -62,6 +62,6 @@ gulp.task('themes-css', function(){
   ]);
 });
 
-gulp.task('build', ['app_boot', 'app_boot_protolegacy', 'app', 'themes-css']);
+gulp.task('build', gulp.series('app_boot', 'app_boot_protolegacy', 'app', 'themes-css'));
 
-gulp.task('default', ['build']);
+gulp.task('default', gulp.series('build'));
