@@ -827,7 +827,7 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
             //  XML LISTING
             //------------------------------------
             case "ls":
-                $this->getExplorer()->getAll($dir, $httpVars);
+                $this->getExplorer()->getAll($dir, $page , $httpVars);
             break;
 
             //------------------------------------
