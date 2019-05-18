@@ -1332,7 +1332,7 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
         $zipLocalPath = $selection->getZipLocalPath(true);
         if(strlen($zipLocalPath)>1 && $zipLocalPath[0] == "/") $zipLocalPath = substr($zipLocalPath, 1)."/";
         $files = $selection->getFiles();
-
+        $newFiles = array();
         $realZipFile = call_user_func(array($this->wrapperClassName, "getRealFSReference"), $this->urlBase.$zipPath);
         $archive = new \PclZip($realZipFile);
         $content = $archive->listContent();
@@ -1340,20 +1340,33 @@ class FsAccessDriver extends AbstractAccessDriver implements FileWrapperProvider
             $item = substr($item, strlen($zipPath));
             if($item[0] == "/") $item = substr($item, 1);
             foreach ($content as $zipItem){
-                if($zipItem["stored_filename"] == $item || $zipItem["stored_filename"] == $item."/"){
-                    $files[$key] = $zipItem["stored_filename"];
+                $fileName = $zipItem["stored_filename"];
+                if($fileName == $item || $fileName == $item."/"){
+                    $files[$key] = $fileName;
                     break;
                 }else{
                     unset($files[$key]);
                 }
+                if(substr_count(substr($fileName, 0, strlen($fileName) - 2), "/") == 0) {
+                    array_push($newFiles, $zipItem["stored_filename"]);
+                }                
             }
         }
         Logger::debug("Archive", $files);
         $realDestination = call_user_func(array($this->wrapperClassName, "getRealFSReference"), $this->urlBase.$destDir);
         Logger::debug("Extract", array($realDestination, $realZipFile, $files, $zipLocalPath));
-        $result = $archive->extract(PCLZIP_OPT_BY_NAME, $files, 
+        if(count($files) == 0) {
+            $result = $archive->extract(
                                     PCLZIP_OPT_PATH, $realDestination, 
                                     PCLZIP_OPT_REMOVE_PATH, $zipLocalPath);
+
+           $selection->setFiles($newFiles);    
+        } else {
+            $result = $archive->extract(PCLZIP_OPT_BY_NAME, $files, 
+                                    PCLZIP_OPT_PATH, $realDestination."/".$zipLocalPath, 
+                                    PCLZIP_OPT_REMOVE_PATH, $zipLocalPath);
+        }
+
         if($result <= 0){
             $error[] = $archive->errorInfo(true);
         }else{
