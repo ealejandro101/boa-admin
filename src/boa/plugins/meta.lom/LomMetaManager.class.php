@@ -38,6 +38,7 @@ use BoA\Core\Services\AuthService;
 use BoA\Core\Services\ConfService;
 use BoA\Core\Services\PluginsService;
 use BoA\Core\Utils\Utils;
+use BoA\Core\Utils\Text\SystemTextEncoding;
 use BoA\Core\Xml\ManifestNode;
 use BoA\Plugins\Access\Dco\DcoSpecProvider;
 
@@ -46,6 +47,8 @@ defined('APP_EXEC') or die( 'Access not allowed');
 class LomMetaManager extends Plugin implements DcoSpecProvider {
     const PUBLISHED_STATUS = 'published';
     const INPROGRESS_STATUS = 'inprogress';
+    const DIGITAL_RESOURCE_OBJECT = 'DIGITAL_RESOURCE_OBJECT';
+    const META_PREFIX = 'meta_fields_';
     /**
      * @var AbstractAccessDriver
      */
@@ -63,119 +66,10 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
     public function initMeta($accessDriver){
         $this->accessDriver = $accessDriver;
-
-        /*$store = PluginsService::getInstance()->getUniqueActivePluginForType("metastore");
-        if($store === false){
-                throw new \Exception("The 'meta.lom' plugin requires at least one active 'metastore' plugin");
-        }
-        $this->metaStore = $store;
-        $this->metaStore->initMeta($accessDriver);*/
-
-        //$messages = ConfService::getMessages();
-        /****** JO Commented this
-        $def = $this->getMetaDefinition();
-        if(!isSet($this->options["meta_visibility"])) $visibilities = array("visible");
-        else $visibilities = explode(",", $this->options["meta_visibility"]);
-        $cdataHead = '<div>
-                        <div class="panelHeader infoPanelGroup" colspan="2"><span class="icon-edit" data-action="edit_lom_meta" title="APP_MESSAGE[meta_lom.1]"></span>APP_MESSAGE[meta_lom.1]</div>
-                        <table class="infoPanelTable" cellspacing="0" border="0" cellpadding="0">';
-        $cdataFoot = '</table></div>';
-        $cdataParts = "";
-        
-        $selection = $this->xPath->query('registry_contributions/client_configs/component_config[@className="FilesList"]/columns');
-        $contrib = $selection->item(0);   
-        $even = false;
-        $searchables = array();
-        $index = 0;
-        $fieldType = "text";
-        foreach ($def as $key=>$label){
-            if(isSet($visibilities[$index])){
-                    $lastVisibility = $visibilities[$index];
-            }
-            $index ++;
-            $col = $this->manifestDoc->createElement("additional_column");
-            $col->setAttribute("messageString", $label);
-            $col->setAttribute("attributeName", $key);
-            $col->setAttribute("sortType", "String");
-            if(isSet($lastVisibility)) $col->setAttribute("defaultVisibilty", $lastVisibility);
-            if($key == "stars_rate"){
-                $col->setAttribute("modifier", "MetaCellRenderer.prototype.starsRateFilter");
-                $col->setAttribute("sortType", "CellSorterValue");
-                $fieldType = "stars_rate";
-            }else if($key == "css_label"){
-                $col->setAttribute("modifier", "MetaCellRenderer.prototype.cssLabelsFilter");
-                $col->setAttribute("sortType", "CellSorterValue");
-                $fieldType = "css_label";
-            }else if(substr($key,0,5) == "area_"){
-                    $searchables[$key] = $label;
-                    $fieldType = "textarea";
-            }else{
-                $searchables[$key] = $label;
-                $fieldType = "text";
-            }
-            $contrib->appendChild($col);
-            
-            $trClass = ($even?" class=\"even\"":"");
-            $even = !$even;
-            $cdataParts .= '<tr'.$trClass.'><td class="infoPanelLabel">'.$label.'</td><td class="infoPanelValue" data-metaType="'.$fieldType.'" id="ip_'.$key.'">#{'.$key.'}</td></tr>';
-        }*/
-        
-        /****** JO Commented this
-        $selection = $this->xPath->query('registry_contributions/client_configs/component_config[@className="InfoPanel"]/infoPanelExtension');
-        $contrib = $selection->item(0);
-        $contrib->setAttribute("attributes", implode(",", array_keys($def)));
-        if(isset($def["stars_rate"]) || isSet($def["css_label"])){
-            $contrib->setAttribute("modifier", "LomMetaCellRenderer.prototype.infoPanelModifier");
-        }
-        $htmlSel = $this->xPath->query('html', $contrib);
-        $html = $htmlSel->item(0);
-        $cdata = $this->manifestDoc->createCDATASection($cdataHead . $cdataParts . $cdataFoot);
-        $html->appendChild($cdata);
-        
-        $selection = $this->xPath->query('registry_contributions/client_configs/template_part[@appClass="SearchEngine"]');
-        foreach($selection as $tag){
-            $v = $tag->attributes->getNamedItem("appOptions")->nodeValue;
-            $metaV = count($searchables)? '"metaColumns":'.json_encode($searchables): "";
-            if(!empty($v) && trim($v) != "{}"){
-                $v = str_replace("}", ", ".$metaV."}", $v);
-            }else{
-                $v = "{".$metaV."}";
-            }
-            $tag->setAttribute("appOptions", $v);
-        }
-        */
-        parent::init($this->options);
-    
+        parent::init($this->options);    
     }
         
     protected function getMetaDefinition(){
-        /******* JO Commented this
-        foreach($this->options as $key => $val){
-            $matches = array();
-            if(preg_match('/^lom_meta_fields_(.*)$/', $key, $matches) != 0){
-                $repIndex = $matches[1];
-                $this->options["lom_meta_fields"].=",".$val;
-                $this->options["lom_meta_labels"].=",".$this->options["lom_meta_labels_".$repIndex];
-                if(isSet($this->options["lom_meta_visibility_".$repIndex]) && isSet($this->options["lom_meta_visibility"])){
-                    $this->options["lom_meta_visibility"].=",".$this->options["lom_meta_visibility_".$repIndex];
-                }
-            }
-        }
-
-        $fields = $this->options["lom_meta_fields"];
-        $arrF = explode(",", $fields);
-        $labels = $this->options["lom_meta_labels"];
-        $arrL = explode(",", $labels);
-
-        $result = array();
-        foreach ($arrF as $index => $value){
-            if(isSet($arrL[$index])){
-                $result[$value] = $arrL[$index];
-            }else{
-                $result[$value] = $value;
-            }
-        }
-        return $result;  */ 
         return array();
     }
     
@@ -193,7 +87,6 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $this->mess = ConfService::getMessages();
         $isRoot = is_dir($metaPath);
         if ($isRoot){
-
             $metaPath .= "/.manifest";
         }
         else {
@@ -302,9 +195,82 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             case "save_dcometa":
                 $this->saveDcoMeta($action, $httpVars, $fileVars);
             break;
+            case "convert_to_digital_resource":
+                $this->convertToDigitalResource($action, $httpVars, $fileVars);
+            break;
             case "publish_metadata":
                 $this->publish();
         }
+    }
+
+    /* DcoSpecProvider Implementation */
+    public function loadSpecs(){
+        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
+
+        if (!is_dir($specsPath)){
+            mkdir($specsPath, 0755, true);
+        }
+
+        $list = new \stdClass();
+
+        foreach(glob($specsPath."/*.xml") as $file){
+            $xml = new \DOMDocument();
+            $xml->load($file);
+            $xpath = new \DOMXPath($xml);
+
+            $id = $xpath->query("/spec/id");
+            $name = $xpath->query("/spec/name");
+            $list->{$id[0]->nodeValue} = $name[0]->nodeValue;
+        }
+        return $list;
+    }
+    
+    public function getSpecById($id, $print=true){
+        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
+
+        if ($id === self::DIGITAL_RESOURCE_OBJECT) {
+            $id = $this->options["dro_spec"];
+        }
+
+        $found = glob($specsPath."/".$id.".xml");
+        if (count($found) > 0){
+            $xml = new \DOMDocument();
+            $xml->load($found[0]);
+            if ($print){
+                header('Content-Type: text/xml; charset=UTF-8');
+                header('Cache-Control: no-cache');
+                print ($xml->saveXML());
+                return false;
+            }
+            return $xml;
+        }
+        return false;
+    }
+
+    public function initMetaFromSpec($dir, $specId){
+        //Create metadata file based on specs defaults
+        $spec = $this->getSpecById($specId, false);
+        if (false === $spec){
+            throw new \Exception("Unable to find DCO specification '{$specId}'");
+        }
+        $xpath = new \DOMXPath($spec);
+        $fields = $xpath->query("/spec/fields");
+
+        if ($fields == null) {
+            throw new \Exception('Unable to load metadata setup');
+        }
+
+        $fields = $fields->item(0);
+        $meta = $this->parseMetaToJson($fields);
+        return $meta;
+        //$error = $this->accessDriver->createEmptyFile($dir, "/.metadata", json_encode($meta));
+        //if(isSet($error)){
+        //    throw new ApplicationException($error);
+        //}
+    }
+
+    public function getMetaEditorClass(){
+        return "LomMetaEditor";
     }
 
     private function loadSpecsAsJson(){
@@ -373,7 +339,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             foreach ($segments as $segment) {
                 $key = $parambasename."_".$specField->nodeName."_".$segment;
                 if (array_key_exists($key, $meta)){
-                    $newObj[$segment] = ctype_digit($meta[$key])?intval($meta[$key]):0;
+                    $newObj[$segment] = intval($meta[$key]);
                     $ret = true;
                 }
             }
@@ -386,7 +352,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             $key = $parambasename."_".$specField->nodeName.$colrow;
             if (array_key_exists($key, $meta)){
                 if ($translatable) {
-                    $translations = json_decode($meta[$key]);
+                    $translations = $this->getTranslations($meta[$key]);
                     $value = array();
                     foreach (get_object_vars($translations) as $lang => $langValue) {
                         $value[$lang] = is_array($langValue) ? $langValue : array_map('trim', explode(',', $langValue));
@@ -421,7 +387,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             
             if (array_key_exists($key, $meta)){                
                 if ($translatable){
-                    $parent[$specField->nodeName] = json_decode($meta[$key]);
+                    $parent[$specField->nodeName] = $this->getTranslations($meta[$key]);
                 }
                 else {
                     $parent[$specField->nodeName] = $meta[$key];
@@ -432,15 +398,26 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         }
     }
 
+    private function getTranslations($value) {
+        if ($value == null) return null;
+
+        $translations = json_decode($value);
+        if ($translations == null) {
+            $translations = new \stdClass();
+            $translations->none = $value;
+        }
+        return $translations;
+    }
+
     private function saveDcoMeta($actionName, $httpVars, $fileVars){
         if(!isSet($this->actions[$actionName])) return;
         if(is_a($this->accessDriver, "demoAccessDriver")){
-            throw new Exception("Write actions are disabled in demo mode!");
+            throw new \Exception("Write actions are disabled in demo mode!");
         }
         $repo = $this->accessDriver->repository;
         $user = AuthService::getLoggedUser();
         if(!AuthService::usersEnabled() && $user!=null && !$user->canWrite($repo->getId())){
-            throw new Exception("You have no right on this action.");
+            throw new \Exception("You have no right on this action.");
         }
         $selection = new UserSelection();
         $selection->initFromHttpVars();
@@ -450,6 +427,14 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $meta = array();
         $this->parseParameters($httpVars, $meta, null, true);
         $spec_id = $httpVars["spec_id"];
+        $data = $this->createUpdateManifest($currentFile, $meta, $spec_id);
+
+        //Controller::applyHook("node.meta_change", array($node));
+        HTMLWriter::charsetHeader("application/json");
+        echo isSet($data)?$data:"{}";
+    }
+
+    private function createUpdateManifest($currentFile, $meta, $spec_id){
         $spec = $this->getSpecById($spec_id, false);
         $xpath = new \DOMXPath($spec);
         $categories = $xpath->query("/spec/fields/*[@type='category']");
@@ -460,7 +445,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             foreach ($category->childNodes as $field){
                 if ($field->nodeType != XML_ELEMENT_NODE) continue;
                 //if ($field->nodeType == XML_CDATA_SECTION_NODE) continue;
-                $this->readSpecFieldToJson($field, $xpath, $metaobject[$category->nodeName], "meta_fields_".$category->nodeName, $meta, "");
+                $this->readSpecFieldToJson($field, $xpath, $metaobject[$category->nodeName], self::META_PREFIX.$category->nodeName, $meta, "");
             }
         }
 
@@ -487,17 +472,15 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             $data = json_encode($json);
             @fwrite($fp, $data, strlen($data));
             @fclose($fp);
+            return $data;
         }
-        //Controller::applyHook("node.meta_change", array($node));
-        HTMLWriter::charsetHeader("application/json");
-        echo isSet($data)?$data:"{}";
     }
 
     private function publish(){
         $repo = $this->accessDriver->repository;
         $user = AuthService::getLoggedUser();
         if(!AuthService::usersEnabled() && $user!=null && !$user->canWrite($repo->getId())){
-            throw new Exception("You have no right on this action.");
+            throw new \Exception("You have no right on this action.");
         }
 
         $selection = new UserSelection();
@@ -591,52 +574,95 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         return $output;
     }
 
-    /* DcoSpecProvider Implementation */
-    public function loadSpecs(){
-        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
+    private function convertToDigitalResource($action, $httpVars, $fileVars){
+        if(!isSet($this->actions[$action])) return;
 
-        if (!is_dir($specsPath)){
-            mkdir($specsPath, 0755, true);
-        }
-
-        $list = new \stdClass();
-
-        foreach(glob($specsPath."/*.xml") as $file){
-            $xml = new \DOMDocument();
-            $xml->load($file);
-            $xpath = new \DOMXPath($xml);
-
-            $id = $xpath->query("/spec/id");
-            $name = $xpath->query("/spec/name");
-            $list->{$id[0]->nodeValue} = $name[0]->nodeValue;
-        }
-        return $list;
-    }
-    
-    public function getSpecById($id, $print=true){
-        $specsPath = APP_DATA_PATH."/plugins/meta.lom/specs";
-
-        if ($id === 'DIGITAL_RESOURCE_OBJECT') {
-            $id = $this->options["dro_spec"];
-        }
-
-        $found = glob($specsPath."/".$id.".xml");
-        if (count($found) > 0){
-            $xml = new \DOMDocument();
-            $xml->load($found[0]);
-            if ($print){
-                header('Content-Type: text/xml; charset=UTF-8');
-                header('Cache-Control: no-cache');
-                print ($xml->saveXML());
-                return false;
+        HTMLWriter::charsetHeader("application/json");
+        header("Cache-Control: no-cache");
+        try {
+            if(is_a($this->accessDriver, "demoAccessDriver")){
+                throw new \Exception("Write actions are disabled in demo mode!");
             }
-            return $xml;
+            $repo = $this->accessDriver->repository;
+            $user = AuthService::getLoggedUser();
+            if(!AuthService::usersEnabled() && $user!=null && !$user->canWrite($repo->getId())){
+                throw new \Exception("You have no right on this action.");
+            }
+            
+            ob_start();
+            ob_implicit_flush(true);
+
+            $data = array("status" => "SCANNING", "processed" => 0,  "of" => 0);
+            $this->partialJsonOutput($data);
+            ob_flush();
+
+            $dir = Utils::securePath(SystemTextEncoding::magicDequote($dir));
+            $selection = new UserSelection();
+            $selection->initFromHttpVars();
+            $dir = $selection->getUniqueFile();
+            $dir = Utils::securePath(SystemTextEncoding::magicDequote($dir));
+            $rel_path = ($dir!= ""?($dir[0]=="/"?"":"/").$dir:"");
+            $path = $this->accessDriver->urlBase.$rel_path;
+            $path = call_user_func(array($this->accessDriver->wrapperClassName, "getRealFSReference"), $path);
+            $rootpath = call_user_func(array($this->accessDriver->wrapperClassName, "getRealFSReference"), $this->accessDriver->urlBase);
+            $recursively = $httpVars["recursively"];
+            
+            $pmeta = $this->getParentMeta($path, $rootpath);
+
+            $all = $this->getFiles($path, preg_match('/true/i', $recursively));
+
+            $data["status"] = "PROCESSING";
+            $data["of"] = count($all);
+            $this->partialJsonOutput($data);
+            ob_flush();
+
+            $start_time = microtime(true);
+            $data["converted"] = 0;
+            foreach($all as $file) {
+                if ($this->assignDroMetadata($file, str_replace($rootpath, '', $file), $pmeta)) {
+                    $data["converted"]++;
+                }
+                $data["processed"]++;
+                $elapsed = (microtime(true) - $start_time) * 1000;
+                if ($elapsed > 1000) {
+                    $this->partialJsonOutput($data);
+                    $start_time = microtime(true);
+                }
+            }
+
+            $data["status"] = "COMPLETED";
+            $data["processed"] = $data["of"];
+            $this->partialJsonOutput($data);
         }
-        return false;
+        catch(\Exception $e)
+        {
+            $result = array("status" => "FAILED", "message" => $e->getMessage());
+            echo json_encode($result);
+        }
     }
 
-    public function initMetaFromSpec($dir, $specId){
-        //Create metadata file based on specs defaults
+    private function getParentMeta($dir, $rootpath){
+        $path = dirname($dir);
+        $root = "";
+        $i = 0;
+        do {
+            if (file_exists("$path/.manifest")){
+                $fmanifest = "$path/.manifest";
+                break;
+            }
+            $path = dirname($path);
+        } while($path != $rootpath && $i++<100);
+
+        $content = file_get_contents($fmanifest);
+        $manifest = json_decode($content);
+        $metadata = $manifest->metadata;
+
+        $meta = array();
+        $this->readJsonMeta($manifest->manifest->type, $metadata, $meta);
+        return $meta;
+    }
+
+    private function readJsonMeta($specId, $json, &$meta){
         $spec = $this->getSpecById($specId, false);
         if (false === $spec){
             throw new \Exception("Unable to find DCO specification '{$specId}'");
@@ -647,18 +673,70 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         if ($fields == null) {
             throw new \Exception('Unable to load metadata setup');
         }
-
         $fields = $fields->item(0);
-        $meta = $this->parseMetaToJson($fields);
+        return $this->parseJsonMetaToArray($fields, $json, $meta, trim(self::META_PREFIX, '_'));
+    }
+
+    private function parseJsonMetaToArray($node, $json, &$meta, $prefix){
+        if ($this->hasChildElements($node)){
+            foreach ($node->childNodes as $childNode) {
+                if ($childNode->nodeType == XML_TEXT_NODE) continue;
+                if ($childNode->nodeType == XML_CDATA_SECTION_NODE) continue;
+                if (!isset($json->{$childNode->nodeName})) continue;
+                $this->parseJsonMetaToArray($childNode, $json->{$childNode->nodeName}, $meta, $prefix."_".$childNode->nodeName);
+            }
+        }
+        else {
+            if ($node->nodeName == 'duration') {
+                foreach (get_object_vars($json) as $key => $value) {
+                    $meta[$prefix.'_'.$key] = $value;
+                }
+            }
+            else {
+                $translatable = $node->getAttribute("translatable");
+                $meta[$prefix] = $translatable ? json_encode($json) : $json;
+            }
+        }
+    }
+
+    private function assignDroMetadata($path, $relpath, $pmeta){
+        $filename = basename($path);
+        $dir = dirname($path);
+        $manifest = "$dir/.$filename.manifest";
+        if (file_exists($manifest)) return false; //There is already a manifest, so the file already has metadata   
+        $meta = $this->getFileMeta($path);
+        $meta = array_merge($pmeta, $meta);
+        $this->createUpdateManifest($relpath, $meta, $this->options["dro_spec"]);
+        return true;
+    }
+
+    private function getFileMeta($path){
+        //ToDo: What meta to get from the file? from the parent?. 
+        $fileinfo = pathinfo($path);
+        $meta = array();
+        $meta[self::META_PREFIX."general_title"] = str_replace('_', ' ', $fileinfo['filename']);
+        $meta[self::META_PREFIX."general_description"] = '';
         return $meta;
-        //$error = $this->accessDriver->createEmptyFile($dir, "/.metadata", json_encode($meta));
-        //if(isSet($error)){
-        //    throw new ApplicationException($error);
-        //}
     }
 
-    public function getMetaEditorClass(){
-        return "LomMetaEditor";
+    private function getFiles($dir, $recursively){
+        $entries = scandir($dir);
+        $files = array();
+        foreach ($entries as $entry) {
+            if (preg_match('/^(\.\.?|\..*(?<=\.)(manifest|published|metadata))$/', $entry)) continue;
+            $fullname = $dir."/".$entry;
+            if (is_file($fullname)) {
+                $files[] = $fullname;
+            }
+            else if ($recursively) {
+                $files = array_merge($files, $this->getFiles($fullname, $recursively));
+            }
+        }
+        return $files;
     }
 
+    private function partialJsonOutput($output){
+        echo "\\n" . json_encode($output);
+        ob_flush();
+    }
 }

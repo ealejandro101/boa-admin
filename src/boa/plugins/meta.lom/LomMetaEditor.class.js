@@ -258,7 +258,8 @@ Class.create("LomMetaEditor", AbstractEditor, {
     getControlSettings: function(options){
         var settings = {};
         settings.mandatory = options.meta.getAttribute('required');
-        settings.readonly = options.meta.getAttribute('editable') !== "true";
+        settings.readonly = options.meta.getAttribute('editable') === "false";
+        console.log(`label: ${options.text}; setting.readonly: ${settings.readonly}`);
         settings.defaultValue = "";
         settings.label = options.text;
         settings.translatable = options.meta.getAttribute('translatable') === 'true';

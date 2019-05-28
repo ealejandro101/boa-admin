@@ -33,3 +33,11 @@ table.meta_form_table td, table.meta_form_table th {
 .text-center input[type=checkbox] {
     margin: 0 auto;
 }
+
+#tk-dlg-container {
+    padding: 15px;
+}
+
+.tk-dlg-content, #tk-dlg-progress {
+    text-align: center;
+}

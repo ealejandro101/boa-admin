@@ -13,6 +13,7 @@
 			<js file="plugins/meta.lom/LomMetaCellRenderer.class.js" className="LomMetaCellRenderer" autoload="true"/>
 			<js file="plugins/meta.lom/LomSpecEditor.class.js" className="LomSpecEditor" autoload="true"/>
 			<js file="plugins/meta.lom/LomMetaEditor.class.js" className="LomMetaEditor" autoload="true"/>
+			<js file="plugins/meta.lom/LomMetaConverter.class.js" className="LomMetaConverter" autoload="true"/>
       <css file="plugins/meta.lom/lommeta.css" autoload="true" />
       <css file="plugins/editor.role/rolesEditor.css" autoload="true" />
       <img_library alias="meta_lom" path="plugins/meta.lom/img"/>
