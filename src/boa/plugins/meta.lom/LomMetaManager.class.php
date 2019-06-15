@@ -97,6 +97,9 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $content = file_get_contents($metaPath);
         $meta = json_decode($content);
         $metadata = array("lommetadata" => json_encode($meta->metadata));
+        if ($meta->manifest && ($meta->manifest->type || $meta->manifest->is_a)){
+            $metadata["lomtype"] = $meta->manifest->is_a;
+        } 
 
         if (!$isRoot){
             $metadata["status_id"] = $meta->manifest->status;
@@ -263,10 +266,6 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $fields = $fields->item(0);
         $meta = $this->parseMetaToJson($fields);
         return $meta;
-        //$error = $this->accessDriver->createEmptyFile($dir, "/.metadata", json_encode($meta));
-        //if(isSet($error)){
-        //    throw new ApplicationException($error);
-        //}
     }
 
     public function getMetaEditorClass(){
@@ -285,7 +284,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
     }
 
     private function readSpecFieldToJson($specField, $specXpath, &$parent, $parambasename, $meta, $colrow=""){
-        if (!$specField->hasAttribute("enabled") || !$specField->attributes["enabled"]->nodeValue){
+        if (!$specField->hasAttribute("enabled") || !($specField->getAttribute("enabled") == "true")){
             return false;
         }
         $type = $specField->getAttribute("type");
@@ -300,7 +299,6 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                 }
                 else {
                     $target = array();
-                    $parent[$specField->nodeName] = &$target;
                 }
                 
                 $itemsFound = true;
@@ -321,16 +319,21 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                         $index++;
                     }
                 }
+                if (!$isContainer && count($target)){
+                    $parent[$specField->nodeName] = &$target;
+                }
             }
             else{
-                $newObj = $parent[$specField->nodeName] = array();
+                $newObj = array();
                 foreach ($specField->childNodes as $child) {
                     if ($child->nodeType != XML_ELEMENT_NODE) continue;
                     //if ($child->nodeType == XML_CDATA_SECTION_NODE) continue;
                     $this->readSpecFieldToJson($child, $specXpath, $newObj, $paramprefix.$colrow, $meta);
                 }
+                if (count($newObj)){
+                    $parent[$specField->nodeName] = $newObj;
+                }
             }
-
         }
         else if ($type == "duration"){
             $segments = explode(" ", "years months days hours minutes seconds");
@@ -384,7 +387,6 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                 return $ret;
             }
             $key = $parambasename."_".$specField->nodeName.$colrow;
-            
             if (array_key_exists($key, $meta)){                
                 if ($translatable){
                     $parent[$specField->nodeName] = $this->getTranslations($meta[$key]);
@@ -427,26 +429,34 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
         $meta = array();
         $this->parseParameters($httpVars, $meta, null, true);
         $spec_id = $httpVars["spec_id"];
-        $data = $this->createUpdateManifest($currentFile, $meta, $spec_id);
+        $unique = $httpVars["mode"] == 'single';
+        $data = $this->createUpdateManifest($currentFile, $meta, $spec_id, $unique);
 
         //Controller::applyHook("node.meta_change", array($node));
         HTMLWriter::charsetHeader("application/json");
         echo isSet($data)?$data:"{}";
     }
 
-    private function createUpdateManifest($currentFile, $meta, $spec_id){
+    private function createUpdateManifest($currentFile, $meta, $spec_id, $unique){
         $spec = $this->getSpecById($spec_id, false);
         $xpath = new \DOMXPath($spec);
         $categories = $xpath->query("/spec/fields/*[@type='category']");
 
-        $metaobject = array();
-        foreach($categories as $category){
-            $metaobject[$category->nodeName] = array();
-            foreach ($category->childNodes as $field){
-                if ($field->nodeType != XML_ELEMENT_NODE) continue;
-                //if ($field->nodeType == XML_CDATA_SECTION_NODE) continue;
-                $this->readSpecFieldToJson($field, $xpath, $metaobject[$category->nodeName], self::META_PREFIX.$category->nodeName, $meta, "");
+        if (is_array($meta)) {
+            $metaobject = array();
+            foreach($categories as $category){
+                $object = array();
+                foreach ($category->childNodes as $field){
+                    if ($field->nodeType != XML_ELEMENT_NODE) continue;
+                    $this->readSpecFieldToJson($field, $xpath, $object, self::META_PREFIX.$category->nodeName, $meta, "");
+                }
+                if (count($object)){
+                    $metaobject[$category->nodeName] = $object;
+                }
             }
+        }
+        else {
+            $metaobject = $meta;
         }
 
         $isRoot = is_dir($this->accessDriver->urlBase.$currentFile);
@@ -468,12 +478,24 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                 $json->manifest->is_a = $isRoot?'dco':'dro';
             }
             $json->manifest->lastupdated = date('c');
-            $json->metadata = $metaobject;
+            $json->metadata = $unique ? $metaobject : $this->mergeMetadata($json->metadata, $metaobject);
             $data = json_encode($json);
             @fwrite($fp, $data, strlen($data));
             @fclose($fp);
             return $data;
         }
+    }
+
+    private function mergeMetadata($basemeta, $metaobject){
+        foreach ($metaobject as $key => $value) {
+            if (is_array($value) && is_object($basemeta->$key)) {
+                $this->mergeMetadata($basemeta->$key, $value);
+            }
+            else {
+                $basemeta->$key = $value;
+            }
+        }
+        return $basemeta;
     }
 
     private function publish(){
@@ -565,7 +587,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             return $keys;
         }
         else {
-            if ($node->hasAttribute("enabled") && $node->attributes["enabled"]->nodeValue){
+            if ($node->hasAttribute("enabled") && $node->getAttribute("enabled") == "true"){
                 $output = ($node->hasAttribute("defaultValue") ? $node->getAttribute("defaultValue") : "");
             }
             else
@@ -655,14 +677,14 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
 
         $content = file_get_contents($fmanifest);
         $manifest = json_decode($content);
-        $metadata = $manifest->metadata;
+        return $manifest->metadata;
 
-        $meta = array();
+        /*$meta = array();
         $this->readJsonMeta($manifest->manifest->type, $metadata, $meta);
-        return $meta;
+        return $meta;*/
     }
 
-    private function readJsonMeta($specId, $json, &$meta){
+    /*private function readJsonMeta($specId, $json, &$meta){
         $spec = $this->getSpecById($specId, false);
         if (false === $spec){
             throw new \Exception("Unable to find DCO specification '{$specId}'");
@@ -694,28 +716,41 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             }
             else {
                 $translatable = $node->getAttribute("translatable");
-                $meta[$prefix] = $translatable ? json_encode($json) : $json;
+                $meta[$prefix] = $json;
             }
         }
-    }
+    }*/
 
     private function assignDroMetadata($path, $relpath, $pmeta){
         $filename = basename($path);
         $dir = dirname($path);
         $manifest = "$dir/.$filename.manifest";
-        if (file_exists($manifest)) return false; //There is already a manifest, so the file already has metadata   
-        $meta = $this->getFileMeta($path);
-        $meta = array_merge($pmeta, $meta);
-        $this->createUpdateManifest($relpath, $meta, $this->options["dro_spec"]);
+        if (file_exists($manifest)) return false; //There is already a manifest, so the file already has metadata
+        $meta = clone $pmeta;
+        $meta = $this->mergeMetadata($meta, $this->getFileMeta($path));
+        $this->createUpdateManifest($relpath, $meta, $this->options["dro_spec"], true);
         return true;
     }
 
     private function getFileMeta($path){
-        //ToDo: What meta to get from the file? from the parent?. 
         $fileinfo = pathinfo($path);
-        $meta = array();
-        $meta[self::META_PREFIX."general_title"] = str_replace('_', ' ', $fileinfo['filename']);
-        $meta[self::META_PREFIX."general_description"] = '';
+        $meta = array("general" => array());
+
+        $spec = $this->getSpecById($this->options["dro_spec"], false);
+        $xpath = new \DOMXPath($spec);
+        $field = $xpath->query("/spec/fields/general/title")->item(0);
+
+        if ($field) {
+            $translatable = $field->getAttribute("translatable");
+            $value = str_replace('_', ' ', $fileinfo['filename']);
+            $meta["general"]["title"] = $translatable ? $this->getTranslations($value) : $value;
+        }
+        $field = $xpath->query("/spec/fields/general/description")->item(0);
+        if ($field) {
+            $translatable = $field->getAttribute("translatable");
+            $value = '';
+            $meta["general"]["description"] = $translatable ? $this->getTranslations($value) : $value;
+        }
         return $meta;
     }
 

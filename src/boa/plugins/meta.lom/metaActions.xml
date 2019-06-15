@@ -30,7 +30,7 @@
                 <context selection="true" dir="false" recycle="hidden" actionBar="false" contextMenu="true" infoPanel="true"
                     actionBarGroup="more" inZip="false">
                 </context>
-                <selectionContext dir="false" file="file" recycle="false" unique="true"></selectionContext>
+                <selectionContext dir="false" file="file" recycle="false" unique="false"></selectionContext>
                 </gui>
             <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
             <processing>
@@ -66,7 +66,6 @@
                         var userSelection = app.getUserSelection(),
                             context = userSelection.getContextNode(),
                             enabled = !!context;
-
                         if (enabled) {
                             var path = context.getPath(),
                                 pathParts = path.split('/');
@@ -75,7 +74,28 @@
                         }
                         context = { selection : enabled, contextMenu: enabled, infoPanel: enabled };
                         window.listenerContext.setContext(context);
-                    ]]>          
+                    ]]>
+                    </clientListener>
+                    <clientListener name="selectionChange"><![CDATA[
+                        var userSelection = app.getUserSelection(),
+                            context = userSelection.getContextNode(),
+                            enabled = !!context;
+                        if (enabled) {
+                            var path = context.getPath(),
+                                pathParts = path.split('/');
+                            pathParts.splice(0,1);
+                            enabled = pathParts[1] === 'content';
+                            var type = null;
+                            enabled = enabled && !userSelection.getSelectedNodes().some(function(node){
+                                var lomtype = node.getMetadata().get('lomtype');
+                                if (!lomtype) return true;
+                                if (type == null) type = lomtype;
+                                return (type != lomtype);
+                            });
+                        }                        
+                        context = { selection : enabled, contextMenu: enabled, infoPanel: enabled };
+                        window.listenerContext.setContext(context);
+                    ]]>
                     </clientListener>
                     <clientListener name="init"><![CDATA[
                         //DIGITAL_RESOURCE_OBJECT             
@@ -101,18 +121,29 @@
                 <context selection="true" dir="true" file="false" recycle="hidden" actionBar="false" contextMenu="true" infoPanel="true"
                     actionBarGroup="more" inZip="false">
                 </context>
-                <selectionContext dir="true" file="false" recycle="false" unique="false"></selectionContext>
+                <selectionContext dir="true" file="true" recycle="false" unique="false"></selectionContext>
             </gui>
             <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
             <processing>
                 <clientCallback prepareModal="true"><![CDATA[
                         var userSelection = app.getUserSelection();
-                        var onLoad = function (oForm){
-                            var converter = new LomMetaConverter(oForm);
-                            converter.show(userSelection);
-                        }
+                        var onLoad, form, editor;
                         var onSubmit = function(oForm){};
-                        modal.showDialogForm('', 'convert_dro_form', onLoad, onSubmit, null, true, true);
+                        if (userSelection.isUnique() && userSelection.hasFile()){
+                            onLoad = function (oForm){
+                                var metaEditor = new LomMetaEditor(oForm);
+                                metaEditor.show(userSelection);
+                            }
+                            form = 'dcometa_form';
+                        }
+                        else {
+                            var onLoad = function (oForm){
+                                var converter = new LomMetaConverter(oForm);
+                                converter.show(userSelection);
+                            }
+                            form = 'convert_dro_form';
+                        }
+                        modal.showDialogForm('', form, onLoad, onSubmit, null, true, true);
                     ]]></clientCallback>
                     <clientForm id="convert_dro_form"><![CDATA[
                         <div id="convert_dro_form" action="convert_dro_form" box_width="490" box_height="160" class="tk-dlg" box_width="auto" box_height="auto" box_resize="true" box_padding="0">
@@ -141,6 +172,23 @@
                             </div>
                         </div>
                     ]]></clientForm>
+                    <clientListener name="selectionChange"><![CDATA[
+                        var userSelection = app.getUserSelection(),
+                            context = userSelection.getContextNode(),
+                            enabled = !!context;
+                        if (enabled) {
+                            var path = context.getPath(),
+                                pathParts = path.split('/');
+                            pathParts.splice(0,1);
+                            enabled = pathParts[1] === 'content';
+                            enabled = enabled && !userSelection.getSelectedNodes().some(function(node){
+                                return node.getMetadata().get('lomtype') != null;
+                            });
+                        }                        
+                        context = { selection : enabled, contextMenu: enabled, infoPanel: enabled };
+                        window.listenerContext.setContext(context);
+                    ]]>
+                    </clientListener>
                     <clientListener name="contextChange"><![CDATA[
                         var userSelection = app.getUserSelection(),
                             context = userSelection.getContextNode(),
@@ -157,7 +205,7 @@
                     ]]>
                     </clientListener>
                     <clientListener name="init"><![CDATA[
-                        //DIGITAL_RESOURCE_OBJECT
+                        /*//DIGITAL_RESOURCE_OBJECT
                         var action = app.getActionBar().getActionByName('convert_to_dro');
                         if (action && !action.updating){
                             action.updating = true;
@@ -171,9 +219,84 @@
                                 action.updating = false;
                             }.bind(this);
                             connexion.sendAsync();
-                        }
+                        }*/
                     ]]></clientListener>
                 </processing>
         </action>
+        <!--action name="add_massive_metadata">
+            <gui text="meta_lom.18" title="meta_lom.19" src="editdelete.png" iconClass="icon-trash" accessKey="massive_meta_access_key" hasAccessKey="false">
+                <context selection="true" dir="" recycle="false"
+                    actionBar="false" contextMenu="true" infoPanel="false"
+                    actionBarGroup="change" inZip="false" custom="">
+                </context>
+                <selectionContext dir="false" file="true" recycle="false" unique="false" image="false" editable="false"></selectionContext>
+            </gui>
+            <rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+            <processing>
+                <clientCallback prepareModal="true"><![CDATA[
+                    var userSelection = app.getUserSelection();
+                    var onLoad = function (oForm){
+                        var dialog = new LomMetaMassiveMetadata(oForm);
+                        dialog.show(userSelection);
+                    }
+                    var onSubmit = function(oForm){};
+                    modal.showDialogForm('', 'massive_metadata_form', onLoad, onSubmit, null, true, true);
+
+                    /*var onLoad = function(oForm){
+                        var message = MessageHash[177];
+                        var repoHasRecycle = app.getContextHolder().getRootNode().getMetadata().get("repo_has_recycle");
+                        if(repoHasRecycle && repoHasRecycle == "true" && app.getContextNode().getMime() != "recycle"){
+                            message = MessageHash[176];
+                        }
+                        $(oForm).getElementsBySelector('span[id="delete_message"]')[0].innerHTML = message;
+                    };
+                    modal.showDialogForm('Delete', 'delete_form', onLoad, function(){
+                        var oForm = modal.getForm();
+                        app.getUserSelection().updateFormOrUrl(oForm);
+                        app.actionBar.submitForm(oForm, true, function(transport){
+                            var result = this.parseXmlMessage(transport.responseXML);
+                        }.bind(app.actionBar));
+                        hideLightBox(true);
+                        return false;
+                    });*/
+                    ]]></clientCallback>
+                <clientForm id="massive_metadata_form"><![CDATA[
+                    <div id="massive_metadata_form" action="massive_metadata_form" box_width="490" box_height="160" class="tk-dlg" box_width="auto" box_height="auto" box_resize="true" box_padding="0">
+                        <div id="tk-dlg-container">
+                            <div id="tk-dlg-confirmation">
+                                <div class="tk-dlg-content">
+                                    APP_MESSAGE[meta_lom.15]<br/>
+                                    APP_MESSAGE[meta_lom.16]
+                                </div>
+                                <div id="tk-dlg-form">
+                                    <input type="checkbox" name="recursively" id="recursively" />
+                                    <label for="recursively">APP_MESSAGE[meta_lom.17]</label>
+                                </div>
+                            </div>
+                            <div id="tk-dlg-progress" style="display:none">
+                                <div style="padding-top:3px;">
+                                    <div id="pgBar_total" style="width:154px; height: 4px;border: 1px solid #ccc;;margin-top: 6px;display:flex;margin: 0 auto"></div>
+                                    <span style="display:block;margin-top:10px;" id="progressString"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="editor_header">
+                            <div class="action_bar">
+                                <a href="#" onclick="return false;" class="icon-continue" id="processButton" onclick="return false;"><img src="APP_THEME_FOLDER/images/actions/22/button_ok.png" width="22" height="22" alt="APP_MESSAGE[481]" border="0"><br><span message_id="481">APP_MESSAGE[481]</span></a>
+                            </div>
+                        </div>
+                    </div>
+                ]]></clientForm>
+                <serverCallback methodName="switchAction"></serverCallback>
+                <clientListener name="contextChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.contextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+                <clientListener name="selectionChange"><![CDATA[
+                    app.dcoManager && app.dcoManager.selectionContextActionManager(window.listenerContext);
+                ]]>          
+                </clientListener>
+            </processing>
+        </action-->
     </actions>
 </registry_contributions>
