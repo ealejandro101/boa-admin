@@ -185,12 +185,11 @@ Class.create("LomMetaEditor", AbstractEditor, {
         if (fields.length > 0){
             container.insert(form);
             form.paneObject = this;
-            this.formManager.createParametersInputs(form, fields, true, values, null, true, this.massive);            
+            this.formManager.createParametersInputs(form, fields, true, values, null, true, this.massive);
             this.formManager.observeFormChanges(form, this.onFormChanges.bind(this));
             return true;
         }
         return false;
-        //function(form, parametersDefinitions, showTip, values, disabled, skipAccordion, addFieldCheckbox, startAccordionClosed)
     },
     onFormChanges: function(event){
 
@@ -442,7 +441,8 @@ Class.create("LomMetaEditor", AbstractEditor, {
             app.displayMessage("ERROR", MessageHash['boaconf.36']);
         }else{
             var i = 0;
-            this._selection.getSelectedNodes().each(function(node){
+            var selectedNodes = this._selection.getSelectedNodes();
+            selectedNodes.each(function(node){
                 toSubmit.set("file", node.getPath());
                 var conn = new Connexion();
                 conn.setParameters(toSubmit);
@@ -458,9 +458,12 @@ Class.create("LomMetaEditor", AbstractEditor, {
             var check = function(){
                 if (i > 0) {
                     setTimeout(check, tw);
+                    return;
                 }
                 this.setClean();
                 this.refreshActionsToolbar();
+                this.actions.get("closeButton").click();
+                alert(MessageHash['meta_lom.18']);
             }.bind(this);
             check();
         }

@@ -48,6 +48,7 @@ $mess=array(
 "15" => "Todos los archivos dentro de la carpeta(s) seleccionada serán convertidos a recurso digital",
 "16" => "¿Desea continuar?",
 "17" => "Ejecutar recursivamente",
+"18" => "Actualización exitosa.",
 "todro.scanning" => "Calculando cantidad de archivos a procesar...",
 "todro.processing" => "Procesando [PROCESSING] de [TOTAL] archivos. [PERCENTAGE]% completado.",
 "todro.completed" => "Proceso completado. Archivos procesados: [TOTAL], total convertidos: [CONVERTED]",

@@ -103,9 +103,6 @@ Class.create("FormManager", {
                 languages = param.get('languages') || [];
             }
 
-            if (name == 'taxon_path'){
-                console.log(param);
-            }
             if (name == 'btnaddnew') {
                 console.log(type);
             }
@@ -301,7 +298,6 @@ Class.create("FormManager", {
 				element = element + '<input type="radio" data-ctrl_type="'+type+'" class="SF_box" name="'+name+'" id="'+name+'-false"  '+(selectFalse?'checked':'')+' value="false"'+disabledString+'><label for="'+name+'-false">'+MessageHash[441] + '</label>';
 				element = '<div class="SF_input">'+element+'</div>';
 			}else if(type == 'select'){
-                try{
                 var achoices, json_list;
                 var pchoices = param.get("choices");
                 var dependencies = '';
@@ -383,7 +379,6 @@ Class.create("FormManager", {
                 if (dependencies){
                     dataEl = { dependencies: dependencies, createOptions: createOptions, getChoices: pchoices };
                 }
-                }catch(err){console.log(err);}
             }else if(type == "image" && param.get("uploadAction")){
                 if(defaultValue && !param.get('useDefaultImage')){
                     var conn = new Connexion();
@@ -487,8 +482,7 @@ Class.create("FormManager", {
                 div.insert(new Element('div', {className:"SF_label"}).update(label+(mandatory?'*':'')+' :'));
                 // INSERT CHECKBOX
                 if(addFieldCheckbox){
-                    cBox = '<input type="checkbox" class="SF_fieldCheckBox" name="SFCB_'+name+'" '+(defaultValue?'checked':'')+'/>';
-                    cBox = new Element('input', {type:'checkbox', className:'SF_fieldCheckBox', name:'SFCB_'+name});
+                    cBox = new Element('input', {type:'checkbox', className:'SF_fieldCheckBox', name:'SFCB_'+name, autocomplete:'off'});
                     cBox.checked = defaultValue?true:false;
                     div.insert(cBox);
                 }
@@ -650,39 +644,10 @@ Class.create("FormManager", {
 
         if(addFieldCheckbox){
             form.select("input.SF_fieldCheckBox").each(function(cb){
-                cb.observe("click", function(event){
-                    var cbox = event.target;
-                    var state = !cbox.checked;
-                    var fElement = cbox.next("input.SF_input,select.SF_input,div.SF_input,div.SF_inputContainer,textarea.SF_input,div.input-group.date");
-                    var fElements;
-                    var isDiv = fElement && fElement.nodeName.toLowerCase() == "div";
-                    if( isDiv) {
-                        fElements = fElement.select("input,select");
-                    }else{
-                        fElements = $A(fElement ? [fElement] : []);
-                    }
-                    fElements.invoke((state?"disable":"enable"));
-                    var nextDiv = cbox.up(0).next('div');
-                    if (nextDiv && nextDiv.match('.SF_replicableGroup')){
-                        var addBtn = nextDiv.down('.SF_replication_Add');
-                        if (addBtn && state) {
-                            nextDiv.down('.SF_replication_Add').addClassName("SF_disabled");
-                        }
-                        else if (addBtn) {
-                            nextDiv.down('.SF_replication_Add').removeClassName("SF_disabled");
-                        }
-                    }
-                    if(state){
-                        cbox.previous("div.SF_label").addClassName("SF_disabled");
-                    }else{
-                        cbox.previous("div.SF_label").removeClassName("SF_disabled");
-                    }
-                });
-                if(!cb.checked){
-                    cb.checked = true;
-                    cb.click();                    
-                }
-            });
+                cb.checked = false;
+                cb.observe("click", this.fieldCheckboxClick);
+                this.fieldCheckboxClick({target: cb});
+            }.bind(this));
         }        
 
         if(!groupDivs.size()) return;
@@ -711,6 +676,35 @@ Class.create("FormManager", {
         });
         if(!startAccordionClosed) form.SF_accordion.activate(form.down('div.accordion_toggle'));
 	},
+
+    fieldCheckboxClick: function(event){
+        var cbox = event.target;
+        var state = !cbox.checked;
+        var fElement = cbox.next("input.SF_input,select.SF_input,div.SF_input,div.SF_inputContainer,textarea.SF_input,div.input-group.date");
+        var fElements;
+        var isDiv = fElement && fElement.nodeName.toLowerCase() == "div";
+        if( isDiv) {
+            fElements = fElement.select("input,select");
+        }else{
+            fElements = $A(fElement ? [fElement] : []);
+        }
+        fElements.invoke((state?"disable":"enable"));
+        var nextDiv = cbox.up(0).next('div');
+        if (nextDiv && nextDiv.match('.SF_replicableGroup')){
+            var addBtn = nextDiv.down('.SF_replication_Add');
+            if (addBtn && state) {
+                nextDiv.down('.SF_replication_Add').addClassName("SF_disabled");
+            }
+            else if (addBtn) {
+                nextDiv.down('.SF_replication_Add').removeClassName("SF_disabled");
+            }
+        }
+        if(state){
+            cbox.previous("div.SF_label").addClassName("SF_disabled");
+        }else{
+            cbox.previous("div.SF_label").removeClassName("SF_disabled");
+        }
+    },
 
     createFormToolbar: function(form){
         if (!form.down('[data-language]')) return;
