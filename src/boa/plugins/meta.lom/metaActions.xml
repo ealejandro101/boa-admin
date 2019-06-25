@@ -77,8 +77,8 @@
                     ]]>
                     </clientListener>
                     <clientListener name="selectionChange"><![CDATA[
-                        var userSelection = app.getUserSelection(),
-                            context = userSelection.getContextNode(),
+                        var selection = app.getUserSelection(),
+                            context = selection.getContextNode(),
                             enabled = !!context;
                         if (enabled) {
                             var path = context.getPath(),
@@ -86,12 +86,12 @@
                             pathParts.splice(0,1);
                             enabled = pathParts[1] === 'content';
                             var type = null;
-                            enabled = enabled && !userSelection.getSelectedNodes().some(function(node){
+                            enabled = enabled && ((selection.isUnique() && selection.getUniqueNode() != null) || !selection.getSelectedNodes().some(function(node){
                                 var lomtype = node.getMetadata().get('lomtype');
                                 if (!lomtype) return true;
                                 if (type == null) type = lomtype;
                                 return (type != lomtype);
-                            });
+                            }));
                         }                        
                         context = { selection : enabled, contextMenu: enabled, infoPanel: enabled };
                         window.listenerContext.setContext(context);
@@ -173,17 +173,31 @@
                         </div>
                     ]]></clientForm>
                     <clientListener name="selectionChange"><![CDATA[
-                        var userSelection = app.getUserSelection(),
-                            context = userSelection.getContextNode(),
+                        var selection = app.getUserSelection(),
+                            context = selection.getContextNode(),
                             enabled = !!context;
                         if (enabled) {
-                            var path = context.getPath(),
-                                pathParts = path.split('/');
-                            pathParts.splice(0,1);
-                            enabled = pathParts[1] === 'content';
-                            enabled = enabled && !userSelection.getSelectedNodes().some(function(node){
-                                return node.getMetadata().get('lomtype') != null;
-                            });
+                            if (context.getMime() == 'dco'){
+                                enabled = selection.isUnique();
+                                if (enabled){
+                                    var node = selection.getUniqueNode();
+                                    enabled = node && /\/content$/.test(node.getPath());
+                                }
+                            }
+                            else {
+                                var path = context.getPath(),
+                                    pathParts = path.split('/');
+                                pathParts.splice(0,1);
+                                enabled = pathParts[1] === 'content';
+                                if (enabled){
+                                    var node = selection.getUniqueNode();
+                                    enabled = selection.isUnique() && node && !node.isLeaf();
+                                }
+                                /*enabled = enabled && !selection.getSelectedNodes().some(function(node){
+                                    console.log(node.getMetadata().get('lomtype'));
+                                    return node.getMetadata().get('lomtype') != null;
+                                });*/
+                            }
                         }                        
                         context = { selection : enabled, contextMenu: enabled, infoPanel: enabled };
                         window.listenerContext.setContext(context);

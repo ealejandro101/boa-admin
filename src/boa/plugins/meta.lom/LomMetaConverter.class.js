@@ -121,6 +121,7 @@ Class.create("LomMetaConverter", AbstractEditor, {
         this.enableAction('closeButton');
         this.progressBar.setPercentage(100, true);
         this.progressString.update(this.getMessage(status));
+        app.fireContextRefresh();
     },
     proccess: function(){
         if (this.busy) return;
