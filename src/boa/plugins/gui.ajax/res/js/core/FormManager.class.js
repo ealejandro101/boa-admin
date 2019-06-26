@@ -86,6 +86,7 @@ Class.create("FormManager", {
         var replicableGroups = $H({});
 
 		parametersDefinitions.each(function(param){		
+            var dataEl = null;
 			var label = param.get('label');
 			if(param.get('labelId')){
 				label = MessageHash[param.get('labelId')];
@@ -158,7 +159,7 @@ Class.create("FormManager", {
                     new Element('input', Object.extend({type: 'text', className:'SF_input', value:defaultValue}, commonAttributes));
             }
             else if (type == 'duration'){
-                element = new Element('div');
+                element = new Element('div', { className: 'SF_inputContainer' });
                 var layout = { _row1: ['years', 'months', 'days'], _row2: ['hours', 'minutes', 'seconds']};
                 for(var row in layout){
                     var div = new Element('div', { className: 'input-group', id:name+row });
@@ -171,7 +172,7 @@ Class.create("FormManager", {
                 }
             }
             else if (type == 'composed'){
-                element = new Element('div')
+                element = new Element('div', { className: 'SF_inputContainer' });
                 $A(param.get('childs')).each(function (child){
                     var childName = child.get('name');
                     var childType = child.get('type');
@@ -212,9 +213,6 @@ Class.create("FormManager", {
                 });
             }
             else if(type == 'button'){
-
-                console.log('button rendering');
-
                 element = new Element('div', {className:'SF_input SF_inlineButton'}).update('<span class="icon-play-circle"></span>'+param.get('description'));
                 element.observe("click", function(event){
                     element.addClassName('SF_inlineButtonWorking');
@@ -300,68 +298,87 @@ Class.create("FormManager", {
 				element = element + '<input type="radio" data-ctrl_type="'+type+'" class="SF_box" name="'+name+'" id="'+name+'-false"  '+(selectFalse?'checked':'')+' value="false"'+disabledString+'><label for="'+name+'-false">'+MessageHash[441] + '</label>';
 				element = '<div class="SF_input">'+element+'</div>';
 			}else if(type == 'select'){
-                var choices, json_list;
-                if(Object.isString(param.get("choices"))){
-                    if(param.get("choices").startsWith("json_list:")){
-                        choices = ["loading|"+MessageHash[466]+"..."];
-                        json_list = param.get("choices").split(":")[1];
-                    }else if(param.get("choices") == "APP_AVAILABLE_LANGUAGES"){
+                var achoices, json_list;
+                var pchoices = param.get("choices");
+                var dependencies = '';
+                if(Object.isString(pchoices)){
+                    if(pchoices.startsWith("json_list:")){
+                        achoices = ["loading|"+MessageHash[466]+"..."];
+                        json_list = pchoices.split(":")[1];
+                    }else if(pchoices == "APP_AVAILABLE_LANGUAGES"){
                         var object = window._bootstrap.parameters.get("availableLanguages");
-                        choices = [];
+                        achoices = [];
                         for(var key in object){
-                            choices.push(key + "|" + object[key]);
+                            achoices.push(key + "|" + object[key]);
                         }
                     }else{
-                        choices = param.get('choices').split(",");
+                        achoices = pchoices.split(",");
                     }
-                }else{
-                    choices = param.get("choices");
+                }else if (Object.isFunction(pchoices)){
+                    achoices = pchoices(param.get('dependencies'));
                 }
-                if(!choices) choices = [];
-                var multiple = param.get("multiple") ? "multiple='true'":"";
-                element = '<select class="SF_input" name="'+name+'" data-mandatory="'+(mandatory?'true':'false')+'" '+multiple+disabledString+'>';
-                if(!mandatory && !multiple) element += '<option value=""></option>';
-                var groupOpened = false;
-                var selected;
-                if (param.get("multiple")){
-                    selected = Object.isArray(defaultValue) ? defaultValue : defaultValue.split(",");
+                else{
+                    achoices = pchoices;
                 }
-                var group = '';
-                choices = $A(choices).map(function (it) {
-                    var cSplit = it.split('|'), cValue = cSplit[0], cLabel = cSplit[cSplit.length-1];
-                    var isGroup = /^_grp_/.test(cValue);
-                    group = isGroup ? cLabel : group;
-                    return { value: cValue, label: cLabel, sortKey : [group, '::', isGroup ? '' : cLabel].join('') };
-                }).sort(function(a,b){
-                    return a.sortKey.localeCompare(b.sortKey);
-                });
+                if(!achoices) achoices = [];
 
-                for(var k=0;k<choices.length;k++){
-                    var cLabel, cValue;
-                    cValue = choices[k].value;
-                    cLabel = choices[k].label;
-                    var selectedString = '';
-                    if (/^_grp_/.test(cValue)){
-                        if (groupOpened) {
-                            element += '</optgroup>';    
-                        }
-                        element += '<optgroup label="'+cLabel+'">';
+                if (param.get('dependencies')){
+                    dependencies = ' data-dependencies="true" ';
+                }
+
+                var multiple = param.get("multiple") ? "multiple='true'":"";
+                element = '<select class="SF_input" name="'+name+'" data-mandatory="'+(mandatory?'true':'false')+'"'+dependencies+multiple+disabledString+'>';
+                var createOptions = function(choices){
+                    var optionset = '';
+                    if(!mandatory && !multiple) optionset += '<option value=""></option>';
+                    var groupOpened = false;
+                    var selected;
+                    if (param.get("multiple")){
+                        selected = Object.isArray(defaultValue) ? defaultValue : defaultValue.split(",");
                     }
-                    else {
-                        if(param.get("multiple")){
-                            $A(selected).each(function(defV){
-                                if(defV == cValue) selectedString = ' selected';
-                            });
-                        }else{
-                            selectedString = (defaultValue == cValue ? ' selected' : '');
+                    var group = '';
+                    choices = $A(choices).map(function (it) {
+                        var cSplit = it.split('|'), cValue = cSplit[0], cLabel = cSplit[cSplit.length-1];
+                        var isGroup = /^_grp_/.test(cValue);
+                        group = isGroup ? cLabel : group;
+                        return { value: cValue, label: cLabel, sortKey : [group, '::', isGroup ? '' : cLabel].join('') };
+                    }).sort(function(a,b){
+                        return a.sortKey.localeCompare(b.sortKey);
+                    });
+
+                    for(var k=0;k<choices.length;k++){
+                        var cLabel, cValue;
+                        cValue = choices[k].value;
+                        cLabel = choices[k].label;
+                        var selectedString = '';
+                        if (/^_grp_/.test(cValue)){
+                            if (groupOpened) {
+                                optionset += '</optgroup>';    
+                            }
+                            optionset += '<optgroup label="'+cLabel+'">';
                         }
-                        element += '<option value="'+cValue+'"'+selectedString+'>'+cLabel+'</option>';
-                    }                    
+                        else {
+                            if(param.get("multiple")){
+                                $A(selected).each(function(defV){
+                                    if(defV == cValue) selectedString = ' selected';
+                                });
+                            }else{
+                                selectedString = (defaultValue == cValue ? ' selected' : '');
+                            }
+                            optionset += '<option value="'+cValue+'"'+selectedString+'>'+cLabel+'</option>';
+                        }                    
+                    }
+                    if (groupOpened) {
+                        optionset += '</optgroup>';    
+                    }
+                    return optionset;
                 }
-                if (groupOpened) {
-                    element += '</optgroup>';    
-                }
+                element += createOptions(achoices);
                 element += '</select>';
+                var dependencies = param.get('dependencies');
+                if (dependencies){
+                    dataEl = { dependencies: dependencies, createOptions: createOptions, getChoices: pchoices };
+                }
             }else if(type == "image" && param.get("uploadAction")){
                 if(defaultValue && !param.get('useDefaultImage')){
                     var conn = new Connexion();
@@ -465,13 +482,15 @@ Class.create("FormManager", {
                 div.insert(new Element('div', {className:"SF_label"}).update(label+(mandatory?'*':'')+' :'));
                 // INSERT CHECKBOX
                 if(addFieldCheckbox){
-                    cBox = '<input type="checkbox" class="SF_fieldCheckBox" name="SFCB_'+name+'" '+(defaultValue?'checked':'')+'/>';
-                    cBox = new Element('input', {type:'checkbox', className:'SF_fieldCheckBox', name:'SFCB_'+name});
+                    cBox = new Element('input', {type:'checkbox', className:'SF_fieldCheckBox', name:'SFCB_'+name, autocomplete:'off'});
                     cBox.checked = defaultValue?true:false;
                     div.insert(cBox);
                 }
                 // INSERT ELEMENT
                 div.insert(element);
+                if (dataEl){
+                    div.down('.SF_input').store(dataEl);
+                }
             }else{
                 div = new Element('div', {className:'dialogLegend'}).update(desc);
             }
@@ -572,6 +591,7 @@ Class.create("FormManager", {
                 if (replicatable === null || replicatable === 'true'){
                     if (!groupFixed){
                         var replicationButton = new Element("a", {className:'SF_replication_Add', title:'Replicate this group'}).update("&nbsp;").observe("click", function(event){
+                            if ($(event.target).match('.SF_disabled')) return;
                             this.replicateRow(repGroup,  1, form, null, $(event.target).up('.SF_replicableGroup'));    
                         }.bind(this));
                         repGroup.insert({bottom:replicationButton});
@@ -607,22 +627,28 @@ Class.create("FormManager", {
                         }
                     }
 
-                    if (!groupRequired && !valuesLike){
+                    if (!groupRequired && !valuesLike && replicatable === 'true'){
                         contentPane.hide();
                     }
                 }
                 else {
-                    if (!groupRequired){
+                    if (!groupRequired && replicatable === 'true'){
                         contentPane.hide();
                     }
                 }
             }.bind(this));
         }
-
         //Create form toolbar
         this.createFormToolbar(form);
-
         this.createDatePickers(form);
+
+        if(addFieldCheckbox){
+            form.select("input.SF_fieldCheckBox").each(function(cb){
+                cb.checked = false;
+                cb.observe("click", this.fieldCheckboxClick);
+                this.fieldCheckboxClick({target: cb});
+            }.bind(this));
+        }        
 
         if(!groupDivs.size()) return;
         var firstGroup = true;
@@ -649,29 +675,36 @@ Class.create("FormManager", {
             direction : 'vertical'
         });
         if(!startAccordionClosed) form.SF_accordion.activate(form.down('div.accordion_toggle'));
-        if(addFieldCheckbox){
-            form.select("input.SF_fieldCheckBox").each(function(cb){
-                cb.observe("click", function(event){
-                    var cbox = event.target;
-                    var state = !cbox.checked;
-                    var fElement = cbox.next("input.SF_input,select.SF_input,div.SF_input,textarea.SF_input");
-                    var fElements;
-                    if(fElement && fElement.nodeName.toLowerCase() == "div") {
-                        fElements = fElement.select("input");
-                    }else{
-                        fElements = $A([fElement]);
-                    }
-                    fElements.invoke((state?"disable":"enable"));
-                    if(state) cbox.previous("div.SF_label").addClassName("SF_disabled");
-                    else cbox.previous("div.SF_label").removeClassName("SF_disabled");
-                });
-                if(!cb.checked){
-                    cb.checked = true;
-                    cb.click();                	
-                }
-            });
-        }        
 	},
+
+    fieldCheckboxClick: function(event){
+        var cbox = event.target;
+        var state = !cbox.checked;
+        var fElement = cbox.next("input.SF_input,select.SF_input,div.SF_input,div.SF_inputContainer,textarea.SF_input,div.input-group.date");
+        var fElements;
+        var isDiv = fElement && fElement.nodeName.toLowerCase() == "div";
+        if( isDiv) {
+            fElements = fElement.select("input,select");
+        }else{
+            fElements = $A(fElement ? [fElement] : []);
+        }
+        fElements.invoke((state?"disable":"enable"));
+        var nextDiv = cbox.up(0).next('div');
+        if (nextDiv && nextDiv.match('.SF_replicableGroup')){
+            var addBtn = nextDiv.down('.SF_replication_Add');
+            if (addBtn && state) {
+                nextDiv.down('.SF_replication_Add').addClassName("SF_disabled");
+            }
+            else if (addBtn) {
+                nextDiv.down('.SF_replication_Add').removeClassName("SF_disabled");
+            }
+        }
+        if(state){
+            cbox.previous("div.SF_label").addClassName("SF_disabled");
+        }else{
+            cbox.previous("div.SF_label").removeClassName("SF_disabled");
+        }
+    },
 
     createFormToolbar: function(form){
         if (!form.down('[data-language]')) return;
@@ -813,7 +846,7 @@ Class.create("FormManager", {
                 if(event.keyCode == Event.KEY_DOWN || event.keyCode == Event.KEY_UP || event.keyCode == Event.KEY_RIGHT || event.keyCode == Event.KEY_LEFT || event.keyCode == Event.KEY_TAB){
                     return;
                 }
-                realCallback();
+                realCallback(event);
             });
         }.bind(this) );
         if(form.paneObject){
@@ -825,13 +858,13 @@ Class.create("FormManager", {
                         if(event.keyCode == Event.KEY_DOWN || event.keyCode == Event.KEY_UP || event.keyCode == Event.KEY_RIGHT || event.keyCode == Event.KEY_LEFT || event.keyCode == Event.KEY_TAB){
                             return;
                         }
-                        realCallback();
+                        realCallback(event);
                     });
                 }.bind(this) );
             });
             //set Dirty if a replicated row is removed
             form.paneObject.observe("after_remove_replicated_row", function(replicate){
-                realCallback();
+                realCallback(replicate);
             });
         }
     },
@@ -880,12 +913,22 @@ Class.create("FormManager", {
 			if(el.getAttribute('data-ctrl_type')){
 				parametersHash.set(prefix+el.name+'_apptype', el.getAttribute('data-ctrl_type'));
 			}
-            if(form.down('[name="SFCB_'+el.name+'"]')){
+            var refEl = form.down('[name="SFCB_'+el.name+'"]');
+            if(refEl){
                 checkboxesActive = true;
-                parametersHash.set(prefix+el.name+'_checkbox', form.down('[name="SFCB_'+el.name+'"]').checked?'checked':'unchecked');
+                parametersHash.set(prefix+el.name+'_checkbox', refEl.checked?'checked':'unchecked');
             }
-            if(el.up('.SF_replicableGroup')){
-                parametersHash.set(prefix+el.name+'_replication', el.up('.SF_replicableGroup').id);
+            refEl = el.up('.SF_replicableGroup');
+            if(refEl){
+                var group = refEl.id;
+                parametersHash.set(prefix+el.name+'_replication', refEl.id);
+            }
+            refEl = el.up('.SF_inputContainer');
+            if(refEl){
+                if (refEl.previous().match('input.SF_fieldCheckBox')){
+                    checkboxesActive = true;
+                    parametersHash.set(prefix+el.name+'_checkbox', refEl.previous().checked?'checked':'unchecked');
+                }
             }
 		});
 		form.select('select').each(function(el){

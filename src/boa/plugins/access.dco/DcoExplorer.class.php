@@ -282,12 +282,9 @@ class DcoExplorer{
         }
         //while(strlen($nodeName = readdir($handle)) > 0){
         foreach ($nodes as $nodeName){
-            if($nodeName == "." || $nodeName == "..") continue;
+            if($nodeName == "." || $nodeName == ".." || $nodeName == ".alternate") continue; //skip special directories including alternate folder
+            if (preg_match("/^\\.(:?.*)\\.manifest(:?\\.published)?$/", subject)) continue; //Skip manifest files
             if(isSet($uniqueFile) && $nodeName != $uniqueFile){
-                $cursor ++;
-                continue;
-            }
-            if($offset > 0 && $cursor < $offset){
                 $cursor ++;
                 continue;
             }
@@ -299,8 +296,13 @@ class DcoExplorer{
                 continue;
             }
 
+            if($offset > 0 && $cursor < $offset){
+                $cursor ++;
+                continue;
+            }
+
             if($limitPerPage > 0 && ($cursor - $offset) >= $limitPerPage) {
-                return;
+                break;
             }
 
             $currentFile = $nonPatchedPath."/".$nodeName;
@@ -428,7 +430,6 @@ class DcoExplorer{
 
     private function renderPagination($options, $totalPages, $crtPage, $countFiles ){       
         $lsOptions = $options["options"];
-
         if(isSet($totalPages) && isSet($crtPage)){
             XMLWriter::renderPaginationData(
                  $countFiles, 

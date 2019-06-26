@@ -1330,7 +1330,7 @@
             doAction = function (e) {
                 Event.stop(e);
                 var actionEl = e.findElement('[data-action]');
-                if (!actionEl) return false;
+                if (!actionEl) return false;    
                 if ($(e.target).match('.disabled')){
                     return false;
                 }
@@ -1416,6 +1416,7 @@
             // Shows or hides the widget
             ///            
             toggle = function () {
+                if (input.match('[disabled]')) return;
                 return (widget ? hide() : show());
             },
 

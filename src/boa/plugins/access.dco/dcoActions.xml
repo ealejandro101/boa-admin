@@ -951,7 +951,7 @@
                 </clientListener>
             </processing>
         </action>
-        <action name="delete">          
+        <action name="delete">
             <gui text="7" title="161" src="editdelete.png" iconClass="icon-trash" accessKey="delete_access_key" hasAccessKey="true" specialAccessKey="delete">
                 <context selection="true" dir="" recycle="false"
                     actionBar="true" contextMenu="true" infoPanel="false"

@@ -558,7 +558,8 @@ $mess=array(
 "477" => "Select a file or folder to see its details here",
 "478" => "Agregar",
 "479" => "Remover",
-"480" => "Sin lenguaje"
+"480" => "Sin lenguaje",
+"481" => "Continuar"
 /* END SENTENCE */
 );
 ?>

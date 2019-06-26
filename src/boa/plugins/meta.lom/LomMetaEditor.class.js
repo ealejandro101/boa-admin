@@ -28,11 +28,13 @@
  */
 "use strict";
 Class.create("LomMetaEditor", AbstractEditor, {
+    _selection:null,
     _node: null,
     _optionSetsCache: null,
     tab: null,
     spec: null,
     formManager: null,
+    massive: false,
     metaTag: '',
     initialize: function($super, oFormObject){
         $super(oFormObject, {fullscreen:false});
@@ -41,10 +43,14 @@ Class.create("LomMetaEditor", AbstractEditor, {
         this._optionSetsCache = {};
     },
     show: function(selection){
-        var node = this._node = selection.getNode(0);
+        this.massive = selection.isMultiple();
+        this._selection = selection;
         var type = 'DIGITAL_RESOURCE_OBJECT'; //By default open with the digital resource object spec
-        if (node.getMime() == 'dco') {//If it is a DCO object, then read the type from the object
-            type = node.getMetadata().get('type_id');
+        if (!this.massive){//If it is a DCO object, then read the type from the object
+            this._node = selection.getNode(0);
+            if (this._node.getMime() == 'dco'){
+                type = this._node.getMetadata().get('type_id');
+            }
         }
         var params = new Hash();
         params.set("get_action", "get_spec_by_id");
@@ -62,7 +68,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
         this.updateHeader();
         this.tab = new SimpleTabs(this.oForm.down("#categoryTabulator"));
         var categories = XPathSelectNodes(spec, '//fields/*[@type="category"]');
-        var metadata = this._node.getMetadata().get("lommetadata");
+        var metadata = this.massive ? null : this._node.getMetadata().get("lommetadata");
         metadata = (metadata && metadata.evalJSON())||{};
         //set available languages
         var languages = this.getOptionSet('languages');
@@ -102,11 +108,18 @@ Class.create("LomMetaEditor", AbstractEditor, {
         this.refreshActionsToolbar();
     },
     refreshActionsToolbar: function(){
+        var publishButton = this.actions.get("publishButton");
+
+        if (this.massive){
+            publishButton.hide();
+            return;
+        }
+
         var meta = this._node.getMetadata();
         var status = meta.get('status_id'),
             lastupdated = meta.get('lastupdated'),
-            lastpublished = meta.get('lastpublished'),
-            publishButton = this.actions.get("publishButton");
+            lastpublished = meta.get('lastpublished');
+
         publishButton.stopObserving('click');
         if (status == null || status == undefined || status == 'inprogress' || status == 'published' && lastpublished < lastupdated) {
             publishButton.observe("click", this.publish.bind(this));
@@ -122,6 +135,16 @@ Class.create("LomMetaEditor", AbstractEditor, {
         }
     },
     updateHeader: function(){
+        var headerLabel = this.element.down("span.header_label");
+        if (this.massive){
+            headerLabel.update("Asignar metadatos"); //MessageHash["meta_lom.massivemetadata"]
+            var icon = resolveImageSource("dco.png", "/images/mimes/64");
+            this.element.down("span.header_label").setStyle({
+                    backgroundImage:"url('"+icon+"')",
+                    backgroundSize : '34px'
+                });
+            return;
+        }
         var meta = this._node.getMetadata();
         this.element.down("span.header_label").update(meta.get("text"));
         var icon = resolveImageSource(this._node.getIcon(), "/images/mimes/64");
@@ -162,12 +185,36 @@ Class.create("LomMetaEditor", AbstractEditor, {
         if (fields.length > 0){
             container.insert(form);
             form.paneObject = this;
-            this.formManager.createParametersInputs(form, fields, true, values, null, true);
-            this.formManager.observeFormChanges(form, this.setDirty.bind(this));
+            this.formManager.createParametersInputs(form, fields, true, values, null, true, this.massive);
+            this.formManager.observeFormChanges(form, this.onFormChanges.bind(this));
             return true;
-        }        
+        }
         return false;
-        //function(form, parametersDefinitions, showTip, values, disabled, skipAccordion, addFieldCheckbox, startAccordionClosed)
+    },
+    onFormChanges: function(event){
+
+        this.setDirty();
+        if (!event || !event.target) return;
+        var el = $(event.target);
+        if (!el || !el.match('.SF_input,.form-control')) return;        
+        var name = el.name;
+        this.oForm.select('select[data-dependencies]').each(function(select){
+            if (select.name == name) return;
+            var dependencies = select.retrieve('dependencies');            
+            var dep = dependencies && dependencies.get(name);
+            if (!dep) return;
+            
+            dep.value = el.value;
+            dependencies.set(name, dep);
+            select.store('dependencies', dependencies);
+            var createOptions = select.retrieve('createOptions');
+            var getChoices = select.retrieve('getChoices');
+            if (Object.isFunction(createOptions) && Object.isFunction(getChoices)){
+                var choices = getChoices(dependencies);
+                select.update(createOptions(choices));
+            }
+        });
+
     },
 
     /**
@@ -191,7 +238,8 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 type:'label',
                 label: label,
                 name: name,
-                description: field.firstChild!=null&&field.firstChild.nodeType==field.firstChild.TEXT_NODE?field.firstChild.wholeText.trim():""
+                description: field.firstChild!=null&&field.firstChild.nodeType==field.firstChild.TEXT_NODE?field.firstChild.wholeText.trim():"",
+                isMassive: this.massive
             })];
             var isCollection = field.getAttribute("collection") === 'true';
             var isRequired = field.getAttribute("required") === 'true';
@@ -199,6 +247,11 @@ Class.create("LomMetaEditor", AbstractEditor, {
 
             var nameSuffix = isContainer ? '' : fname+'.'; 
             var data = isContainer ? metadata : metadata[fname];
+
+            if (isCollection && !Object.isArray(data)){
+                var value = field.getAttribute('defaultValue');
+                data = JSON.parse(value)||[];
+            }
 
             $A(field.children).each(function(child){
                 options = this.prepareMetaFieldEntry(child, container, level+1, dicprefix+nameSuffix, (data||{}), values);
@@ -258,10 +311,11 @@ Class.create("LomMetaEditor", AbstractEditor, {
     getControlSettings: function(options){
         var settings = {};
         settings.mandatory = options.meta.getAttribute('required');
-        settings.readonly = options.meta.getAttribute('editable') !== "true";
+        settings.readonly = options.meta.getAttribute('editable') === "false";
         settings.defaultValue = "";
         settings.label = options.text;
         settings.translatable = options.meta.getAttribute('translatable') === 'true';
+        settings.isMassive = this.massive;
 
         if (settings.translatable){
             settings.languages = this.getOptionSet('languages');
@@ -299,24 +353,30 @@ Class.create("LomMetaEditor", AbstractEditor, {
                 settings.multiple = options.meta.getAttribute('multiple') === "true";
                 var choices = [];
                 var optionsetname=options.meta.getAttribute('optionset-name');
+                settings.optionsetname = optionsetname;
                 //Set the option set name based on the value of another field in the collection
                 if (/\{(.*?)\}/.test(optionsetname)) {
+                    var dependencies = {};
                     var matches = optionsetname.match(/\{(.*?)\}/g);
                     for(var i = 0; i < matches.length; i++){
                         var ph = options.name.split('.').slice(0,-1).join('.')+'.'+matches[i].slice(1, -1);
-                        if (options.values && options.values.get(ph)){
-                            optionsetname = optionsetname.replace(matches[i], options.values.get(ph));
+                        dependencies[ph] = { ph: matches[i], value: null };
+                        if (options.values && options.values.get(ph)){                            
+                            dependencies[ph].value = options.values.get(ph);
                         }
-                    }    
+                    }
+                    settings.dependencies = $H(dependencies);
+                    settings.choices = function(dependencies){
+                        var optionsetname = settings.optionsetname;
+                        dependencies.each(function(dep){
+                            optionsetname = optionsetname.replace(dep.value.ph, dep.value.value);
+                        });
+                        return this.getOptions(optionsetname);
+                    }.bind(this);
                 }
-                var optionset = this.getOptionSet(optionsetname);
-                //var optionset = XPathSelectSingleNode(this.spec, '//optionsets/optionset[@name="'+optionsetname+'"]');
-                if (optionset){
-                    $A(Object.keys(optionset)).each(function(choice){
-                        choices.push(choice+"|"+optionset[choice]);
-                    });
+                else{
+                    settings.choices = this.getOptions(optionsetname);
                 }
-                settings.choices = choices;
                 break;
             default:
                 var type = XPathSelectSingleNode(this.spec, '//types/type[@name="'+options.type+'"]')
@@ -341,7 +401,15 @@ Class.create("LomMetaEditor", AbstractEditor, {
         }
         return settings;
     },
-
+    getOptions: function(optionsetname){
+        var optionset = this.getOptionSet(optionsetname);
+        var choices = [];
+        $A(Object.keys(optionset)).each(function(choice){
+            choices.push(choice+"|"+optionset[choice]);
+        });
+        return choices;
+    }
+    ,
     setDirty: function(){
         this.actions.get("saveButton").removeClassName("disabled");
     },
@@ -366,42 +434,39 @@ Class.create("LomMetaEditor", AbstractEditor, {
         toSubmit.set("action", "save_dcometa");
         toSubmit.set("plugin_id", 'meta.lom');
         toSubmit.set("dir", app.getContextNode().getPath());
-        toSubmit.set("file", this._node.getPath());
         toSubmit.set('spec_id', this.getSpecId());
+        toSubmit.set('mode', this.massive?'massive':'single');
         var missing = this.formManager.serializeParametersInputs(this.element.down("#categoryTabulator"), toSubmit, 'DCO_');
         if(missing){
             app.displayMessage("ERROR", MessageHash['boaconf.36']);
         }else{
-            var conn = new Connexion();
-            conn.setParameters(toSubmit);
-            conn.setMethod("post");
-            conn.onComplete = function(transport){
-                //app.actionBar.parseXmlMessage(transport.responseXML);
-                var meta = this._node.getMetadata();
-                var data = transport.responseJSON || {};
-                meta.set('lommetadata', JSON.stringify(data.metadata||{}));
-                meta.set('lastupdated', data.manifest && data.manifest.lastupdated);
+            var i = 0;
+            var selectedNodes = this._selection.getSelectedNodes();
+            selectedNodes.each(function(node){
+                toSubmit.set("file", node.getPath());
+                var conn = new Connexion();
+                conn.setParameters(toSubmit);
+                conn.setMethod("post");
+                conn.onComplete = function(transport){
+                    this.updateNodeMetadata(node, transport.responseJSON || {});
+                    --i;
+                }.bind(this);
+                i++;
+                conn.sendAsync();
+            }.bind(this));
+            var tw = 100;
+            var check = function(){
+                if (i > 0) {
+                    setTimeout(check, tw);
+                    return;
+                }
                 this.setClean();
                 this.refreshActionsToolbar();
-                var overlay = meta.get('overlay_icon');
-                if (overlay){
-                    if (/(,?)(alert|ok)\.png/.test(overlay)){
-                        overlay = overlay.replace(/(,?)(alert|ok)\.png/, '$1alert.png');    
-                    }
-                    else {
-                        overlay += ',alert.png';
-                    }                
-                }
-                else {
-                    overlay = (meta.get('is_file')?'dro.png,':'')+'alert.png';
-                }
-                meta.set('overlay_icon', overlay);
-                this._node.notify('node_replaced', this._node);
+                this.actions.get("closeButton").click();
+                alert(MessageHash['meta_lom.18']);
             }.bind(this);
-            conn.sendAsync();
+            check();
         }
-
-
     },
     publish: function(){
         if (this.isDirty()){
@@ -484,5 +549,24 @@ Class.create("LomMetaEditor", AbstractEditor, {
             }.bind(this));
         }
         return (this._optionSetsCache[optionsetname] = choices);
+    },
+    updateNodeMetadata: function(node, data){
+        var meta = node.getMetadata();
+        meta.set('lommetadata', JSON.stringify(data.metadata||{}));
+        meta.set('lastupdated', data.manifest && data.manifest.lastupdated);
+        var overlay = meta.get('overlay_icon');
+        if (overlay){
+            if (/(,?)(alert|ok)\.png/.test(overlay)){
+                overlay = overlay.replace(/(,?)(alert|ok)\.png/, '$1alert.png');    
+            }
+            else {
+                overlay += ',alert.png';
+            }                
+        }
+        else {
+            overlay = (meta.get('is_file')?'dro.png,':'')+'alert.png';
+        }
+        meta.set('overlay_icon', overlay);
+        node.notify('node_replaced', node);
     }
 });
