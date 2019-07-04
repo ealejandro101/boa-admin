@@ -16,7 +16,7 @@
 //
 // The latest code can be found at <https://github.com/boa-project/>.
  
-namespace BoA\Plugins\Editor\Video;
+namespace BoA\Plugins\Editor\Diaporama;
 
 use BoA\Core\Http\HTMLWriter;
 use BoA\Core\Plugins\Plugin;
@@ -28,10 +28,10 @@ use BoA\Threading\ITask;
 
 defined('APP_EXEC') or die( 'Access not allowed');
 
-define("MP4", "mp4");
-define("WEBM", "webm");
-define("OGV", "ogv");
-define("VIDEO_TASK_QUEUE_PATH", APP_DATA_PATH . "/plugins/editor.video/transcode.json");
+define("PNG", "png");
+define("GIF", "gif");
+define("JPG", "jpg");
+define("JPEG", "jpeg");
 /**
  * This is a one-line short description of the file/class.
  *
@@ -43,15 +43,14 @@ define("VIDEO_TASK_QUEUE_PATH", APP_DATA_PATH . "/plugins/editor.video/transcode
  * @copyright  2017 BoA Project
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
-class VideoTranscoderTask implements ITask {
+class ImageProcessorTask implements ITask {
 
     private $_plugin;
-    private $mp4;
-    private $webm;
-    private $ogv;
+    private $png;
+    private $gif;
+    private $jpg;
+    private $jpeg;
     private $availableSizes;
-    private $generateThumbs;
-    private $generatePreview;
     private $extensions;
     private $ffmpeg;
 
@@ -96,9 +95,9 @@ class VideoTranscoderTask implements ITask {
             $this->extensions = $mimesNode[0]->value;
         }
 
-        //Set mp4 as default extension
+        //Set png as default extension
         if (empty($this->extensions)) {
-            $this->extensions = MP4;
+            $this->extensions = PNG;
         }
 
         $this->prepareExtensionsFilter();
@@ -106,7 +105,6 @@ class VideoTranscoderTask implements ITask {
         foreach($repositories as $key => $repo) {
             $this->scanRepository($repo);
         }
-        //$confStorageDriver = ConfService::getConfStorageImpl();
     }
 
     /**
@@ -116,10 +114,11 @@ class VideoTranscoderTask implements ITask {
         if (!isset($this->_plugin)) return;
         $config = $this->_plugin->getConfigs();
 
-        $this->mp4 = $config["STREAMING_MP4"];
-        $this->webm = $config["STREAMING_WEBM"];
-        $this->ogv = $config["STREAMING_OGV"];
-        $entries = explode(",", $config["STREAMING_SIZES"]);
+        $this->png = $config["FORMAT_PNG"];
+        $this->gif = $config["FORMAT_GIF"];
+        $this->jpg = $config["FORMAT_JPG"];
+        $this->jpeg = $config["FORMAT_JPEG"];
+        $entries = explode(",", $config["AVAILABLE_SIZES"]);
         $this->availableSizes = array();
         foreach ($entries as $entry) {
             list($key, $value) = explode(":", $entry);
@@ -131,10 +130,8 @@ class VideoTranscoderTask implements ITask {
                 list($width, $height) = explode("x", strtolower($value));
                 $this->availableSizes[$key] =  [$width, $height];
             }
-        }
-        
-        $this->generateThumbs = $config["MISC_THUMBNAILS"];
-        $this->generatePreview = $config["MISC_PREVIEW"];
+        }        
+        //$this->generateThumbs = $config["MISC_THUMBNAILS"];
     }
 
     /**
@@ -159,8 +156,8 @@ class VideoTranscoderTask implements ITask {
     * scan all folders in current repository
     */
     private function scanRepository($repository) {
-
         $accessType = $repository->getAccessType();
+
         if (!preg_match("/^(dco)$/", $accessType)) return; //Only dco repositories to process alternates
 
         $path = $repository->getOption("PATH");
@@ -183,14 +180,14 @@ class VideoTranscoderTask implements ITask {
         $entries = glob_recursive($path . "/" . str_repeat('?', 36) . $rootsuffix . "/content/*." . $this->extensions, GLOB_NOSORT|GLOB_BRACE);
         
         foreach ($entries as $filename) {
-            $this->makeStreamingReady($filename, $repo);
+            $this->makePreviewReady($filename, $repo);
         }
     }
 
     /**
     * scan all folders in current repository
     */
-    private function makeStreamingReady($filename, $repo) {
+    private function makePreviewReady($filename, $repo) {
 
         $filename_parts = pathinfo($filename);
         $relpath = str_replace($repo["path"], "", $filename);
@@ -206,29 +203,25 @@ class VideoTranscoderTask implements ITask {
         }
 
         if (!file_exists($alternatepath)) {
-            throw new Exception("Path -$filename- don't exists and can't be created. " . __FUNCTION__ . " method");
+            throw new \Exception("Path -$alternatepath- don't exists and can't be created. " . __FUNCTION__ . " method");
         }
 
-        $video_manager = new VideoManager($filename, $this->availableSizes);
+        $image_manager = new ImageManager($filename, $this->availableSizes);
 
-        if ($this->mp4) {
-            $video_manager->ensureFormat(MP4, $alternatepath);
+        if ($this->png) {
+            $image_manager->ensureFormat(PNG, $alternatepath);
         }
 
-        if ($this->webm) {
-            $video_manager->ensureFormat(WEBM, $alternatepath);
+        if ($this->jpg) {
+            $image_manager->ensureFormat(JPG, $alternatepath);
         }
 
-        if ($this->ogv) {
-            $video_manager->ensureFormat(OGV, $alternatepath);
+        if ($this->gif) {
+            $image_manager->ensureFormat(GIF, $alternatepath);
         }
 
-        if ($this->generateThumbs) {
-            $video_manager->generateThumb($alternatepath);
-        }
-
-        if ($this->generatePreview) {
-            $video_manager->generatePreview($alternatepath);
+        if ($this->jpeg) {
+            $image_manager->ensureFormat(JPEG, $alternatepath);
         }
     }
 

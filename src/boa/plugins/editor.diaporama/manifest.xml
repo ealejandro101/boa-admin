@@ -5,6 +5,11 @@
         <global_param name="META_EXTRACTION_THRESHOLD" type="string" label="CONF_MESSAGE[Size Threshold]" description="CONF_MESSAGE[Threshold]" default="50000"/>
         <global_param name="GENERATE_THUMBNAIL" type="boolean" label="CONF_MESSAGE[Thumbnails]" description="CONF_MESSAGE[Generate thumbnails or not]" default="true"/>
         <global_param name="THUMBNAIL_QUALITY" type="integer" label="CONF_MESSAGE[Quality]" description="CONF_MESSAGE[Thumbs quality]" default="2"/>
+        <global_param name="AVAILABLE_SIZES" group="CONF_MESSAGE[Alternates]" type="string" label="CONF_MESSAGE[Available sizes]" description="CONF_MESSAGE[Provide the sizes that will be available for compsuption as a comma separated list of values in the format: [KEY]:[WIDTH]x[HEIGHT]. E.g. high:1920x1080,small:640x360]" default="high:1920x1080,medium:1280x720,small:640x360" />
+        <global_param name="FORMAT_PNG" group="CONF_MESSAGE[Alternates]" type="boolean" label="CONF_MESSAGE[PNG?]" description="CONF_MESSAGE[Have png alternate image?]" default="true"/>
+        <global_param name="FORMAT_JPG" group="CONF_MESSAGE[Alternates]" type="boolean" label="CONF_MESSAGE[JPG?]" description="CONF_MESSAGE[Have jpg alternate image?]" default="false"/>
+        <global_param name="FORMAT_JPEG" group="CONF_MESSAGE[Alternates]" type="boolean" label="CONF_MESSAGE[JPEG?]" description="CONF_MESSAGE[Have jpeg alternate image?]" default="false"/>
+        <global_param name="FORMAT_GIF" group="CONF_MESSAGE[Alternates]" type="boolean" label="CONF_MESSAGE[GIF?]" description="CONF_MESSAGE[Have gif alternate image?]" default="false"/>
     </server_settings>
     <class_definition filename="editor.diaporama/ImagePreviewer.class.php" classname="BoA\Plugins\Editor\Diaporama\ImagePreviewer"/>
     <client_settings>

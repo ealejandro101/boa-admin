@@ -67,12 +67,6 @@ class TaskManager {
         ConfService::start();
 
         $confStorageDriver = ConfService::getConfStorageImpl();
-
-
-        //set_error_handler(array("\BoA\Core\Http\XMLWriter", "catchError"), E_ALL & ~E_NOTICE & ~E_STRICT );
-        //set_exception_handler(array("\BoA\Core\Http\XMLWriter", "catchException"));
-
-        //var_dump($pServ->getDetectedPlugins());
         $this->getAvailableTasks();
     }
 
@@ -104,9 +98,9 @@ class TaskManager {
 					# code...
 					if ($task->isRunning()) continue;
 
+                    echo "$type.$plugname : " . $key . "..." . PHP_EOL;
 					$task->start($plugin);
 				}
-				echo "$type.$plugname : " . $provider->getTasks() . PHP_EOL;
 			}
 		}
 	}    
