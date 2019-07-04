@@ -25,6 +25,8 @@ use BoA\Core\Utils\CacheManager;
 use BoA\Core\Utils\Utils;
 use BoA\Core\Xml\ManifestNode;
 use BoA\Plugins\Core\Log\Logger;
+use BoA\Threading\ITaskProviderFactory;
+use BoA\Plugins\Editor\Diaporama\ImageTasks;
 
 defined('APP_EXEC') or die( 'Access not allowed');
 
@@ -39,7 +41,7 @@ defined('APP_EXEC') or die( 'Access not allowed');
  * @copyright  2017 BoA Project
  * @license    https://www.gnu.org/licenses/agpl-3.0.html GNU Affero GPL v3 or later
  */
-class ImagePreviewer extends Plugin {
+class ImagePreviewer extends Plugin implements ITaskProviderFactory {
 
     private $currentDimension;
 
@@ -196,6 +198,12 @@ class ImagePreviewer extends Plugin {
 		$ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 		return in_array($ext, $mimesAtt);
 	}	
-	
+
+    /**
+     * 
+     */
+    public function getTaskProvider() {
+        return isset($this->taskProvider) ? $this->taskProvider : ($this->taskProvider = new ImageTasks());
+    }
 }
 ?>

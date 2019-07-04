@@ -50,6 +50,8 @@ use BoA\Plugins\Core\Log\Logger;
 
 defined('APP_EXEC') or die( 'Access not allowed');
 
+define("DCOFOLDER_SUFFIX", "@boa.udea.edu.co");
+
 /**
  * Plugin to access a filesystem. Most "FS" like driver (even remote ones)
  * extend this one.
@@ -80,6 +82,9 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
         if(isset($this->pluginConf["PROBE_REAL_SIZE"])){
             // PASS IT TO THE WRAPPER 
             ConfService::setConf("PROBE_REAL_SIZE", $this->pluginConf["PROBE_REAL_SIZE"]);
+        }
+        if (!isset($this->driverConf["DCOFOLDER_SUFFIX"])){
+            $this->driverConf["DCOFOLDER_SUFFIX"] = DCOFOLDER_SUFFIX;
         }
         $create = $this->repository->getOption("CREATE");
         $path = $this->repository->getOption("PATH");
@@ -2060,8 +2065,9 @@ class DcoAccessDriver extends AbstractAccessDriver implements FileWrapperProvide
 
     private function getUniqueId($dir){
         $uid = GUID();
-        while (file_exists($this->urlBase.$dir."/".$uid."@boa.udea.edu.co")) $uid = GUID();
-        return $uid."@boa.udea.edu.co";
+        $suffix = $this->driverConf["DCOFOLDER_SUFFIX"];
+        while (file_exists($this->urlBase.$dir."/".$uid.$suffix)) $uid = GUID();
+        return $uid.$suffix;
     }
 
     private function setObjectEntryPoint($path){

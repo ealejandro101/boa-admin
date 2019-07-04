@@ -43,7 +43,7 @@ class VideoManager {
     function __construct($filename, $availablesizes){
 
         if (!file_exists($filename)) {
-            throw new Exception("File -$filename- not found in " . __FUNCTION__ . " method");
+            throw new \Exception("File -$filename- not found in " . __FUNCTION__ . " method");
         }
 
         $this->availableSizes = $availablesizes;
