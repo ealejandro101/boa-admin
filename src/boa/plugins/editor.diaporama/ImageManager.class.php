@@ -133,12 +133,10 @@ class ImageManager {
 
     private function getImage() {        
         if (isset($this->imageinfo->resource)) {
-            echo 'resource is set' . PHP_EOL;
             return $this->imageinfo->resource;
         }
-        echo "image type: " . $this->imageinfo->type . PHP_EOL;
+
         $src = $this->clearFilename();
-        echo $src . PHP_EOL;
         switch ($this->imageinfo->type) {
             case JPEG:
             case JPG:
