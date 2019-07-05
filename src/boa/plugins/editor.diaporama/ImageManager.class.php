@@ -45,8 +45,7 @@ class ImageManager {
         if (!file_exists($filename)) {
             throw new \Exception("File -$filename- not found in " . __FUNCTION__ . " method");
         }
-
-        $this->availableSizes = $availablesizes;
+        $this->availableSizes = is_array($availablesizes) ? $availablesizes : array();
         $this->filename = $filename;
         $this->imageinfo = $this->getImageInfo();
         if (is_null($this->imageinfo)) {
@@ -62,6 +61,14 @@ class ImageManager {
                 $this->convert($alternatefilename, $format, $size);
             }
         }
+    }
+
+    public function generateThumb($outputdir, $quality) {
+        // Path for Thumb image
+        $thumbpath = $outputdir . "/thumb.png";
+        if (file_exists($thumbpath)) return;
+
+        $this->toPNG($thumbpath, [256, 256], $quality);
     }
 
     private function convert($output, $format, $size) {
@@ -86,36 +93,46 @@ class ImageManager {
         }
     }
 
-    private function toPNG($output, $size) {
-        list($width, $height) = $this->availableSizes[$size];
+    private function toPNG($output, $size, $quality = -1) { //-1 is to use the default zlib compression level
+        list($width, $height) = is_array($size) ? $size : $this->availableSizes[$size];
 
-        list ($nw, $nh) = $this->getDimensions($width, $height);
-        $new_image = imagecreatetruecolor($nw, $nh);
-
-        imagecopyresampled($new_image, $this->getImage(), 0, 0, 0, 0, $nw, $nh, $this->imageinfo->width, $this->imageinfo->height);
-        imagepng($new_image, $output);
+        list ($nw, $nh, $dst_x, $dst_y) = $this->getDimensions($width, $height);
+        $new_image = imagecreatetruecolor($width, $height);
+        // Prepare alpha channel for transparent background
+        $alpha_channel = imagecolorallocatealpha($new_image, 0, 0, 0, 127);
+        imagecolortransparent($new_image, $alpha_channel);
+        // Fill image
+        imagefill($new_image, 0, 0, $alpha_channel);
+        //Save transparency
+        imagesavealpha($new_image,true);
+        //Copy image
+        imagecopyresampled($new_image, $this->getImage(), $dst_x, $dst_y, 0, 0, $nw, $nh, $this->imageinfo->width, $this->imageinfo->height);
+        imagepng($new_image, $output, $quality);
+        imagedestroy($new_image);
     }
 
     private function toJPG($output, $size) {
         $input = $this->clearFilename();
         list($width, $height) = $this->availableSizes[$size];
 
-        list ($nw, $nh) = $this->getDimensions($width, $height);
-        $new_image = imagecreatetruecolor($nw, $nh);
+        list ($nw, $nh, $dst_x, $dst_y) = $this->getDimensions($width, $height);
+        $new_image = imagecreatetruecolor($width, $height);
         
-        imagecopyresampled($new_image, $this->getImage(), 0, 0, 0, 0, $nw, $nh, $this->imageinfo->width, $this->imageinfo->height);
+        imagecopyresampled($new_image, $this->getImage(), $dst_x, $dst_y, 0, 0, $nw, $nh, $this->imageinfo->width, $this->imageinfo->height);
         imagejpeg($new_image, $output);
+        imagedestroy($new_image);
     }
 
     private function toGIF($output, $size) {
         $input = $this->clearFilename();
         list($width, $height) = $this->availableSizes[$size];
 
-        list ($nw, $nh) = $this->getDimensions($width, $height);
-        $new_image = imagecreatetruecolor($nw, $nh);
+        list ($nw, $nh, $dst_x, $dst_y) = $this->getDimensions($width, $height);
+        $new_image = imagecreatetruecolor($width, $height);
         
-        imagecopyresampled($new_image, $this->getImage(), 0, 0, 0, 0, $nw, $nh, $this->imageinfo->width, $this->imageinfo->height);
+        imagecopyresampled($new_image, $this->getImage(), $dst_x, $dst_y, 0, 0, $nw, $nh, $this->imageinfo->width, $this->imageinfo->height);
         imagegif($new_image, $output);
+        imagedestroy($new_image);
     }
 
     public function getImageInfo() {
@@ -171,7 +188,15 @@ class ImageManager {
             $nh = $height;
         }
 
-        return array($nw, $nh);
+        if ($nw > $this->imageinfo->width || $nh > $this->imageinfo->height) {
+            $nw = $this->imageinfo->width;
+            $nh = $this->imageinfo->height;
+        }
+
+        $dst_x = ($width - $nw) / 2;
+        $dst_y = ($height - $nh) / 2;
+
+        return array($nw, $nh, $dst_x, $dst_y);
     }
 
     public function clearFilename() {

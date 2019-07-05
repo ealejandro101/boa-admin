@@ -118,6 +118,9 @@ class ImageProcessorTask implements ITask {
         $this->gif = $config["FORMAT_GIF"];
         $this->jpg = $config["FORMAT_JPG"];
         $this->jpeg = $config["FORMAT_JPEG"];
+        $this->generateThumbs = $config["GENERATE_THUMBNAIL"];
+        $this->thumbnailQuality = $config["THUMBNAIL_QUALITY"];
+
         $entries = explode(",", $config["AVAILABLE_SIZES"]);
         $this->availableSizes = array();
         foreach ($entries as $entry) {
@@ -222,6 +225,10 @@ class ImageProcessorTask implements ITask {
 
         if ($this->jpeg) {
             $image_manager->ensureFormat(JPEG, $alternatepath);
+        }
+
+        if ($this->generateThumbs) {
+            $image_manager->generateThumb($alternatepath, $this->thumbnailQuality);
         }
     }
 
