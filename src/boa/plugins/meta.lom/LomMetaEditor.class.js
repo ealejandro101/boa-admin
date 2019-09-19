@@ -121,7 +121,7 @@ Class.create("LomMetaEditor", AbstractEditor, {
             lastpublished = meta.get('lastpublished');
 
         publishButton.stopObserving('click');
-        if (status == null || status == undefined || status == 'inprogress' || status == 'published' && lastpublished < lastupdated) {
+        if (status == null || status == undefined || status == 'inprogress' || status == 'published' && lastpublished && lastpublished < lastupdated) {
             publishButton.observe("click", this.publish.bind(this));
             publishButton.removeClassName("disabled");
             var statusText = MessageHash["meta_lom.pending_to_publish"];

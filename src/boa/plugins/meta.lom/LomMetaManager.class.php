@@ -105,13 +105,16 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             $metadata["status_id"] = $meta->manifest->status;
             $metadata["status"] = $this->mess["access_dco.".$meta->manifest->status];
             $metadata["lastupdated"] = $meta->manifest->lastupdated;
-            if (isset($meta->manifest->lastpublished)){
+            if (!empty($meta->manifest->lastpublished)){
                 $metadata["lastpublished"] = $meta->manifest->lastpublished;    
+            }
+            else {
+                $metadata["lastpublished"] = 0;
             }
         }
         $status = $meta->manifest->status;
         if ($status == self::PUBLISHED_STATUS){
-            if (isset($meta->manifest->lastpublished) && $meta->manifest->lastpublished < $meta->manifest->lastupdated){
+            if (empty($meta->manifest->lastpublished) || $meta->manifest->lastpublished < $meta->manifest->lastupdated){
                 $overlay = (isset($overlay)?$overlay.",":"")."alert.png";
             }
             else {
@@ -476,6 +479,10 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
             }
             if (!isset($json->manifest->is_a)){
                 $json->manifest->is_a = $isRoot?'dco':'dro';
+            }
+            $json->manifest->lastupdated = date('c');
+            if (!isset($json->manifest->lastpublished)) {
+                $json->manifest->lastpublished = 0;
             }
             $json->manifest->lastupdated = date('c');
             $json->metadata = $unique ? $metaobject : $this->mergeMetadata($json->metadata, $metaobject);
