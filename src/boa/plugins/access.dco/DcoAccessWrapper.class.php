@@ -109,7 +109,7 @@ class DcoAccessWrapper implements FileWrapper {
                     mkdir($tmpDir);
                     $tmpFileName = $tmpDir.DIRECTORY_SEPARATOR.basename($localPath);
                     Logger::debug("Tmp file $tmpFileName");
-                    register_shutdown_function(array("fsAccessWrapper", "removeTmpFile"), $tmpDir, $tmpFileName);
+                    register_shutdown_function(array(__NAMESPACE__."\DcoAccessWrapper", "removeTmpFile"), $tmpDir, $tmpFileName);
                     $crtZip = new \PclZip(Utils::securePath(realpath($repoObject->getOption("PATH")).$repoObject->resolveVirtualRoots($zipPath)));
                     $content = $crtZip->listContent();
                     foreach ($content as $item){
