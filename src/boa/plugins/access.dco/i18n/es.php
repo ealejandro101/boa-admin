@@ -68,5 +68,6 @@ $mess=array(
 "set_entry_point_succeed" => "El archivo de inicio para el objecto ha sido establecido exitosamente",
 "set_entry_point_invalid_path" => "La ruta del archivo es invalida",
 "set_entry_point_not_content" => "La ruta no corresponde a un archivo de contenido",
-"set_entry_point_manifest_error" => "No se pudo cargar el manifiesto del objeto"
+"set_entry_point_manifest_error" => "No se pudo cargar el manifiesto del objeto",
+"copy_root_disabled" => "Este repositorio no permite archivos en el directorio raiz"
 );

@@ -762,6 +762,7 @@
                         }
                     }
                     var context = app.actionBar;
+                    var activeRepo = user.getRepositoriesList().get(activeRepository);
                     var onLoad = function(oForm){
                         var getAction = oForm.select('input[name="get_action"]')[0];
                         getAction.value = 'copy';                   
@@ -796,6 +797,7 @@
                                 var nodeProvider = new RemoteNodeProvider();
                                 nodeProvider.initProvider({tmp_repository_id:externalRepo});
                                 this.resetRootNode(new ManifestNode("/", false, MessageHash[373], "folder.png", nodeProvider));
+                                activeRepo = user.getRepositoriesList().get(externalRepo);
                             });
                         }else{
                             this.treeSelector.load();
@@ -812,11 +814,19 @@
                         if(activeRepository && this.treeSelector.getFilterActive(activeRepository)){
                             getAction.value = "cross_copy" ;
                         }
+                        if (!canCopy(selectedNode)) return false;
                         app.getUserSelection().updateFormOrUrl(oForm);
                         this.submitForm(oForm);
                         this.treeSelector.unload();
                         hideLightBox();
                     }.bind(context);
+                    var canCopy = function(selectedNode){
+                        if (activeRepo && activeRepo.accessType == 'dco' && selectedNode.lastIndexOf('/') <= 0) {
+                            modal.displayMessage('ERROR', MessageHash['access_dco.copy_root_disabled']);
+                            return false;
+                        }
+                        return true;
+                    }
                     modal.showDialogForm('Move/Copy', 'copymove_form', onLoad, onSubmit, onCancel);             
                     ]]></clientCallback>
                 <clientForm id="copymove_form"><![CDATA[

@@ -68,5 +68,6 @@ $mess=array(
 "set_entry_point_succeed" => "Object default file has been assigned successfully",
 "set_entry_point_invalid_path" => "Provided path is not valid",
 "set_entry_point_not_content" => "Provided path is not an object content file",
-"set_entry_point_manifest_error" => "Unable to load object manifest"
+"set_entry_point_manifest_error" => "Unable to load object manifest",
+"copy_root_disabled" => "This repository doesn't allow files on the root folder"
 );
