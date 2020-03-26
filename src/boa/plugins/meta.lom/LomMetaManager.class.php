@@ -313,7 +313,7 @@ class LomMetaManager extends Plugin implements DcoSpecProvider {
                         if ($child->nodeType != XML_ELEMENT_NODE) continue;
                         //if ($child->nodeType == XML_CDATA_SECTION_NODE) continue;
                         $itemsFound = $this->readSpecFieldToJson($child, $specXpath, $newObj, $paramprefix, $meta, $colrow);
-                        if (!itemsFound){
+                        if (!$itemsFound){
                             break;
                         }
                     }
