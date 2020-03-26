@@ -283,7 +283,7 @@ class DcoExplorer{
         //while(strlen($nodeName = readdir($handle)) > 0){
         foreach ($nodes as $nodeName){
             if($nodeName == "." || $nodeName == ".." || $nodeName == ".alternate") continue; //skip special directories including alternate folder
-            if (preg_match("/^\\.(:?.*)\\.manifest(:?\\.published)?$/", subject)) continue; //Skip manifest files
+            if (preg_match("/^\\.(:?.*)\\.manifest(:?\\.published)?$/", $nodeName)) continue; //Skip manifest files
             if(isSet($uniqueFile) && $nodeName != $uniqueFile){
                 $cursor ++;
                 continue;
